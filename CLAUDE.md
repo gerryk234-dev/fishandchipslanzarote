@@ -26,7 +26,7 @@ Other deliberate duplication to keep in sync:
 
 - **Menu items** exist in three places: `.menu-card` markup in `index.html`, `.menu-card` markup in `menu.html`, and the downloadable `HippieChippy-Menu.pdf`. Cards carry `data-cat` (`fish`, `burgers`, `breakfast`, `sides`, `extras`) used by the inline `filterMenu()` tabs.
 - **Blog articles** are a `const blogs = [...]` JavaScript array duplicated in both `index.html` and `blog.html`, rendered into modals at runtime.
-- **Business facts** (phone/WhatsApp numbers, address, opening hours, ratings) appear in visible text, `wa.me/...` links, and the Schema.org JSON-LD block in each page's `<head>`. Past number updates have missed pages (e.g. `menu.html` still carries an older WhatsApp number), so grep the whole repo when changing contact details: `grep -rn '602810603' *.html`.
+- **Business facts** (phone/WhatsApp numbers, address, opening hours, ratings) appear in visible text, `wa.me/...` links, and the Schema.org JSON-LD block in each page's `<head>`. The customer WhatsApp order number is **+34 612 22 58 43** (`wa.me/34612225843`); the landline is +34 928 46 76 14. Past number updates have missed pages, so grep the whole repo when changing contact details: `grep -rn '612225843' *.html`.
 
 ## Key conventions
 
