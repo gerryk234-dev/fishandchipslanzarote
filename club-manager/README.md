@@ -69,6 +69,49 @@ Toda la información está en un único archivo: `server/data/club.db`
 sqlite3 server/data/club.db ".backup backup-$(date +%F).db"
 ```
 
+## Báscula (OHAUS Navigator NV622)
+
+La app se conecta directamente a la báscula desde el navegador — sin programas
+adicionales — usando el **kit de interfaz USB de OHAUS** (aparece en el PC como
+puerto serie virtual, 9600 baudios).
+
+**Cómo usarla:** en la pestaña **Dispensar**, pulsa **⚖ Conectar báscula** y
+elige el puerto de la báscula en el diálogo de Chrome (solo la primera vez).
+A partir de ahí:
+
+- El peso se ve **en vivo** junto al título (punto verde = estable, ámbar = oscilando)
+- Botón **Tara** para poner a cero con el recipiente encima
+- Al añadir un producto en gramos aparece un botón **⚖ 3.52g** con el peso
+  actual — un toque y entra en el ticket con el peso exacto (solo se activa
+  cuando la lectura es estable)
+
+**Requisitos:**
+
+- Chrome o Edge **de escritorio** (la Web Serial API no existe en móviles) —
+  la báscula se usa desde el PC del mostrador; los móviles siguen sirviendo
+  para todo lo demás
+- La página debe abrirse en `http://localhost:4000` (si el servidor corre en
+  el mismo PC) **o por HTTPS** si el servidor está en otra máquina — Chrome
+  no permite Web Serial en HTTP plano. Con Caddy delante tienes HTTPS con dos
+  líneas de configuración.
+- La báscula debe estar en **gramos** (el botón de usar peso se desactiva en
+  otras unidades)
+- Cierra el programa de OHAUS si lo tienes abierto — solo un programa puede
+  usar el puerto serie a la vez
+
+Protocolo: se sondea con el comando `IP` (impresión inmediata) cada 500 ms y
+se interpreta cualquier línea `<peso> g` (con `?` = lectura inestable). El
+botón **Tara** envía `T`. Compatible con cualquier báscula OHAUS con el mismo
+protocolo serie (Navigator, Scout, etc.).
+
+## Móvil
+
+La interfaz es adaptable: en pantallas estrechas la navegación pasa a una
+barra superior deslizable, los paneles se apilan a una columna, el ticket
+ocupa todo el ancho y la tabla de inventario se desplaza en horizontal.
+Cualquier móvil o tablet del club puede usarse como mostrador (excepto la
+báscula, ver arriba).
+
 ## Modelo de seguridad
 
 | Capa | Mecanismo |

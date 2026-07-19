@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { api } from "./api.js";
+import { useScale } from "./scale.js";
 
 /* ========= ONE LIFE LANZAROTE — Club Manager V3 =========
    Multi-device edition: todos los datos viven en el servidor.
@@ -41,6 +42,25 @@ const S = () => (
     .fadein { animation: fade .25s ease; }
     @keyframes fade { from { opacity: 0; transform: translateY(4px);} to { opacity: 1; transform: none;} }
     @media (prefers-reduced-motion: reduce) { .fadein { animation: none; } }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    /* ---- mobile ---- */
+    @media (max-width: 760px) {
+      .app-shell { flex-direction: column !important; }
+      .sidebar { width: 100% !important; flex-direction: row !important; align-items: center !important;
+                 gap: 2px !important; padding: 8px 10px !important; border-right: none !important;
+                 border-bottom: 1px solid ${C.line}; overflow-x: auto; }
+      .sidebar .brand { display: none; }
+      .sidebar .navbtn { padding: 9px 11px !important; font-size: 14px !important; white-space: nowrap; }
+      .sidebar .userbox { margin-top: 0 !important; margin-left: auto; border-top: none !important;
+                          padding: 0 4px !important; text-align: right; flex-shrink: 0; }
+      .app-main { padding: 14px !important; }
+      .split { flex-direction: column !important; }
+      .side-col { width: 100% !important; }
+      .side-col > div { position: static !important; }
+      .day-detail { margin-left: 0 !important; }
+      .table-wrap table { min-width: 560px; }
+      input, select { font-size: 16px !important; } /* stop iOS zoom-on-focus */
+    }
   `}</style>
 );
 
@@ -66,8 +86,8 @@ const Btn = ({ children, onClick, kind = "ghost", size = "md", disabled, style }
   return <button onClick={onClick} disabled={disabled} style={{ ...base, ...style }}>{children}</button>;
 };
 
-const Panel = ({ children, style }) => (
-  <div style={{ background: C.surface, border: `1px solid ${C.line}`, borderRadius: 12, ...style }}>{children}</div>
+const Panel = ({ children, style, className }) => (
+  <div className={className} style={{ background: C.surface, border: `1px solid ${C.line}`, borderRadius: 12, ...style }}>{children}</div>
 );
 
 const Field = (props) => (
@@ -152,18 +172,18 @@ export default function App() {
   const pendingCount = data.members.filter((m) => m.status === "pendiente").length;
 
   return (
-    <div style={{ minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "'Outfit', sans-serif", display: "flex" }}>
+    <div className="app-shell" style={{ minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "'Outfit', sans-serif", display: "flex" }}>
       <S />
-      <aside style={{ width: 190, borderRight: `1px solid ${C.line}`, padding: "20px 12px", display: "flex", flexDirection: "column", gap: 4, flexShrink: 0 }}>
-        <div className="mono" style={{ color: C.green, letterSpacing: 3, fontSize: 10, padding: "0 10px", marginBottom: 14 }}>ONE LIFE<br />LANZAROTE</div>
+      <aside className="sidebar" style={{ width: 190, borderRight: `1px solid ${C.line}`, padding: "20px 12px", display: "flex", flexDirection: "column", gap: 4, flexShrink: 0 }}>
+        <div className="mono brand" style={{ color: C.green, letterSpacing: 3, fontSize: 10, padding: "0 10px", marginBottom: 14 }}>ONE LIFE<br />LANZAROTE</div>
         {NAV.map((n) => (
-          <button key={n.id} onClick={() => setTab(n.id)}
-            style={{ textAlign: "left", padding: "11px 12px", borderRadius: 8, border: "none", fontSize: 15, fontWeight: 600, background: tab === n.id ? C.greenDark : "transparent", color: tab === n.id ? C.green : C.muted, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <button key={n.id} className="navbtn" onClick={() => setTab(n.id)}
+            style={{ textAlign: "left", padding: "11px 12px", borderRadius: 8, border: "none", fontSize: 15, fontWeight: 600, background: tab === n.id ? C.greenDark : "transparent", color: tab === n.id ? C.green : C.muted, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 6 }}>
             {n.label}
             {n.id === "socios" && pendingCount > 0 && <span className="mono" style={{ background: C.amber, color: "#2A2008", borderRadius: 10, fontSize: 11, padding: "1px 7px", fontWeight: 700 }}>{pendingCount}</span>}
           </button>
         ))}
-        <div style={{ marginTop: "auto", padding: 10, borderTop: `1px solid ${C.line}` }}>
+        <div className="userbox" style={{ marginTop: "auto", padding: 10, borderTop: `1px solid ${C.line}` }}>
           <div style={{ fontSize: 12, color: C.muted }}>{isAdmin ? "Sesión" : "En mostrador"}</div>
           <div style={{ fontWeight: 700, display: "flex", gap: 8, alignItems: "center" }}>{user.name} {isAdmin && <Badge kind="admin" />}</div>
           <button onClick={async () => { if (isAdmin) { try { await api.post("/api/auth/admin/logout"); } catch { /* ignore */ } await refresh(); } setUser(null); }}
@@ -171,7 +191,7 @@ export default function App() {
         </div>
       </aside>
 
-      <main style={{ flex: 1, padding: 24, overflow: "auto" }}>
+      <main className="app-main" style={{ flex: 1, padding: 24, overflow: "auto" }}>
         {tab === "dispensar" && <Dispensar data={data} refresh={refresh} user={user} notify={notify} />}
         {tab === "socios" && <Socios data={data} refresh={refresh} notify={notify} isAdmin={isAdmin} />}
         {tab === "inventario" && <Inventario data={data} refresh={refresh} notify={notify} />}
@@ -299,6 +319,8 @@ function Dispensar({ data, refresh, user, notify }) {
   const [qtyFor, setQtyFor] = useState(null);
   const [qty, setQty] = useState("");
   const [busy, setBusy] = useState(false);
+  const scale = useScale();
+  const fresh = scale.reading && Date.now() - scale.reading.ts < 3000 ? scale.reading : null;
 
   const active = members.filter((m) => m.status === "activo");
   const results = q ? active.filter((m) => (m.name + m.num).toLowerCase().includes(q.toLowerCase())) : [];
@@ -342,9 +364,25 @@ function Dispensar({ data, refresh, user, notify }) {
   const gramBtns = [0.5, 1, 2, 3.5, 5];
 
   return (
-    <div className="fadein" style={{ display: "flex", gap: 20 }}>
+    <div className="fadein split" style={{ display: "flex", gap: 20 }}>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <h2 style={{ margin: "0 0 16px", fontSize: 22 }}>Dispensar</h2>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap", margin: "0 0 16px" }}>
+          <h2 style={{ margin: 0, fontSize: 22 }}>Dispensar</h2>
+          {scale.supported && !scale.connected && (
+            <Btn size="sm" onClick={() => scale.connect().catch(() => notify("No se pudo conectar con la báscula"))}>⚖ Conectar báscula</Btn>
+          )}
+          {scale.connected && (
+            <div style={{ display: "flex", alignItems: "center", gap: 10, background: C.surface, border: `1px solid ${C.line}`, borderRadius: 10, padding: "6px 12px" }}>
+              <span style={{ width: 8, height: 8, borderRadius: "50%", background: fresh ? (fresh.stable ? C.green : C.amber) : C.red, flexShrink: 0 }} />
+              <span className="mono" style={{ fontSize: 18, fontWeight: 600, minWidth: 90, textAlign: "right" }}>
+                {fresh ? `${fresh.value.toFixed(2)} ${fresh.unit}` : "— g"}
+              </span>
+              <Btn size="sm" onClick={scale.tare}>Tara</Btn>
+              <button onClick={scale.disconnect} title="Desconectar báscula"
+                style={{ background: "none", border: "none", color: C.muted, padding: 0, fontSize: 14 }}>✕</button>
+            </div>
+          )}
+        </div>
         {!member ? (
           <Panel style={{ padding: 18 }}>
             <div style={{ fontSize: 13, color: C.muted, marginBottom: 8 }}>1 · Buscar socio</div>
@@ -400,6 +438,14 @@ function Dispensar({ data, refresh, user, notify }) {
                             <button key={g} onClick={() => addToCart(p, g)} className="mono"
                               style={{ padding: "6px 10px", borderRadius: 6, border: `1px solid ${C.line}`, background: C.surface2, color: C.text, fontSize: 13 }}>{g}g</button>
                           ))}
+                          {scale.connected && (
+                            <button className="mono" disabled={!fresh || !fresh.stable || fresh.unit !== "g" || fresh.value <= 0}
+                              onClick={() => fresh && addToCart(p, +fresh.value.toFixed(2))}
+                              title={fresh && fresh.unit !== "g" ? "Pon la báscula en gramos" : "Usar el peso de la báscula"}
+                              style={{ padding: "6px 10px", borderRadius: 6, border: `1px solid ${C.green}`, background: C.greenDark, color: C.green, fontSize: 13, fontWeight: 600, opacity: !fresh || !fresh.stable || fresh.unit !== "g" || fresh.value <= 0 ? 0.4 : 1 }}>
+                              ⚖ {fresh && fresh.unit === "g" ? `${fresh.value.toFixed(2)}g` : "báscula"}
+                            </button>
+                          )}
                         </div>
                       )}
                       <div style={{ display: "flex", gap: 6 }}>
@@ -418,7 +464,7 @@ function Dispensar({ data, refresh, user, notify }) {
         )}
       </div>
 
-      <div style={{ width: 300, flexShrink: 0 }}>
+      <div className="side-col" style={{ width: 300, flexShrink: 0 }}>
         <Panel style={{ padding: 18, position: "sticky", top: 0 }}>
           <div className="mono" style={{ textAlign: "center", color: C.muted, fontSize: 11, letterSpacing: 2, borderBottom: `1px dashed ${C.line}`, paddingBottom: 10, marginBottom: 10 }}>
             TICKET · {user.name.toUpperCase()}
@@ -605,7 +651,7 @@ function Socios({ data, refresh, notify }) {
           ))}
         </Panel>
 
-        <Panel style={{ width: 340, padding: 18, flexShrink: 0 }}>
+        <Panel className="side-col" style={{ width: 340, padding: 18, flexShrink: 0 }}>
           {!sel ? (
             <div style={{ color: C.muted, fontSize: 14 }}>Selecciona un socio para ver su ficha.</div>
           ) : (
@@ -656,7 +702,7 @@ function Inventario({ data, refresh, notify }) {
   return (
     <div className="fadein">
       <h2 style={{ margin: "0 0 16px", fontSize: 22 }}>Inventario</h2>
-      <Panel>
+      <Panel className="table-wrap">
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
           <thead>
             <tr className="mono" style={{ color: C.muted, fontSize: 11, letterSpacing: 1, textAlign: "left" }}>
@@ -819,7 +865,7 @@ function Informes({ data }) {
                 <span className="mono" style={{ fontSize: 13, color: C.amber, width: 90, textAlign: "right" }}>{eur(v.total)}</span>
               </div>
               {openDay === d && (
-                <div style={{ margin: "4px 0 10px 116px" }}>
+                <div className="day-detail" style={{ margin: "4px 0 10px 116px" }}>
                   {[...v.sales].sort((a, b) => b.ts - a.ts).map((s) => {
                     const m = members.find((x) => x.id === s.memberId);
                     return (
