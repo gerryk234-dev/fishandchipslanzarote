@@ -5,6 +5,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { db, getSetting, setSetting } from "./db.js";
 import { verifySecret, signToken, verifyToken } from "./auth.js";
+import { generateCard } from "./card.js";
+import { sendWelcome } from "./mailer.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 4000;
@@ -12,7 +14,7 @@ const TOKEN_SECRET = getSetting("token_secret");
 const SESSION_DAYS = 180;
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: "4mb" })); // member selfies arrive as data URLs
 app.use(cookieParser());
 
 /* ================= auth ================= */
@@ -241,6 +243,95 @@ app.delete("/api/members/:id", requireDevice, (req, res) => {
   if (!m) return res.status(400).json({ error: "bad_member" });
   db.prepare("UPDATE members SET status = 'baja' WHERE id = ?").run(m.id); // history stays intact
   res.json({ ok: true });
+});
+
+const PHOTO_RE = /^data:image\/(jpeg|jpg|png);base64,[A-Za-z0-9+/=]+$/;
+
+/* direct add by staff: creates an ACTIVE member with number, sends welcome email */
+app.post("/api/members", requireDevice, async (req, res) => {
+  const name = String(req.body?.name || "").trim();
+  if (!name) return res.status(400).json({ error: "name_required" });
+  const type = req.body?.type === "turista" ? "turista" : "local";
+  const photo = req.body?.photo && PHOTO_RE.test(req.body.photo) ? req.body.photo : null;
+  db.exec("BEGIN");
+  let member;
+  try {
+    const seq = Number(getSetting("member_seq")) + 1;
+    setSetting("member_seq", String(seq));
+    const num = "OL-" + String(seq).padStart(4, "0");
+    const info = db.prepare(
+      "INSERT INTO members (num, name, nationality, type, status, joined, sponsor_num, email, phone, photo) VALUES (?, ?, ?, ?, 'activo', ?, NULL, ?, ?, ?)"
+    ).run(num, name, String(req.body?.nationality || "").trim() || "—", type,
+      new Date().toISOString().slice(0, 10),
+      String(req.body?.email || "").trim() || null,
+      String(req.body?.phone || "").trim() || null, photo);
+    member = db.prepare("SELECT * FROM members WHERE id = ?").get(Number(info.lastInsertRowid));
+    db.exec("COMMIT");
+  } catch (e) {
+    db.exec("ROLLBACK");
+    console.error(e);
+    return res.status(500).json({ error: "internal" });
+  }
+  let emailStatus = "no_email";
+  try {
+    const pdf = await generateCard(member);
+    emailStatus = await sendWelcome(member, pdf);
+  } catch (e) {
+    console.error("[card]", e.message);
+    emailStatus = "failed";
+  }
+  res.json({ member: memberRow(member), emailStatus });
+});
+
+/* full detail incl. photo (state list intentionally excludes photos) */
+app.get("/api/members/:id", requireDevice, (req, res) => {
+  const m = db.prepare("SELECT * FROM members WHERE id = ?").get(req.params.id);
+  if (!m) return res.status(404).json({ error: "bad_member" });
+  res.json({ ...memberRow(m), photo: m.photo || null });
+});
+
+/* consumption/spend aggregates + 30-day daily series for the profile charts */
+app.get("/api/members/:id/stats", requireDevice, (req, res) => {
+  const memberId = Number(req.params.id);
+  const now = Date.now();
+  const DAY = 24 * 3600 * 1000;
+  const since365 = now - 365 * DAY;
+  const rows = db.prepare("SELECT * FROM sales WHERE member_id = ? AND ts >= ? ORDER BY ts").all(memberId, since365);
+  const withGrams = rows.map((s) => ({
+    ts: s.ts, total: s.total,
+    grams: db.prepare("SELECT COALESCE(SUM(qty),0) g FROM sale_items WHERE sale_id = ? AND unit = 'g'").get(s.id).g,
+  }));
+  const agg = (days) => {
+    const cut = now - days * DAY;
+    const sel = withGrams.filter((s) => s.ts >= cut);
+    return {
+      spent: Math.round(sel.reduce((a, s) => a + s.total, 0) * 100) / 100,
+      grams: Math.round(sel.reduce((a, s) => a + s.grams, 0) * 100) / 100,
+      ops: sel.length,
+    };
+  };
+  const daily = [];
+  for (let back = 29; back >= 0; back--) {
+    const d = new Date(now - back * DAY);
+    const iso = d.toISOString().slice(0, 10);
+    const dayStart = new Date(iso + "T00:00:00").getTime();
+    const sel = withGrams.filter((s) => s.ts >= dayStart && s.ts < dayStart + DAY);
+    daily.push({
+      date: iso,
+      spent: Math.round(sel.reduce((a, s) => a + s.total, 0) * 100) / 100,
+      grams: Math.round(sel.reduce((a, s) => a + s.grams, 0) * 100) / 100,
+    });
+  }
+  res.json({ d7: agg(7), d30: agg(30), d180: agg(180), d365: agg(365), daily });
+});
+
+app.get("/api/members/:id/card.pdf", requireDevice, async (req, res) => {
+  const m = db.prepare("SELECT * FROM members WHERE id = ?").get(req.params.id);
+  if (!m || !m.num) return res.status(404).json({ error: "bad_member" });
+  const pdf = await generateCard(m);
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", `attachment; filename="OneLife-${m.num}.pdf"`);
+  res.send(pdf);
 });
 
 app.post("/api/members/:id/approve", requireDevice, (req, res) => {

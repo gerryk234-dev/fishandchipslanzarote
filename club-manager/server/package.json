@@ -9,7 +9,9 @@
     "set-secrets": "node scripts/set-secrets.js"
   },
   "dependencies": {
+    "cookie-parser": "^1.4.7",
     "express": "^4.21.2",
-    "cookie-parser": "^1.4.7"
+    "nodemailer": "^9.0.3",
+    "pdf-lib": "^1.17.1"
   }
 }

@@ -161,6 +161,59 @@ export async function mockRequest(method, path, body) {
     needDevice();
     return clone(s.sales.filter((x) => x.memberId === Number(m[1])).sort((a, b) => b.ts - a.ts).slice(0, 100));
   }
+  if (method === "GET" && (m = route.match(/^\/api\/members\/(\d+)\/stats$/))) {
+    needDevice();
+    const id = Number(m[1]);
+    const now = Date.now();
+    const DAY = 24 * 3600 * 1000;
+    const rows = s.sales.filter((x) => x.memberId === id).map((x) => ({
+      ts: x.ts, total: x.total,
+      grams: x.items.filter((i) => i.unit === "g").reduce((a, i) => a + i.qty, 0),
+    }));
+    const agg = (days) => {
+      const sel = rows.filter((r) => r.ts >= now - days * DAY);
+      return {
+        spent: Math.round(sel.reduce((a, r) => a + r.total, 0) * 100) / 100,
+        grams: Math.round(sel.reduce((a, r) => a + r.grams, 0) * 100) / 100,
+        ops: sel.length,
+      };
+    };
+    const daily = [];
+    for (let back = 29; back >= 0; back--) {
+      const iso = new Date(now - back * DAY).toISOString().slice(0, 10);
+      const dayStart = new Date(iso + "T00:00:00").getTime();
+      const sel = rows.filter((r) => r.ts >= dayStart && r.ts < dayStart + DAY);
+      daily.push({
+        date: iso,
+        spent: Math.round(sel.reduce((a, r) => a + r.total, 0) * 100) / 100,
+        grams: Math.round(sel.reduce((a, r) => a + r.grams, 0) * 100) / 100,
+      });
+    }
+    return { d7: agg(7), d30: agg(30), d180: agg(180), d365: agg(365), daily };
+  }
+  if (method === "GET" && (m = route.match(/^\/api\/members\/(\d+)$/))) {
+    needDevice();
+    const mem2 = s.members.find((x) => x.id === Number(m[1]));
+    if (!mem2) fail(404, "bad_member");
+    return clone({ ...mem2, photo: mem2.photo || null });
+  }
+  if (method === "POST" && route === "/api/members") {
+    needDevice();
+    const name = String(body?.name || "").trim();
+    if (!name) fail(400, "name_required");
+    s.memberSeq += 1;
+    const member = {
+      id: Date.now(), num: "OL-" + String(s.memberSeq).padStart(4, "0"), name,
+      nationality: String(body?.nationality || "").trim() || "—",
+      type: body?.type === "turista" ? "turista" : "local",
+      status: "activo", joined: isoOf(Date.now()), sponsor: null,
+      phone: String(body?.phone || "").trim() || null,
+      email: String(body?.email || "").trim() || null,
+      photo: typeof body?.photo === "string" && body.photo.startsWith("data:image/") ? body.photo : null,
+    };
+    s.members.push(member); save(s);
+    return clone({ member, emailStatus: member.email ? "not_configured" : "no_email" });
+  }
   if (method === "POST" && route === "/api/invites") {
     needDevice();
     const sponsor = s.members.find((x) => x.id === Number(body?.sponsorId) && x.status === "activo");

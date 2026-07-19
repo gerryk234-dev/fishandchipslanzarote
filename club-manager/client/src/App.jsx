@@ -3,7 +3,7 @@ import { api, DEMO } from "./api.js";
 import { useScale } from "./scale.js";
 
 const DemoBadge = () => DEMO ? (
-  <div className="mono" style={{ position: "fixed", top: 8, right: 8, zIndex: 70, background: "#4A3A22", color: "#E3B04B", fontSize: 10, letterSpacing: 1, padding: "4px 9px", borderRadius: 6, fontWeight: 700, pointerEvents: "none" }}>
+  <div className="mono" style={{ position: "fixed", top: 8, right: 8, zIndex: 70, background: "#4A3A22", color: "#E3B04B", fontSize: 11, letterSpacing: 1, padding: "4px 9px", borderRadius: 6, fontWeight: 800, pointerEvents: "none" }}>
     DEMO · DATOS DE PRUEBA
   </div>
 ) : null;
@@ -16,9 +16,9 @@ const DemoBadge = () => DEMO ? (
 ========================================================== */
 
 const C = {
-  bg: "#171C15", surface: "#20261D", surface2: "#272E23", line: "#333D2F",
-  text: "#EFEDE3", muted: "#9AA391", green: "#8FBF6F", greenDark: "#3E5233",
-  amber: "#E3B04B", red: "#D9704F", blue: "#7FA8C9",
+  bg: "#171C15", surface: "#20261D", surface2: "#272E23", line: "#3D4838",
+  text: "#FFFFFF", muted: "#C6CFBB", green: "#9CCC7B", greenDark: "#3E5233",
+  amber: "#EDBD58", red: "#E07E5C", blue: "#8FB8D9",
 };
 
 const CATS = [
@@ -38,7 +38,8 @@ const isoOf = (ts) => new Date(ts).toISOString().slice(0, 10);
 const S = () => (
   <style>{`
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
-    * { box-sizing: border-box; } body { margin: 0; }
+    * { box-sizing: border-box; } body { margin: 0; font-weight: 500; }
+    button, input, select { font-weight: 700; }
     ::selection { background: ${C.greenDark}; }
     .mono { font-family: 'IBM Plex Mono', monospace; }
     button { font-family: 'Outfit', sans-serif; cursor: pointer; }
@@ -55,6 +56,10 @@ const S = () => (
               border-right: 1px solid ${C.line}; z-index: 61; padding: 18px 12px;
               display: flex; flex-direction: column; gap: 4px; }
     .drawer .navbtn { width: 100%; }
+    .sheet { position: fixed; top: 4vh; left: 0; right: 0; margin: 0 auto; z-index: 61;
+             width: min(720px, 94vw); max-height: 90vh; overflow-y: auto;
+             background: ${C.surface}; border: 1px solid ${C.line}; border-radius: 14px; padding: 22px; }
+    @media (max-width: 760px) { .sheet { width: 96vw; padding: 16px; max-height: 92vh; } }
     /* ---- mobile ---- */
     @media (max-width: 760px) {
       .app-shell { flex-direction: column !important; }
@@ -85,14 +90,14 @@ const Badge = ({ kind }) => {
     admin: { bg: "#4A3A22", fg: C.amber, t: "ADMIN" },
   };
   const m = map[kind]; if (!m) return null;
-  return <span className="mono" style={{ background: m.bg, color: m.fg, fontSize: 10, letterSpacing: 1, padding: "3px 8px", borderRadius: 4, fontWeight: 600 }}>{m.t}</span>;
+  return <span className="mono" style={{ background: m.bg, color: m.fg, fontSize: 11, letterSpacing: 1, padding: "3px 8px", borderRadius: 4, fontWeight: 700 }}>{m.t}</span>;
 };
 
 const Btn = ({ children, onClick, kind = "ghost", size = "md", disabled, style }) => {
   const base = {
     border: `1px solid ${C.line}`, borderRadius: 8, color: C.text, background: C.surface2,
     padding: size === "lg" ? "14px 20px" : size === "sm" ? "6px 12px" : "10px 16px",
-    fontSize: size === "lg" ? 16 : 14, fontWeight: 600, opacity: disabled ? 0.4 : 1,
+    fontSize: size === "lg" ? 16 : 14, fontWeight: 700, opacity: disabled ? 0.4 : 1,
   };
   if (kind === "primary") { base.background = C.green; base.color = "#16210F"; base.border = `1px solid ${C.green}`; }
   if (kind === "amber") { base.background = C.amber; base.color = "#2A2008"; base.border = `1px solid ${C.amber}`; }
@@ -104,7 +109,7 @@ const Panel = ({ children, style, className }) => (
 );
 
 const Field = (props) => (
-  <input {...props} style={{ width: "100%", padding: "11px 14px", background: C.bg, border: `1px solid ${C.line}`, borderRadius: 8, color: C.text, fontSize: 15, ...props.style }} />
+  <input {...props} style={{ width: "100%", padding: "11px 14px", background: C.bg, border: `1px solid ${C.line}`, borderRadius: 8, color: C.text, fontSize: 16, ...props.style }} />
 );
 
 /* ================================ APP ================================ */
@@ -149,8 +154,8 @@ export default function App() {
       <div style={{ minHeight: "100vh", background: C.bg, color: C.text, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Outfit', sans-serif" }}>
         <S />
         <div style={{ textAlign: "center" }}>
-          <div style={{ color: C.red, fontWeight: 700, marginBottom: 8 }}>Sin conexión con el servidor</div>
-          <div style={{ color: C.muted, fontSize: 14, marginBottom: 16 }}>Comprueba que el servidor del club esté en marcha.</div>
+          <div style={{ color: C.red, fontWeight: 800, marginBottom: 8 }}>Sin conexión con el servidor</div>
+          <div style={{ color: C.muted, fontSize: 15, marginBottom: 16 }}>Comprueba que el servidor del club esté en marcha.</div>
           <Btn kind="primary" onClick={() => { setPhase("loading"); refresh(); }}>Reintentar</Btn>
         </div>
       </div>
@@ -197,12 +202,16 @@ export default function App() {
       return h.slice(0, -1);
     });
   };
+  const logout = async () => {
+    if (isAdmin) { try { await api.post("/api/auth/admin/logout"); } catch { /* ignore */ } await refresh(); }
+    setUser(null); setHist([]);
+  };
 
   const navButtons = (extraClass) => NAV.map((n) => (
     <button key={n.id} className={"navbtn " + (extraClass || "")} onClick={() => goTab(n.id)}
-      style={{ textAlign: "left", padding: "11px 12px", borderRadius: 8, border: "none", fontSize: 15, fontWeight: 600, background: tab === n.id ? C.greenDark : "transparent", color: tab === n.id ? C.green : C.muted, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 6 }}>
+      style={{ textAlign: "left", padding: "11px 12px", borderRadius: 8, border: "none", fontSize: 16, fontWeight: 700, background: tab === n.id ? C.greenDark : "transparent", color: tab === n.id ? C.green : C.muted, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 6 }}>
       {n.label}
-      {n.id === "socios" && pendingCount > 0 && <span className="mono" style={{ background: C.amber, color: "#2A2008", borderRadius: 10, fontSize: 11, padding: "1px 7px", fontWeight: 700 }}>{pendingCount}</span>}
+      {n.id === "socios" && pendingCount > 0 && <span className="mono" style={{ background: C.amber, color: "#2A2008", borderRadius: 10, fontSize: 12, padding: "1px 7px", fontWeight: 800 }}>{pendingCount}</span>}
     </button>
   ));
 
@@ -211,14 +220,16 @@ export default function App() {
       <S />
       <aside className="sidebar" style={{ width: 190, borderRight: `1px solid ${C.line}`, padding: "20px 12px", display: "flex", flexDirection: "column", gap: 4, flexShrink: 0 }}>
         <button className="hamburger" onClick={() => setMenuOpen(true)} aria-label="Abrir menú"
-          style={{ background: C.surface2, border: `1px solid ${C.line}`, borderRadius: 8, color: C.text, fontSize: 18, padding: "7px 12px", flexShrink: 0 }}>☰</button>
-        <div className="mono brand" style={{ color: C.green, letterSpacing: 3, fontSize: 10, padding: "0 10px", marginBottom: 14 }}>ONE LIFE<br />LANZAROTE</div>
+          style={{ background: C.surface2, border: `1px solid ${C.line}`, borderRadius: 8, color: C.text, fontSize: 20, padding: "7px 12px", flexShrink: 0 }}>☰</button>
+        <div className="mono brand" style={{ color: C.green, letterSpacing: 3, fontSize: 11, padding: "0 10px", marginBottom: 14 }}>ONE LIFE<br />LANZAROTE</div>
         {navButtons()}
         <div className="userbox" style={{ marginTop: "auto", padding: 10, borderTop: `1px solid ${C.line}` }}>
-          <div style={{ fontSize: 12, color: C.muted }}>{isAdmin ? "Sesión" : "En mostrador"}</div>
-          <div style={{ fontWeight: 700, display: "flex", gap: 8, alignItems: "center" }}>{user.name} {isAdmin && <Badge kind="admin" />}</div>
-          <button onClick={async () => { if (isAdmin) { try { await api.post("/api/auth/admin/logout"); } catch { /* ignore */ } await refresh(); } setUser(null); }}
-            style={{ background: "none", border: "none", color: C.muted, fontSize: 12, padding: 0, marginTop: 4, textDecoration: "underline", cursor: "pointer" }}>Cambiar</button>
+          <div style={{ fontSize: 13, color: C.muted }}>{isAdmin ? "Sesión" : "En mostrador"}</div>
+          <div style={{ fontWeight: 800, display: "flex", gap: 8, alignItems: "center" }}>{user.name} {isAdmin && <Badge kind="admin" />}</div>
+          <button onClick={logout}
+            style={{ marginTop: 8, width: "100%", background: "transparent", border: `1px solid ${C.red}`, color: C.red, borderRadius: 8, padding: "8px 10px", fontSize: 14, fontWeight: 800, cursor: "pointer" }}>
+            Cerrar sesión
+          </button>
         </div>
       </aside>
 
@@ -226,12 +237,14 @@ export default function App() {
         <>
           <div className="drawer-backdrop" onClick={() => setMenuOpen(false)} />
           <div className="drawer fadein">
-            <div className="mono" style={{ color: C.green, letterSpacing: 3, fontSize: 10, padding: "0 10px", marginBottom: 10 }}>ONE LIFE<br />LANZAROTE</div>
+            <div className="mono" style={{ color: C.green, letterSpacing: 3, fontSize: 11, padding: "0 10px", marginBottom: 10 }}>ONE LIFE<br />LANZAROTE</div>
             {navButtons()}
             <div style={{ marginTop: "auto", padding: 10, borderTop: `1px solid ${C.line}` }}>
-              <div style={{ fontWeight: 700, display: "flex", gap: 8, alignItems: "center" }}>{user.name} {isAdmin && <Badge kind="admin" />}</div>
-              <button onClick={async () => { setMenuOpen(false); if (isAdmin) { try { await api.post("/api/auth/admin/logout"); } catch { /* ignore */ } await refresh(); } setUser(null); }}
-                style={{ background: "none", border: "none", color: C.muted, fontSize: 13, padding: 0, marginTop: 6, textDecoration: "underline", cursor: "pointer" }}>Cambiar de usuario</button>
+              <div style={{ fontWeight: 800, display: "flex", gap: 8, alignItems: "center" }}>{user.name} {isAdmin && <Badge kind="admin" />}</div>
+              <button onClick={() => { setMenuOpen(false); logout(); }}
+                style={{ marginTop: 10, width: "100%", background: "transparent", border: `1px solid ${C.red}`, color: C.red, borderRadius: 8, padding: "10px 10px", fontSize: 15, fontWeight: 800, cursor: "pointer" }}>
+                Cerrar sesión
+              </button>
             </div>
           </div>
         </>
@@ -240,7 +253,7 @@ export default function App() {
       <main className="app-main" style={{ flex: 1, padding: 24, overflow: "auto" }}>
         {hist.length > 0 && (
           <button onClick={goBack}
-            style={{ background: "none", border: "none", color: C.muted, fontSize: 14, fontWeight: 600, padding: 0, marginBottom: 12, display: "inline-flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
+            style={{ background: "none", border: "none", color: C.muted, fontSize: 15, fontWeight: 700, padding: 0, marginBottom: 12, display: "inline-flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
             ← Volver
           </button>
         )}
@@ -251,7 +264,7 @@ export default function App() {
       </main>
 
       {toast && (
-        <div className="fadein mono" style={{ position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)", background: C.green, color: "#16210F", padding: "10px 22px", borderRadius: 8, fontWeight: 600, fontSize: 14, zIndex: 50 }}>{toast}</div>
+        <div className="fadein mono" style={{ position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)", background: C.green, color: "#16210F", padding: "10px 22px", borderRadius: 8, fontWeight: 700, fontSize: 15, zIndex: 50 }}>{toast}</div>
       )}
       <DemoBadge />
     </div>
@@ -281,19 +294,19 @@ function DeviceLogin({ onDone }) {
     <div style={{ minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "'Outfit', sans-serif", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <S />
       <div style={{ textAlign: "center" }} className="fadein">
-        <div className="mono" style={{ color: C.green, letterSpacing: 4, fontSize: 12, marginBottom: 8 }}>ONE LIFE LANZAROTE</div>
-        <h1 style={{ fontSize: 34, fontWeight: 700, margin: "0 0 6px" }}>Club Manager</h1>
+        <div className="mono" style={{ color: C.green, letterSpacing: 4, fontSize: 13, marginBottom: 8 }}>ONE LIFE LANZAROTE</div>
+        <h1 style={{ fontSize: 34, fontWeight: 800, margin: "0 0 6px" }}>Club Manager</h1>
         <p style={{ color: C.muted, marginBottom: 24 }}>Autoriza este dispositivo con el código del club</p>
         <input autoFocus type="password" value={code} className="mono"
           onChange={(e) => { setCode(e.target.value); setErr(false); }}
           onKeyDown={(e) => e.key === "Enter" && submit()}
           placeholder="Código del club"
-          style={{ fontSize: 18, textAlign: "center", width: 260, padding: "12px 0", background: C.surface, border: `1px solid ${err ? C.red : C.line}`, borderRadius: 10, color: C.text }} />
-        {err && <div style={{ color: C.red, fontSize: 13, marginTop: 8 }}>Código incorrecto</div>}
+          style={{ fontSize: 20, textAlign: "center", width: 260, padding: "12px 0", background: C.surface, border: `1px solid ${err ? C.red : C.line}`, borderRadius: 10, color: C.text }} />
+        {err && <div style={{ color: C.red, fontSize: 14, marginTop: 8 }}>Código incorrecto</div>}
         <div style={{ marginTop: 18 }}>
           <Btn kind="primary" size="lg" onClick={submit} disabled={busy || !code.trim()}>Autorizar dispositivo</Btn>
         </div>
-        <div className="mono" style={{ color: C.muted, fontSize: 11, marginTop: 16 }}>
+        <div className="mono" style={{ color: C.muted, fontSize: 12, marginTop: 16 }}>
           {DEMO ? "demo — código: onelife" : "Solo hace falta una vez por dispositivo"}
         </div>
       </div>
@@ -325,8 +338,8 @@ function Login({ employees, onUser, onAdmin }) {
     <div style={{ minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "'Outfit', sans-serif", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <S />
       <div style={{ textAlign: "center" }} className="fadein">
-        <div className="mono" style={{ color: C.green, letterSpacing: 4, fontSize: 12, marginBottom: 8 }}>ONE LIFE LANZAROTE</div>
-        <h1 style={{ fontSize: 34, fontWeight: 700, margin: "0 0 6px" }}>Club Manager</h1>
+        <div className="mono" style={{ color: C.green, letterSpacing: 4, fontSize: 13, marginBottom: 8 }}>ONE LIFE LANZAROTE</div>
+        <h1 style={{ fontSize: 34, fontWeight: 800, margin: "0 0 6px" }}>Club Manager</h1>
 
         {!pinMode ? (
           <>
@@ -335,12 +348,12 @@ function Login({ employees, onUser, onAdmin }) {
               {employees.map((e) => (
                 <button key={e.id} onClick={() => onUser(e)}
                   style={{ background: C.surface, border: `1px solid ${C.line}`, borderRadius: 14, padding: "26px 30px", color: C.text, width: 130 }}>
-                  <div className="mono" style={{ width: 52, height: 52, borderRadius: "50%", background: C.greenDark, color: C.green, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px", fontWeight: 700 }}>{e.initials}</div>
-                  <div style={{ fontWeight: 600 }}>{e.name}</div>
+                  <div className="mono" style={{ width: 52, height: 52, borderRadius: "50%", background: C.greenDark, color: C.green, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px", fontWeight: 800 }}>{e.initials}</div>
+                  <div style={{ fontWeight: 700 }}>{e.name}</div>
                 </button>
               ))}
             </div>
-            <button onClick={() => setPinMode(true)} style={{ marginTop: 28, background: "none", border: `1px solid ${C.line}`, color: C.amber, borderRadius: 8, padding: "10px 22px", fontWeight: 600 }}>
+            <button onClick={() => setPinMode(true)} style={{ marginTop: 28, background: "none", border: `1px solid ${C.line}`, color: C.amber, borderRadius: 8, padding: "10px 22px", fontWeight: 700 }}>
               Acceso administrador
             </button>
           </>
@@ -352,12 +365,12 @@ function Login({ employees, onUser, onAdmin }) {
               onKeyDown={(e) => e.key === "Enter" && tryPin()}
               className="mono"
               style={{ fontSize: 26, letterSpacing: 12, textAlign: "center", width: 200, padding: "12px 0", background: C.surface, border: `1px solid ${err ? C.red : C.line}`, borderRadius: 10, color: C.text }} />
-            {err && <div style={{ color: C.red, fontSize: 13, marginTop: 8 }}>PIN incorrecto</div>}
+            {err && <div style={{ color: C.red, fontSize: 14, marginTop: 8 }}>PIN incorrecto</div>}
             <div style={{ display: "flex", gap: 10, justifyContent: "center", marginTop: 18 }}>
               <Btn onClick={() => setPinMode(false)}>Volver</Btn>
               <Btn kind="amber" onClick={tryPin} disabled={busy}>Entrar</Btn>
             </div>
-            {DEMO && <div className="mono" style={{ color: C.muted, fontSize: 11, marginTop: 16 }}>demo — PIN: 1234</div>}
+            {DEMO && <div className="mono" style={{ color: C.muted, fontSize: 12, marginTop: 16 }}>demo — PIN: 1234</div>}
           </div>
         )}
       </div>
@@ -425,33 +438,33 @@ function Dispensar({ data, refresh, user, notify }) {
     <div className="fadein split" style={{ display: "flex", gap: 20 }}>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap", margin: "0 0 16px" }}>
-          <h2 style={{ margin: 0, fontSize: 22 }}>Dispensar</h2>
+          <h2 style={{ margin: 0, fontSize: 24 }}>Dispensar</h2>
           {scale.supported && !scale.connected && (
             <Btn size="sm" onClick={() => scale.connect().catch(() => notify("No se pudo conectar con la báscula"))}>⚖ Conectar báscula</Btn>
           )}
           {scale.connected && (
             <div style={{ display: "flex", alignItems: "center", gap: 10, background: C.surface, border: `1px solid ${C.line}`, borderRadius: 10, padding: "6px 12px" }}>
               <span style={{ width: 8, height: 8, borderRadius: "50%", background: fresh ? (fresh.stable ? C.green : C.amber) : C.red, flexShrink: 0 }} />
-              <span className="mono" style={{ fontSize: 18, fontWeight: 600, minWidth: 90, textAlign: "right" }}>
+              <span className="mono" style={{ fontSize: 20, fontWeight: 700, minWidth: 90, textAlign: "right" }}>
                 {fresh ? `${fresh.value.toFixed(2)} ${fresh.unit}` : "— g"}
               </span>
               <Btn size="sm" onClick={scale.tare}>Tara</Btn>
               <button onClick={scale.disconnect} title="Desconectar báscula"
-                style={{ background: "none", border: "none", color: C.muted, padding: 0, fontSize: 14 }}>✕</button>
+                style={{ background: "none", border: "none", color: C.muted, padding: 0, fontSize: 15 }}>✕</button>
             </div>
           )}
         </div>
         {!member ? (
           <Panel style={{ padding: 18 }}>
-            <div style={{ fontSize: 13, color: C.muted, marginBottom: 8 }}>1 · Buscar socio</div>
+            <div style={{ fontSize: 14, color: C.muted, marginBottom: 8 }}>1 · Buscar socio</div>
             <Field value={q} onChange={(e) => setQ(e.target.value)} placeholder="Nombre o nº de socio…" />
             <div style={{ marginTop: 10 }}>
               {results.map((m) => (
                 <div key={m.id} className="row" onClick={() => { setMember(m); setQ(""); }}
                   style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 10px", borderRadius: 8, cursor: "pointer" }}>
                   <div>
-                    <div style={{ fontWeight: 600 }}>{m.name}</div>
-                    <div className="mono" style={{ fontSize: 12, color: C.muted }}>{m.num}</div>
+                    <div style={{ fontWeight: 700 }}>{m.name}</div>
+                    <div className="mono" style={{ fontSize: 13, color: C.muted }}>{m.num}</div>
                   </div>
                   <Badge kind={m.type} />
                 </div>
@@ -463,8 +476,8 @@ function Dispensar({ data, refresh, user, notify }) {
           <Panel style={{ padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
             <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
               <div>
-                <div style={{ fontWeight: 700 }}>{member.name}</div>
-                <div className="mono" style={{ fontSize: 12, color: C.muted }}>{member.num}</div>
+                <div style={{ fontWeight: 800 }}>{member.name}</div>
+                <div className="mono" style={{ fontSize: 13, color: C.muted }}>{member.num}</div>
               </div>
               <Badge kind={member.type} />
             </div>
@@ -477,7 +490,7 @@ function Dispensar({ data, refresh, user, notify }) {
             <div style={{ display: "flex", gap: 8, margin: "0 0 12px", flexWrap: "wrap" }}>
               {CATS.map((c) => (
                 <button key={c.id} onClick={() => setCat(c.id)}
-                  style={{ padding: "8px 14px", borderRadius: 20, border: `1px solid ${cat === c.id ? C.green : C.line}`, background: cat === c.id ? C.greenDark : "transparent", color: cat === c.id ? C.green : C.muted, fontWeight: 600, fontSize: 13 }}>
+                  style={{ padding: "8px 14px", borderRadius: 20, border: `1px solid ${cat === c.id ? C.green : C.line}`, background: cat === c.id ? C.greenDark : "transparent", color: cat === c.id ? C.green : C.muted, fontWeight: 700, fontSize: 14 }}>
                   {c.label}
                 </button>
               ))}
@@ -485,22 +498,22 @@ function Dispensar({ data, refresh, user, notify }) {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(170px, 1fr))", gap: 12 }}>
               {products.filter((p) => p.cat === cat).map((p) => (
                 <Panel key={p.id} style={{ padding: 14 }}>
-                  <div style={{ fontWeight: 700, marginBottom: 2 }}>{p.name}</div>
-                  <div className="mono" style={{ fontSize: 13, color: C.amber, marginBottom: 2 }}>{eur(priceOf(p))} / {p.unit}</div>
-                  <div className="mono" style={{ fontSize: 11, color: p.stock <= 10 ? C.red : C.muted, marginBottom: 10 }}>stock {p.stock} {p.unit}</div>
+                  <div style={{ fontWeight: 800, marginBottom: 2 }}>{p.name}</div>
+                  <div className="mono" style={{ fontSize: 14, color: C.amber, marginBottom: 2 }}>{eur(priceOf(p))} / {p.unit}</div>
+                  <div className="mono" style={{ fontSize: 12, color: p.stock <= 10 ? C.red : C.muted, marginBottom: 10 }}>stock {p.stock} {p.unit}</div>
                   {qtyFor === p.id ? (
                     <div>
                       {p.unit === "g" && (
                         <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}>
                           {gramBtns.map((g) => (
                             <button key={g} onClick={() => addToCart(p, g)} className="mono"
-                              style={{ padding: "6px 10px", borderRadius: 6, border: `1px solid ${C.line}`, background: C.surface2, color: C.text, fontSize: 13 }}>{g}g</button>
+                              style={{ padding: "6px 10px", borderRadius: 6, border: `1px solid ${C.line}`, background: C.surface2, color: C.text, fontSize: 14 }}>{g}g</button>
                           ))}
                           {scale.connected && (
                             <button className="mono" disabled={!fresh || !fresh.stable || fresh.unit !== "g" || fresh.value <= 0}
                               onClick={() => fresh && addToCart(p, +fresh.value.toFixed(2))}
                               title={fresh && fresh.unit !== "g" ? "Pon la báscula en gramos" : "Usar el peso de la báscula"}
-                              style={{ padding: "6px 10px", borderRadius: 6, border: `1px solid ${C.green}`, background: C.greenDark, color: C.green, fontSize: 13, fontWeight: 600, opacity: !fresh || !fresh.stable || fresh.unit !== "g" || fresh.value <= 0 ? 0.4 : 1 }}>
+                              style={{ padding: "6px 10px", borderRadius: 6, border: `1px solid ${C.green}`, background: C.greenDark, color: C.green, fontSize: 14, fontWeight: 700, opacity: !fresh || !fresh.stable || fresh.unit !== "g" || fresh.value <= 0 ? 0.4 : 1 }}>
                               ⚖ {fresh && fresh.unit === "g" ? `${fresh.value.toFixed(2)}g` : "báscula"}
                             </button>
                           )}
@@ -524,12 +537,12 @@ function Dispensar({ data, refresh, user, notify }) {
 
       <div className="side-col" style={{ width: 300, flexShrink: 0 }}>
         <Panel style={{ padding: 18, position: "sticky", top: 0 }}>
-          <div className="mono" style={{ textAlign: "center", color: C.muted, fontSize: 11, letterSpacing: 2, borderBottom: `1px dashed ${C.line}`, paddingBottom: 10, marginBottom: 10 }}>
+          <div className="mono" style={{ textAlign: "center", color: C.muted, fontSize: 12, letterSpacing: 2, borderBottom: `1px dashed ${C.line}`, paddingBottom: 10, marginBottom: 10 }}>
             TICKET · {user.name.toUpperCase()}
           </div>
-          {!member && <div style={{ color: C.muted, fontSize: 13, textAlign: "center", padding: "18px 0" }}>Selecciona un socio para empezar</div>}
+          {!member && <div style={{ color: C.muted, fontSize: 14, textAlign: "center", padding: "18px 0" }}>Selecciona un socio para empezar</div>}
           {member && (
-            <div className="mono" style={{ fontSize: 13 }}>
+            <div className="mono" style={{ fontSize: 14 }}>
               <div style={{ color: C.muted, marginBottom: 8 }}>{member.num} · {member.type?.toUpperCase()}</div>
               {cart.length === 0 && <div style={{ color: C.muted, padding: "10px 0" }}>— sin artículos —</div>}
               {cart.map((i, idx) => (
@@ -540,13 +553,13 @@ function Dispensar({ data, refresh, user, notify }) {
                   <button onClick={() => setCart((c) => c.filter((_, j) => j !== idx))} style={{ background: "none", border: "none", color: C.red, padding: 0 }}>✕</button>
                 </div>
               ))}
-              <div style={{ borderTop: `1px dashed ${C.line}`, marginTop: 10, paddingTop: 10, display: "flex", justifyContent: "space-between", fontSize: 16, fontWeight: 600 }}>
+              <div style={{ borderTop: `1px dashed ${C.line}`, marginTop: 10, paddingTop: 10, display: "flex", justifyContent: "space-between", fontSize: 17, fontWeight: 700 }}>
                 <span>TOTAL</span><span style={{ color: C.amber }}>{eur(total)}</span>
               </div>
               <div style={{ display: "flex", gap: 8, margin: "14px 0" }}>
                 {["efectivo", "tarjeta"].map((p) => (
                   <button key={p} onClick={() => setPayment(p)}
-                    style={{ flex: 1, padding: "9px 0", borderRadius: 8, border: `1px solid ${payment === p ? C.green : C.line}`, background: payment === p ? C.greenDark : "transparent", color: payment === p ? C.green : C.muted, fontWeight: 600, fontSize: 13 }}>
+                    style={{ flex: 1, padding: "9px 0", borderRadius: 8, border: `1px solid ${payment === p ? C.green : C.line}`, background: payment === p ? C.greenDark : "transparent", color: payment === p ? C.green : C.muted, fontWeight: 700, fontSize: 14 }}>
                     {p === "efectivo" ? "Efectivo" : "Tarjeta"}
                   </button>
                 ))}
@@ -562,62 +575,117 @@ function Dispensar({ data, refresh, user, notify }) {
   );
 }
 
-/* ============================ SOCIOS + PRE-REGISTRO ============================ */
+/* ============================ SOCIOS ============================ */
+
+/* client-side selfie resize → JPEG data URL (~keeps uploads small) */
+function fileToDataUrl(file, maxSide = 640) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL("image/jpeg", 0.82));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("bad_image")); };
+    img.src = url;
+  });
+}
+
+const Avatar = ({ photo, name, size = 56 }) => photo ? (
+  <img src={photo} alt={name} style={{ width: size, height: size, borderRadius: "50%", objectFit: "cover", border: `2px solid ${C.greenDark}`, flexShrink: 0 }} />
+) : (
+  <div className="mono" style={{ width: size, height: size, borderRadius: "50%", background: C.greenDark, color: C.green, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: size / 2.6, flexShrink: 0 }}>
+    {(name || "?").split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase()}
+  </div>
+);
+
+/* 30-day single-series bar chart (per dataviz spec: thin bars, 2px gaps,
+   recessive grid, direct label on the max only, per-bar tooltip) */
+function BarChart({ data, color, fmt }) {
+  const W = 320, H = 100, padL = 4, padR = 4, padT = 16, padB = 15;
+  const max = Math.max(...data.map((d) => d.v), 0);
+  if (max <= 0) return <div style={{ color: C.muted, fontSize: 14, padding: "14px 0" }}>Sin movimientos en 30 días.</div>;
+  const iw = (W - padL - padR) / data.length;
+  const bw = Math.max(2, iw - 2);
+  const plotH = H - padT - padB;
+  const maxIdx = data.reduce((mi, d, i) => (d.v > data[mi].v ? i : mi), 0);
+  const labelX = Math.min(Math.max(padL + maxIdx * iw + bw / 2, 24), W - 24);
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: "auto", display: "block" }} role="img">
+      {[0.5, 1].map((f) => (
+        <line key={f} x1={padL} x2={W - padR} y1={H - padB - plotH * f} y2={H - padB - plotH * f} stroke={C.line} strokeWidth="0.6" />
+      ))}
+      <line x1={padL} x2={W - padR} y1={H - padB} y2={H - padB} stroke={C.line} strokeWidth="1" />
+      {data.map((d, i) => {
+        const h = (d.v / max) * plotH;
+        return (
+          <rect key={d.date} x={padL + i * iw + 1} y={H - padB - h} width={bw} height={Math.max(h, d.v > 0 ? 1.5 : 0)} rx="1.5" fill={color} opacity={i === maxIdx ? 1 : 0.82}>
+            <title>{`${dateES(d.date)} · ${fmt(d.v)}`}</title>
+          </rect>
+        );
+      })}
+      <text x={labelX} y={H - padB - (data[maxIdx].v / max) * plotH - 5} textAnchor="middle" fontSize="10.5" fontWeight="700" fill={C.text} fontFamily="'IBM Plex Mono', monospace">{fmt(data[maxIdx].v)}</text>
+      {data.map((d, i) => (i % 7 === 3 ? (
+        <text key={"t" + d.date} x={padL + i * iw + bw / 2} y={H - 4} textAnchor="middle" fontSize="8.5" fill={C.muted} fontFamily="'IBM Plex Mono', monospace">{d.date.slice(8, 10)}/{d.date.slice(5, 7)}</text>
+      ) : null))}
+    </svg>
+  );
+}
+
+const EMPTY_NEW_MEMBER = { name: "", nationality: "", phone: "", email: "", type: "local", photo: null };
+
 function Socios({ data, refresh, notify }) {
-  const { members, invites } = data;
+  const { members } = data;
   const [q, setQ] = useState("");
-  const [sel, setSel] = useState(null);
+  const [selId, setSelId] = useState(null);
+  const [detail, setDetail] = useState(null);   // full member incl photo
+  const [stats, setStats] = useState(null);
   const [history, setHistory] = useState([]);
   const [approveType, setApproveType] = useState({});
-  const [showInvite, setShowInvite] = useState(false);
-  const [sponsorId, setSponsorId] = useState("");
-  const [showForm, setShowForm] = useState(false);
-  const [fName, setFName] = useState(""); const [fNat, setFNat] = useState(""); const [fCode, setFCode] = useState("");
-  const [fPhone, setFPhone] = useState(""); const [fEmail, setFEmail] = useState("");
+  const [showAdd, setShowAdd] = useState(false);
+  const [nm, setNm] = useState(EMPTY_NEW_MEMBER);
+  const [saving, setSaving] = useState(false);
 
   const pending = members.filter((m) => m.status === "pendiente");
   const active = members.filter((m) => m.status === "activo" && (m.name + m.num).toLowerCase().includes(q.toLowerCase()));
-  const openInvites = invites.filter((i) => !i.usedBy);
 
   useEffect(() => {
-    if (!sel) { setHistory([]); return; }
+    if (!selId) { setDetail(null); setStats(null); setHistory([]); return; }
     let alive = true;
-    api.get(`/api/members/${sel.id}/sales`).then((h) => { if (alive) setHistory(h); }).catch(() => {});
+    api.get(`/api/members/${selId}`).then((d) => alive && setDetail(d)).catch(() => {});
+    api.get(`/api/members/${selId}/stats`).then((s) => alive && setStats(s)).catch(() => {});
+    api.get(`/api/members/${selId}/sales`).then((h) => alive && setHistory(h)).catch(() => {});
     return () => { alive = false; };
-  }, [sel]);
+  }, [selId]);
 
-  const createInvite = async () => {
-    try {
-      const r = await api.post("/api/invites", { sponsorId });
-      notify(`Invitación creada: ${r.code}`);
-      setShowInvite(false); setSponsorId("");
-      refresh();
-    } catch {
-      notify("No se pudo crear la invitación");
-    }
+  const onPhoto = async (e, setter, current) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    try { setter({ ...current, photo: await fileToDataUrl(f) }); }
+    catch { notify("No se pudo leer la imagen"); }
   };
 
-  const submitForm = async () => {
-    if (!fName.trim()) return;
+  const saveNew = async () => {
+    if (!nm.name.trim() || saving) { if (!nm.name.trim()) notify("El nombre es obligatorio"); return; }
+    setSaving(true);
     try {
-      await api.post("/api/applications", { name: fName, nationality: fNat, code: fCode, phone: fPhone, email: fEmail });
-      notify("Solicitud recibida — pendiente de aprobación");
-      setShowForm(false); setFName(""); setFNat(""); setFCode(""); setFPhone(""); setFEmail("");
-      refresh();
-    } catch (e) {
-      notify(e.data?.error === "bad_invite" ? "Código de invitación no válido o ya usado" : "No se pudo enviar la solicitud");
-    }
-  };
-
-  const removeMember = async (m) => {
-    if (!window.confirm(`¿Dar de baja a ${m.name} (${m.num || "pendiente"})?\nSu historial se conserva pero dejará de aparecer en las listas.`)) return;
-    try {
-      await api.del(`/api/members/${m.id}`);
-      notify(`${m.name} dado de baja`);
-      setSel(null);
+      const r = await api.post("/api/members", nm);
+      const msg = { sent: `${r.member.num} creado — email de bienvenida enviado`,
+        not_configured: `${r.member.num} creado — configura el email (SMTP) para el envío automático`,
+        no_email: `${r.member.num} creado — sin email, entrégale el carnet en el club`,
+        failed: `${r.member.num} creado — el email falló, reintenta desde su ficha` }[r.emailStatus] || `${r.member.num} creado`;
+      notify(msg);
+      setShowAdd(false); setNm(EMPTY_NEW_MEMBER);
       refresh();
     } catch {
-      notify("No se pudo dar de baja");
+      notify("No se pudo crear el socio");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -632,74 +700,45 @@ function Socios({ data, refresh, notify }) {
     }
   };
 
+  const removeMember = async (m) => {
+    if (!window.confirm(`¿Dar de baja a ${m.name} (${m.num || "pendiente"})?\nSu historial se conserva pero dejará de aparecer en las listas.`)) return;
+    try {
+      await api.del(`/api/members/${m.id}`);
+      notify(`${m.name} dado de baja`);
+      setSelId(null);
+      refresh();
+    } catch {
+      notify("No se pudo dar de baja");
+    }
+  };
+
+  const inputStyle = { padding: "12px 14px", background: C.bg, border: `1px solid ${C.line}`, borderRadius: 8, color: C.text, fontSize: 16, width: "100%", minWidth: 0 };
+  const P = stats;
+  const periods = P ? [["7 DÍAS", P.d7], ["30 DÍAS", P.d30], ["6 MESES", P.d180], ["1 AÑO", P.d365]] : [];
+
   return (
     <div className="fadein">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
-        <h2 style={{ margin: 0, fontSize: 22 }}>Socios</h2>
-        <div style={{ display: "flex", gap: 8 }}>
-          <Btn size="sm" onClick={() => { setShowInvite(!showInvite); setShowForm(false); }}>+ Invitación</Btn>
-          <Btn size="sm" onClick={() => { setShowForm(!showForm); setShowInvite(false); }}>Registrar solicitud</Btn>
-        </div>
+        <h2 style={{ margin: 0, fontSize: 24 }}>Socios</h2>
+        <Btn kind="primary" onClick={() => setShowAdd(true)}>＋ Añadir nuevo socio</Btn>
       </div>
-
-      {showInvite && (
-        <Panel style={{ padding: 18, marginBottom: 16 }}>
-          <div style={{ fontWeight: 700, marginBottom: 4 }}>Nueva invitación (pre-registro)</div>
-          <div style={{ fontSize: 13, color: C.muted, marginBottom: 12 }}>Un socio activo avala al nuevo. El código se entrega al interesado para el formulario de la web.</div>
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <select value={sponsorId} onChange={(e) => setSponsorId(e.target.value)}
-              style={{ flex: 1, minWidth: 220, padding: "11px 14px", background: C.bg, border: `1px solid ${C.line}`, borderRadius: 8, color: C.text, fontSize: 15 }}>
-              <option value="">Socio avalista…</option>
-              {members.filter((m) => m.status === "activo").map((m) => <option key={m.id} value={m.id}>{m.num} · {m.name}</option>)}
-            </select>
-            <Btn kind="primary" onClick={createInvite} disabled={!sponsorId}>Generar código</Btn>
-          </div>
-          {openInvites.length > 0 && (
-            <div style={{ marginTop: 14 }}>
-              <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 6 }}>INVITACIONES ABIERTAS</div>
-              {openInvites.map((i) => (
-                <div key={i.code} className="mono" style={{ display: "flex", gap: 12, fontSize: 13, padding: "6px 0", borderTop: `1px solid ${C.line}`, flexWrap: "wrap" }}>
-                  <span style={{ color: C.amber, fontWeight: 600 }}>{i.code}</span>
-                  <span style={{ color: C.muted }}>avala {i.sponsorName} ({i.sponsorNum})</span>
-                  <span style={{ color: C.muted }}>· {i.created}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </Panel>
-      )}
-
-      {showForm && (
-        <Panel style={{ padding: 18, marginBottom: 16 }}>
-          <div style={{ fontWeight: 700, marginBottom: 4 }}>Nueva solicitud de socio</div>
-          <div style={{ fontSize: 13, color: C.muted, marginBottom: 12 }}>Registra aquí una solicitud presencial o llegada por la web.</div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10 }}>
-            <Field placeholder="Nombre completo" value={fName} onChange={(e) => setFName(e.target.value)} />
-            <Field placeholder="Nacionalidad" value={fNat} onChange={(e) => setFNat(e.target.value)} />
-            <Field placeholder="Teléfono" inputMode="tel" value={fPhone} onChange={(e) => setFPhone(e.target.value)} />
-            <Field placeholder="Email" type="email" value={fEmail} onChange={(e) => setFEmail(e.target.value)} />
-            <Field placeholder="Código invitación (opcional)" value={fCode} onChange={(e) => setFCode(e.target.value)} />
-          </div>
-          <div style={{ marginTop: 12 }}><Btn kind="primary" onClick={submitForm}>Enviar solicitud</Btn></div>
-        </Panel>
-      )}
 
       {pending.length > 0 && (
         <Panel style={{ padding: 18, marginBottom: 20, borderColor: C.amber + "66" }}>
-          <div style={{ fontWeight: 700, marginBottom: 10 }}>Solicitudes pendientes <span className="mono" style={{ color: C.amber }}>({pending.length})</span></div>
+          <div style={{ fontWeight: 800, marginBottom: 10, fontSize: 17 }}>Solicitudes de la web <span className="mono" style={{ color: C.amber }}>({pending.length})</span></div>
           {pending.map((m) => (
             <div key={m.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "10px 0", borderTop: `1px solid ${C.line}`, flexWrap: "wrap" }}>
               <div>
-                <div style={{ fontWeight: 600 }}>{m.name}</div>
-                <div className="mono" style={{ fontSize: 12, color: C.muted }}>
-                  {m.nationality} · solicitud {m.joined}{m.sponsor ? ` · avalado por ${m.sponsor}` : " · sin aval"}
+                <div style={{ fontWeight: 700, fontSize: 16 }}>{m.name}</div>
+                <div className="mono" style={{ fontSize: 13, color: C.muted }}>
+                  {m.nationality} · solicitud {m.joined}
                   {m.phone ? ` · 📞 ${m.phone}` : ""}{m.email ? ` · ✉ ${m.email}` : ""}
                 </div>
               </div>
               <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                 {["local", "turista"].map((t) => (
                   <button key={t} onClick={() => setApproveType((s) => ({ ...s, [m.id]: t }))}
-                    style={{ padding: "7px 12px", borderRadius: 8, fontSize: 13, fontWeight: 600, border: `1px solid ${(approveType[m.id] || "local") === t ? C.green : C.line}`, background: (approveType[m.id] || "local") === t ? C.greenDark : "transparent", color: (approveType[m.id] || "local") === t ? C.green : C.muted }}>
+                    style={{ padding: "8px 13px", borderRadius: 8, fontSize: 14, fontWeight: 700, border: `1px solid ${(approveType[m.id] || "local") === t ? C.green : C.line}`, background: (approveType[m.id] || "local") === t ? C.greenDark : "transparent", color: (approveType[m.id] || "local") === t ? C.green : C.muted }}>
                     {t === "local" ? "Local" : "Turista"}
                   </button>
                 ))}
@@ -710,59 +749,144 @@ function Socios({ data, refresh, notify }) {
         </Panel>
       )}
 
-      <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
-        <Panel style={{ flex: 1, padding: 18, minWidth: 300 }}>
-          <Field placeholder="Buscar socio…" value={q} onChange={(e) => setQ(e.target.value)} style={{ marginBottom: 10 }} />
-          {active.map((m) => (
-            <div key={m.id} className="row" onClick={() => setSel(m)}
-              style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "11px 10px", borderRadius: 8, cursor: "pointer", background: sel?.id === m.id ? C.surface2 : "transparent" }}>
+      <Panel style={{ padding: 18 }}>
+        <Field placeholder="Buscar socio…" value={q} onChange={(e) => setQ(e.target.value)} style={{ marginBottom: 10 }} />
+        {active.map((m) => (
+          <div key={m.id} className="row" onClick={() => setSelId(m.id)}
+            style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "11px 10px", borderRadius: 8, cursor: "pointer" }}>
+            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+              <Avatar photo={null} name={m.name} size={42} />
               <div>
-                <div style={{ fontWeight: 600 }}>{m.name}</div>
-                <div className="mono" style={{ fontSize: 12, color: C.muted }}>{m.num} · alta {m.joined}</div>
+                <div style={{ fontWeight: 700, fontSize: 16 }}>{m.name}</div>
+                <div className="mono" style={{ fontSize: 13, color: C.muted }}>{m.num} · alta {m.joined}</div>
               </div>
-              <Badge kind={m.type} />
             </div>
-          ))}
-        </Panel>
+            <Badge kind={m.type} />
+          </div>
+        ))}
+        {active.length === 0 && <div style={{ color: C.muted, fontSize: 15, padding: 8 }}>Sin resultados.</div>}
+      </Panel>
 
-        <Panel className="side-col" style={{ width: 340, padding: 18, flexShrink: 0 }}>
-          {!sel ? (
-            <div style={{ color: C.muted, fontSize: 14 }}>Selecciona un socio para ver su ficha.</div>
-          ) : (
-            <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: 17 }}>{sel.name}</div>
-                  <div className="mono" style={{ fontSize: 12, color: C.muted, margin: "2px 0 4px" }}>
-                    {sel.num} · {sel.nationality}{sel.sponsor ? ` · avalado por ${sel.sponsor}` : ""}
-                  </div>
-                  {(sel.phone || sel.email) && (
-                    <div className="mono" style={{ fontSize: 12, color: C.muted, marginBottom: 4 }}>
-                      {sel.phone ? `📞 ${sel.phone}` : ""}{sel.phone && sel.email ? " · " : ""}{sel.email ? `✉ ${sel.email}` : ""}
-                    </div>
-                  )}
-                </div>
-                <button onClick={() => removeMember(sel)}
-                  style={{ background: "none", border: `1px solid ${C.line}`, color: C.red, borderRadius: 8, padding: "5px 10px", fontSize: 12, fontWeight: 600, flexShrink: 0 }}>
-                  Dar de baja
-                </button>
-              </div>
-              <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, margin: "8px 0" }}>HISTORIAL DE CONSUMO</div>
-              {history.length === 0 && <div style={{ color: C.muted, fontSize: 13 }}>Sin dispensaciones registradas.</div>}
-              {history.map((s) => (
-                <div key={s.id} style={{ borderTop: `1px dashed ${C.line}`, padding: "8px 0" }} className="mono">
-                  <div style={{ fontSize: 11, color: C.muted }}>{new Date(s.ts).toLocaleDateString("es-ES")} · {timeStr(s.ts)} · {s.employeeName}</div>
-                  {s.items.map((i, idx) => (
-                    <div key={idx} style={{ display: "flex", justifyContent: "space-between", fontSize: 13 }}>
-                      <span>{i.name}</span><span style={{ color: C.muted }}>{i.qty}{i.unit === "g" ? "g" : "×"}</span><span style={{ color: C.amber }}>{eur(i.qty * i.price)}</span>
-                    </div>
+      {/* ---- add member sheet ---- */}
+      {showAdd && (
+        <>
+          <div className="drawer-backdrop" onClick={() => !saving && setShowAdd(false)} />
+          <div className="sheet fadein">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+              <h3 style={{ margin: 0, fontSize: 20 }}>Añadir nuevo socio</h3>
+              <button onClick={() => !saving && setShowAdd(false)} style={{ background: "none", border: "none", color: C.muted, fontSize: 22, cursor: "pointer", padding: 4 }}>✕</button>
+            </div>
+            <div style={{ fontSize: 14, color: C.muted, marginBottom: 14 }}>
+              Al guardar se le asigna su número OL y, si tiene email, recibe automáticamente su carnet en PDF con la bienvenida y las condiciones del club.
+            </div>
+            <div style={{ display: "flex", gap: 16, alignItems: "flex-start", flexWrap: "wrap" }}>
+              <label style={{ cursor: "pointer", textAlign: "center" }}>
+                <Avatar photo={nm.photo} name={nm.name || "?"} size={96} />
+                <div style={{ color: C.green, fontSize: 13, fontWeight: 700, marginTop: 6 }}>{nm.photo ? "Cambiar foto" : "📷 Subir selfie"}</div>
+                <input type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => onPhoto(e, setNm, nm)} />
+              </label>
+              <div style={{ flex: 1, minWidth: 220, display: "grid", gap: 10 }}>
+                <input style={inputStyle} placeholder="Nombre completo *" value={nm.name} onChange={(e) => setNm({ ...nm, name: e.target.value })} />
+                <input style={inputStyle} placeholder="Nacionalidad" value={nm.nationality} onChange={(e) => setNm({ ...nm, nationality: e.target.value })} />
+                <input style={inputStyle} placeholder="Teléfono (WhatsApp)" inputMode="tel" value={nm.phone} onChange={(e) => setNm({ ...nm, phone: e.target.value })} />
+                <input style={inputStyle} placeholder="Email" type="email" value={nm.email} onChange={(e) => setNm({ ...nm, email: e.target.value })} />
+                <div style={{ display: "flex", gap: 8 }}>
+                  {["local", "turista"].map((t) => (
+                    <button key={t} onClick={() => setNm({ ...nm, type: t })}
+                      style={{ flex: 1, padding: "11px 0", borderRadius: 8, fontSize: 15, fontWeight: 700, border: `1px solid ${nm.type === t ? C.green : C.line}`, background: nm.type === t ? C.greenDark : "transparent", color: nm.type === t ? C.green : C.muted }}>
+                      {t === "local" ? "Local" : "Turista"}
+                    </button>
                   ))}
                 </div>
-              ))}
+              </div>
             </div>
-          )}
-        </Panel>
-      </div>
+            <div style={{ marginTop: 16 }}>
+              <Btn kind="primary" size="lg" style={{ width: "100%" }} disabled={saving || !nm.name.trim()} onClick={saveNew}>
+                {saving ? "Guardando…" : "Guardar socio y enviar carnet"}
+              </Btn>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* ---- member profile sheet ---- */}
+      {selId && (
+        <>
+          <div className="drawer-backdrop" onClick={() => setSelId(null)} />
+          <div className="sheet fadein">
+            {!detail ? (
+              <div style={{ color: C.muted, padding: 20 }}>Cargando ficha…</div>
+            ) : (
+              <>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
+                  <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
+                    <Avatar photo={detail.photo} name={detail.name} size={84} />
+                    <div>
+                      <div style={{ fontWeight: 800, fontSize: 21, display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>{detail.name} <Badge kind={detail.type} /></div>
+                      <div className="mono" style={{ fontSize: 16, color: C.amber, fontWeight: 700, margin: "2px 0" }}>{detail.num}</div>
+                      <div className="mono" style={{ fontSize: 13, color: C.muted }}>
+                        {detail.nationality} · alta {detail.joined}{detail.sponsor ? ` · avalado por ${detail.sponsor}` : ""}
+                      </div>
+                      {(detail.phone || detail.email) && (
+                        <div className="mono" style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>
+                          {detail.phone ? `📞 ${detail.phone}` : ""}{detail.phone && detail.email ? " · " : ""}{detail.email ? `✉ ${detail.email}` : ""}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <button onClick={() => setSelId(null)} style={{ background: "none", border: "none", color: C.muted, fontSize: 22, cursor: "pointer", padding: 4 }}>✕</button>
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: 10, margin: "18px 0" }}>
+                  {periods.map(([label, v]) => (
+                    <div key={label} style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 10, padding: "12px 14px" }}>
+                      <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 4 }}>{label}</div>
+                      <div className="mono" style={{ fontSize: 18, fontWeight: 800, color: C.amber }}>{eur(v.spent)}</div>
+                      <div className="mono" style={{ fontSize: 14, color: C.green, fontWeight: 700 }}>{v.grams} g · {v.ops} ops</div>
+                    </div>
+                  ))}
+                  {!P && <div style={{ color: C.muted, fontSize: 14 }}>Cargando estadísticas…</div>}
+                </div>
+
+                {P && (
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 14, marginBottom: 18 }}>
+                    <div style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 10, padding: 14 }}>
+                      <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 8 }}>GASTO · ÚLTIMOS 30 DÍAS</div>
+                      <BarChart data={P.daily.map((d) => ({ date: d.date, v: d.spent }))} color={C.amber} fmt={(v) => eur(v)} />
+                    </div>
+                    <div style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 10, padding: 14 }}>
+                      <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 8 }}>CONSUMO (g) · ÚLTIMOS 30 DÍAS</div>
+                      <BarChart data={P.daily.map((d) => ({ date: d.date, v: d.grams }))} color={C.green} fmt={(v) => `${v} g`} />
+                    </div>
+                  </div>
+                )}
+
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 18 }}>
+                  {!DEMO && (
+                    <a href={`/api/members/${detail.id}/card.pdf`} style={{ textDecoration: "none" }}>
+                      <Btn>📄 Descargar carnet PDF</Btn>
+                    </a>
+                  )}
+                  <Btn style={{ color: C.red, borderColor: C.red }} onClick={() => removeMember(detail)}>Dar de baja</Btn>
+                </div>
+
+                <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 8 }}>HISTORIAL DE CONSUMO</div>
+                {history.length === 0 && <div style={{ color: C.muted, fontSize: 14 }}>Sin dispensaciones registradas.</div>}
+                {history.map((s) => (
+                  <div key={s.id} style={{ borderTop: `1px dashed ${C.line}`, padding: "8px 0" }} className="mono">
+                    <div style={{ fontSize: 12, color: C.muted }}>{new Date(s.ts).toLocaleDateString("es-ES")} · {timeStr(s.ts)} · {s.employeeName}</div>
+                    {s.items.map((i, idx) => (
+                      <div key={idx} style={{ display: "flex", justifyContent: "space-between", fontSize: 14 }}>
+                        <span>{i.name}</span><span style={{ color: C.muted }}>{i.qty}{i.unit === "g" ? "g" : "×"}</span><span style={{ color: C.amber }}>{eur(i.qty * i.price)}</span>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -831,18 +955,18 @@ function Inventario({ data, refresh, notify }) {
     }
   };
 
-  const inputStyle = { padding: "9px 10px", background: C.bg, border: `1px solid ${C.line}`, borderRadius: 6, color: C.text, fontSize: 14, width: "100%", minWidth: 0 };
+  const inputStyle = { padding: "9px 10px", background: C.bg, border: `1px solid ${C.line}`, borderRadius: 6, color: C.text, fontSize: 15, width: "100%", minWidth: 0 };
 
   return (
     <div className="fadein">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap", margin: "0 0 16px" }}>
-        <h2 style={{ margin: 0, fontSize: 22 }}>Inventario</h2>
+        <h2 style={{ margin: 0, fontSize: 24 }}>Inventario</h2>
         <Btn size="sm" kind="primary" onClick={() => setShowNew(!showNew)}>{showNew ? "Cancelar" : "+ Producto"}</Btn>
       </div>
 
       {showNew && (
         <Panel style={{ padding: 18, marginBottom: 16 }}>
-          <div style={{ fontWeight: 700, marginBottom: 10 }}>Nuevo producto</div>
+          <div style={{ fontWeight: 800, marginBottom: 10 }}>Nuevo producto</div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 10 }}>
             <input style={inputStyle} placeholder="Nombre" value={np.name} onChange={(e) => setNp({ ...np, name: e.target.value })} />
             <select style={inputStyle} value={np.cat} onChange={(e) => setNp({ ...np, cat: e.target.value })}>
@@ -861,11 +985,11 @@ function Inventario({ data, refresh, notify }) {
       )}
 
       <Panel className="table-wrap">
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 15 }}>
           <thead>
-            <tr className="mono" style={{ color: C.muted, fontSize: 11, letterSpacing: 1, textAlign: "left" }}>
+            <tr className="mono" style={{ color: C.muted, fontSize: 12, letterSpacing: 1, textAlign: "left" }}>
               {["PRODUCTO", "CATEGORÍA", "P. LOCAL", "P. TURISTA", "STOCK", ""].map((h) => (
-                <th key={h} style={{ padding: "12px 16px", borderBottom: `1px solid ${C.line}`, fontWeight: 500 }}>{h}</th>
+                <th key={h} style={{ padding: "12px 16px", borderBottom: `1px solid ${C.line}`, fontWeight: 700 }}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -893,12 +1017,12 @@ function Inventario({ data, refresh, notify }) {
                 </tr>
               ) : (
                 <tr key={p.id} className="row">
-                  <td style={{ padding: "12px 16px", fontWeight: 600 }}>{p.name}</td>
+                  <td style={{ padding: "12px 16px", fontWeight: 700 }}>{p.name}</td>
                   <td style={{ padding: "12px 16px", color: C.muted }}>{CATS.find((c) => c.id === p.cat)?.label}</td>
                   <td className="mono" style={{ padding: "12px 16px", color: C.amber }}>{eur(p.priceLocal)}/{p.unit}</td>
                   <td className="mono" style={{ padding: "12px 16px", color: C.amber }}>{eur(p.priceTourist)}/{p.unit}</td>
                   <td className="mono" style={{ padding: "12px 16px", color: p.stock <= 10 ? C.red : C.text }}>
-                    {p.stock} {p.unit} {p.stock <= 10 && <span style={{ fontSize: 10, letterSpacing: 1 }}>· BAJO</span>}
+                    {p.stock} {p.unit} {p.stock <= 10 && <span style={{ fontSize: 11, letterSpacing: 1 }}>· BAJO</span>}
                   </td>
                   <td style={{ padding: "12px 16px", textAlign: "right", whiteSpace: "nowrap" }}>
                     {adding === p.id ? (
@@ -999,28 +1123,28 @@ function Informes({ data }) {
 
   const Stat = ({ label, value, color }) => (
     <Panel style={{ padding: 18, flex: 1, minWidth: 150 }}>
-      <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 6 }}>{label}</div>
-      <div className="mono" style={{ fontSize: 24, fontWeight: 600, color: color || C.text }}>{value}</div>
+      <div className="mono" style={{ fontSize: 12, color: C.muted, letterSpacing: 2, marginBottom: 6 }}>{label}</div>
+      <div className="mono" style={{ fontSize: 26, fontWeight: 700, color: color || C.text }}>{value}</div>
     </Panel>
   );
 
   return (
     <div className="fadein">
-      <h2 style={{ margin: "0 0 16px", fontSize: 22 }}>Informes</h2>
+      <h2 style={{ margin: "0 0 16px", fontSize: 24 }}>Informes</h2>
 
       {/* period controls */}
       <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 18, flexWrap: "wrap" }}>
         <div style={{ display: "flex", border: `1px solid ${C.line}`, borderRadius: 10, overflow: "hidden" }}>
           {[["dia", "Día"], ["semana", "Semana"], ["mes", "Mes"]].map(([id, l]) => (
             <button key={id} onClick={() => { setPeriod(id); setOpenDay(null); }}
-              style={{ padding: "10px 18px", border: "none", fontWeight: 600, fontSize: 14, background: period === id ? C.greenDark : "transparent", color: period === id ? C.green : C.muted }}>
+              style={{ padding: "10px 18px", border: "none", fontWeight: 700, fontSize: 15, background: period === id ? C.greenDark : "transparent", color: period === id ? C.green : C.muted }}>
               {l}
             </button>
           ))}
         </div>
         <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
           <Btn size="sm" onClick={() => move(-1)}>←</Btn>
-          <span className="mono" style={{ fontSize: 13, color: C.text, minWidth: 170, textAlign: "center", textTransform: "capitalize" }}>{range.label}</span>
+          <span className="mono" style={{ fontSize: 14, color: C.text, minWidth: 170, textAlign: "center", textTransform: "capitalize" }}>{range.label}</span>
           <Btn size="sm" onClick={() => move(1)}>→</Btn>
           <Btn size="sm" onClick={() => { setAnchor(todayISO()); setOpenDay(null); }}>Hoy</Btn>
         </div>
@@ -1036,25 +1160,25 @@ function Informes({ data }) {
 
       {period !== "dia" && (
         <Panel style={{ padding: 18, marginBottom: 20 }}>
-          <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 12 }}>FACTURACIÓN POR DÍA</div>
-          {days.length === 0 && <div style={{ color: C.muted, fontSize: 13 }}>Sin movimientos en este periodo.</div>}
+          <div className="mono" style={{ fontSize: 12, color: C.muted, letterSpacing: 2, marginBottom: 12 }}>FACTURACIÓN POR DÍA</div>
+          {days.length === 0 && <div style={{ color: C.muted, fontSize: 14 }}>Sin movimientos en este periodo.</div>}
           {days.map(([d, v]) => (
             <div key={d}>
               <div className="row" onClick={() => setOpenDay(openDay === d ? null : d)}
                 style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 6px", borderRadius: 8, cursor: "pointer" }}>
-                <span className="mono" style={{ width: 110, fontSize: 13, textTransform: "capitalize" }}>{dateES(d)}</span>
+                <span className="mono" style={{ width: 110, fontSize: 14, textTransform: "capitalize" }}>{dateES(d)}</span>
                 <div style={{ flex: 1, height: 10, background: C.bg, borderRadius: 5, overflow: "hidden" }}>
                   <div style={{ width: `${(v.total / maxDay) * 100}%`, height: "100%", background: C.green }} />
                 </div>
-                <span className="mono" style={{ fontSize: 13, color: C.muted, width: 60, textAlign: "right" }}>{v.n} ops</span>
-                <span className="mono" style={{ fontSize: 13, color: C.amber, width: 90, textAlign: "right" }}>{eur(v.total)}</span>
+                <span className="mono" style={{ fontSize: 14, color: C.muted, width: 60, textAlign: "right" }}>{v.n} ops</span>
+                <span className="mono" style={{ fontSize: 14, color: C.amber, width: 90, textAlign: "right" }}>{eur(v.total)}</span>
               </div>
               {openDay === d && (
                 <div className="day-detail" style={{ margin: "4px 0 10px 116px" }}>
                   {[...v.sales].sort((a, b) => b.ts - a.ts).map((s) => {
                     const m = members.find((x) => x.id === s.memberId);
                     return (
-                      <div key={s.id} className="mono" style={{ display: "flex", gap: 12, fontSize: 12, color: C.muted, padding: "4px 0", flexWrap: "wrap" }}>
+                      <div key={s.id} className="mono" style={{ display: "flex", gap: 12, fontSize: 13, color: C.muted, padding: "4px 0", flexWrap: "wrap" }}>
                         <span>{timeStr(s.ts)}</span>
                         <span style={{ color: C.text }}>{m?.name || "—"}</span>
                         <span>{s.items.map((i) => `${i.name} ${i.qty}${i.unit === "g" ? "g" : "×"}`).join(", ")}</span>
@@ -1073,22 +1197,22 @@ function Informes({ data }) {
 
       <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
         <Panel style={{ flex: 1, padding: 18, minWidth: 280 }}>
-          <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 12 }}>POR EMPLEADO</div>
-          {Object.keys(byEmp).length === 0 && <div style={{ color: C.muted, fontSize: 13 }}>Sin movimientos.</div>}
+          <div className="mono" style={{ fontSize: 12, color: C.muted, letterSpacing: 2, marginBottom: 12 }}>POR EMPLEADO</div>
+          {Object.keys(byEmp).length === 0 && <div style={{ color: C.muted, fontSize: 14 }}>Sin movimientos.</div>}
           {Object.entries(byEmp).sort((a, b) => b[1].t - a[1].t).map(([name, v]) => (
             <div key={name} style={{ display: "flex", justifyContent: "space-between", padding: "9px 0", borderTop: `1px solid ${C.line}` }}>
-              <span style={{ fontWeight: 600 }}>{name}</span>
+              <span style={{ fontWeight: 700 }}>{name}</span>
               <span className="mono" style={{ color: C.muted }}>{v.n} ops</span>
               <span className="mono" style={{ color: C.amber }}>{eur(v.t)}</span>
             </div>
           ))}
         </Panel>
         <Panel style={{ flex: 1, padding: 18, minWidth: 280 }}>
-          <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 12 }}>POR PRODUCTO</div>
-          {prodRows.length === 0 && <div style={{ color: C.muted, fontSize: 13 }}>Sin movimientos.</div>}
+          <div className="mono" style={{ fontSize: 12, color: C.muted, letterSpacing: 2, marginBottom: 12 }}>POR PRODUCTO</div>
+          {prodRows.length === 0 && <div style={{ color: C.muted, fontSize: 14 }}>Sin movimientos.</div>}
           {prodRows.map(([name, d]) => (
             <div key={name} style={{ display: "flex", justifyContent: "space-between", padding: "9px 0", borderTop: `1px solid ${C.line}` }}>
-              <span style={{ fontWeight: 600 }}>{name}</span>
+              <span style={{ fontWeight: 700 }}>{name}</span>
               <span className="mono" style={{ color: C.muted }}>{+d.qty.toFixed(2)} {d.unit}</span>
               <span className="mono" style={{ color: C.amber }}>{eur(d.rev)}</span>
             </div>
@@ -1098,12 +1222,12 @@ function Informes({ data }) {
 
       {period === "dia" && (
         <Panel style={{ marginTop: 20, padding: 18 }}>
-          <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 12 }}>REGISTRO DEL DÍA</div>
-          {inRange.length === 0 && <div style={{ color: C.muted, fontSize: 13 }}>Sin dispensaciones este día.</div>}
+          <div className="mono" style={{ fontSize: 12, color: C.muted, letterSpacing: 2, marginBottom: 12 }}>REGISTRO DEL DÍA</div>
+          {inRange.length === 0 && <div style={{ color: C.muted, fontSize: 14 }}>Sin dispensaciones este día.</div>}
           {[...inRange].sort((a, b) => b.ts - a.ts).map((s) => {
             const m = members.find((x) => x.id === s.memberId);
             return (
-              <div key={s.id} className="mono" style={{ display: "flex", gap: 14, padding: "9px 0", borderTop: `1px solid ${C.line}`, fontSize: 13, flexWrap: "wrap" }}>
+              <div key={s.id} className="mono" style={{ display: "flex", gap: 14, padding: "9px 0", borderTop: `1px solid ${C.line}`, fontSize: 14, flexWrap: "wrap" }}>
                 <span style={{ color: C.muted }}>{timeStr(s.ts)}</span>
                 <span style={{ flex: 1, minWidth: 140 }}>{m?.name || "—"}</span>
                 <span style={{ color: C.muted }}>{s.items.map((i) => `${i.name} ${i.qty}${i.unit === "g" ? "g" : "×"}`).join(", ")}</span>
