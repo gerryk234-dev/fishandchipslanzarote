@@ -69,6 +69,44 @@ Toda la información está en un único archivo: `server/data/club.db`
 sqlite3 server/data/club.db ".backup backup-$(date +%F).db"
 ```
 
+## Acceso desde cualquier dispositivo
+
+La app es 100 % web: una vez alojado el servidor (VPS o mini-PC del club, ver
+"Dónde alojarlo"), cualquier móvil, tablet o portátil entra por la misma URL
+con el código del club. En el móvil, Chrome/Safari ofrecen **"Añadir a
+pantalla de inicio"** — la app se instala con su propio icono y se abre a
+pantalla completa como una app nativa (manifest PWA incluido).
+
+El personal es: **Mattia, Daimond y Max** (en bases de datos creadas con la
+versión anterior se migran automáticamente al arrancar).
+
+## Registro de socios desde onelifelanzarote.com
+
+El servidor publica una página de pre-registro en **`/registro`**
+(p. ej. `https://club.onelifelanzarote.com/registro`): nombre, nacionalidad,
+teléfono/email (al menos uno), código de invitación opcional y confirmación
+de mayoría de edad. Cada solicitud entra al momento en la pestaña **Socios**
+como *pendiente* (con aviso en el menú); al aprobarla se le asigna su número
+de socio **OL-XXXX** automáticamente.
+
+Para conectarla a la web del club, cualquiera de estas opciones:
+
+1. **Enlace** desde onelifelanzarote.com: `<a href="https://TU-SERVIDOR/registro">Hazte socio</a>`
+2. **Iframe** incrustado: `<iframe src="https://TU-SERVIDOR/registro" style="width:100%;height:760px;border:0"></iframe>`
+3. **API directa** si la web tiene su propio formulario: `POST https://TU-SERVIDOR/api/public/register` con JSON `{ name, nationality, phone, email, code }`
+
+El endpoint público está protegido con límite de 5 solicitudes/hora por IP y
+un campo honeypot antibots; no expone ningún dato del club.
+
+## Gestión de productos y socios
+
+- **Inventario** (cualquier empleado): **+ Producto** para dar de alta
+  (nombre, categoría, gramos o unidad, precio local/turista, stock inicial);
+  **✎** para editar nombre y precios; **🗑** para quitarlo (baja lógica — el
+  historial de ventas no se toca); **+ Stock** como siempre.
+- **Socios** (cualquier empleado): además de aprobar solicitudes, el botón
+  **Dar de baja** en la ficha retira al socio conservando su historial.
+
 ## Báscula (OHAUS Navigator NV622)
 
 La app se conecta directamente a la báscula desde el navegador — sin programas

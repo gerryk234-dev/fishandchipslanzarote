@@ -76,6 +76,7 @@ const productRow = (p) => ({
 const memberRow = (m) => ({
   id: m.id, num: m.num, name: m.name, nationality: m.nationality,
   type: m.type, status: m.status, joined: m.joined, sponsor: m.sponsor_num,
+  email: m.email || null, phone: m.phone || null,
 });
 const saleWithItems = (s) => ({
   id: s.id, ts: s.ts, memberId: s.member_id, employeeId: s.employee_id,
@@ -175,28 +176,70 @@ app.post("/api/invites", requireDevice, (req, res) => {
   res.json({ code });
 });
 
-app.post("/api/applications", requireDevice, (req, res) => {
-  const name = String(req.body?.name || "").trim();
-  const nationality = String(req.body?.nationality || "").trim() || "—";
-  const code = String(req.body?.code || "").trim().toUpperCase();
-  if (!name) return res.status(400).json({ error: "name_required" });
-
+function insertApplication({ name, nationality, code, email, phone }) {
   let invite = null;
   if (code) {
     invite = db.prepare("SELECT * FROM invites WHERE code = ? AND used_by IS NULL").get(code);
-    if (!invite) return res.status(400).json({ error: "bad_invite" });
+    if (!invite) return { error: "bad_invite" };
   }
   db.exec("BEGIN");
   try {
     db.prepare(
-      "INSERT INTO members (num, name, nationality, type, status, joined, sponsor_num) VALUES (NULL, ?, ?, NULL, 'pendiente', ?, ?)"
-    ).run(name, nationality, new Date().toISOString().slice(0, 10), invite ? invite.sponsor_num : null);
+      "INSERT INTO members (num, name, nationality, type, status, joined, sponsor_num, email, phone) VALUES (NULL, ?, ?, NULL, 'pendiente', ?, ?, ?, ?)"
+    ).run(name, nationality, new Date().toISOString().slice(0, 10), invite ? invite.sponsor_num : null, email || null, phone || null);
     if (invite) db.prepare("UPDATE invites SET used_by = ? WHERE code = ?").run(name, invite.code);
     db.exec("COMMIT");
   } catch (e) {
     db.exec("ROLLBACK");
     throw e;
   }
+  return { ok: true };
+}
+
+app.post("/api/applications", requireDevice, (req, res) => {
+  const name = String(req.body?.name || "").trim();
+  if (!name) return res.status(400).json({ error: "name_required" });
+  const r = insertApplication({
+    name,
+    nationality: String(req.body?.nationality || "").trim() || "—",
+    code: String(req.body?.code || "").trim().toUpperCase(),
+    email: String(req.body?.email || "").trim(),
+    phone: String(req.body?.phone || "").trim(),
+  });
+  if (r.error) return res.status(400).json(r);
+  res.json(r);
+});
+
+/* public web registration (linked from onelifelanzarote.com) */
+const regAttempts = new Map(); // ip -> [timestamps]
+app.post("/api/public/register", (req, res) => {
+  const ip = req.ip || "?";
+  const now = Date.now();
+  const recent = (regAttempts.get(ip) || []).filter((t) => now - t < 3600_000);
+  if (recent.length >= 5) return res.status(429).json({ error: "too_many_requests" });
+  recent.push(now);
+  regAttempts.set(ip, recent);
+
+  if (String(req.body?.web || "").trim()) return res.json({ ok: true }); // honeypot: silently drop bots
+  const name = String(req.body?.name || "").trim().slice(0, 120);
+  const phone = String(req.body?.phone || "").trim().slice(0, 40);
+  const email = String(req.body?.email || "").trim().slice(0, 120);
+  if (!name) return res.status(400).json({ error: "name_required" });
+  if (!phone && !email) return res.status(400).json({ error: "contact_required" });
+  const r = insertApplication({
+    name,
+    nationality: String(req.body?.nationality || "").trim().slice(0, 60) || "—",
+    code: String(req.body?.code || "").trim().toUpperCase().slice(0, 20),
+    email, phone,
+  });
+  if (r.error) return res.status(400).json(r);
+  res.json({ ok: true });
+});
+
+app.delete("/api/members/:id", requireDevice, (req, res) => {
+  const m = db.prepare("SELECT * FROM members WHERE id = ? AND status != 'baja'").get(req.params.id);
+  if (!m) return res.status(400).json({ error: "bad_member" });
+  db.prepare("UPDATE members SET status = 'baja' WHERE id = ?").run(m.id); // history stays intact
   res.json({ ok: true });
 });
 
@@ -219,6 +262,50 @@ app.post("/api/members/:id/approve", requireDevice, (req, res) => {
 });
 
 /* ================= inventory ================= */
+
+const PRODUCT_CATS = ["flores", "hash", "polen", "dry", "comestibles", "bebidas"];
+
+app.post("/api/products", requireDevice, (req, res) => {
+  const name = String(req.body?.name || "").trim();
+  const cat = req.body?.cat;
+  const unit = req.body?.unit;
+  const priceLocal = Number(req.body?.priceLocal);
+  const priceTourist = Number(req.body?.priceTourist);
+  const stock = Number(req.body?.stock ?? 0);
+  if (!name) return res.status(400).json({ error: "name_required" });
+  if (!PRODUCT_CATS.includes(cat)) return res.status(400).json({ error: "bad_cat" });
+  if (!["g", "ud"].includes(unit)) return res.status(400).json({ error: "bad_unit" });
+  if (!Number.isFinite(priceLocal) || priceLocal < 0 || !Number.isFinite(priceTourist) || priceTourist < 0) {
+    return res.status(400).json({ error: "bad_price" });
+  }
+  if (!Number.isFinite(stock) || stock < 0) return res.status(400).json({ error: "bad_stock" });
+  const info = db.prepare(
+    "INSERT INTO products (name, cat, unit, price_local, price_tourist, stock) VALUES (?, ?, ?, ?, ?, ?)"
+  ).run(name, cat, unit, priceLocal, priceTourist, Math.round(stock * 100) / 100);
+  res.json(productRow(db.prepare("SELECT * FROM products WHERE id = ?").get(Number(info.lastInsertRowid))));
+});
+
+app.patch("/api/products/:id", requireDevice, (req, res) => {
+  const p = db.prepare("SELECT * FROM products WHERE id = ? AND active = 1").get(req.params.id);
+  if (!p) return res.status(400).json({ error: "bad_product" });
+  const name = req.body?.name !== undefined ? String(req.body.name).trim() : p.name;
+  const priceLocal = req.body?.priceLocal !== undefined ? Number(req.body.priceLocal) : p.price_local;
+  const priceTourist = req.body?.priceTourist !== undefined ? Number(req.body.priceTourist) : p.price_tourist;
+  if (!name) return res.status(400).json({ error: "name_required" });
+  if (!Number.isFinite(priceLocal) || priceLocal < 0 || !Number.isFinite(priceTourist) || priceTourist < 0) {
+    return res.status(400).json({ error: "bad_price" });
+  }
+  db.prepare("UPDATE products SET name = ?, price_local = ?, price_tourist = ? WHERE id = ?")
+    .run(name, priceLocal, priceTourist, p.id);
+  res.json(productRow(db.prepare("SELECT * FROM products WHERE id = ?").get(p.id)));
+});
+
+app.delete("/api/products/:id", requireDevice, (req, res) => {
+  const p = db.prepare("SELECT * FROM products WHERE id = ? AND active = 1").get(req.params.id);
+  if (!p) return res.status(400).json({ error: "bad_product" });
+  db.prepare("UPDATE products SET active = 0 WHERE id = ?").run(p.id); // history in sale_items keeps its snapshot
+  res.json({ ok: true });
+});
 
 app.post("/api/products/:id/stock", requireDevice, (req, res) => {
   const n = Number(req.body?.amount);
@@ -244,6 +331,8 @@ app.get("/api/reports", requireAdmin, (req, res) => {
 });
 
 /* ================= static client ================= */
+
+app.get("/registro", (_req, res) => res.sendFile(join(__dirname, "..", "public", "registro.html")));
 
 const dist = join(__dirname, "..", "..", "client", "dist");
 if (existsSync(dist)) {

@@ -43,6 +43,12 @@ const S = () => (
     @keyframes fade { from { opacity: 0; transform: translateY(4px);} to { opacity: 1; transform: none;} }
     @media (prefers-reduced-motion: reduce) { .fadein { animation: none; } }
     .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .hamburger { display: none; }
+    .drawer-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 60; }
+    .drawer { position: fixed; top: 0; left: 0; bottom: 0; width: 240px; background: ${C.surface};
+              border-right: 1px solid ${C.line}; z-index: 61; padding: 18px 12px;
+              display: flex; flex-direction: column; gap: 4px; }
+    .drawer .navbtn { width: 100%; }
     /* ---- mobile ---- */
     @media (max-width: 760px) {
       .app-shell { flex-direction: column !important; }
@@ -50,6 +56,7 @@ const S = () => (
                  gap: 2px !important; padding: 8px 10px !important; border-right: none !important;
                  border-bottom: 1px solid ${C.line}; overflow-x: auto; }
       .sidebar .brand { display: none; }
+      .hamburger { display: block; }
       .sidebar .navbtn { padding: 9px 11px !important; font-size: 14px !important; white-space: nowrap; }
       .sidebar .userbox { margin-top: 0 !important; margin-left: auto; border-top: none !important;
                           padding: 0 4px !important; text-align: right; flex-shrink: 0; }
@@ -100,6 +107,8 @@ export default function App() {
   const [data, setData] = useState(null);        // {products, members, employees, invites, isAdmin}
   const [user, setUser] = useState(null);        // employee object or {admin:true}
   const [tab, setTab] = useState("dispensar");
+  const [hist, setHist] = useState([]);          // visited-tab stack for the Volver button
+  const [menuOpen, setMenuOpen] = useState(false);
   const [toast, setToast] = useState(null);
 
   const notify = useCallback((msg) => { setToast(msg); setTimeout(() => setToast(null), 2600); }, []);
@@ -153,13 +162,13 @@ export default function App() {
         onUser={async (e) => {
           if (data.isAdmin) { try { await api.post("/api/auth/admin/logout"); } catch { /* ignore */ } await refresh(); }
           setUser(e);
-          setTab("dispensar");
+          setTab("dispensar"); setHist([]);
         }}
         onAdmin={async (pin) => {
           await api.post("/api/auth/admin", { pin });
           await refresh();
           setUser({ admin: true, name: "Administrador" });
-          setTab("informes");
+          setTab("informes"); setHist([]);
         }}
       />
     );
@@ -171,18 +180,34 @@ export default function App() {
     : [{ id: "dispensar", label: "Dispensar" }, { id: "socios", label: "Socios" }, { id: "inventario", label: "Inventario" }];
   const pendingCount = data.members.filter((m) => m.status === "pendiente").length;
 
+  const goTab = (id) => {
+    if (id !== tab) { setHist((h) => [...h.slice(-19), tab]); setTab(id); }
+    setMenuOpen(false);
+  };
+  const goBack = () => {
+    setHist((h) => {
+      if (!h.length) return h;
+      setTab(h[h.length - 1]);
+      return h.slice(0, -1);
+    });
+  };
+
+  const navButtons = (extraClass) => NAV.map((n) => (
+    <button key={n.id} className={"navbtn " + (extraClass || "")} onClick={() => goTab(n.id)}
+      style={{ textAlign: "left", padding: "11px 12px", borderRadius: 8, border: "none", fontSize: 15, fontWeight: 600, background: tab === n.id ? C.greenDark : "transparent", color: tab === n.id ? C.green : C.muted, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 6 }}>
+      {n.label}
+      {n.id === "socios" && pendingCount > 0 && <span className="mono" style={{ background: C.amber, color: "#2A2008", borderRadius: 10, fontSize: 11, padding: "1px 7px", fontWeight: 700 }}>{pendingCount}</span>}
+    </button>
+  ));
+
   return (
     <div className="app-shell" style={{ minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "'Outfit', sans-serif", display: "flex" }}>
       <S />
       <aside className="sidebar" style={{ width: 190, borderRight: `1px solid ${C.line}`, padding: "20px 12px", display: "flex", flexDirection: "column", gap: 4, flexShrink: 0 }}>
+        <button className="hamburger" onClick={() => setMenuOpen(true)} aria-label="Abrir menú"
+          style={{ background: C.surface2, border: `1px solid ${C.line}`, borderRadius: 8, color: C.text, fontSize: 18, padding: "7px 12px", flexShrink: 0 }}>☰</button>
         <div className="mono brand" style={{ color: C.green, letterSpacing: 3, fontSize: 10, padding: "0 10px", marginBottom: 14 }}>ONE LIFE<br />LANZAROTE</div>
-        {NAV.map((n) => (
-          <button key={n.id} className="navbtn" onClick={() => setTab(n.id)}
-            style={{ textAlign: "left", padding: "11px 12px", borderRadius: 8, border: "none", fontSize: 15, fontWeight: 600, background: tab === n.id ? C.greenDark : "transparent", color: tab === n.id ? C.green : C.muted, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 6 }}>
-            {n.label}
-            {n.id === "socios" && pendingCount > 0 && <span className="mono" style={{ background: C.amber, color: "#2A2008", borderRadius: 10, fontSize: 11, padding: "1px 7px", fontWeight: 700 }}>{pendingCount}</span>}
-          </button>
-        ))}
+        {navButtons()}
         <div className="userbox" style={{ marginTop: "auto", padding: 10, borderTop: `1px solid ${C.line}` }}>
           <div style={{ fontSize: 12, color: C.muted }}>{isAdmin ? "Sesión" : "En mostrador"}</div>
           <div style={{ fontWeight: 700, display: "flex", gap: 8, alignItems: "center" }}>{user.name} {isAdmin && <Badge kind="admin" />}</div>
@@ -191,7 +216,28 @@ export default function App() {
         </div>
       </aside>
 
+      {menuOpen && (
+        <>
+          <div className="drawer-backdrop" onClick={() => setMenuOpen(false)} />
+          <div className="drawer fadein">
+            <div className="mono" style={{ color: C.green, letterSpacing: 3, fontSize: 10, padding: "0 10px", marginBottom: 10 }}>ONE LIFE<br />LANZAROTE</div>
+            {navButtons()}
+            <div style={{ marginTop: "auto", padding: 10, borderTop: `1px solid ${C.line}` }}>
+              <div style={{ fontWeight: 700, display: "flex", gap: 8, alignItems: "center" }}>{user.name} {isAdmin && <Badge kind="admin" />}</div>
+              <button onClick={async () => { setMenuOpen(false); if (isAdmin) { try { await api.post("/api/auth/admin/logout"); } catch { /* ignore */ } await refresh(); } setUser(null); }}
+                style={{ background: "none", border: "none", color: C.muted, fontSize: 13, padding: 0, marginTop: 6, textDecoration: "underline", cursor: "pointer" }}>Cambiar de usuario</button>
+            </div>
+          </div>
+        </>
+      )}
+
       <main className="app-main" style={{ flex: 1, padding: 24, overflow: "auto" }}>
+        {hist.length > 0 && (
+          <button onClick={goBack}
+            style={{ background: "none", border: "none", color: C.muted, fontSize: 14, fontWeight: 600, padding: 0, marginBottom: 12, display: "inline-flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
+            ← Volver
+          </button>
+        )}
         {tab === "dispensar" && <Dispensar data={data} refresh={refresh} user={user} notify={notify} />}
         {tab === "socios" && <Socios data={data} refresh={refresh} notify={notify} isAdmin={isAdmin} />}
         {tab === "inventario" && <Inventario data={data} refresh={refresh} notify={notify} />}
@@ -515,6 +561,7 @@ function Socios({ data, refresh, notify }) {
   const [sponsorId, setSponsorId] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [fName, setFName] = useState(""); const [fNat, setFNat] = useState(""); const [fCode, setFCode] = useState("");
+  const [fPhone, setFPhone] = useState(""); const [fEmail, setFEmail] = useState("");
 
   const pending = members.filter((m) => m.status === "pendiente");
   const active = members.filter((m) => m.status === "activo" && (m.name + m.num).toLowerCase().includes(q.toLowerCase()));
@@ -541,12 +588,24 @@ function Socios({ data, refresh, notify }) {
   const submitForm = async () => {
     if (!fName.trim()) return;
     try {
-      await api.post("/api/applications", { name: fName, nationality: fNat, code: fCode });
+      await api.post("/api/applications", { name: fName, nationality: fNat, code: fCode, phone: fPhone, email: fEmail });
       notify("Solicitud recibida — pendiente de aprobación");
-      setShowForm(false); setFName(""); setFNat(""); setFCode("");
+      setShowForm(false); setFName(""); setFNat(""); setFCode(""); setFPhone(""); setFEmail("");
       refresh();
     } catch (e) {
       notify(e.data?.error === "bad_invite" ? "Código de invitación no válido o ya usado" : "No se pudo enviar la solicitud");
+    }
+  };
+
+  const removeMember = async (m) => {
+    if (!window.confirm(`¿Dar de baja a ${m.name} (${m.num || "pendiente"})?\nSu historial se conserva pero dejará de aparecer en las listas.`)) return;
+    try {
+      await api.del(`/api/members/${m.id}`);
+      notify(`${m.name} dado de baja`);
+      setSel(null);
+      refresh();
+    } catch {
+      notify("No se pudo dar de baja");
     }
   };
 
@@ -605,6 +664,8 @@ function Socios({ data, refresh, notify }) {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10 }}>
             <Field placeholder="Nombre completo" value={fName} onChange={(e) => setFName(e.target.value)} />
             <Field placeholder="Nacionalidad" value={fNat} onChange={(e) => setFNat(e.target.value)} />
+            <Field placeholder="Teléfono" inputMode="tel" value={fPhone} onChange={(e) => setFPhone(e.target.value)} />
+            <Field placeholder="Email" type="email" value={fEmail} onChange={(e) => setFEmail(e.target.value)} />
             <Field placeholder="Código invitación (opcional)" value={fCode} onChange={(e) => setFCode(e.target.value)} />
           </div>
           <div style={{ marginTop: 12 }}><Btn kind="primary" onClick={submitForm}>Enviar solicitud</Btn></div>
@@ -620,6 +681,7 @@ function Socios({ data, refresh, notify }) {
                 <div style={{ fontWeight: 600 }}>{m.name}</div>
                 <div className="mono" style={{ fontSize: 12, color: C.muted }}>
                   {m.nationality} · solicitud {m.joined}{m.sponsor ? ` · avalado por ${m.sponsor}` : " · sin aval"}
+                  {m.phone ? ` · 📞 ${m.phone}` : ""}{m.email ? ` · ✉ ${m.email}` : ""}
                 </div>
               </div>
               <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -656,11 +718,24 @@ function Socios({ data, refresh, notify }) {
             <div style={{ color: C.muted, fontSize: 14 }}>Selecciona un socio para ver su ficha.</div>
           ) : (
             <div>
-              <div style={{ fontWeight: 700, fontSize: 17 }}>{sel.name}</div>
-              <div className="mono" style={{ fontSize: 12, color: C.muted, margin: "2px 0 12px" }}>
-                {sel.num} · {sel.nationality}{sel.sponsor ? ` · avalado por ${sel.sponsor}` : ""}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 17 }}>{sel.name}</div>
+                  <div className="mono" style={{ fontSize: 12, color: C.muted, margin: "2px 0 4px" }}>
+                    {sel.num} · {sel.nationality}{sel.sponsor ? ` · avalado por ${sel.sponsor}` : ""}
+                  </div>
+                  {(sel.phone || sel.email) && (
+                    <div className="mono" style={{ fontSize: 12, color: C.muted, marginBottom: 4 }}>
+                      {sel.phone ? `📞 ${sel.phone}` : ""}{sel.phone && sel.email ? " · " : ""}{sel.email ? `✉ ${sel.email}` : ""}
+                    </div>
+                  )}
+                </div>
+                <button onClick={() => removeMember(sel)}
+                  style={{ background: "none", border: `1px solid ${C.line}`, color: C.red, borderRadius: 8, padding: "5px 10px", fontSize: 12, fontWeight: 600, flexShrink: 0 }}>
+                  Dar de baja
+                </button>
               </div>
-              <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 8 }}>HISTORIAL DE CONSUMO</div>
+              <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, margin: "8px 0" }}>HISTORIAL DE CONSUMO</div>
               {history.length === 0 && <div style={{ color: C.muted, fontSize: 13 }}>Sin dispensaciones registradas.</div>}
               {history.map((s) => (
                 <div key={s.id} style={{ borderTop: `1px dashed ${C.line}`, padding: "8px 0" }} className="mono">
@@ -681,13 +756,21 @@ function Socios({ data, refresh, notify }) {
 }
 
 /* ============================ INVENTARIO ============================ */
+const EMPTY_PRODUCT = { name: "", cat: "flores", unit: "g", priceLocal: "", priceTourist: "", stock: "" };
+
 function Inventario({ data, refresh, notify }) {
   const { products } = data;
   const [adding, setAdding] = useState(null);
   const [amount, setAmount] = useState("");
+  const [showNew, setShowNew] = useState(false);
+  const [np, setNp] = useState(EMPTY_PRODUCT);
+  const [editId, setEditId] = useState(null);
+  const [ep, setEp] = useState({ name: "", priceLocal: "", priceTourist: "" });
+
+  const num = (v) => parseFloat(String(v).replace(",", "."));
 
   const addStock = async (p) => {
-    const n = parseFloat(String(amount).replace(",", "."));
+    const n = num(amount);
     if (!n || n <= 0) return;
     try {
       await api.post(`/api/products/${p.id}/stock`, { amount: n });
@@ -699,9 +782,72 @@ function Inventario({ data, refresh, notify }) {
     }
   };
 
+  const createProduct = async () => {
+    const pl = num(np.priceLocal), pt = num(np.priceTourist), st = num(np.stock || "0");
+    if (!np.name.trim() || !Number.isFinite(pl) || !Number.isFinite(pt)) { notify("Completa nombre y precios"); return; }
+    try {
+      await api.post("/api/products", { name: np.name, cat: np.cat, unit: np.unit, priceLocal: pl, priceTourist: pt, stock: Number.isFinite(st) ? st : 0 });
+      notify(`${np.name.trim()} añadido al inventario`);
+      setShowNew(false); setNp(EMPTY_PRODUCT);
+      refresh();
+    } catch {
+      notify("No se pudo crear el producto");
+    }
+  };
+
+  const saveEdit = async (p) => {
+    const pl = num(ep.priceLocal), pt = num(ep.priceTourist);
+    if (!ep.name.trim() || !Number.isFinite(pl) || !Number.isFinite(pt)) { notify("Completa nombre y precios"); return; }
+    try {
+      await api.patch(`/api/products/${p.id}`, { name: ep.name, priceLocal: pl, priceTourist: pt });
+      notify("Producto actualizado");
+      setEditId(null);
+      refresh();
+    } catch {
+      notify("No se pudo guardar");
+    }
+  };
+
+  const removeProduct = async (p) => {
+    if (!window.confirm(`¿Quitar "${p.name}" del inventario?\nEl historial de ventas se conserva.`)) return;
+    try {
+      await api.del(`/api/products/${p.id}`);
+      notify(`${p.name} eliminado`);
+      refresh();
+    } catch {
+      notify("No se pudo eliminar");
+    }
+  };
+
+  const inputStyle = { padding: "9px 10px", background: C.bg, border: `1px solid ${C.line}`, borderRadius: 6, color: C.text, fontSize: 14, width: "100%", minWidth: 0 };
+
   return (
     <div className="fadein">
-      <h2 style={{ margin: "0 0 16px", fontSize: 22 }}>Inventario</h2>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap", margin: "0 0 16px" }}>
+        <h2 style={{ margin: 0, fontSize: 22 }}>Inventario</h2>
+        <Btn size="sm" kind="primary" onClick={() => setShowNew(!showNew)}>{showNew ? "Cancelar" : "+ Producto"}</Btn>
+      </div>
+
+      {showNew && (
+        <Panel style={{ padding: 18, marginBottom: 16 }}>
+          <div style={{ fontWeight: 700, marginBottom: 10 }}>Nuevo producto</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 10 }}>
+            <input style={inputStyle} placeholder="Nombre" value={np.name} onChange={(e) => setNp({ ...np, name: e.target.value })} />
+            <select style={inputStyle} value={np.cat} onChange={(e) => setNp({ ...np, cat: e.target.value })}>
+              {CATS.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
+            </select>
+            <select style={inputStyle} value={np.unit} onChange={(e) => setNp({ ...np, unit: e.target.value })}>
+              <option value="g">por gramos (g)</option>
+              <option value="ud">por unidad (ud)</option>
+            </select>
+            <input style={inputStyle} placeholder="Precio local €" inputMode="decimal" value={np.priceLocal} onChange={(e) => setNp({ ...np, priceLocal: e.target.value })} />
+            <input style={inputStyle} placeholder="Precio turista €" inputMode="decimal" value={np.priceTourist} onChange={(e) => setNp({ ...np, priceTourist: e.target.value })} />
+            <input style={inputStyle} placeholder="Stock inicial" inputMode="decimal" value={np.stock} onChange={(e) => setNp({ ...np, stock: e.target.value })} />
+          </div>
+          <div style={{ marginTop: 12 }}><Btn kind="primary" onClick={createProduct}>Guardar producto</Btn></div>
+        </Panel>
+      )}
+
       <Panel className="table-wrap">
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
           <thead>
@@ -713,26 +859,53 @@ function Inventario({ data, refresh, notify }) {
           </thead>
           <tbody>
             {products.map((p) => (
-              <tr key={p.id} className="row">
-                <td style={{ padding: "12px 16px", fontWeight: 600 }}>{p.name}</td>
-                <td style={{ padding: "12px 16px", color: C.muted }}>{CATS.find((c) => c.id === p.cat)?.label}</td>
-                <td className="mono" style={{ padding: "12px 16px", color: C.amber }}>{eur(p.priceLocal)}/{p.unit}</td>
-                <td className="mono" style={{ padding: "12px 16px", color: C.amber }}>{eur(p.priceTourist)}/{p.unit}</td>
-                <td className="mono" style={{ padding: "12px 16px", color: p.stock <= 10 ? C.red : C.text }}>
-                  {p.stock} {p.unit} {p.stock <= 10 && <span style={{ fontSize: 10, letterSpacing: 1 }}>· BAJO</span>}
-                </td>
-                <td style={{ padding: "12px 16px", textAlign: "right" }}>
-                  {adding === p.id ? (
+              editId === p.id ? (
+                <tr key={p.id}>
+                  <td style={{ padding: "8px 16px" }}>
+                    <input autoFocus style={{ ...inputStyle, minWidth: 140 }} value={ep.name} onChange={(e) => setEp({ ...ep, name: e.target.value })} />
+                  </td>
+                  <td style={{ padding: "8px 16px", color: C.muted }}>{CATS.find((c) => c.id === p.cat)?.label}</td>
+                  <td style={{ padding: "8px 16px" }}>
+                    <input style={{ ...inputStyle, width: 80 }} inputMode="decimal" value={ep.priceLocal} onChange={(e) => setEp({ ...ep, priceLocal: e.target.value })} />
+                  </td>
+                  <td style={{ padding: "8px 16px" }}>
+                    <input style={{ ...inputStyle, width: 80 }} inputMode="decimal" value={ep.priceTourist} onChange={(e) => setEp({ ...ep, priceTourist: e.target.value })} />
+                  </td>
+                  <td className="mono" style={{ padding: "8px 16px", color: C.muted }}>{p.stock} {p.unit}</td>
+                  <td style={{ padding: "8px 16px", textAlign: "right", whiteSpace: "nowrap" }}>
                     <span style={{ display: "inline-flex", gap: 6 }}>
-                      <input autoFocus value={amount} onChange={(e) => setAmount(e.target.value)} inputMode="decimal" placeholder={p.unit}
-                        style={{ width: 80, padding: "6px 10px", background: C.bg, border: `1px solid ${C.line}`, borderRadius: 6, color: C.text }} />
-                      <Btn size="sm" kind="primary" onClick={() => addStock(p)}>OK</Btn>
+                      <Btn size="sm" kind="primary" onClick={() => saveEdit(p)}>Guardar</Btn>
+                      <Btn size="sm" onClick={() => setEditId(null)}>Cancelar</Btn>
                     </span>
-                  ) : (
-                    <Btn size="sm" onClick={() => { setAdding(p.id); setAmount(""); }}>+ Stock</Btn>
-                  )}
-                </td>
-              </tr>
+                  </td>
+                </tr>
+              ) : (
+                <tr key={p.id} className="row">
+                  <td style={{ padding: "12px 16px", fontWeight: 600 }}>{p.name}</td>
+                  <td style={{ padding: "12px 16px", color: C.muted }}>{CATS.find((c) => c.id === p.cat)?.label}</td>
+                  <td className="mono" style={{ padding: "12px 16px", color: C.amber }}>{eur(p.priceLocal)}/{p.unit}</td>
+                  <td className="mono" style={{ padding: "12px 16px", color: C.amber }}>{eur(p.priceTourist)}/{p.unit}</td>
+                  <td className="mono" style={{ padding: "12px 16px", color: p.stock <= 10 ? C.red : C.text }}>
+                    {p.stock} {p.unit} {p.stock <= 10 && <span style={{ fontSize: 10, letterSpacing: 1 }}>· BAJO</span>}
+                  </td>
+                  <td style={{ padding: "12px 16px", textAlign: "right", whiteSpace: "nowrap" }}>
+                    {adding === p.id ? (
+                      <span style={{ display: "inline-flex", gap: 6 }}>
+                        <input autoFocus value={amount} onChange={(e) => setAmount(e.target.value)} inputMode="decimal" placeholder={p.unit}
+                          style={{ width: 80, padding: "6px 10px", background: C.bg, border: `1px solid ${C.line}`, borderRadius: 6, color: C.text }} />
+                        <Btn size="sm" kind="primary" onClick={() => addStock(p)}>OK</Btn>
+                        <Btn size="sm" onClick={() => setAdding(null)}>✕</Btn>
+                      </span>
+                    ) : (
+                      <span style={{ display: "inline-flex", gap: 6 }}>
+                        <Btn size="sm" onClick={() => { setAdding(p.id); setAmount(""); setEditId(null); }}>+ Stock</Btn>
+                        <Btn size="sm" onClick={() => { setEditId(p.id); setAdding(null); setEp({ name: p.name, priceLocal: String(p.priceLocal), priceTourist: String(p.priceTourist) }); }}>✎</Btn>
+                        <Btn size="sm" style={{ color: C.red }} onClick={() => removeProduct(p)}>🗑</Btn>
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              )
             ))}
           </tbody>
         </table>

@@ -117,7 +117,7 @@ if (!seeded) {
   );
   for (const m of seedMembers) insM.run(...m);
 
-  for (const [name, initials] of [["Adrián", "AD"], ["Naiara", "NA"], ["Tomás", "TO"]]) {
+  for (const [name, initials] of [["Mattia", "MA"], ["Daimond", "DA"], ["Max", "MX"]]) {
     db.prepare("INSERT INTO employees (name, initials) VALUES (?, ?)").run(name, initials);
   }
 
@@ -126,5 +126,20 @@ if (!seeded) {
   setSetting("admin_pin_hash", hashSecret(process.env.ADMIN_PIN || "1234"));
   setSetting("token_secret", randomHex(32));
   setSetting("seeded", "1");
+  setSetting("employees_v2", "1");
   console.log("[db] first run: seeded demo data (club code: onelife · admin PIN: 1234 — change with npm run set-secrets)");
 }
+
+/* ---- migrations for databases created before these features ---- */
+if (!getSetting("employees_v2")) {
+  db.exec("UPDATE employees SET active = 0");
+  for (const [name, initials] of [["Mattia", "MA"], ["Daimond", "DA"], ["Max", "MX"]]) {
+    db.prepare("INSERT INTO employees (name, initials) VALUES (?, ?)").run(name, initials);
+  }
+  setSetting("employees_v2", "1");
+  console.log("[db] migrated staff list to: Mattia, Daimond, Max");
+}
+
+const memberCols = db.prepare("SELECT name FROM pragma_table_info('members')").all().map((c) => c.name);
+if (!memberCols.includes("email")) db.exec("ALTER TABLE members ADD COLUMN email TEXT");
+if (!memberCols.includes("phone")) db.exec("ALTER TABLE members ADD COLUMN phone TEXT");
