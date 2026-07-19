@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import { api } from "./api.js";
+import { api, DEMO } from "./api.js";
 import { useScale } from "./scale.js";
+
+const DemoBadge = () => DEMO ? (
+  <div className="mono" style={{ position: "fixed", top: 8, right: 8, zIndex: 70, background: "#4A3A22", color: "#E3B04B", fontSize: 10, letterSpacing: 1, padding: "4px 9px", borderRadius: 6, fontWeight: 700, pointerEvents: "none" }}>
+    DEMO · DATOS DE PRUEBA
+  </div>
+) : null;
 
 /* ========= ONE LIFE LANZAROTE — Club Manager V3 =========
    Multi-device edition: todos los datos viven en el servidor.
@@ -247,6 +253,7 @@ export default function App() {
       {toast && (
         <div className="fadein mono" style={{ position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)", background: C.green, color: "#16210F", padding: "10px 22px", borderRadius: 8, fontWeight: 600, fontSize: 14, zIndex: 50 }}>{toast}</div>
       )}
+      <DemoBadge />
     </div>
   );
 }
@@ -286,8 +293,11 @@ function DeviceLogin({ onDone }) {
         <div style={{ marginTop: 18 }}>
           <Btn kind="primary" size="lg" onClick={submit} disabled={busy || !code.trim()}>Autorizar dispositivo</Btn>
         </div>
-        <div className="mono" style={{ color: C.muted, fontSize: 11, marginTop: 16 }}>Solo hace falta una vez por dispositivo</div>
+        <div className="mono" style={{ color: C.muted, fontSize: 11, marginTop: 16 }}>
+          {DEMO ? "demo — código: onelife" : "Solo hace falta una vez por dispositivo"}
+        </div>
       </div>
+      <DemoBadge />
     </div>
   );
 }
@@ -347,9 +357,11 @@ function Login({ employees, onUser, onAdmin }) {
               <Btn onClick={() => setPinMode(false)}>Volver</Btn>
               <Btn kind="amber" onClick={tryPin} disabled={busy}>Entrar</Btn>
             </div>
+            {DEMO && <div className="mono" style={{ color: C.muted, fontSize: 11, marginTop: 16 }}>demo — PIN: 1234</div>}
           </div>
         )}
       </div>
+      <DemoBadge />
     </div>
   );
 }

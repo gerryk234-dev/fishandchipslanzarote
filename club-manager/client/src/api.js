@@ -1,6 +1,12 @@
-/* Thin fetch wrapper for the club API. All calls use the session cookie. */
+/* Thin fetch wrapper for the club API. All calls use the session cookie.
+   In the DEMO build (VITE_DEMO) every call is served by mockApi.js instead. */
+
+import { mockRequest } from "./mockApi.js";
+
+export const DEMO = !!import.meta.env.VITE_DEMO;
 
 async function request(method, path, body) {
+  if (DEMO) return mockRequest(method, path, body);
   const res = await fetch(path, {
     method,
     headers: body ? { "Content-Type": "application/json" } : undefined,
