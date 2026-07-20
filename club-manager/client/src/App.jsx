@@ -638,7 +638,7 @@ function BarChart({ data, color, fmt }) {
   );
 }
 
-const EMPTY_NEW_MEMBER = { name: "", nationality: "", phone: "", email: "", type: "local", photo: null };
+const EMPTY_NEW_MEMBER = { name: "", nationality: "", document: "", phone: "", email: "", type: "local", photo: null };
 
 function Socios({ data, refresh, notify }) {
   const { members } = data;
@@ -789,6 +789,7 @@ function Socios({ data, refresh, notify }) {
               <div style={{ flex: 1, minWidth: 220, display: "grid", gap: 10 }}>
                 <input style={inputStyle} placeholder="Nombre completo *" value={nm.name} onChange={(e) => setNm({ ...nm, name: e.target.value })} />
                 <input style={inputStyle} placeholder="Nacionalidad" value={nm.nationality} onChange={(e) => setNm({ ...nm, nationality: e.target.value })} />
+                <input style={inputStyle} placeholder="DNI / Pasaporte" value={nm.document} onChange={(e) => setNm({ ...nm, document: e.target.value })} />
                 <input style={inputStyle} placeholder="Teléfono (WhatsApp)" inputMode="tel" value={nm.phone} onChange={(e) => setNm({ ...nm, phone: e.target.value })} />
                 <input style={inputStyle} placeholder="Email" type="email" value={nm.email} onChange={(e) => setNm({ ...nm, email: e.target.value })} />
                 <div style={{ display: "flex", gap: 8 }}>
@@ -826,6 +827,7 @@ function Socios({ data, refresh, notify }) {
                     <div className="mono" style={{ fontSize: 14, color: C.muted }}>
                       {detail.nationality} · alta {detail.joined}{detail.sponsor ? ` · avalado por ${detail.sponsor}` : ""}
                     </div>
+                    {detail.document && <div className="mono" style={{ fontSize: 14, color: C.muted, marginTop: 3 }}>🪪 {detail.document}</div>}
                     {detail.phone && <div className="mono" style={{ fontSize: 14, color: C.muted, marginTop: 3 }}>📞 {detail.phone}</div>}
                     {detail.email && <div className="mono" style={{ fontSize: 14, color: C.muted, marginTop: 3 }}>✉ {detail.email}</div>}
                   </div>

@@ -7,6 +7,7 @@ import { db, getSetting, setSetting } from "./db.js";
 import { verifySecret, signToken, verifyToken } from "./auth.js";
 import { generateCard } from "./card.js";
 import { sendWelcome } from "./mailer.js";
+import { startImporter } from "./importer.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 4000;
@@ -78,7 +79,7 @@ const productRow = (p) => ({
 const memberRow = (m) => ({
   id: m.id, num: m.num, name: m.name, nationality: m.nationality,
   type: m.type, status: m.status, joined: m.joined, sponsor: m.sponsor_num,
-  email: m.email || null, phone: m.phone || null,
+  email: m.email || null, phone: m.phone || null, document: m.document || null,
 });
 const saleWithItems = (s) => ({
   id: s.id, ts: s.ts, memberId: s.member_id, employeeId: s.employee_id,
@@ -178,7 +179,7 @@ app.post("/api/invites", requireDevice, (req, res) => {
   res.json({ code });
 });
 
-function insertApplication({ name, nationality, code, email, phone }) {
+function insertApplication({ name, nationality, code, email, phone, document }) {
   let invite = null;
   if (code) {
     invite = db.prepare("SELECT * FROM invites WHERE code = ? AND used_by IS NULL").get(code);
@@ -187,8 +188,8 @@ function insertApplication({ name, nationality, code, email, phone }) {
   db.exec("BEGIN");
   try {
     db.prepare(
-      "INSERT INTO members (num, name, nationality, type, status, joined, sponsor_num, email, phone) VALUES (NULL, ?, ?, NULL, 'pendiente', ?, ?, ?, ?)"
-    ).run(name, nationality, new Date().toISOString().slice(0, 10), invite ? invite.sponsor_num : null, email || null, phone || null);
+      "INSERT INTO members (num, name, nationality, type, status, joined, sponsor_num, email, phone, document) VALUES (NULL, ?, ?, NULL, 'pendiente', ?, ?, ?, ?, ?)"
+    ).run(name, nationality, new Date().toISOString().slice(0, 10), invite ? invite.sponsor_num : null, email || null, phone || null, document || null);
     if (invite) db.prepare("UPDATE invites SET used_by = ? WHERE code = ?").run(name, invite.code);
     db.exec("COMMIT");
   } catch (e) {
@@ -207,6 +208,7 @@ app.post("/api/applications", requireDevice, (req, res) => {
     code: String(req.body?.code || "").trim().toUpperCase(),
     email: String(req.body?.email || "").trim(),
     phone: String(req.body?.phone || "").trim(),
+    document: String(req.body?.document || "").trim(),
   });
   if (r.error) return res.status(400).json(r);
   res.json(r);
@@ -233,6 +235,7 @@ app.post("/api/public/register", (req, res) => {
     nationality: String(req.body?.nationality || "").trim().slice(0, 60) || "—",
     code: String(req.body?.code || "").trim().toUpperCase().slice(0, 20),
     email, phone,
+    document: String(req.body?.document || "").trim().slice(0, 40),
   });
   if (r.error) return res.status(400).json(r);
   res.json({ ok: true });
@@ -260,11 +263,12 @@ app.post("/api/members", requireDevice, async (req, res) => {
     setSetting("member_seq", String(seq));
     const num = "OL-" + String(seq).padStart(4, "0");
     const info = db.prepare(
-      "INSERT INTO members (num, name, nationality, type, status, joined, sponsor_num, email, phone, photo) VALUES (?, ?, ?, ?, 'activo', ?, NULL, ?, ?, ?)"
+      "INSERT INTO members (num, name, nationality, type, status, joined, sponsor_num, email, phone, photo, document) VALUES (?, ?, ?, ?, 'activo', ?, NULL, ?, ?, ?, ?)"
     ).run(num, name, String(req.body?.nationality || "").trim() || "—", type,
       new Date().toISOString().slice(0, 10),
       String(req.body?.email || "").trim() || null,
-      String(req.body?.phone || "").trim() || null, photo);
+      String(req.body?.phone || "").trim() || null, photo,
+      String(req.body?.document || "").trim() || null);
     member = db.prepare("SELECT * FROM members WHERE id = ?").get(Number(info.lastInsertRowid));
     db.exec("COMMIT");
   } catch (e) {
@@ -340,22 +344,33 @@ app.get("/api/members/:id/card.pdf", requireDevice, async (req, res) => {
   res.send(pdf);
 });
 
-app.post("/api/members/:id/approve", requireDevice, (req, res) => {
+app.post("/api/members/:id/approve", requireDevice, async (req, res) => {
   const type = req.body?.type === "turista" ? "turista" : "local";
   const m = db.prepare("SELECT * FROM members WHERE id = ? AND status = 'pendiente'").get(req.params.id);
   if (!m) return res.status(400).json({ error: "not_pending" });
   db.exec("BEGIN");
+  let num;
   try {
     const seq = Number(getSetting("member_seq")) + 1;
-    const num = "OL-" + String(seq).padStart(4, "0");
+    num = "OL-" + String(seq).padStart(4, "0");
     setSetting("member_seq", String(seq));
     db.prepare("UPDATE members SET status = 'activo', type = ?, num = ? WHERE id = ?").run(type, num, m.id);
     db.exec("COMMIT");
-    res.json({ ok: true, num });
   } catch (e) {
     db.exec("ROLLBACK");
     throw e;
   }
+  // approved members get their card by email too (web/imported applicants)
+  let emailStatus = "no_email";
+  try {
+    const fresh = db.prepare("SELECT * FROM members WHERE id = ?").get(m.id);
+    const pdf = await generateCard(fresh);
+    emailStatus = await sendWelcome(fresh, pdf);
+  } catch (e) {
+    console.error("[card]", e.message);
+    emailStatus = "failed";
+  }
+  res.json({ ok: true, num, emailStatus });
 });
 
 /* ================= inventory ================= */
@@ -437,4 +452,7 @@ if (existsSync(dist)) {
   app.get(/^\/(?!api\/).*/, (_req, res) => res.sendFile(join(dist, "index.html")));
 }
 
-app.listen(PORT, () => console.log(`[server] One Life Club Manager listening on :${PORT}`));
+app.listen(PORT, () => {
+  console.log(`[server] One Life Club Manager listening on :${PORT}`);
+  startImporter();
+});

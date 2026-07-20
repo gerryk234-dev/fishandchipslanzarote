@@ -97,6 +97,24 @@ pantalla completa como una app nativa (manifest PWA incluido).
 El personal es: **Mattia, Daimond y Max** (en bases de datos creadas con la
 versión anterior se migran automáticamente al arrancar).
 
+## Importador de Gmail (socios registrados por la web)
+
+Con las credenciales de Gmail configuradas (mismo `.env` del email), el
+servidor **lee el buzón de la cuenta del club** al arrancar y cada 5 minutos:
+
+- Detecta los correos del formulario de onelifelanzarote.com (Elementor:
+  `Full name:`, `Nationality:`, `ID/ Passport number:`, `Email:`,
+  `Phone number:`, `Upload a selfie: <URL>`)
+- **Descarga la selfie** desde la web y la guarda en la ficha
+- Crea a cada persona como solicitud **pendiente** en Socios (se recuerda el
+  último correo procesado, y se saltan duplicados por email/documento/nombre)
+- Al **aprobar** una solicitud se le asigna su número OL y recibe
+  automáticamente el email de bienvenida con su carnet PDF
+
+La primera ejecución procesa todo el histórico del buzón, así que la lista
+completa de registrados aparece en Socios en cuanto el servidor arranca con
+las credenciales puestas.
+
 ## Registro de socios desde onelifelanzarote.com
 
 El servidor publica una página de pre-registro en **`/registro`**

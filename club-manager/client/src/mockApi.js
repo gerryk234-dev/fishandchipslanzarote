@@ -221,6 +221,7 @@ export async function mockRequest(method, path, body) {
       status: "activo", joined: isoOf(Date.now()), sponsor: null,
       phone: String(body?.phone || "").trim() || null,
       email: String(body?.email || "").trim() || null,
+      document: String(body?.document || "").trim() || null,
       photo: typeof body?.photo === "string" && body.photo.startsWith("data:image/") ? body.photo : null,
     };
     s.members.push(member); save(s);
@@ -250,6 +251,7 @@ export async function mockRequest(method, path, body) {
       id: Date.now(), num: null, name, nationality: String(body?.nationality || "").trim() || "—",
       type: null, status: "pendiente", joined: isoOf(Date.now()), sponsor: invite ? invite.sponsorNum : null,
       phone: String(body?.phone || "").trim() || null, email: String(body?.email || "").trim() || null,
+      document: String(body?.document || "").trim() || null,
     });
     save(s);
     return { ok: true };

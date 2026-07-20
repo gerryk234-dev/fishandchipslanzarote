@@ -39,6 +39,8 @@
       <input id="name" name="name" required maxlength="120" autocomplete="name">
       <label for="nationality">Nacionalidad</label>
       <input id="nationality" name="nationality" maxlength="60" autocomplete="country-name">
+      <label for="documentid">DNI / Pasaporte</label>
+      <input id="documentid" name="documentid" maxlength="40" autocomplete="off">
       <label for="phone">Teléfono (WhatsApp)</label>
       <input id="phone" name="phone" maxlength="40" inputmode="tel" autocomplete="tel">
       <label for="email">Email</label>
@@ -79,7 +81,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: f.name.value, nationality: f.nationality.value,
+          name: f.name.value, nationality: f.nationality.value, document: f.documentid.value,
           phone, email, code: f.code.value, web: f.web.value,
         }),
       });

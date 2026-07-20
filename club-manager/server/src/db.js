@@ -144,3 +144,4 @@ const memberCols = db.prepare("SELECT name FROM pragma_table_info('members')").a
 if (!memberCols.includes("email")) db.exec("ALTER TABLE members ADD COLUMN email TEXT");
 if (!memberCols.includes("phone")) db.exec("ALTER TABLE members ADD COLUMN phone TEXT");
 if (!memberCols.includes("photo")) db.exec("ALTER TABLE members ADD COLUMN photo TEXT"); // data-URL selfie
+if (!memberCols.includes("document")) db.exec("ALTER TABLE members ADD COLUMN document TEXT"); // ID/passport number
