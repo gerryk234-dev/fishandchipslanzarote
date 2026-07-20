@@ -42,6 +42,23 @@ cd ../server && npm install && npm start    # sirve la API y la web en :4000
 El servidor sirve la interfaz compilada, así que solo hay que exponer el
 puerto 4000 (o poner delante un proxy con HTTPS, ver abajo).
 
+### Configurar el email (Gmail)
+
+El email de bienvenida con el carnet PDF se envía con la cuenta Gmail del
+club mediante una **contraseña de aplicación** (requiere verificación en dos
+pasos activada; se crea en myaccount.google.com/apppasswords).
+
+```bash
+cd server
+cp .env.example .env
+# edita .env y pon la contraseña de aplicación real en SMTP_PASS
+npm start   # carga .env automáticamente
+```
+
+`.env` está en el .gitignore — la contraseña nunca se sube al repositorio.
+Si la contraseña se ve comprometida, revócala en
+myaccount.google.com/apppasswords y genera otra.
+
 ### Cambiar las credenciales (¡hazlo antes de usarlo de verdad!)
 
 ```bash

@@ -3,3 +3,4 @@ dist/
 dist-demo/
 server/data/
 *.log
+.env
