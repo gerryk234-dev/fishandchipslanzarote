@@ -322,7 +322,13 @@ app.get("/api/members/:id/stats", requireDevice, (req, res) => {
       grams: Math.round(sel.reduce((a, s) => a + s.grams, 0) * 100) / 100,
     });
   }
-  res.json({ d7: agg(7), d30: agg(30), d180: agg(180), d365: agg(365), daily });
+  const byProduct = db.prepare(`
+    SELECT si.name, si.unit, ROUND(SUM(si.qty), 2) qty, ROUND(SUM(si.qty * si.price), 2) tokens
+    FROM sale_items si JOIN sales s ON s.id = si.sale_id
+    WHERE s.member_id = ? AND s.ts >= ?
+    GROUP BY si.name, si.unit ORDER BY tokens DESC
+  `).all(memberId, since365);
+  res.json({ d7: agg(7), d30: agg(30), d180: agg(180), d365: agg(365), daily, byProduct });
 });
 
 app.get("/api/members/:id/card.pdf", requireDevice, async (req, res) => {

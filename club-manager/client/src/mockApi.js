@@ -189,7 +189,19 @@ export async function mockRequest(method, path, body) {
         grams: Math.round(sel.reduce((a, r) => a + r.grams, 0) * 100) / 100,
       });
     }
-    return { d7: agg(7), d30: agg(30), d180: agg(180), d365: agg(365), daily };
+    const byProductMap = {};
+    for (const sale of s.sales.filter((x) => x.memberId === id && x.ts >= now - 365 * DAY)) {
+      for (const i of sale.items) {
+        const k = i.name;
+        byProductMap[k] = byProductMap[k] || { name: i.name, unit: i.unit, qty: 0, tokens: 0 };
+        byProductMap[k].qty += i.qty;
+        byProductMap[k].tokens += i.qty * i.price;
+      }
+    }
+    const byProduct = Object.values(byProductMap)
+      .map((p) => ({ ...p, qty: Math.round(p.qty * 100) / 100, tokens: Math.round(p.tokens * 100) / 100 }))
+      .sort((a, b) => b.tokens - a.tokens);
+    return { d7: agg(7), d30: agg(30), d180: agg(180), d365: agg(365), daily, byProduct };
   }
   if (method === "GET" && (m = route.match(/^\/api\/members\/(\d+)$/))) {
     needDevice();

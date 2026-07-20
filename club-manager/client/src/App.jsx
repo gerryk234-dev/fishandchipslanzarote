@@ -29,7 +29,8 @@ const CATS = [
 
 const POLL_MS = 15000;
 const todayISO = () => new Date().toISOString().slice(0, 10);
-const eur = (n) => n.toLocaleString("es-ES", { style: "currency", currency: "EUR" });
+/* the club charges in tokens (1 tk = 1 €) — all amounts display as tokens */
+const eur = (n) => `${n.toLocaleString("es-ES", { maximumFractionDigits: 2 })} tk`;
 const timeStr = (d) => new Date(d).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
 const dateES = (iso) => new Date(iso + "T12:00").toLocaleDateString("es-ES", { weekday: "short", day: "numeric", month: "short" });
 const isoOf = (ts) => new Date(ts).toISOString().slice(0, 10);
@@ -818,23 +819,20 @@ function Socios({ data, refresh, notify }) {
               <div style={{ color: C.muted, padding: 20 }}>Cargando ficha…</div>
             ) : (
               <>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
-                  <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
-                    <Avatar photo={detail.photo} name={detail.name} size={84} />
-                    <div>
-                      <div style={{ fontWeight: 800, fontSize: 21, display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>{detail.name} <Badge kind={detail.type} /></div>
-                      <div className="mono" style={{ fontSize: 16, color: C.amber, fontWeight: 700, margin: "2px 0" }}>{detail.num}</div>
-                      <div className="mono" style={{ fontSize: 13, color: C.muted }}>
-                        {detail.nationality} · alta {detail.joined}{detail.sponsor ? ` · avalado por ${detail.sponsor}` : ""}
-                      </div>
-                      {(detail.phone || detail.email) && (
-                        <div className="mono" style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>
-                          {detail.phone ? `📞 ${detail.phone}` : ""}{detail.phone && detail.email ? " · " : ""}{detail.email ? `✉ ${detail.email}` : ""}
-                        </div>
-                      )}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16 }}>
+                  <div style={{ flex: 1, minWidth: 0, alignSelf: "center" }}>
+                    <div style={{ fontWeight: 800, fontSize: 22, display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>{detail.name} <Badge kind={detail.type} /></div>
+                    <div className="mono" style={{ fontSize: 17, color: C.amber, fontWeight: 800, margin: "4px 0" }}>{detail.num}</div>
+                    <div className="mono" style={{ fontSize: 14, color: C.muted }}>
+                      {detail.nationality} · alta {detail.joined}{detail.sponsor ? ` · avalado por ${detail.sponsor}` : ""}
                     </div>
+                    {detail.phone && <div className="mono" style={{ fontSize: 14, color: C.muted, marginTop: 3 }}>📞 {detail.phone}</div>}
+                    {detail.email && <div className="mono" style={{ fontSize: 14, color: C.muted, marginTop: 3 }}>✉ {detail.email}</div>}
                   </div>
-                  <button onClick={() => setSelId(null)} style={{ background: "none", border: "none", color: C.muted, fontSize: 22, cursor: "pointer", padding: 4 }}>✕</button>
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8, flexShrink: 0 }}>
+                    <button onClick={() => setSelId(null)} style={{ background: "none", border: "none", color: C.muted, fontSize: 24, cursor: "pointer", padding: "0 2px", lineHeight: 1 }}>✕</button>
+                    <Avatar photo={detail.photo} name={detail.name} size={104} />
+                  </div>
                 </div>
 
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: 10, margin: "18px 0" }}>
@@ -851,13 +849,26 @@ function Socios({ data, refresh, notify }) {
                 {P && (
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 14, marginBottom: 18 }}>
                     <div style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 10, padding: 14 }}>
-                      <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 8 }}>GASTO · ÚLTIMOS 30 DÍAS</div>
+                      <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 8 }}>TOKENS · ÚLTIMOS 30 DÍAS</div>
                       <BarChart data={P.daily.map((d) => ({ date: d.date, v: d.spent }))} color={C.amber} fmt={(v) => eur(v)} />
                     </div>
                     <div style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 10, padding: 14 }}>
                       <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 8 }}>CONSUMO (g) · ÚLTIMOS 30 DÍAS</div>
                       <BarChart data={P.daily.map((d) => ({ date: d.date, v: d.grams }))} color={C.green} fmt={(v) => `${v} g`} />
                     </div>
+                  </div>
+                )}
+
+                {P && P.byProduct?.length > 0 && (
+                  <div style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 10, padding: 14, marginBottom: 18 }}>
+                    <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 10 }}>PRODUCTOS CONSUMIDOS · ÚLTIMO AÑO</div>
+                    {P.byProduct.map((p) => (
+                      <div key={p.name + p.unit} style={{ display: "flex", justifyContent: "space-between", gap: 10, padding: "7px 0", borderTop: `1px solid ${C.line}` }}>
+                        <span style={{ fontWeight: 700, fontSize: 15, flex: 1, minWidth: 0 }}>{p.name}</span>
+                        <span className="mono" style={{ color: C.green, fontSize: 14, fontWeight: 700 }}>{p.qty} {p.unit === "g" ? "g" : "ud"}</span>
+                        <span className="mono" style={{ color: C.amber, fontSize: 14, fontWeight: 700, width: 86, textAlign: "right" }}>{eur(p.tokens)}</span>
+                      </div>
+                    ))}
                   </div>
                 )}
 
@@ -976,8 +987,8 @@ function Inventario({ data, refresh, notify }) {
               <option value="g">por gramos (g)</option>
               <option value="ud">por unidad (ud)</option>
             </select>
-            <input style={inputStyle} placeholder="Precio local €" inputMode="decimal" value={np.priceLocal} onChange={(e) => setNp({ ...np, priceLocal: e.target.value })} />
-            <input style={inputStyle} placeholder="Precio turista €" inputMode="decimal" value={np.priceTourist} onChange={(e) => setNp({ ...np, priceTourist: e.target.value })} />
+            <input style={inputStyle} placeholder="Precio local (tk)" inputMode="decimal" value={np.priceLocal} onChange={(e) => setNp({ ...np, priceLocal: e.target.value })} />
+            <input style={inputStyle} placeholder="Precio turista (tk)" inputMode="decimal" value={np.priceTourist} onChange={(e) => setNp({ ...np, priceTourist: e.target.value })} />
             <input style={inputStyle} placeholder="Stock inicial" inputMode="decimal" value={np.stock} onChange={(e) => setNp({ ...np, stock: e.target.value })} />
           </div>
           <div style={{ marginTop: 12 }}><Btn kind="primary" onClick={createProduct}>Guardar producto</Btn></div>
@@ -1151,7 +1162,7 @@ function Informes({ data }) {
       </div>
 
       <div style={{ display: "flex", gap: 14, marginBottom: 20, flexWrap: "wrap" }}>
-        <Stat label="FACTURACIÓN" value={eur(total)} color={C.amber} />
+        <Stat label="TOKENS" value={eur(total)} color={C.amber} />
         <Stat label="EFECTIVO" value={eur(cash)} />
         <Stat label="TARJETA" value={eur(card)} />
         <Stat label="DISPENSACIONES" value={inRange.length} color={C.green} />
@@ -1160,7 +1171,7 @@ function Informes({ data }) {
 
       {period !== "dia" && (
         <Panel style={{ padding: 18, marginBottom: 20 }}>
-          <div className="mono" style={{ fontSize: 12, color: C.muted, letterSpacing: 2, marginBottom: 12 }}>FACTURACIÓN POR DÍA</div>
+          <div className="mono" style={{ fontSize: 12, color: C.muted, letterSpacing: 2, marginBottom: 12 }}>TOKENS POR DÍA</div>
           {days.length === 0 && <div style={{ color: C.muted, fontSize: 14 }}>Sin movimientos en este periodo.</div>}
           {days.map(([d, v]) => (
             <div key={d}>
