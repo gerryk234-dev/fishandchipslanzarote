@@ -127,7 +127,7 @@ if (!seeded) {
   setSetting("token_secret", randomHex(32));
   setSetting("seeded", "1");
   setSetting("employees_v2", "1");
-  console.log("[db] first run: seeded demo data (club code: onelife · admin PIN: 1234 — change with npm run set-secrets)");
+  console.log(`[db] first run: seeded demo data (club code: ${process.env.CLUB_CODE ? "from CLUB_CODE env" : "onelife"} · admin PIN: ${process.env.ADMIN_PIN ? "from ADMIN_PIN env" : "1234"})`);
 }
 
 /* ---- migrations for databases created before these features ---- */
