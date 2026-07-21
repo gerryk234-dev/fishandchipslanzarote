@@ -55,7 +55,11 @@ function seed() {
         items.push({ productId: p2.id, name: p2.name, qty: 1, unit: p2.unit, price: price2 });
       }
       const total = Math.round(items.reduce((s, i) => s + i.qty * i.price, 0) * 100) / 100;
-      sales.push({ id: saleId++, ts: d.getTime(), memberId: m.id, employeeId: emp.id, employeeName: emp.name, payment: (back + k) % 3 === 1 ? "tarjeta" : "efectivo", items, total });
+      const fiadoSale = (back + k) % 6 === 2;
+      const method = (back + k) % 3 === 1 ? "tarjeta" : "efectivo";
+      sales.push({ id: saleId++, ts: d.getTime(), memberId: m.id, employeeId: emp.id, employeeName: emp.name,
+        payment: fiadoSale ? "fiado" : method, total, items,
+        paid: !fiadoSale, paidTs: fiadoSale ? null : d.getTime(), paidMethod: fiadoSale ? null : method });
     }
   }
 
@@ -115,7 +119,10 @@ export async function mockRequest(method, path, body) {
     return clone({
       isAdmin: s.auth.admin,
       products: s.products.filter((p) => p.active),
-      members: s.members.filter((x) => x.status !== "baja"),
+      members: s.members.filter((x) => x.status !== "baja").map((x) => ({
+        ...x,
+        debt: Math.round(s.sales.filter((v) => v.memberId === x.id && !v.paid).reduce((a, v) => a + v.total, 0) * 100) / 100,
+      })),
       employees: s.employees,
       invites: s.invites,
     });
@@ -153,7 +160,8 @@ export async function mockRequest(method, path, body) {
       const p = s.products.find((x) => x.id === pid);
       p.stock = Math.round((p.stock - qty) * 100) / 100;
     }
-    const sale = { id: s.saleSeq++, ts: Date.now(), memberId: member.id, employeeId: empId, employeeName, payment, items: lines, total: Math.round(total * 100) / 100 };
+    const isPaid = payment !== "fiado";
+    const sale = { id: s.saleSeq++, ts: Date.now(), memberId: member.id, employeeId: empId, employeeName, payment, items: lines, total: Math.round(total * 100) / 100, paid: isPaid, paidTs: isPaid ? Date.now() : null, paidMethod: isPaid ? payment : null };
     s.sales.push(sale); save(s);
     return clone(sale);
   }
@@ -164,44 +172,60 @@ export async function mockRequest(method, path, body) {
   if (method === "GET" && (m = route.match(/^\/api\/members\/(\d+)\/stats$/))) {
     needDevice();
     const id = Number(m[1]);
+    const days = Math.min(1095, Math.max(7, Number(q.days) || 30));
     const now = Date.now();
     const DAY = 24 * 3600 * 1000;
     const rows = s.sales.filter((x) => x.memberId === id).map((x) => ({
-      ts: x.ts, total: x.total,
+      ts: x.ts, total: x.total, paid: x.paid,
       grams: x.items.filter((i) => i.unit === "g").reduce((a, i) => a + i.qty, 0),
     }));
-    const agg = (days) => {
-      const sel = rows.filter((r) => r.ts >= now - days * DAY);
+    const agg = (d) => {
+      const sel = rows.filter((r) => r.ts >= now - d * DAY);
       return {
         spent: Math.round(sel.reduce((a, r) => a + r.total, 0) * 100) / 100,
         grams: Math.round(sel.reduce((a, r) => a + r.grams, 0) * 100) / 100,
         ops: sel.length,
       };
     };
-    const daily = [];
-    for (let back = 29; back >= 0; back--) {
-      const iso = new Date(now - back * DAY).toISOString().slice(0, 10);
-      const dayStart = new Date(iso + "T00:00:00").getTime();
-      const sel = rows.filter((r) => r.ts >= dayStart && r.ts < dayStart + DAY);
-      daily.push({
-        date: iso,
+    const debt = Math.round(rows.filter((r) => !r.paid).reduce((a, r) => a + r.total, 0) * 100) / 100;
+    const bucketDays = days <= 31 ? 1 : days <= 190 ? 7 : 30;
+    const buckets = Math.ceil(days / bucketDays);
+    const series = [];
+    for (let b = buckets - 1; b >= 0; b--) {
+      const end2 = now - b * bucketDays * DAY;
+      const start2 = end2 - bucketDays * DAY;
+      const sel = rows.filter((r) => r.ts > start2 && r.ts <= end2);
+      series.push({
+        date: new Date(end2).toISOString().slice(0, 10),
         spent: Math.round(sel.reduce((a, r) => a + r.total, 0) * 100) / 100,
         grams: Math.round(sel.reduce((a, r) => a + r.grams, 0) * 100) / 100,
       });
     }
     const byProductMap = {};
-    for (const sale of s.sales.filter((x) => x.memberId === id && x.ts >= now - 365 * DAY)) {
+    for (const sale of s.sales.filter((x) => x.memberId === id && x.ts >= now - days * DAY)) {
       for (const i of sale.items) {
         const k = i.name;
-        byProductMap[k] = byProductMap[k] || { name: i.name, unit: i.unit, qty: 0, tokens: 0 };
+        byProductMap[k] = byProductMap[k] || { name: i.name, unit: i.unit, qty: 0, tokens: 0, owed: 0 };
         byProductMap[k].qty += i.qty;
         byProductMap[k].tokens += i.qty * i.price;
+        if (!sale.paid) byProductMap[k].owed += i.qty * i.price;
       }
     }
     const byProduct = Object.values(byProductMap)
-      .map((p) => ({ ...p, qty: Math.round(p.qty * 100) / 100, tokens: Math.round(p.tokens * 100) / 100 }))
+      .map((p) => ({ ...p, qty: Math.round(p.qty * 100) / 100, tokens: Math.round(p.tokens * 100) / 100, owed: Math.round(p.owed * 100) / 100 }))
       .sort((a, b) => b.tokens - a.tokens);
-    return { d7: agg(7), d30: agg(30), d180: agg(180), d365: agg(365), daily, byProduct };
+    return { d7: agg(7), d30: agg(30), d180: agg(180), d365: agg(365), debt, days, series, daily: series, byProduct };
+  }
+  if (method === "POST" && (m = route.match(/^\/api\/members\/(\d+)\/settle$/))) {
+    needDevice();
+    const id = Number(m[1]);
+    const unpaid = s.sales.filter((x) => x.memberId === id && !x.paid);
+    if (!unpaid.length) fail(400, "no_debt");
+    const methodPay = ["efectivo", "tarjeta"].includes(body?.method) ? body.method : "efectivo";
+    const settled = Math.round(unpaid.reduce((a, x) => a + x.total, 0) * 100) / 100;
+    for (const x of unpaid) { x.paid = true; x.paidTs = Date.now(); x.paidMethod = methodPay; }
+    save(s);
+    return { ok: true, settled, sales: unpaid.length };
   }
   if (method === "GET" && (m = route.match(/^\/api\/members\/(\d+)$/))) {
     needDevice();

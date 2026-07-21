@@ -84,15 +84,21 @@ const memberRow = (m) => ({
 const saleWithItems = (s) => ({
   id: s.id, ts: s.ts, memberId: s.member_id, employeeId: s.employee_id,
   employeeName: s.employee_name, payment: s.payment, total: s.total,
+  paid: !!s.paid, paidTs: s.paid_ts || null, paidMethod: s.paid_method || null,
   items: db.prepare("SELECT * FROM sale_items WHERE sale_id = ?").all(s.id)
     .map((i) => ({ productId: i.product_id, name: i.name, qty: i.qty, unit: i.unit, price: i.price })),
 });
 
 app.get("/api/state", requireDevice, (req, res) => {
+  const debts = new Map(
+    db.prepare("SELECT member_id, ROUND(SUM(total), 2) d FROM sales WHERE paid = 0 GROUP BY member_id").all()
+      .map((r) => [r.member_id, r.d])
+  );
   res.json({
     isAdmin: !!req.session.a,
     products: db.prepare("SELECT * FROM products WHERE active = 1 ORDER BY id").all().map(productRow),
-    members: db.prepare("SELECT * FROM members WHERE status != 'baja' ORDER BY id").all().map(memberRow),
+    members: db.prepare("SELECT * FROM members WHERE status != 'baja' ORDER BY id").all()
+      .map((m) => ({ ...memberRow(m), debt: debts.get(m.id) || 0 })),
     employees: db.prepare("SELECT id, name, initials FROM employees WHERE active = 1 ORDER BY id").all(),
     invites: db.prepare("SELECT * FROM invites ORDER BY created DESC").all()
       .map((i) => ({ code: i.code, sponsorNum: i.sponsor_num, sponsorName: i.sponsor_name, created: i.created, usedBy: i.used_by })),
@@ -104,7 +110,7 @@ app.get("/api/state", requireDevice, (req, res) => {
 app.post("/api/sales", requireDevice, (req, res) => {
   const { memberId, employeeId, payment, items } = req.body || {};
   if (!Array.isArray(items) || items.length === 0) return res.status(400).json({ error: "empty_cart" });
-  if (!["efectivo", "tarjeta"].includes(payment)) return res.status(400).json({ error: "bad_payment" });
+  if (!["efectivo", "tarjeta", "fiado"].includes(payment)) return res.status(400).json({ error: "bad_payment" });
 
   const member = db.prepare("SELECT * FROM members WHERE id = ?").get(memberId);
   if (!member || member.status !== "activo") return res.status(400).json({ error: "member_not_active" });
@@ -141,9 +147,11 @@ app.post("/api/sales", requireDevice, (req, res) => {
     }
     total = Math.round(total * 100) / 100;
 
+    const now = Date.now();
+    const isPaid = payment !== "fiado" ? 1 : 0;
     const info = db.prepare(
-      "INSERT INTO sales (ts, member_id, employee_id, employee_name, payment, total) VALUES (?, ?, ?, ?, ?, ?)"
-    ).run(Date.now(), member.id, empId, employeeName, payment, total);
+      "INSERT INTO sales (ts, member_id, employee_id, employee_name, payment, total, paid, paid_ts, paid_method) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    ).run(now, member.id, empId, employeeName, payment, total, isPaid, isPaid ? now : null, isPaid ? payment : null);
     const saleId = Number(info.lastInsertRowid);
     const insItem = db.prepare(
       "INSERT INTO sale_items (sale_id, product_id, name, qty, unit, price) VALUES (?, ?, ?, ?, ?, ?)"
@@ -163,6 +171,16 @@ app.post("/api/sales", requireDevice, (req, res) => {
 app.get("/api/members/:id/sales", requireDevice, (req, res) => {
   const rows = db.prepare("SELECT * FROM sales WHERE member_id = ? ORDER BY ts DESC LIMIT 100").all(req.params.id);
   res.json(rows.map(saleWithItems));
+});
+
+/* settle a member's whole tab (all unpaid sales) */
+app.post("/api/members/:id/settle", requireDevice, (req, res) => {
+  const method = ["efectivo", "tarjeta"].includes(req.body?.method) ? req.body.method : "efectivo";
+  const owed = db.prepare("SELECT ROUND(COALESCE(SUM(total),0),2) t, COUNT(*) n FROM sales WHERE member_id = ? AND paid = 0").get(req.params.id);
+  if (!owed.n) return res.status(400).json({ error: "no_debt" });
+  db.prepare("UPDATE sales SET paid = 1, paid_ts = ?, paid_method = ? WHERE member_id = ? AND paid = 0")
+    .run(Date.now(), method, req.params.id);
+  res.json({ ok: true, settled: owed.t, sales: owed.n });
 });
 
 /* ================= members / invites ================= */
@@ -294,45 +312,52 @@ app.get("/api/members/:id", requireDevice, (req, res) => {
   res.json({ ...memberRow(m), photo: m.photo || null });
 });
 
-/* consumption/spend aggregates + 30-day daily series for the profile charts */
+/* consumption/spend aggregates + bucketed series for the profile charts.
+   ?days=7..1095 selects the chart/byProduct window (daily ≤31, weekly ≤190, else monthly) */
 app.get("/api/members/:id/stats", requireDevice, (req, res) => {
   const memberId = Number(req.params.id);
+  const days = Math.min(1095, Math.max(7, Number(req.query.days) || 30));
   const now = Date.now();
   const DAY = 24 * 3600 * 1000;
-  const since365 = now - 365 * DAY;
-  const rows = db.prepare("SELECT * FROM sales WHERE member_id = ? AND ts >= ? ORDER BY ts").all(memberId, since365);
+  const windowStart = now - days * DAY;
+  const rows = db.prepare("SELECT * FROM sales WHERE member_id = ? AND ts >= ? ORDER BY ts")
+    .all(memberId, Math.min(windowStart, now - 365 * DAY));
   const withGrams = rows.map((s) => ({
-    ts: s.ts, total: s.total,
+    ts: s.ts, total: s.total, paid: s.paid,
     grams: db.prepare("SELECT COALESCE(SUM(qty),0) g FROM sale_items WHERE sale_id = ? AND unit = 'g'").get(s.id).g,
   }));
-  const agg = (days) => {
-    const cut = now - days * DAY;
-    const sel = withGrams.filter((s) => s.ts >= cut);
+  const agg = (d) => {
+    const sel = withGrams.filter((s) => s.ts >= now - d * DAY);
     return {
       spent: Math.round(sel.reduce((a, s) => a + s.total, 0) * 100) / 100,
       grams: Math.round(sel.reduce((a, s) => a + s.grams, 0) * 100) / 100,
       ops: sel.length,
     };
   };
-  const daily = [];
-  for (let back = 29; back >= 0; back--) {
-    const d = new Date(now - back * DAY);
-    const iso = d.toISOString().slice(0, 10);
-    const dayStart = new Date(iso + "T00:00:00").getTime();
-    const sel = withGrams.filter((s) => s.ts >= dayStart && s.ts < dayStart + DAY);
-    daily.push({
-      date: iso,
+  const debt = db.prepare("SELECT ROUND(COALESCE(SUM(total),0),2) t FROM sales WHERE member_id = ? AND paid = 0").get(memberId).t;
+
+  // bucketed series across the selected window
+  const bucketDays = days <= 31 ? 1 : days <= 190 ? 7 : 30;
+  const buckets = Math.ceil(days / bucketDays);
+  const series = [];
+  for (let b = buckets - 1; b >= 0; b--) {
+    const end = now - b * bucketDays * DAY;
+    const start = end - bucketDays * DAY;
+    const sel = withGrams.filter((s) => s.ts > start && s.ts <= end);
+    series.push({
+      date: new Date(end).toISOString().slice(0, 10),
       spent: Math.round(sel.reduce((a, s) => a + s.total, 0) * 100) / 100,
       grams: Math.round(sel.reduce((a, s) => a + s.grams, 0) * 100) / 100,
     });
   }
   const byProduct = db.prepare(`
-    SELECT si.name, si.unit, ROUND(SUM(si.qty), 2) qty, ROUND(SUM(si.qty * si.price), 2) tokens
+    SELECT si.name, si.unit, ROUND(SUM(si.qty), 2) qty, ROUND(SUM(si.qty * si.price), 2) tokens,
+           ROUND(SUM(CASE WHEN s.paid = 0 THEN si.qty * si.price ELSE 0 END), 2) owed
     FROM sale_items si JOIN sales s ON s.id = si.sale_id
     WHERE s.member_id = ? AND s.ts >= ?
     GROUP BY si.name, si.unit ORDER BY tokens DESC
-  `).all(memberId, since365);
-  res.json({ d7: agg(7), d30: agg(30), d180: agg(180), d365: agg(365), daily, byProduct });
+  `).all(memberId, windowStart);
+  res.json({ d7: agg(7), d30: agg(30), d180: agg(180), d365: agg(365), debt, days, series, daily: series, byProduct });
 });
 
 app.get("/api/members/:id/card.pdf", requireDevice, async (req, res) => {

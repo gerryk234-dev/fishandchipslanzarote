@@ -89,6 +89,7 @@ const Badge = ({ kind }) => {
     turista: { bg: "#2B3B47", fg: C.blue, t: "TURISTA" },
     pendiente: { bg: "#4A3A22", fg: C.amber, t: "PENDIENTE" },
     admin: { bg: "#4A3A22", fg: C.amber, t: "ADMIN" },
+    fiado: { bg: "#4A2A22", fg: C.red, t: "FIADO" },
   };
   const m = map[kind]; if (!m) return null;
   return <span className="mono" style={{ background: m.bg, color: m.fg, fontSize: 11, letterSpacing: 1, padding: "3px 8px", borderRadius: 4, fontWeight: 700 }}>{m.t}</span>;
@@ -418,7 +419,7 @@ function Dispensar({ data, refresh, user, notify }) {
         payment,
         items: cart.map((i) => ({ productId: i.productId, qty: i.qty })),
       });
-      notify(`Dispensación registrada — ${eur(sale.total)}`);
+      notify(payment === "fiado" ? `Apuntado como FIADO — debe ${eur(sale.total)}` : `Dispensación registrada — ${eur(sale.total)}`);
       setCart([]); setMember(null); setQ(""); setPayment("efectivo");
       refresh();
     } catch (e) {
@@ -465,7 +466,9 @@ function Dispensar({ data, refresh, user, notify }) {
                   style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 10px", borderRadius: 8, cursor: "pointer" }}>
                   <div>
                     <div style={{ fontWeight: 700 }}>{m.name}</div>
-                    <div className="mono" style={{ fontSize: 13, color: C.muted }}>{m.num}</div>
+                    <div className="mono" style={{ fontSize: 13, color: C.muted }}>
+                      {m.num}{m.debt > 0 && <span style={{ color: C.red, fontWeight: 800 }}> · debe {eur(m.debt)}</span>}
+                    </div>
                   </div>
                   <Badge kind={m.type} />
                 </div>
@@ -478,7 +481,9 @@ function Dispensar({ data, refresh, user, notify }) {
             <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
               <div>
                 <div style={{ fontWeight: 800 }}>{member.name}</div>
-                <div className="mono" style={{ fontSize: 13, color: C.muted }}>{member.num}</div>
+                <div className="mono" style={{ fontSize: 13, color: C.muted }}>
+                  {member.num}{member.debt > 0 && <span style={{ color: C.red, fontWeight: 800 }}> · debe {eur(member.debt)}</span>}
+                </div>
               </div>
               <Badge kind={member.type} />
             </div>
@@ -557,7 +562,8 @@ function Dispensar({ data, refresh, user, notify }) {
               <div style={{ borderTop: `1px dashed ${C.line}`, marginTop: 10, paddingTop: 10, display: "flex", justifyContent: "space-between", fontSize: 17, fontWeight: 700 }}>
                 <span>TOTAL</span><span style={{ color: C.amber }}>{eur(total)}</span>
               </div>
-              <div style={{ display: "flex", gap: 8, margin: "14px 0" }}>
+              <div className="mono" style={{ fontSize: 12, color: C.muted, letterSpacing: 1, margin: "12px 0 6px" }}>PAGADO</div>
+              <div style={{ display: "flex", gap: 8 }}>
                 {["efectivo", "tarjeta"].map((p) => (
                   <button key={p} onClick={() => setPayment(p)}
                     style={{ flex: 1, padding: "9px 0", borderRadius: 8, border: `1px solid ${payment === p ? C.green : C.line}`, background: payment === p ? C.greenDark : "transparent", color: payment === p ? C.green : C.muted, fontWeight: 700, fontSize: 14 }}>
@@ -565,8 +571,15 @@ function Dispensar({ data, refresh, user, notify }) {
                   </button>
                 ))}
               </div>
-              <Btn kind="amber" size="lg" style={{ width: "100%" }} disabled={cart.length === 0 || busy} onClick={confirm}>
-                {busy ? "Registrando…" : "Registrar dispensación"}
+              <div className="mono" style={{ fontSize: 12, color: C.muted, letterSpacing: 1, margin: "10px 0 6px" }}>O DEJAR A DEBER</div>
+              <button onClick={() => setPayment("fiado")}
+                style={{ width: "100%", padding: "9px 0", borderRadius: 8, border: `1px solid ${payment === "fiado" ? C.red : C.line}`, background: payment === "fiado" ? "#4A2A22" : "transparent", color: payment === "fiado" ? C.red : C.muted, fontWeight: 800, fontSize: 14, marginBottom: 14 }}>
+                Fiado {payment === "fiado" ? `· deberá ${eur(total)}` : ""}
+              </button>
+              <Btn kind={payment === "fiado" ? "ghost" : "amber"} size="lg"
+                style={{ width: "100%", ...(payment === "fiado" ? { borderColor: C.red, color: C.red } : {}) }}
+                disabled={cart.length === 0 || busy} onClick={confirm}>
+                {busy ? "Registrando…" : payment === "fiado" ? "Registrar como FIADO" : "Registrar dispensación"}
               </Btn>
             </div>
           )}
@@ -646,7 +659,9 @@ function Socios({ data, refresh, notify }) {
   const [selId, setSelId] = useState(null);
   const [detail, setDetail] = useState(null);   // full member incl photo
   const [stats, setStats] = useState(null);
+  const [statDays, setStatDays] = useState(30); // chart/byProduct window
   const [history, setHistory] = useState([]);
+  const [settling, setSettling] = useState(false);
   const [approveType, setApproveType] = useState({});
   const [showAdd, setShowAdd] = useState(false);
   const [nm, setNm] = useState(EMPTY_NEW_MEMBER);
@@ -659,10 +674,32 @@ function Socios({ data, refresh, notify }) {
     if (!selId) { setDetail(null); setStats(null); setHistory([]); return; }
     let alive = true;
     api.get(`/api/members/${selId}`).then((d) => alive && setDetail(d)).catch(() => {});
-    api.get(`/api/members/${selId}/stats`).then((s) => alive && setStats(s)).catch(() => {});
     api.get(`/api/members/${selId}/sales`).then((h) => alive && setHistory(h)).catch(() => {});
     return () => { alive = false; };
   }, [selId]);
+
+  useEffect(() => {
+    if (!selId) return;
+    let alive = true;
+    api.get(`/api/members/${selId}/stats?days=${statDays}`).then((s) => alive && setStats(s)).catch(() => {});
+    return () => { alive = false; };
+  }, [selId, statDays]);
+
+  const settle = async (method) => {
+    if (settling) return;
+    setSettling(true);
+    try {
+      const r = await api.post(`/api/members/${selId}/settle`, { method });
+      notify(`Deuda cobrada: ${eur(r.settled)} (${method})`);
+      api.get(`/api/members/${selId}/stats?days=${statDays}`).then(setStats).catch(() => {});
+      api.get(`/api/members/${selId}/sales`).then(setHistory).catch(() => {});
+      refresh();
+    } catch {
+      notify("No se pudo cobrar la deuda");
+    } finally {
+      setSettling(false);
+    }
+  };
 
   const onPhoto = async (e, setter, current) => {
     const f = e.target.files?.[0];
@@ -837,6 +874,19 @@ function Socios({ data, refresh, notify }) {
                   </div>
                 </div>
 
+                {P && P.debt > 0 && (
+                  <div style={{ background: "#4A2A22", border: `1px solid ${C.red}`, borderRadius: 10, padding: "12px 16px", margin: "16px 0 0", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                    <div>
+                      <div className="mono" style={{ fontSize: 11, color: C.red, letterSpacing: 2 }}>DEUDA PENDIENTE (FIADO)</div>
+                      <div className="mono" style={{ fontSize: 22, fontWeight: 800, color: C.red }}>{eur(P.debt)}</div>
+                    </div>
+                    <div style={{ display: "flex", gap: 8 }}>
+                      <Btn size="sm" kind="primary" disabled={settling} onClick={() => settle("efectivo")}>Cobrar efectivo</Btn>
+                      <Btn size="sm" disabled={settling} onClick={() => settle("tarjeta")}>Cobrar tarjeta</Btn>
+                    </div>
+                  </div>
+                )}
+
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: 10, margin: "18px 0" }}>
                   {periods.map(([label, v]) => (
                     <div key={label} style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 10, padding: "12px 14px" }}>
@@ -848,27 +898,42 @@ function Socios({ data, refresh, notify }) {
                   {!P && <div style={{ color: C.muted, fontSize: 14 }}>Cargando estadísticas…</div>}
                 </div>
 
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 12 }}>
+                  {[[7, "1 semana"], [30, "1 mes"], [90, "3 meses"], [180, "6 meses"], [365, "1 año"], [1095, "3 años"]].map(([d, l]) => (
+                    <button key={d} onClick={() => setStatDays(d)}
+                      style={{ padding: "7px 12px", borderRadius: 16, fontSize: 13, fontWeight: 700, border: `1px solid ${statDays === d ? C.green : C.line}`, background: statDays === d ? C.greenDark : "transparent", color: statDays === d ? C.green : C.muted }}>
+                      {l}
+                    </button>
+                  ))}
+                </div>
                 {P && (
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 14, marginBottom: 18 }}>
                     <div style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 10, padding: 14 }}>
-                      <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 8 }}>TOKENS · ÚLTIMOS 30 DÍAS</div>
-                      <BarChart data={P.daily.map((d) => ({ date: d.date, v: d.spent }))} color={C.amber} fmt={(v) => eur(v)} />
+                      <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 8 }}>TOKENS · {statDays <= 31 ? "POR DÍA" : statDays <= 190 ? "POR SEMANA" : "POR MES"}</div>
+                      <BarChart data={P.series.map((d) => ({ date: d.date, v: d.spent }))} color={C.amber} fmt={(v) => eur(v)} />
                     </div>
                     <div style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 10, padding: 14 }}>
-                      <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 8 }}>CONSUMO (g) · ÚLTIMOS 30 DÍAS</div>
-                      <BarChart data={P.daily.map((d) => ({ date: d.date, v: d.grams }))} color={C.green} fmt={(v) => `${v} g`} />
+                      <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 8 }}>CONSUMO (g) · {statDays <= 31 ? "POR DÍA" : statDays <= 190 ? "POR SEMANA" : "POR MES"}</div>
+                      <BarChart data={P.series.map((d) => ({ date: d.date, v: d.grams }))} color={C.green} fmt={(v) => `${v} g`} />
                     </div>
                   </div>
                 )}
 
                 {P && P.byProduct?.length > 0 && (
                   <div style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 10, padding: 14, marginBottom: 18 }}>
-                    <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 10 }}>PRODUCTOS CONSUMIDOS · ÚLTIMO AÑO</div>
+                    <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 10 }}>PRODUCTOS CONSUMIDOS · PERIODO SELECCIONADO</div>
+                    <div className="mono" style={{ display: "flex", justifyContent: "flex-end", gap: 10, fontSize: 11, color: C.muted, letterSpacing: 1, paddingBottom: 4 }}>
+                      <span>CANTIDAD</span><span style={{ width: 86, textAlign: "right" }}>GASTADO</span>
+                      {P.byProduct.some((p) => p.owed > 0) && <span style={{ width: 78, textAlign: "right" }}>DEBE</span>}
+                    </div>
                     {P.byProduct.map((p) => (
                       <div key={p.name + p.unit} style={{ display: "flex", justifyContent: "space-between", gap: 10, padding: "7px 0", borderTop: `1px solid ${C.line}` }}>
                         <span style={{ fontWeight: 700, fontSize: 15, flex: 1, minWidth: 0 }}>{p.name}</span>
                         <span className="mono" style={{ color: C.green, fontSize: 14, fontWeight: 700 }}>{p.qty} {p.unit === "g" ? "g" : "ud"}</span>
                         <span className="mono" style={{ color: C.amber, fontSize: 14, fontWeight: 700, width: 86, textAlign: "right" }}>{eur(p.tokens)}</span>
+                        {P.byProduct.some((x) => x.owed > 0) && (
+                          <span className="mono" style={{ color: p.owed > 0 ? C.red : C.muted, fontSize: 14, fontWeight: 700, width: 78, textAlign: "right" }}>{p.owed > 0 ? eur(p.owed) : "—"}</span>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -887,7 +952,11 @@ function Socios({ data, refresh, notify }) {
                 {history.length === 0 && <div style={{ color: C.muted, fontSize: 14 }}>Sin dispensaciones registradas.</div>}
                 {history.map((s) => (
                   <div key={s.id} style={{ borderTop: `1px dashed ${C.line}`, padding: "8px 0" }} className="mono">
-                    <div style={{ fontSize: 12, color: C.muted }}>{new Date(s.ts).toLocaleDateString("es-ES")} · {timeStr(s.ts)} · {s.employeeName}</div>
+                    <div style={{ fontSize: 12, color: C.muted, display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                      {new Date(s.ts).toLocaleDateString("es-ES")} · {timeStr(s.ts)} · {s.employeeName}
+                      {!s.paid && <Badge kind="fiado" />}
+                      {s.paid && s.payment === "fiado" && <span style={{ color: C.green }}>pagado {s.paidTs ? new Date(s.paidTs).toLocaleDateString("es-ES") : ""} ({s.paidMethod})</span>}
+                    </div>
                     {s.items.map((i, idx) => (
                       <div key={idx} style={{ display: "flex", justifyContent: "space-between", fontSize: 14 }}>
                         <span>{i.name}</span><span style={{ color: C.muted }}>{i.qty}{i.unit === "g" ? "g" : "×"}</span><span style={{ color: C.amber }}>{eur(i.qty * i.price)}</span>
@@ -1107,8 +1176,9 @@ function Informes({ data }) {
 
   const inRange = sales;
   const total = inRange.reduce((s, x) => s + x.total, 0);
-  const cash = inRange.filter((s) => s.payment === "efectivo").reduce((s, x) => s + x.total, 0);
-  const card = total - cash;
+  const cash = inRange.filter((s) => s.paid && (s.paidMethod || s.payment) === "efectivo").reduce((s, x) => s + x.total, 0);
+  const card = inRange.filter((s) => s.paid && (s.paidMethod || s.payment) === "tarjeta").reduce((s, x) => s + x.total, 0);
+  const fiado = inRange.filter((s) => !s.paid).reduce((s, x) => s + x.total, 0);
   const grams = inRange.reduce((s, x) => s + x.items.filter((i) => i.unit === "g").reduce((a, i) => a + i.qty, 0), 0);
 
   /* --- per day breakdown, ordered --- */
@@ -1167,6 +1237,7 @@ function Informes({ data }) {
         <Stat label="TOKENS" value={eur(total)} color={C.amber} />
         <Stat label="EFECTIVO" value={eur(cash)} />
         <Stat label="TARJETA" value={eur(card)} />
+        {fiado > 0 && <Stat label="FIADO PENDIENTE" value={eur(fiado)} color={C.red} />}
         <Stat label="DISPENSACIONES" value={inRange.length} color={C.green} />
         <Stat label="GRAMOS" value={`${+grams.toFixed(2)} g`} />
       </div>
@@ -1196,7 +1267,7 @@ function Informes({ data }) {
                         <span style={{ color: C.text }}>{m?.name || "—"}</span>
                         <span>{s.items.map((i) => `${i.name} ${i.qty}${i.unit === "g" ? "g" : "×"}`).join(", ")}</span>
                         <span>{s.employeeName}</span>
-                        <span>{s.payment}</span>
+                        <span style={{ color: s.paid ? undefined : C.red, fontWeight: s.paid ? undefined : 800 }}>{s.paid ? (s.paidMethod || s.payment) : "FIADO"}</span>
                         <span style={{ color: C.amber }}>{eur(s.total)}</span>
                       </div>
                     );
@@ -1245,7 +1316,7 @@ function Informes({ data }) {
                 <span style={{ flex: 1, minWidth: 140 }}>{m?.name || "—"}</span>
                 <span style={{ color: C.muted }}>{s.items.map((i) => `${i.name} ${i.qty}${i.unit === "g" ? "g" : "×"}`).join(", ")}</span>
                 <span style={{ color: C.muted }}>{s.employeeName}</span>
-                <span>{s.payment}</span>
+                <span style={{ color: s.paid ? undefined : C.red, fontWeight: s.paid ? undefined : 800 }}>{s.paid ? (s.paidMethod || s.payment) : "FIADO"}</span>
                 <span style={{ color: C.amber }}>{eur(s.total)}</span>
               </div>
             );

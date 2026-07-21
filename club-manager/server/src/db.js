@@ -145,3 +145,12 @@ if (!memberCols.includes("email")) db.exec("ALTER TABLE members ADD COLUMN email
 if (!memberCols.includes("phone")) db.exec("ALTER TABLE members ADD COLUMN phone TEXT");
 if (!memberCols.includes("photo")) db.exec("ALTER TABLE members ADD COLUMN photo TEXT"); // data-URL selfie
 if (!memberCols.includes("document")) db.exec("ALTER TABLE members ADD COLUMN document TEXT"); // ID/passport number
+
+const saleCols = db.prepare("SELECT name FROM pragma_table_info('sales')").all().map((c) => c.name);
+if (!saleCols.includes("paid")) {
+  // fiado (tab) support: unpaid sales accumulate as member debt until settled
+  db.exec("ALTER TABLE sales ADD COLUMN paid INTEGER NOT NULL DEFAULT 1");
+  db.exec("ALTER TABLE sales ADD COLUMN paid_ts INTEGER");
+  db.exec("ALTER TABLE sales ADD COLUMN paid_method TEXT");
+  db.exec("UPDATE sales SET paid_ts = ts, paid_method = payment WHERE paid = 1");
+}
