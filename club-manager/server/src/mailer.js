@@ -19,13 +19,23 @@ function transport() {
   });
 }
 
+/* Build a valid From: header. If SMTP_FROM is only a display name (no
+   address), wrap it around SMTP_USER so sending never fails on a bad From. */
+function fromAddress() {
+  const from = (process.env.SMTP_FROM || "").trim();
+  const user = process.env.SMTP_USER;
+  if (!from) return user;
+  if (from.includes("@")) return from;      // already a full address / name <addr>
+  return `${from} <${user}>`;               // display name only → attach the address
+}
+
 export async function sendWelcome(member, pdfBytes) {
   const t = transport();
   if (!t) return "not_configured";
   if (!member.email) return "no_email";
   try {
     await t.sendMail({
-      from: process.env.SMTP_FROM || process.env.SMTP_USER,
+      from: fromAddress(),
       to: member.email,
       subject: `Bienvenido/a a One Life Lanzarote — tu carnet ${member.num}`,
       text: `${WELCOME_TEXT(member.name)}\n\n------------------------------\n\n${TERMS_TEXT}`,
