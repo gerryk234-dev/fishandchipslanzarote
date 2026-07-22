@@ -1,23 +1,35 @@
-# Photo guide — Speed Boat Rental
+# Photos — Speed Boat Rental
 
-The `.png` files in this folder are **designed promo graphics** (generated here),
-not real photographs. Use them as gallery images / placeholders until you add real
-shots. When you have real photos, drop them in and rename over the placeholders.
+All `.png` files here are **designed vector scene illustrations** (generated), not
+real photographs. Use them as gallery images now; swap in real photos when you
+have them (keep the same filenames to reuse them in place).
 
-## Recommended real shots (in priority order)
-1. **Hero** — the Caribe speedboat on the water, sun out, people aboard → featured image
-2. **Wakeboarder in action** — spray, rider up on the board behind the boat
-3. **On-board / relaxing** — guests sitting on the boat, coastline behind
-4. **Swim stop** — boat anchored in a clear-water bay, someone swimming
-5. **Captain at the wheel** — shows the "includes captain" selling point
-6. **Coastline / scenery** — Lanzarote cliffs or Papagayo beaches from the water
+## Gallery — 4 per service
 
-## Tips
-- Shoot landscape (horizontal), bright daylight, plenty of blue water.
-- Keep faces either clearly consenting or not identifiable (privacy).
-- Aim for ~2000px wide, well-lit; avoid heavy filters.
+### Speed boat service
+- `boat-01-cruising.png` — boat cruising the coast
+- `boat-02-swim-stop.png` — anchored in a bay, people swimming
+- `boat-03-on-deck.png` — guests relaxing on deck
+- `boat-04-skipper-helm.png` — skipper at the wheel
 
-## Generated placeholder graphics in this folder
-- `01-hero-speedboat.png` — headline offer card (boat, 295 €, 2h30, captain)
-- `02-wakeboard.png` — wakeboard add-on / rates card
-- `03-whats-included.png` — "what's included" summary card
+### Wakeboard service
+- `wakeboard-01-riding.png` — rider up on the board
+- `wakeboard-02-towing.png` — boat towing the rider (wide)
+- `wakeboard-03-getting-ready.png` — rider in the water, ready to start
+- `wakeboard-04-group.png` — group cheering while one rides
+
+## Promo cards (with text / prices)
+- `01-hero-speedboat.png` — headline offer (295 €, 2h30, captain)
+- `02-wakeboard.png` — wakeboard rates (+150 € / +50 € per extra rider)
+- `03-whats-included.png` — what's-included summary
+
+## Recommended real shots (priority)
+1. Boat on the water with guests (hero / featured image)
+2. Wakeboarder in action (spray, up on the board)
+3. Guests relaxing on deck, coastline behind
+4. Swim stop — boat anchored in clear water
+5. Skipper at the wheel
+6. Coastline / Papagayo scenery from the water
+
+Tips: shoot landscape, bright daylight, ~2000px wide; keep faces consenting or
+not identifiable.

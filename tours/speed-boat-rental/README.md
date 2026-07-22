@@ -1,42 +1,33 @@
 # Speed Boat Rental — tour upload folder
 
-Everything needed to publish this tour as a "trip" listing (structured the same
-way as the excursionsticketsdirect.com Playa Blanca → Papagayo mini-cruise page).
+Everything needed to publish this tour as a "trip" listing.
 
 ## Contents
 ```
 speed-boat-rental/
-├── README.md          ← this file (upload checklist)
-├── tour-details.md    ← all copy: title, price, duration, includes, booking (EN + ES)
+├── README.md          ← this file
+├── tour-details.md    ← short spec: prices, includes, requirements (developer-facing)
 └── photos/
-    ├── PHOTO-GUIDE.md  ← shot list for the real photos you should add
-    └── *.png           ← generated promo graphics (use as gallery / placeholders)
+    ├── PHOTO-GUIDE.md
+    ├── boat-01..04-*.png       ← 4 speed boat scene images
+    ├── wakeboard-01..04-*.png  ← 4 wakeboard scene images
+    └── 01..03-*.png            ← 3 promo cards (with text/prices)
 ```
 
-## How to upload (maps to the trip page fields)
-1. **Title** → field 1 in `tour-details.md`
-2. **Featured image** → pick the strongest photo (a real boat shot once you have it;
-   until then use `photos/01-hero-speedboat.png`)
-3. **Gallery** → drop all `photos/*.png` (and your real photos) into the gallery
-4. **Price** → field 3. Headline price is **295 €** (private boat, up to 6). List
-   the wakeboard add-on and wakeboard-only rate as options.
-5. **Duration & times** → field 4 (times + departure marina still **[TO CONFIRM]**)
-6. **Description** → field 6 intro paragraph
-7. **What's Included** → field 7 bullet list
-8. **Booking Details** → field 9 (contact, languages, payment — all **[TO CONFIRM]**)
-9. **SEO title/description/slug** → field 10
+## Upload — map to the trip page
+- **Title / description** → `tour-details.md` (Title + Boat hire includes)
+- **Price** → 295 € boat hire · +150 € wakeboard (1 h, up to 4) · +50 € per extra rider/hour
+- **Duration** → 2h 30 · times flexible/on request
+- **What's Included** → the "Boat hire — includes" list
+- **Extras** → "Wakeboard — extra service"
+- **Languages** → Spanish, English, French, German
+- **Gallery** → all `photos/*.png` (use `boat-01-cruising.png` as featured until real photos)
+- **SEO** → slug + meta in `tour-details.md`
 
-## Before publishing — fill these in
-- [ ] Departure point / marina (the only detail still missing)
-- [ ] Replace promo graphics with real photos of the boat & wakeboarding
-
-## Already confirmed
-- Times: flexible / on request, subject to availability (private boat + skipper)
-- Languages: Spanish, English, French, German
-- Booking: handled by the website
-- Price: 295 € boat hire · +150 € wakeboard (1 h, up to 4) · +50 € per extra rider/hour
+## Before publishing
+- [ ] Departure point / marina (only detail still missing)
+- [ ] Replace scene illustrations with real photos
 
 ## Source
-Built from the uploaded *Speed Boat Rental / Caribe* flyer. Prices, duration,
-capacity and the wakeboard options come straight from that flyer; everything
-marked **[TO CONFIRM]** was not on it.
+Built from the uploaded Speed Boat Rental / Caribe flyer; prices/times/languages
+confirmed by the owner. Only the departure marina is still to confirm.
