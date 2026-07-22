@@ -1,0 +1,9 @@
+{
+  "name": "onelife-club-manager",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "cd client && npm install --no-audit --no-fund && npm run build && cd ../server && npm install --no-audit --no-fund",
+    "start": "cd server && npm start"
+  }
+}
