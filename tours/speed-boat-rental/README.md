@@ -27,13 +27,14 @@ speed-boat-rental/
 9. **SEO title/description/slug** → field 10
 
 ## Before publishing — fill these in
-- [ ] Departure times and marina
-- [ ] Contact / WhatsApp number to book
-- [ ] Operator/business name
-- [ ] Languages spoken by the crew
-- [ ] Payment & cancellation policy
-- [ ] Confirm what "Extra pax 50 € / 30 min" means
+- [ ] Departure point / marina (the only detail still missing)
 - [ ] Replace promo graphics with real photos of the boat & wakeboarding
+
+## Already confirmed
+- Times: flexible / on request, subject to availability (private boat + skipper)
+- Languages: Spanish, English, French, German
+- Booking: handled by the website
+- Price: 295 € boat hire · +150 € wakeboard (1 h, up to 4) · +50 € per extra rider/hour
 
 ## Source
 Built from the uploaded *Speed Boat Rental / Caribe* flyer. Prices, duration,
