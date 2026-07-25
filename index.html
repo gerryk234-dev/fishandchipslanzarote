@@ -488,6 +488,25 @@
       transform: translateY(-3px);
       box-shadow: 0 12px 40px rgba(0,0,0,0.10);
     }
+    .menu-card-ph {
+      width: 100%; height: 180px; display: flex; align-items: center; justify-content: center;
+      font-size: 3.4rem; background: linear-gradient(135deg, var(--sea), #164b74); color: var(--gold);
+    }
+    .menu-notes {
+      max-width: 1000px; margin: 3rem auto 0; display: grid; gap: 1.25rem;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    }
+    .menu-note {
+      background: var(--chalk); border: 1px solid #e8e8e8; border-left: 3px solid var(--gold);
+      border-radius: var(--radius); padding: 1rem 1.1rem;
+    }
+    .menu-note h4 { font-family: var(--ff-display); font-size: 1rem; margin-bottom: 0.35rem; color: var(--sea); }
+    .menu-note p { font-size: 0.86rem; color: var(--mist); line-height: 1.5; }
+    .menu-igic {
+      grid-column: 1 / -1; text-align: center; font-size: 0.8rem; color: var(--mist);
+      letter-spacing: 0.05em; text-transform: uppercase; margin-top: 0.25rem;
+    }
+
     .menu-card-img {
       width: 100%;
       height: 180px;
@@ -2353,8 +2372,8 @@
         <p class="spotlight-desc">
           Fresh Atlantic cod in our legendary light, crispy beer batter — the one reviewers from Leeds, London and Scotland can't stop talking about. Served with hand-cut chips, mushy peas and tartare sauce. This is what we're known for, and we don't take it lightly.
         </p>
-        <div class="spotlight-price">€15.95</div>
-        <p style="font-size:0.8rem;color:rgba(255,255,255,0.5);margin-top:0.5rem;">Small Cod &amp; Chips with Mushy Peas — €12.95</p>
+        <div class="spotlight-price">€16.90</div>
+        <p style="font-size:0.8rem;color:rgba(255,255,255,0.5);margin-top:0.5rem;">Regular Cod &amp; Chips — €13.90</p>
       </div>
     </div>
 
@@ -2362,320 +2381,737 @@
     <div class="menu-tabs">
       <button class="menu-tab active" onclick="filterMenu('all', this)">All</button>
       <button class="menu-tab" onclick="filterMenu('fish', this)">🐟 Fish</button>
-      <button class="menu-tab" onclick="filterMenu('sides', this)">🍟 Sides &amp; Sauces</button>
+      <button class="menu-tab" onclick="filterMenu('specials', this)">⭐ House Specials</button>
       <button class="menu-tab" onclick="filterMenu('burgers', this)">🍔 Burgers</button>
-      <button class="menu-tab" onclick="filterMenu('breakfast', this)">🍳 Breakfast</button>
-      <button class="menu-tab" onclick="filterMenu('extras', this)">➕ Extras</button>
+      <button class="menu-tab" onclick="filterMenu('breakfast', this)">🍳 Breakfast &amp; Sandwiches</button>
+      <button class="menu-tab" onclick="filterMenu('starters', this)">🍤 Starters &amp; Salads</button>
+      <button class="menu-tab" onclick="filterMenu('sides', this)">🍟 Sides</button>
+      <button class="menu-tab" onclick="filterMenu('kids', this)">👶 Kids</button>
+      <button class="menu-tab" onclick="filterMenu('extras', this)">🍫 Desserts &amp; Drinks</button>
     </div>
 
     <!-- Grid -->
     <div class="menu-grid" id="menuGrid">
-
       <!-- FISH -->
+
       <div class="menu-card" data-cat="fish">
-        <img class="menu-card-img" src="images/img41.jpg" alt="Breaded calamares rings Hippie Chippy Costa Teguise" loading="lazy" />
+        <img class="menu-card-img" src="images/img8.jpg" alt="Regular Cod &amp; Chips Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
         <div class="menu-card-body">
           <div class="menu-card-header">
-            <h3 class="menu-card-name">Breaded Calamares</h3>
-            <span class="menu-card-price">€8.95</span>
+            <h3 class="menu-card-name">Regular Cod &amp; Chips</h3>
+            <span class="menu-card-price">€13.90</span>
           </div>
-          <p class="menu-card-desc">Crispy golden breaded calamari rings served with a fresh garden salad. A taste of the Atlantic, chippy style.</p>
-          <div class="menu-card-tags">
-            <span class="tag tag-new">New</span>
-          </div>
+          <p class="menu-card-desc">Fresh Atlantic cod in our signature crispy beer batter, with hand-cut chips, mushy or garden peas and tartare sauce.</p>
         </div>
       </div>
 
-
       <div class="menu-card" data-cat="fish">
-        <img class="menu-card-img" src="images/img15.jpg" alt="Large battered cod and chips Hippie Chippy Costa Teguise" loading="lazy" />
+        <img class="menu-card-img" src="images/img15.jpg" alt="Large Cod &amp; Chips Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
         <div class="menu-card-body">
           <div class="menu-card-header">
             <h3 class="menu-card-name">Large Cod &amp; Chips</h3>
-            <span class="menu-card-price">€15.95</span>
+            <span class="menu-card-price">€16.90</span>
           </div>
-          <p class="menu-card-desc">Fresh Atlantic cod in our signature crispy beer batter. Served with hand-cut chips, mushy peas and tartare sauce. Light, golden and cooked to order.</p>
-          <div class="menu-card-tags">
-            <span class="tag tag-popular">⭐ Most Popular</span>
-          </div>
+          <p class="menu-card-desc">The full-size portion of the cod reviewers from Leeds, London and Scotland can't stop talking about. Light, golden, cooked to order.</p>
+          <div class="menu-card-tags"><span class="tag tag-popular">⭐ Most Popular</span></div>
         </div>
       </div>
 
       <div class="menu-card" data-cat="fish">
-        <img class="menu-card-img" src="images/img8.jpg" alt="Small cod and chips with mushy peas Hippie Chippy Lanzarote" loading="lazy" />
+        <img class="menu-card-img" src="images/img16.jpg" alt="Regular Haddock &amp; Chips Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
         <div class="menu-card-body">
           <div class="menu-card-header">
-            <h3 class="menu-card-name">Small Cod &amp; Chips with Mushy Peas</h3>
-            <span class="menu-card-price">€12.95</span>
+            <h3 class="menu-card-name">Regular Haddock &amp; Chips</h3>
+            <span class="menu-card-price">€13.90</span>
           </div>
-          <p class="menu-card-desc">A lighter portion of our classic battered cod with hand-cut chips and mushy peas. All the flavour, none of the fuss.</p>
-          <div class="menu-card-tags">
-            <span class="tag tag-new">Lighter Portion</span>
-          </div>
+          <p class="menu-card-desc">Delicately flavoured North Atlantic haddock in our classic batter, with fluffy hand-cut chips and your choice of peas.</p>
         </div>
       </div>
 
       <div class="menu-card" data-cat="fish">
-        <img class="menu-card-img" src="images/img16.jpg" alt="Battered haddock and chips Hippie Chippy Lanzarote" loading="lazy" />
+        <img class="menu-card-img" src="images/img16.jpg" alt="Large Haddock &amp; Chips Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
         <div class="menu-card-body">
           <div class="menu-card-header">
-            <h3 class="menu-card-name">Battered Haddock &amp; Chips</h3>
+            <h3 class="menu-card-name">Large Haddock &amp; Chips</h3>
+            <span class="menu-card-price">€16.90</span>
+          </div>
+          <p class="menu-card-desc">For the haddock purists who want the bigger plate. Same crisp batter, same hand-cut chips, more of it.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="fish">
+        <img class="menu-card-img" src="images/img42.jpg" alt="Breaded Scampi Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Breaded Scampi</h3>
             <span class="menu-card-price">€13.50</span>
           </div>
-          <p class="menu-card-desc">For the haddock purists. Delicately flavoured North Atlantic haddock in our classic batter, paired with fluffy hand-cut chips and your choice of sauce.</p>
-          <div class="menu-card-tags">
-            <span class="tag tag-popular">⭐ Customer Favourite</span>
-          </div>
+          <p class="menu-card-desc">Crispy whole-tail scampi in golden breadcrumbs, served with hand-cut chips and tartare sauce.</p>
         </div>
       </div>
 
       <div class="menu-card" data-cat="fish">
-        <img class="menu-card-img" src="images/img42.jpg" alt="Scampi breaded chicken coleslaw and chips combo Hippie Chippy Costa Teguise" loading="lazy" />
+        <img class="menu-card-img" src="images/prawns-garlic.jpg" alt="Garlic King Prawns Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
         <div class="menu-card-body">
           <div class="menu-card-header">
-            <h3 class="menu-card-name">Scampi, Breaded Chicken, Coleslaw &amp; Chips</h3>
-            <span class="menu-card-price">€10.95</span>
+            <h3 class="menu-card-name">Garlic King Prawns</h3>
+            <span class="menu-card-price">€14.90</span>
           </div>
-          <p class="menu-card-desc">A little bit of everything — crispy whole tail scampi, golden breaded chicken and fresh coleslaw, served with hand-cut chips.</p>
-          <div class="menu-card-tags">
-            <span class="tag tag-popular">Combo</span>
-          </div>
+          <p class="menu-card-desc">King prawns cooked in garlic — a Canarian favourite served the chippy way, with hand-cut chips.</p>
+          <div class="menu-card-tags"><span class="tag tag-new">New</span></div>
         </div>
       </div>
 
-      <!-- SIDES -->
+      <!-- HOUSE SPECIALS -->
 
-      <div class="menu-card" data-cat="sides">
-        <img class="menu-card-img" src="images/img46.jpg" alt="Hand cut chips Hippie Chippy Lanzarote" loading="lazy" />
+      <div class="menu-card" data-cat="specials">
+        <img class="menu-card-img" src="images/img47.jpg" alt="Battered Sausage &amp; Chips Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
         <div class="menu-card-body">
           <div class="menu-card-header">
-            <h3 class="menu-card-name">Hand-Cut Chips</h3>
-            <span class="menu-card-price">€3.95</span>
+            <h3 class="menu-card-name">Battered Sausage &amp; Chips</h3>
+            <span class="menu-card-price">€7.90</span>
           </div>
-          <p class="menu-card-desc">Made fresh from whole potatoes every single day. Thick, fluffy inside, golden outside — never frozen. The chips reviewers say are better than back home.</p>
-          <div class="menu-card-tags">
-            <span class="tag tag-veg">🌱 Veg</span>
-          </div>
+          <p class="menu-card-desc">A pork sausage wrapped in our golden beer batter — crisp shell, juicy inside — with hand-cut chips.</p>
+          <div class="menu-card-tags"><span class="tag tag-popular">⭐ Fan Favourite</span></div>
         </div>
       </div>
 
-      <div class="menu-card" data-cat="sides">
-        <img class="menu-card-img" src="images/img49.jpg" alt="Curry sauce Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+      <div class="menu-card" data-cat="specials">
+        <img class="menu-card-img" src="images/img2.jpg" alt="Battered Fish Bites &amp; Chips Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
         <div class="menu-card-body">
           <div class="menu-card-header">
-            <h3 class="menu-card-name">Curry Sauce</h3>
-            <span class="menu-card-price">€3.95</span>
+            <h3 class="menu-card-name">Battered Fish Bites &amp; Chips</h3>
+            <span class="menu-card-price">€8.90</span>
           </div>
-          <p class="menu-card-desc">Our house curry sauce — rich, warming and mildly spiced. Reviewed as "the best curry sauce I've ever had" by guests all the way from Scotland. Goes on everything.</p>
-          <div class="menu-card-tags">
-            <span class="tag tag-popular">⭐ Must Try</span>
-          </div>
+          <p class="menu-card-desc">Bite-size pieces of battered cod with hand-cut chips. Light, easy and always a hit.</p>
         </div>
       </div>
 
-      <div class="menu-card" data-cat="sides">
-        <img class="menu-card-img" src="images/img51.jpg" alt="Mushy peas Hippie Chippy Lanzarote" loading="lazy" />
+      <div class="menu-card" data-cat="specials">
+        <img class="menu-card-img" src="images/img30.jpg" alt="Breaded Chicken with Chips &amp; Coleslaw Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
         <div class="menu-card-body">
           <div class="menu-card-header">
-            <h3 class="menu-card-name">Mushy Peas</h3>
-            <span class="menu-card-price">€1.95</span>
+            <h3 class="menu-card-name">Breaded Chicken with Chips &amp; Coleslaw</h3>
+            <span class="menu-card-price">€12.50</span>
           </div>
-          <p class="menu-card-desc">Proper British mushy peas — soft, minted and utterly satisfying alongside battered fish. Included with cod &amp; haddock meals, or order a side pot.</p>
-          <div class="menu-card-tags">
-            <span class="tag tag-veg">🌱 Veg</span>
-          </div>
+          <p class="menu-card-desc">Crispy golden breaded chicken served with hand-cut chips and fresh coleslaw. A hearty alternative to fish.</p>
         </div>
       </div>
 
-      <div class="menu-card" data-cat="sides">
-        <img class="menu-card-img" src="images/logo.jpg" alt="Garden peas side Hippie Chippy Lanzarote" loading="lazy" />
+      <div class="menu-card" data-cat="specials">
+        <img class="menu-card-img" src="images/img35.jpg" alt="Grilled Chicken Breast with Chips &amp; Salad Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
         <div class="menu-card-body">
           <div class="menu-card-header">
-            <h3 class="menu-card-name">Garden Peas</h3>
-            <span class="menu-card-price">€1.95</span>
+            <h3 class="menu-card-name">Grilled Chicken Breast with Chips &amp; Salad</h3>
+            <span class="menu-card-price">€13.50</span>
           </div>
-          <p class="menu-card-desc">Sweet garden peas — a lighter classic side for your fish and chips.</p>
-          <div class="menu-card-tags">
-            <span class="tag tag-veg">🌱 Veg</span>
-          </div>
+          <p class="menu-card-desc">Freshly grilled chicken breast with a crisp garden salad and hand-cut chips. Light, fresh and full of flavour.</p>
+          <div class="menu-card-tags"><span class="tag tag-veg">🥗 Lighter Option</span></div>
         </div>
       </div>
 
-      <div class="menu-card" data-cat="sides">
-        <img class="menu-card-img" src="images/img47.jpg" alt="Battered sausage and chips Hippie Chippy Costa Teguise" loading="lazy" />
+      <div class="menu-card" data-cat="specials">
+        <img class="menu-card-img" src="images/ribs-half.jpg" alt="Half Rack BBQ Pork Ribs, Coleslaw &amp; Chips Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Half Rack BBQ Pork Ribs, Coleslaw &amp; Chips</h3>
+            <span class="menu-card-price">€12.90</span>
+          </div>
+          <p class="menu-card-desc">Slow-cooked pork ribs glazed in smoky BBQ sauce, with fresh coleslaw and hand-cut chips.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="specials">
+        <img class="menu-card-img" src="images/ribs-full.jpg" alt="Full Rack BBQ Pork Ribs, Coleslaw &amp; Chips Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Full Rack BBQ Pork Ribs, Coleslaw &amp; Chips</h3>
+            <span class="menu-card-price">€17.90</span>
+          </div>
+          <p class="menu-card-desc">The whole rack, for a serious appetite. Smoky BBQ glaze, fresh coleslaw and a mountain of hand-cut chips.</p>
+          <div class="menu-card-tags"><span class="tag tag-hot">🔥 Big Plate</span></div>
+        </div>
+      </div>
+
+      <!-- BURGERS -->
+
+      <div class="menu-card" data-cat="burgers">
+        <img class="menu-card-img" src="images/img22.jpg" alt="Cheeseburger Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Cheeseburger</h3>
+            <span class="menu-card-price">€8.90</span>
+          </div>
+          <p class="menu-card-desc">100% beef smash burger with melted cheddar, served with hand-cut chips.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="burgers">
+        <img class="menu-card-img" src="images/img24.jpg" alt="Hippie Smash Burger Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Hippie Smash Burger</h3>
+            <span class="menu-card-price">€14.90</span>
+          </div>
+          <p class="menu-card-desc">Double smash burger with salad, pickles, bacon, egg and cheddar cheese. "Absolutely amazing" — a serious one for serious appetites.</p>
+          <div class="menu-card-tags"><span class="tag tag-hot">🔥 House Special</span></div>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="burgers">
+        <img class="menu-card-img" src="images/img45.jpg" alt="Crispy Chicken Burger Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Crispy Chicken Burger</h3>
+            <span class="menu-card-price">€11.90</span>
+          </div>
+          <p class="menu-card-desc">Crispy fried chicken with salad, pickles and cheddar in a toasted bun, served with hand-cut chips.</p>
+          <div class="menu-card-tags"><span class="tag tag-popular">⭐ Popular Choice</span></div>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="burgers">
+        <img class="menu-card-img" src="images/img44.jpg" alt="Vegan Burger Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Vegan Burger</h3>
+            <span class="menu-card-price">€12.50</span>
+          </div>
+          <p class="menu-card-desc">Vegan patty with salad, pickles and vegan cheese, served with hand-cut chips. Everyone's welcome at Hippie Chippy.</p>
+          <div class="menu-card-tags"><span class="tag tag-veg">🌱 Vegan</span></div>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="burgers">
+        <img class="menu-card-img" src="images/fish-burger.jpg" alt="Fish Burger Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Fish Burger</h3>
+            <span class="menu-card-price">€13.90</span>
+          </div>
+          <p class="menu-card-desc">Our battered cod in a toasted bun with fresh salad, served with hand-cut chips. The chippy classic, handheld.</p>
+        </div>
+      </div>
+
+      <!-- BREAKFAST &amp; SANDWICHES -->
+
+      <div class="menu-card" data-cat="breakfast">
+        <img class="menu-card-img" src="images/img48.jpg" alt="Small Breakfast Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Small Breakfast</h3>
+            <span class="menu-card-price">€6.90</span>
+          </div>
+          <p class="menu-card-desc">1 bacon, 1 sausage, 1 egg, beans &amp; toast. Served until 12:00pm.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="breakfast">
+        <img class="menu-card-img" src="images/img25.jpg" alt="Large Breakfast Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Large Breakfast</h3>
+            <span class="menu-card-price">€8.90</span>
+          </div>
+          <p class="menu-card-desc">2 bacon, 2 sausage, 2 eggs, hash brown, black pudding, mushrooms, beans or tomatoes &amp; 2 toast. Served until 12:00pm.</p>
+          <div class="menu-card-tags"><span class="tag tag-popular">⭐ Most Popular</span></div>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="breakfast">
+        <img class="menu-card-img" src="images/chip-butty.jpg" alt="Chip Butty Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Chip Butty</h3>
+            <span class="menu-card-price">€4.90</span>
+          </div>
+          <p class="menu-card-desc">Hand-cut chips in soft buttered bread. A proper British institution. Served until 18:00.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="breakfast">
+        <img class="menu-card-img" src="images/sandwich-ham-cheese.jpg" alt="Ham &amp; Cheese Toastie Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Ham &amp; Cheese Toastie</h3>
+            <span class="menu-card-price">€4.50</span>
+          </div>
+          <p class="menu-card-desc">Toasted sandwich with ham and melted cheese. Served until 18:00.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="breakfast">
+        <img class="menu-card-img" src="images/sandwich-tuna-mayo.jpg" alt="Tuna &amp; Mayo Toastie Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Tuna &amp; Mayo Toastie</h3>
+            <span class="menu-card-price">€4.50</span>
+          </div>
+          <p class="menu-card-desc">Toasted sandwich with tuna and mayonnaise. Served until 18:00.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="breakfast">
+        <img class="menu-card-img" src="images/sandwich-bacon-egg.jpg" alt="Bacon &amp; Egg Sandwich Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Bacon &amp; Egg Sandwich</h3>
+            <span class="menu-card-price">€5.00</span>
+          </div>
+          <p class="menu-card-desc">Crispy bacon and fried egg in fresh bread. Served until 18:00.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="breakfast">
+        <img class="menu-card-img" src="images/sandwich-avocado-egg.jpg" alt="Avocado &amp; Egg Sandwich Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Avocado &amp; Egg Sandwich</h3>
+            <span class="menu-card-price">€5.50</span>
+          </div>
+          <p class="menu-card-desc">Fresh avocado and egg in toasted bread. Served until 18:00.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="breakfast">
+        <img class="menu-card-img" src="images/omelette-plain.jpg" alt="Plain Omelette Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Plain Omelette</h3>
+            <span class="menu-card-price">€5.50</span>
+          </div>
+          <p class="menu-card-desc">Freshly made omelette served with either hand-cut chips or salad.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="breakfast">
+        <img class="menu-card-img" src="images/omelette-ham-cheese.jpg" alt="Ham &amp; Cheese Omelette Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Ham &amp; Cheese Omelette</h3>
+            <span class="menu-card-price">€6.50</span>
+          </div>
+          <p class="menu-card-desc">Omelette filled with ham and melted cheese, served with hand-cut chips or salad.</p>
+        </div>
+      </div>
+
+      <!-- STARTERS &amp; SALADS -->
+
+      <div class="menu-card" data-cat="starters">
+        <img class="menu-card-img" src="images/garlic-bread.jpg" alt="Garlic Bread Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Garlic Bread</h3>
+            <span class="menu-card-price">€3.50</span>
+          </div>
+          <p class="menu-card-desc">Warm garlic bread, crisp at the edges. The right way to start.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="starters">
+        <img class="menu-card-img" src="images/img47.jpg" alt="Battered Sausage Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
         <div class="menu-card-body">
           <div class="menu-card-header">
             <h3 class="menu-card-name">Battered Sausage</h3>
             <span class="menu-card-price">€5.50</span>
           </div>
-          <p class="menu-card-desc">A pork sausage wrapped in our golden beer batter — crisp shell, juicy inside. Reviewed as "very good" and "to die for" by our regulars. Served in pairs.</p>
-          <div class="menu-card-tags">
-            <span class="tag tag-popular">⭐ Fan Favourite</span>
-          </div>
+          <p class="menu-card-desc">A pork sausage in our golden beer batter. Reviewed as "to die for" by our regulars.</p>
         </div>
       </div>
 
-      <div class="menu-card" data-cat="sides">
-        <img class="menu-card-img" src="images/img52.jpg" alt="Fishcake Hippie Chippy Lanzarote" loading="lazy" />
+      <div class="menu-card" data-cat="starters">
+        <img class="menu-card-img" src="images/img43.jpg" alt="Chicken Quesadillas Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
         <div class="menu-card-body">
           <div class="menu-card-header">
-            <h3 class="menu-card-name">Fishcake</h3>
+            <h3 class="menu-card-name">Chicken Quesadillas</h3>
+            <span class="menu-card-price">€6.50</span>
+          </div>
+          <p class="menu-card-desc">Golden toasted tortilla filled with seasoned chicken and melted cheese.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="starters">
+        <img class="menu-card-img" src="images/mozzarella-poppers.jpg" alt="Mozzarella Poppers Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Mozzarella Poppers</h3>
+            <span class="menu-card-price">€6.50</span>
+          </div>
+          <p class="menu-card-desc">Crumbed mozzarella bites, crisp outside and molten in the middle.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="starters">
+        <img class="menu-card-img" src="images/jalapeno-poppers.jpg" alt="Jalapeño Poppers Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Jalapeño Poppers</h3>
+            <span class="menu-card-price">€6.50</span>
+          </div>
+          <p class="menu-card-desc">Jalapeños stuffed with cheese, breaded and fried golden. A little heat, a lot of cheese.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="starters">
+        <img class="menu-card-img" src="images/img52.jpg" alt="Fish Cake Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Fish Cake</h3>
             <span class="menu-card-price">€6.50</span>
           </div>
           <p class="menu-card-desc">Traditional fish and potato cake, crumbed and fried golden, with tartare sauce on the side.</p>
         </div>
       </div>
 
-      <div class="menu-card" data-cat="sides">
-        <img class="menu-card-img" src="images/img40.jpg" alt="Bacon and cheese chips Hippie Chippy Costa Teguise" loading="lazy" />
+      <div class="menu-card" data-cat="starters">
+        <img class="menu-card-img" src="images/chicken-wings.jpg" alt="Chicken Wings Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
         <div class="menu-card-body">
           <div class="menu-card-header">
-            <h3 class="menu-card-name">Bacon &amp; Cheese Chips</h3>
+            <h3 class="menu-card-name">Chicken Wings</h3>
+            <span class="menu-card-price">€7.00</span>
+          </div>
+          <p class="menu-card-desc">Chicken wings cooked until crisp. Simple and done properly.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="starters">
+        <img class="menu-card-img" src="images/chicken-goujons.jpg" alt="Chicken Goujons Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Chicken Goujons</h3>
+            <span class="menu-card-price">€7.50</span>
+          </div>
+          <p class="menu-card-desc">Strips of breaded chicken breast, fried golden and served with a dip.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="starters">
+        <img class="menu-card-img" src="images/img41.jpg" alt="Battered Calamares Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Battered Calamares</h3>
+            <span class="menu-card-price">€8.00</span>
+          </div>
+          <p class="menu-card-desc">Crispy golden calamari rings. A taste of the Atlantic, chippy style.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="starters">
+        <img class="menu-card-img" src="images/img31.jpg" alt="Chicken Caesar Salad Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Chicken Caesar Salad</h3>
+            <span class="menu-card-price">€10.90</span>
+          </div>
+          <p class="menu-card-desc">Grilled chicken, crisp leaves, parmesan and Caesar dressing.</p>
+          <div class="menu-card-tags"><span class="tag tag-veg">🥗 Lighter Option</span></div>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="starters">
+        <img class="menu-card-img" src="images/salad-tuna.jpg" alt="Tuna Salad Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Tuna Salad</h3>
+            <span class="menu-card-price">€10.90</span>
+          </div>
+          <p class="menu-card-desc">Tuna with fresh mixed salad — light, fresh and quick.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="starters">
+        <img class="menu-card-img" src="images/salad-greek.jpg" alt="Greek Salad Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Greek Salad</h3>
+            <span class="menu-card-price">€9.90</span>
+          </div>
+          <p class="menu-card-desc">Tomatoes, cucumber, onion, feta cheese, olives and Greek dressing.</p>
+          <div class="menu-card-tags"><span class="tag tag-veg">🌱 Veg</span></div>
+        </div>
+      </div>
+
+      <!-- SIDES -->
+
+      <div class="menu-card" data-cat="sides">
+        <img class="menu-card-img" src="images/img46.jpg" alt="Homemade Chips Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Homemade Chips</h3>
+            <span class="menu-card-price">€4.50</span>
+          </div>
+          <p class="menu-card-desc">Made fresh from whole potatoes every single day. Thick, fluffy inside, golden outside — never frozen.</p>
+          <div class="menu-card-tags"><span class="tag tag-veg">🌱 Veg</span></div>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="sides">
+        <img class="menu-card-img" src="images/chips-curry-gravy.jpg" alt="Homemade Chips with Curry or Gravy Sauce Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Homemade Chips with Curry or Gravy Sauce</h3>
+            <span class="menu-card-price">€7.90</span>
+          </div>
+          <p class="menu-card-desc">A full portion of hand-cut chips smothered in our curry sauce or rich gravy.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="sides">
+        <img class="menu-card-img" src="images/chips-cheesy.jpg" alt="Homemade Cheesy Chips Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Homemade Cheesy Chips</h3>
+            <span class="menu-card-price">€5.50</span>
+          </div>
+          <p class="menu-card-desc">Hand-cut chips loaded with melted cheddar.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="sides">
+        <img class="menu-card-img" src="images/img40.jpg" alt="Homemade Chips with Bacon &amp; Cheese Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Homemade Chips with Bacon &amp; Cheese</h3>
+            <span class="menu-card-price">€5.90</span>
+          </div>
+          <p class="menu-card-desc">Golden hand-cut chips loaded with crispy bacon strips and melted cheddar. Pure comfort food.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="sides">
+        <img class="menu-card-img" src="images/curly-fries.jpg" alt="Curly Fries Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Curly Fries</h3>
+            <span class="menu-card-price">€5.50</span>
+          </div>
+          <p class="menu-card-desc">Seasoned curly fries, crisp and moreish.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="sides">
+        <img class="menu-card-img" src="images/sweet-potato-fries.jpg" alt="Sweet Potato Fries Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Sweet Potato Fries</h3>
+            <span class="menu-card-price">€5.00</span>
+          </div>
+          <p class="menu-card-desc">Sweet potato fries, crisp outside and sweet inside.</p>
+          <div class="menu-card-tags"><span class="tag tag-veg">🌱 Veg</span></div>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="sides">
+        <img class="menu-card-img" src="images/potato-scallops.jpg" alt="Potato Scallops Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Potato Scallops</h3>
+            <span class="menu-card-price">€5.90</span>
+          </div>
+          <p class="menu-card-desc">Slices of potato in our beer batter, fried golden. An old chippy classic.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="sides">
+        <img class="menu-card-img" src="images/onion-rings.jpg" alt="Battered Onion Rings Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Battered Onion Rings</h3>
             <span class="menu-card-price">€6.50</span>
           </div>
-          <p class="menu-card-desc">Golden hand-cut chips loaded with crispy bacon strips and melted cheddar cheese. A savory, indulgent take on a chippy classic — pure comfort food.</p>
+          <p class="menu-card-desc">Thick onion rings in crisp golden batter.</p>
+          <div class="menu-card-tags"><span class="tag tag-veg">🌱 Veg</span></div>
         </div>
       </div>
 
-      <!-- BURGERS -->
-      <div class="menu-card" data-cat="burgers">
-        <img class="menu-card-img" src="images/img43.jpg" alt="Chicken quesadilla Hippie Chippy Costa Teguise" loading="lazy" />
+      <div class="menu-card" data-cat="sides">
+        <img class="menu-card-img" src="images/img49.jpg" alt="Curry Sauce Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
         <div class="menu-card-body">
           <div class="menu-card-header">
-            <h3 class="menu-card-name">Chicken Quesadilla</h3>
-            <span class="menu-card-price">€5.95</span>
+            <h3 class="menu-card-name">Curry Sauce</h3>
+            <span class="menu-card-price">€4.00</span>
           </div>
-          <p class="menu-card-desc">Golden toasted tortilla filled with seasoned chicken and melted cheese, topped with guacamole and fresh salsa.</p>
-          <div class="menu-card-tags">
-            <span class="tag tag-new">New</span>
-          </div>
+          <p class="menu-card-desc">Our house curry sauce — rich, warming and mildly spiced. "The best curry sauce I've ever had" — a guest from Scotland.</p>
+          <div class="menu-card-tags"><span class="tag tag-popular">⭐ Must Try</span></div>
         </div>
       </div>
 
-
-      <div class="menu-card" data-cat="burgers">
-        <img class="menu-card-img" src="images/img24.jpg" alt="Hippie Smash Burger Hippie Chippy Costa Teguise" loading="lazy" />
-        <div class="menu-card-body">
-          <div class="menu-card-header">
-            <h3 class="menu-card-name">Hippie Smash Burger</h3>
-            <span class="menu-card-price">€14.95</span>
-          </div>
-          <p class="menu-card-desc">Two smashed beef patties, melted cheese, burger sauce, lettuce, tomato and pickles in a toasted brioche bun. "Absolutely amazing" — a serious one for serious appetites.</p>
-          <div class="menu-card-tags">
-            <span class="tag tag-hot">🔥 House Special</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="menu-card" data-cat="burgers">
-        <img class="menu-card-img" src="images/img45.jpg" alt="Crispy chicken burger and chips Hippie Chippy Costa Teguise" loading="lazy" />
-        <div class="menu-card-body">
-          <div class="menu-card-header">
-            <h3 class="menu-card-name">Crispy Chicken Burger &amp; Chips</h3>
-            <span class="menu-card-price">€10.95</span>
-          </div>
-          <p class="menu-card-desc">Crispy fried chicken breast in a toasted bun with coleslaw, lettuce and house sauce. Served with chips — a crowd-pleasing alternative to fish.</p>
-          <div class="menu-card-tags">
-            <span class="tag tag-new">Popular Choice</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="menu-card" data-cat="burgers">
-        <img class="menu-card-img" src="images/img44.jpg" alt="Hippie Chippy Vegan Burger Costa Teguise" loading="lazy" />
-        <div class="menu-card-body">
-          <div class="menu-card-header">
-            <h3 class="menu-card-name">Hippie Chippy Vegan Burger &amp; Chips</h3>
-            <span class="menu-card-price">€12.50</span>
-          </div>
-          <p class="menu-card-desc">A delicious plant-based burger with all the trimmings — crispy lettuce, tomato, pickles and our special vegan mayo. Served with hand-cut chips and coleslaw. Everyone's welcome at Hippie Chippy.</p>
-          <div class="menu-card-tags">
-            <span class="tag tag-veg">🌱 Vegan</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="menu-card" data-cat="burgers">
-        <img class="menu-card-img" src="images/img30.jpg" alt="Golden breaded chicken and chips Hippie Chippy Lanzarote" loading="lazy" />
-        <div class="menu-card-body">
-          <div class="menu-card-header">
-            <h3 class="menu-card-name">Golden Breaded Chicken</h3>
-            <span class="menu-card-price">€10.95</span>
-          </div>
-          <p class="menu-card-desc">Crispy golden breaded chicken served with hand-cut chips. A hearty alternative to fish, loved by all the family.</p>
-          <div class="menu-card-tags">
-            <span class="tag tag-new">New</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="menu-card" data-cat="burgers">
-        <img class="menu-card-img" src="images/img35.jpg" alt="Grilled chicken salad and chips Hippie Chippy Costa Teguise" loading="lazy" />
-        <div class="menu-card-body">
-          <div class="menu-card-header">
-            <h3 class="menu-card-name">Grilled Chicken &amp; Salad</h3>
-            <span class="menu-card-price">€12.95</span>
-          </div>
-          <p class="menu-card-desc">Freshly grilled chicken breast with a crisp garden salad, sweetcorn, olives and hand-cut chips. Light, fresh and full of flavour.</p>
-          <div class="menu-card-tags">
-            <span class="tag tag-new">🥗 Lighter Option</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- BREAKFAST -->
-
-      <div class="menu-card" data-cat="breakfast">
-        <img class="menu-card-img" src="images/img25.jpg" alt="Full English Breakfast large Hippie Chippy Costa Teguise" loading="lazy" />
-        <div class="menu-card-body">
-          <div class="menu-card-header">
-            <h3 class="menu-card-name">Full English Breakfast (Large)</h3>
-            <span class="menu-card-price">€15.95</span>
-          </div>
-          <p class="menu-card-desc">The whole shebang — bacon, eggs, sausage, baked beans, mushrooms, grilled tomato and toast. Served all day from 9:30am. A proper start to any Lanzarote morning.</p>
-          <div class="menu-card-tags">
-            <span class="tag tag-popular">☀️ All Day</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="menu-card" data-cat="breakfast">
-        <img class="menu-card-img" src="images/img48.jpg" alt="Full English Breakfast small Hippie Chippy Costa Teguise" loading="lazy" />
-        <div class="menu-card-body">
-          <div class="menu-card-header">
-            <h3 class="menu-card-name">Full English Breakfast (Small)</h3>
-            <span class="menu-card-price">€12.85</span>
-          </div>
-          <p class="menu-card-desc">All the breakfast favourites in a lighter portion — bacon, egg, sausage, beans, grilled tomato and toast.</p>
-          <div class="menu-card-tags">
-            <span class="tag tag-new">Lighter Portion</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- EXTRAS -->
-
-      <div class="menu-card" data-cat="extras">
-        <img class="menu-card-img" src="images/img50.jpg" alt="Gravy Hippie Chippy Lanzarote" loading="lazy" />
+      <div class="menu-card" data-cat="sides">
+        <img class="menu-card-img" src="images/img50.jpg" alt="Gravy Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
         <div class="menu-card-body">
           <div class="menu-card-header">
             <h3 class="menu-card-name">Gravy</h3>
+            <span class="menu-card-price">€4.00</span>
+          </div>
+          <p class="menu-card-desc">Rich, dark British-style gravy. Pour it over your chips, your sausages, your everything.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="sides">
+        <img class="menu-card-img" src="images/img51.jpg" alt="Mushy Peas Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Mushy Peas</h3>
             <span class="menu-card-price">€2.00</span>
           </div>
-          <p class="menu-card-desc">Rich, dark British-style gravy. Pour it over your chips, your sausages, your everything. No judgement.</p>
+          <p class="menu-card-desc">Proper British mushy peas — soft, minted and utterly satisfying alongside battered fish.</p>
+          <div class="menu-card-tags"><span class="tag tag-veg">🌱 Veg</span></div>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="sides">
+        <img class="menu-card-img" src="images/garden-peas.jpg" alt="Garden Peas Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Garden Peas</h3>
+            <span class="menu-card-price">€2.00</span>
+          </div>
+          <p class="menu-card-desc">Sweet garden peas — a lighter classic side for your fish and chips.</p>
+          <div class="menu-card-tags"><span class="tag tag-veg">🌱 Veg</span></div>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="sides">
+        <img class="menu-card-img" src="images/coleslaw.jpg" alt="Coleslaw Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Coleslaw</h3>
+            <span class="menu-card-price">€4.00</span>
+          </div>
+          <p class="menu-card-desc">Fresh homemade coleslaw, crunchy and creamy.</p>
+          <div class="menu-card-tags"><span class="tag tag-veg">🌱 Veg</span></div>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="sides">
+        <img class="menu-card-img" src="images/bread-butter.jpg" alt="Bread and Butter Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Bread and Butter</h3>
+            <span class="menu-card-price">€2.50</span>
+          </div>
+          <p class="menu-card-desc">Fresh bread and butter. Because chip butties don't build themselves.</p>
+          <div class="menu-card-tags"><span class="tag tag-veg">🌱 Veg</span></div>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="sides">
+        <img class="menu-card-img" src="images/pickles.jpg" alt="Pickles Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Pickles</h3>
+            <span class="menu-card-price">€1.90</span>
+          </div>
+          <p class="menu-card-desc">Pickled onions and gherkins — the sharp bite that cuts through the batter.</p>
+          <div class="menu-card-tags"><span class="tag tag-veg">🌱 Veg</span></div>
+        </div>
+      </div>
+
+      <!-- CHILDREN'S MENU -->
+
+      <div class="menu-card" data-cat="kids">
+        <img class="menu-card-img" src="images/img2.jpg" alt="Kids Battered Fish Bites Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Kids Battered Fish Bites</h3>
+            <span class="menu-card-price">€7.90</span>
+          </div>
+          <p class="menu-card-desc">Bite-size battered cod with hand-cut chips.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="kids">
+        <img class="menu-card-img" src="images/img52.jpg" alt="Kids Fish Cakes Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Kids Fish Cakes</h3>
+            <span class="menu-card-price">€7.90</span>
+          </div>
+          <p class="menu-card-desc">Golden fish cakes served with hand-cut chips.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="kids">
+        <img class="menu-card-img" src="images/chicken-goujons.jpg" alt="Kids Chicken Nuggets Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Kids Chicken Nuggets</h3>
+            <span class="menu-card-price">€6.90</span>
+          </div>
+          <p class="menu-card-desc">Chicken nuggets with hand-cut chips.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="kids">
+        <img class="menu-card-img" src="images/img22.jpg" alt="Kids Cheeseburger Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Kids Cheeseburger</h3>
+            <span class="menu-card-price">€7.90</span>
+          </div>
+          <p class="menu-card-desc">A smaller cheeseburger with hand-cut chips.</p>
+        </div>
+      </div>
+
+      <div class="menu-card" data-cat="kids">
+        <img class="menu-card-img" src="images/img47.jpg" alt="Kids Sausages Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Kids Sausages</h3>
+            <span class="menu-card-price">€6.90</span>
+          </div>
+          <p class="menu-card-desc">Sausages with hand-cut chips.</p>
+        </div>
+      </div>
+
+      <!-- DESSERTS &amp; DRINKS -->
+
+      <div class="menu-card" data-cat="extras">
+        <img class="menu-card-img" src="images/brownie.jpg" alt="Chocolate Brownie Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3 class="menu-card-name">Chocolate Brownie</h3>
+            <span class="menu-card-price">€5.95</span>
+          </div>
+          <p class="menu-card-desc">Warm chocolate brownie — rich, fudgy and the right way to finish.</p>
         </div>
       </div>
 
       <div class="menu-card" data-cat="extras">
-        <img class="menu-card-img" src="images/img29.jpg" alt="Fresh smoothies and drinks Hippie Chippy Costa Teguise" loading="lazy" />
+        <img class="menu-card-img" src="images/img29.jpg" alt="Drinks &amp; Fresh Smoothies Hippie Chippy Costa Teguise Lanzarote" loading="lazy" />
         <div class="menu-card-body">
           <div class="menu-card-header">
             <h3 class="menu-card-name">Drinks &amp; Fresh Smoothies</h3>
             <span class="menu-card-price">From €2.50</span>
           </div>
-          <p class="menu-card-desc">Fresh smoothies, cold drinks, cans, bottles, and a selection of beers. Refreshing tropical smoothies or ice-cold beverages to wash down your meal.</p>
+          <p class="menu-card-desc">Fresh smoothies, cold drinks, cans, bottles and a selection of beers.</p>
         </div>
       </div>
+
+    <div class="menu-notes">
+      <div class="menu-note">
+        <h4>🌾 Choose your batter</h4>
+        <p data-lang="en">Normal, lightly battered or <strong>GLUTEN FREE</strong> batter — just tell us when you order.</p>
+        <p data-lang="es">Rebozado normal, ligero o <strong>SIN GLUTEN</strong> — indícanoslo al pedir.</p>
+      </div>
+      <div class="menu-note">
+        <h4>🔥 Cooked to order</h4>
+        <p data-lang="en">All our fish is cooked to order — we appreciate your patience at busy times.</p>
+        <p data-lang="es">Todo nuestro pescado se cocina al momento — gracias por su paciencia.</p>
+      </div>
+      <div class="menu-note">
+        <h4>🌊 Sustainably sourced</h4>
+        <p data-lang="en">We only use cod &amp; haddock from sustainable waters, fry in certified eco-sustainable oil, and support local producers wherever we can.</p>
+        <p data-lang="es">Solo usamos bacalao y haddock de pesca sostenible, freímos en aceite eco-sostenible certificado y apoyamos el producto local.</p>
+      </div>
+      <div class="menu-note">
+        <h4>⚠️ Allergies</h4>
+        <p data-lang="en">If you suffer from any allergies or food intolerances, please ask our staff.</p>
+        <p data-lang="es">Si tiene alergias o intolerancias alimentarias, consulte con nuestro personal.</p>
+      </div>
+      <p class="menu-igic">All prices include 7% IGIC · Precios con IGIC 7% incluido</p>
+    </div>
+
 
     </div><!-- end menu-grid -->
   </section>
@@ -3644,23 +4080,65 @@
 
     /* ── ORDER MODAL ─────────────────────────────── */
     const MENU_ITEMS = [
-      { id:'cod', name:'Large Cod & Chips', nameEs:'Bacalao Grande & Patatas', price:15.95 },
-      { id:'smallcod', name:'Small Cod & Chips with Mushy Peas', nameEs:'Bacalao Pequeño con Guisantes', price:12.95 },
-      { id:'haddock', name:'Battered Haddock & Chips', nameEs:'Eglefino & Patatas', price:13.50 },
-      { id:'scampi', name:'Scampi, Breaded Chicken, Coleslaw & Chips', nameEs:'Combo Scampi, Pollo & Patatas', price:10.95 },
-      { id:'calamares', name:'Breaded Calamares', nameEs:'Calamares Empanados', price:8.95 },
-      { id:'smash', name:'Hippie Smash Burger', nameEs:'Hippie Smash Burger', price:14.95 },
-      { id:'chicken', name:'Crispy Chicken Burger', nameEs:'Burger de Pollo Crujiente', price:10.95 },
-      { id:'vegan', name:'Vegan Burger', nameEs:'Burger Vegana', price:12.50 },
-      { id:'golden', name:'Golden Breaded Chicken', nameEs:'Pollo Empanado Dorado', price:10.95 },
-      { id:'quesadilla', name:'Chicken Quesadilla', nameEs:'Quesadilla de Pollo', price:5.95 },
-      { id:'grilled', name:'Grilled Chicken & Salad', nameEs:'Pollo a la Plancha con Ensalada', price:12.95 },
-      { id:'englishL', name:'Full English Breakfast (Large)', nameEs:'Desayuno Inglés (Grande)', price:15.95 },
-      { id:'englishS', name:'Full English Breakfast (Small)', nameEs:'Desayuno Inglés (Pequeño)', price:12.85 },
-      { id:'chips', name:'Hand-Cut Chips', nameEs:'Patatas Artesanas', price:3.95 },
-      { id:'sausage', name:'Battered Sausage (x2)', nameEs:'Salchicha Rebozada (x2)', price:5.50 },
-      { id:'fishcake', name:'Fishcake', nameEs:'Pastel de Pescado', price:6.50 },
-      { id:'smoothie', name:'Fresh Smoothie', nameEs:'Batido Natural', price:4.50 },
+      { id:'regularcodchip', name:'Regular Cod & Chips', nameEs:'Bacalao Regular con Patatas', price:13.90 },
+      { id:'largecodchips', name:'Large Cod & Chips', nameEs:'Bacalao Grande con Patatas', price:16.90 },
+      { id:'regularhaddock', name:'Regular Haddock & Chips', nameEs:'Haddock Regular con Patatas', price:13.90 },
+      { id:'largehaddockch', name:'Large Haddock & Chips', nameEs:'Haddock Grande con Patatas', price:16.90 },
+      { id:'breadedscampi', name:'Breaded Scampi', nameEs:'Scampi Empanado', price:13.50 },
+      { id:'garlickingpraw', name:'Garlic King Prawns', nameEs:'Langostinos al Ajillo', price:14.90 },
+      { id:'batteredsausag', name:'Battered Sausage & Chips', nameEs:'Salchicha Rebozada con Patatas', price:7.90 },
+      { id:'batteredfishbi', name:'Battered Fish Bites & Chips', nameEs:'Bocaditos de Pescado con Patatas', price:8.90 },
+      { id:'breadedchicken', name:'Breaded Chicken with Chips & Coleslaw', nameEs:'Pollo Empanado con Patatas y Coleslaw', price:12.50 },
+      { id:'grilledchicken', name:'Grilled Chicken Breast with Chips & Salad', nameEs:'Pechuga a la Plancha con Patatas y Ensalada', price:13.50 },
+      { id:'halfrackbbqpor', name:'Half Rack BBQ Pork Ribs, Coleslaw & Chips', nameEs:'Media Costilla BBQ con Coleslaw y Patatas', price:12.90 },
+      { id:'fullrackbbqpor', name:'Full Rack BBQ Pork Ribs, Coleslaw & Chips', nameEs:'Costilla Entera BBQ con Coleslaw y Patatas', price:17.90 },
+      { id:'cheeseburger', name:'Cheeseburger', nameEs:'Hamburguesa con Queso', price:8.90 },
+      { id:'hippiesmashbur', name:'Hippie Smash Burger', nameEs:'Hippie Smash Burger', price:14.90 },
+      { id:'crispychickenb', name:'Crispy Chicken Burger', nameEs:'Burger de Pollo Crujiente', price:11.90 },
+      { id:'veganburger', name:'Vegan Burger', nameEs:'Burger Vegana', price:12.50 },
+      { id:'fishburger', name:'Fish Burger', nameEs:'Burger de Pescado', price:13.90 },
+      { id:'smallbreakfast', name:'Small Breakfast', nameEs:'Desayuno Pequeño', price:6.90 },
+      { id:'largebreakfast', name:'Large Breakfast', nameEs:'Desayuno Grande', price:8.90 },
+      { id:'chipbutty', name:'Chip Butty', nameEs:'Bocadillo de Patatas', price:4.90 },
+      { id:'hamcheesetoast', name:'Ham & Cheese Toastie', nameEs:'Sándwich de Jamón y Queso', price:4.50 },
+      { id:'tunamayotoasti', name:'Tuna & Mayo Toastie', nameEs:'Sándwich de Atún y Mayonesa', price:4.50 },
+      { id:'baconeggsandwi', name:'Bacon & Egg Sandwich', nameEs:'Sándwich de Bacon y Huevo', price:5.00 },
+      { id:'avocadoeggsand', name:'Avocado & Egg Sandwich', nameEs:'Sándwich de Aguacate y Huevo', price:5.50 },
+      { id:'plainomelette', name:'Plain Omelette', nameEs:'Tortilla Francesa', price:5.50 },
+      { id:'hamcheeseomele', name:'Ham & Cheese Omelette', nameEs:'Tortilla de Jamón y Queso', price:6.50 },
+      { id:'garlicbread', name:'Garlic Bread', nameEs:'Pan de Ajo', price:3.50 },
+      { id:'batteredsausag2', name:'Battered Sausage', nameEs:'Salchicha Rebozada', price:5.50 },
+      { id:'chickenquesadi', name:'Chicken Quesadillas', nameEs:'Quesadillas de Pollo', price:6.50 },
+      { id:'mozzarellapopp', name:'Mozzarella Poppers', nameEs:'Bolitas de Mozzarella', price:6.50 },
+      { id:'jalapeopoppers', name:'Jalapeño Poppers', nameEs:'Jalapeños Rellenos', price:6.50 },
+      { id:'fishcake', name:'Fish Cake', nameEs:'Pastel de Pescado', price:6.50 },
+      { id:'chickenwings', name:'Chicken Wings', nameEs:'Alitas de Pollo', price:7.00 },
+      { id:'chickengoujons', name:'Chicken Goujons', nameEs:'Tiras de Pollo', price:7.50 },
+      { id:'batteredcalama', name:'Battered Calamares', nameEs:'Calamares Rebozados', price:8.00 },
+      { id:'chickencaesars', name:'Chicken Caesar Salad', nameEs:'Ensalada César con Pollo', price:10.90 },
+      { id:'tunasalad', name:'Tuna Salad', nameEs:'Ensalada de Atún', price:10.90 },
+      { id:'greeksalad', name:'Greek Salad', nameEs:'Ensalada Griega', price:9.90 },
+      { id:'homemadechips', name:'Homemade Chips', nameEs:'Patatas Caseras', price:4.50 },
+      { id:'homemadechipsw', name:'Homemade Chips with Curry or Gravy Sauce', nameEs:'Patatas con Salsa Curry o Gravy', price:7.90 },
+      { id:'homemadecheesy', name:'Homemade Cheesy Chips', nameEs:'Patatas con Queso', price:5.50 },
+      { id:'homemadechipsw2', name:'Homemade Chips with Bacon & Cheese', nameEs:'Patatas con Bacon y Queso', price:5.90 },
+      { id:'curlyfries', name:'Curly Fries', nameEs:'Patatas Espirales', price:5.50 },
+      { id:'sweetpotatofri', name:'Sweet Potato Fries', nameEs:'Patatas de Boniato', price:5.00 },
+      { id:'potatoscallops', name:'Potato Scallops', nameEs:'Patatas Rebozadas', price:5.90 },
+      { id:'batteredonionr', name:'Battered Onion Rings', nameEs:'Aros de Cebolla Rebozados', price:6.50 },
+      { id:'currysauce', name:'Curry Sauce', nameEs:'Salsa Curry', price:4.00 },
+      { id:'gravy', name:'Gravy', nameEs:'Salsa Gravy', price:4.00 },
+      { id:'mushypeas', name:'Mushy Peas', nameEs:'Mushy Peas', price:2.00 },
+      { id:'gardenpeas', name:'Garden Peas', nameEs:'Guisantes', price:2.00 },
+      { id:'coleslaw', name:'Coleslaw', nameEs:'Ensalada Coleslaw', price:4.00 },
+      { id:'breadandbutter', name:'Bread and Butter', nameEs:'Pan con Mantequilla', price:2.50 },
+      { id:'pickles', name:'Pickles', nameEs:'Encurtidos', price:1.90 },
+      { id:'kidsbatteredfi', name:'Kids Battered Fish Bites', nameEs:'Infantil: Bocaditos de Pescado', price:7.90 },
+      { id:'kidsfishcakes', name:'Kids Fish Cakes', nameEs:'Infantil: Pasteles de Pescado', price:7.90 },
+      { id:'kidschickennug', name:'Kids Chicken Nuggets', nameEs:'Infantil: Nuggets de Pollo', price:6.90 },
+      { id:'kidscheeseburg', name:'Kids Cheeseburger', nameEs:'Infantil: Hamburguesa con Queso', price:7.90 },
+      { id:'kidssausages', name:'Kids Sausages', nameEs:'Infantil: Salchichas', price:6.90 },
+      { id:'chocolatebrown', name:'Chocolate Brownie', nameEs:'Brownie de Chocolate', price:5.95 },
     ];
 
     let orderCart = {};
