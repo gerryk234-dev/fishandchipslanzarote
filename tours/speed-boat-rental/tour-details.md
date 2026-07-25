@@ -14,17 +14,24 @@ service** on top of the boat hire.
 | Wakeboard — extra service | **+150 €** |
 | Extra rider on the wakeboard | **+50 € / person / hour** |
 
-## Boat hire — includes
-- Private Caribe speedboat, **2h 30** on the water
-- Professional skipper / captain (included)
+## Includes
+- Private Caribe speedboat cruise, **2h 30** on the water
+- Professional skipper / captain
+- Snorkel equipment
+- Life jackets
 - Fuel for the coastal route
 - Swim stop
 - Up to **6 people**
 
-## Wakeboard — extra service
-- Price: **+150 €** — **1 hour**, up to **4 people**
-- Each additional rider: **+50 € per person, per hour**
-- Requires the boat hire (add-on, not sold on its own)
+## Excludes
+- Hotel pick-up & drop-off
+- Food & drinks
+- Tips / gratuities
+- Wakeboard (available as a paid extra — see below)
+
+## Extras
+- **Wakeboard** — **+150 €** for **1 hour**, up to **4 people** (extra service, requires the boat hire)
+- **Extra rider on the wakeboard** — **+50 € per person, per hour**
 
 ## Details
 - Duration: 2h 30 (boat)
@@ -32,7 +39,16 @@ service** on top of the boat hire.
 - Capacity: 6 (boat) · 4 (wakeboard)
 - Languages: Spanish, English, French, German
 - Booking: via the website
+- Route: Puerto Calero → Papagayo Beach *(reference — confirm your departure marina)*
 - Departure point / marina: **[TO CONFIRM]**
+
+> **Price note:** your flyer sets the boat hire at **295 €**. The comparable H2O
+> Sports "Private Boat Trip 2:30h" listing shows ~**$347 / €** on resale platforms.
+> Confirm which price this listing should use.
+
+> **Reference:** includes/excludes/extras structure adapted from the H2O Sports
+> Lanzarote "Private Boat Trip 2:30h" listing (private, up to 6, Puerto Calero →
+> Papagayo, snorkel gear + life jackets included, wakeboard as a paid extra).
 
 ## What to bring
 - Swimwear, towel, sun cream, hat, sunglasses, light jacket
