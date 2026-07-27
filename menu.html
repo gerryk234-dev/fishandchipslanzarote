@@ -423,6 +423,8 @@
       overflow: hidden;
       border: 1px solid #e8e8e8;
       transition: transform var(--transition), box-shadow var(--transition);
+      display: flex;
+      flex-direction: column;
     }
     .menu-card:hover {
       transform: translateY(-3px);
@@ -464,7 +466,30 @@
     }
     .menu-card-body {
       padding: 1.25rem;
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
     }
+    .menu-card-order {
+      margin-top: auto;
+      width: 100%;
+      border: none;
+      cursor: pointer;
+      background: var(--gold);
+      color: var(--ink);
+      font-family: var(--ff-body);
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 0.6rem 1rem;
+      border-radius: var(--radius);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      transition: background var(--transition), transform var(--transition);
+    }
+    .menu-card-order:hover { background: #e59a1a; transform: translateY(-1px); }
+    .menu-card-order:active { transform: translateY(0); }
     .menu-card-header {
       display: flex;
       align-items: flex-start;
@@ -2903,6 +2928,7 @@
           <p class="menu-card-desc">Fresh smoothies, cold drinks, cans, bottles and a selection of beers.</p>
         </div>
       </div>
+    </div><!-- end menu-grid -->
 
     <div class="menu-notes">
       <div class="menu-note">
@@ -2927,9 +2953,6 @@
       </div>
       <p class="menu-igic">All prices include 7% IGIC · Precios con IGIC 7% incluido</p>
     </div>
-
-
-    </div><!-- end menu-grid -->
   </section>
 
   <!-- ONLINE ORDERING -->
@@ -3129,6 +3152,22 @@
     function closeOrderModal(){ document.getElementById('orderModal').classList.remove('open'); document.body.style.overflow=''; currentStep=1; orderCart={}; document.getElementById('orderSuccess').classList.remove('show'); document.querySelectorAll('.order-step').forEach(s=>s.classList.remove('active')); document.getElementById('step1').classList.add('active'); updateProgress(1); }
     function renderOrderItems(){ const isEs=document.body.classList.contains('lang-es'); document.getElementById('orderItemsGrid').innerHTML=MENU_ITEMS.map(it=>{const q=orderCart[it.id]||0;return `<div class="order-item-btn ${q>0?'selected':''}" id="oib-${it.id}"><span class="oib-name">${isEs?it.nameEs:it.name}</span><span class="oib-price">€${it.price.toFixed(2)}</span><div class="oib-qty"><button class="qty-btn" onclick="changeQty('${it.id}',-1,event)">−</button><span class="qty-num" id="qty-${it.id}">${q}</span><button class="qty-btn" onclick="changeQty('${it.id}',1,event)">+</button></div></div>`;}).join(''); }
     function changeQty(id,d,e){ e.stopPropagation(); orderCart[id]=Math.max(0,(orderCart[id]||0)+d); document.getElementById('qty-'+id).textContent=orderCart[id]; document.getElementById('oib-'+id).classList.toggle('selected',orderCart[id]>0); }
+    // Per-card quick order: pre-select the item, then open the pick-items → WhatsApp modal
+    function quickOrder(id){ if(id){ orderCart[id]=(orderCart[id]||0)+1; } openOrderModal(); if(id){ setTimeout(function(){ var el=document.getElementById('oib-'+id); if(el) el.scrollIntoView({block:'center'}); },60); } }
+    function injectOrderButtons(){
+      var byName={}; MENU_ITEMS.forEach(function(it){ byName[it.name.trim().toLowerCase()]=it; });
+      document.querySelectorAll('.menu-card').forEach(function(card){
+        if(card.querySelector('.menu-card-order')) return;
+        var nameEl=card.querySelector('.menu-card-name'), body=card.querySelector('.menu-card-body');
+        if(!nameEl||!body) return;
+        var it=byName[nameEl.textContent.trim().toLowerCase()];
+        var btn=document.createElement('button'); btn.type='button'; btn.className='menu-card-order';
+        btn.innerHTML='🛒 <span data-lang="en">Order</span><span data-lang="es">Pedir</span>';
+        btn.setAttribute('onclick', it ? ("quickOrder('"+it.id+"')") : "openOrderModal()");
+        body.appendChild(btn);
+      });
+    }
+    if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', injectOrderButtons); } else { injectOrderButtons(); }
     function setOrderType(t,b){ orderType=t; document.querySelectorAll('.order-type-tab').forEach(x=>x.classList.remove('active')); b.classList.add('active'); }
     function goStep(n){ document.querySelectorAll('.order-step').forEach(s=>s.classList.remove('active')); document.getElementById('step'+n).classList.add('active'); currentStep=n; updateProgress(n); if(n===3)renderSummary(); }
     function updateProgress(n){ [1,2,3].forEach(i=>{const d=document.getElementById('prog'+i);d.classList.remove('done','active');if(i<n)d.classList.add('done');if(i===n)d.classList.add('active');}); }
