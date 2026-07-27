@@ -483,6 +483,8 @@
       overflow: hidden;
       border: 1px solid #e8e8e8;
       transition: transform var(--transition), box-shadow var(--transition);
+      display: flex;
+      flex-direction: column;
     }
     .menu-card:hover {
       transform: translateY(-3px);
@@ -524,7 +526,30 @@
     }
     .menu-card-body {
       padding: 1.25rem;
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
     }
+    .menu-card-order {
+      margin-top: auto;
+      width: 100%;
+      border: none;
+      cursor: pointer;
+      background: var(--gold);
+      color: var(--ink);
+      font-family: var(--ff-body);
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 0.6rem 1rem;
+      border-radius: var(--radius);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      transition: background var(--transition), transform var(--transition);
+    }
+    .menu-card-order:hover { background: #e59a1a; transform: translateY(-1px); }
+    .menu-card-order:active { transform: translateY(0); }
     .menu-card-header {
       display: flex;
       align-items: flex-start;
@@ -3087,6 +3112,7 @@
           <p class="menu-card-desc">Fresh smoothies, cold drinks, cans, bottles and a selection of beers.</p>
         </div>
       </div>
+    </div><!-- end menu-grid -->
 
     <div class="menu-notes">
       <div class="menu-note">
@@ -3111,9 +3137,6 @@
       </div>
       <p class="menu-igic">All prices include 7% IGIC · Precios con IGIC 7% incluido</p>
     </div>
-
-
-    </div><!-- end menu-grid -->
   </section>
 
 <!-- ═══════════════════════════════════════════
@@ -4187,6 +4210,23 @@
       const card = document.getElementById('oib-'+id);
       if (card) card.classList.toggle('selected', orderCart[id] > 0);
     }
+
+    // Per-card quick order: pre-select the item, then open the pick-items → WhatsApp modal
+    function quickOrder(id){ if(id){ orderCart[id]=(orderCart[id]||0)+1; } openOrderModal(); if(id){ setTimeout(function(){ var el=document.getElementById('oib-'+id); if(el) el.scrollIntoView({block:'center'}); },60); } }
+    function injectOrderButtons(){
+      var byName={}; MENU_ITEMS.forEach(function(it){ byName[it.name.trim().toLowerCase()]=it; });
+      document.querySelectorAll('.menu-card').forEach(function(card){
+        if(card.querySelector('.menu-card-order')) return;
+        var nameEl=card.querySelector('.menu-card-name'), body=card.querySelector('.menu-card-body');
+        if(!nameEl||!body) return;
+        var it=byName[nameEl.textContent.trim().toLowerCase()];
+        var btn=document.createElement('button'); btn.type='button'; btn.className='menu-card-order';
+        btn.innerHTML='🛒 <span data-lang="en">Order</span><span data-lang="es">Pedir</span>';
+        btn.setAttribute('onclick', it ? ("quickOrder('"+it.id+"')") : "openOrderModal()");
+        body.appendChild(btn);
+      });
+    }
+    if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', injectOrderButtons); } else { injectOrderButtons(); }
 
     function setOrderType(type, btn) {
       orderType = type;
