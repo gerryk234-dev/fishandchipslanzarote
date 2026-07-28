@@ -189,8 +189,8 @@ export default function App() {
 
   const isAdmin = !!user.admin;
   const NAV = isAdmin
-    ? [{ id: "informes", label: "Informes" }, { id: "socios", label: "Socios" }, { id: "inventario", label: "Inventario" }, { id: "dispensar", label: "Dispensar" }]
-    : [{ id: "dispensar", label: "Dispensar" }, { id: "socios", label: "Socios" }, { id: "inventario", label: "Inventario" }];
+    ? [{ id: "informes", label: "Informes" }, { id: "socios", label: "Socios" }, { id: "caja", label: "Caja / Cierres" }, { id: "inventario", label: "Inventario" }, { id: "dispensar", label: "Dispensar" }]
+    : [{ id: "dispensar", label: "Dispensar" }, { id: "socios", label: "Socios" }, { id: "caja", label: "Caja" }, { id: "inventario", label: "Inventario" }];
   const pendingCount = data.members.filter((m) => m.status === "pendiente").length;
 
   const goTab = (id) => {
@@ -261,6 +261,7 @@ export default function App() {
         )}
         {tab === "dispensar" && <Dispensar data={data} refresh={refresh} user={user} notify={notify} />}
         {tab === "socios" && <Socios data={data} refresh={refresh} notify={notify} isAdmin={isAdmin} />}
+        {tab === "caja" && <Caja data={data} user={user} notify={notify} isAdmin={isAdmin} />}
         {tab === "inventario" && <Inventario data={data} refresh={refresh} notify={notify} />}
         {tab === "informes" && isAdmin && <Informes data={data} />}
       </main>
@@ -392,12 +393,15 @@ function Dispensar({ data, refresh, user, notify }) {
   const [qtyFor, setQtyFor] = useState(null);
   const [qty, setQty] = useState("");
   const [busy, setBusy] = useState(false);
+  const [priceMode, setPriceMode] = useState("local"); // employee-chosen price, per sale
   const scale = useScale();
   const fresh = scale.reading && Date.now() - scale.reading.ts < 3000 ? scale.reading : null;
+  const scaleG = fresh && fresh.unit === "g" && fresh.stable && fresh.value > 0 ? +fresh.value.toFixed(2) : null;
 
+  const pickMember = (m) => { setMember(m); setQ(""); setPriceMode(m.type === "turista" ? "turista" : "local"); };
   const active = members.filter((m) => m.status === "activo");
   const results = q ? active.filter((m) => (m.name + m.num).toLowerCase().includes(q.toLowerCase())) : [];
-  const priceOf = (p) => (member?.type === "turista" ? p.priceTourist : p.priceLocal);
+  const priceOf = (p) => (priceMode === "turista" ? p.priceTourist : p.priceLocal);
   const total = cart.reduce((s, i) => s + i.qty * i.price, 0);
 
   const addToCart = (p, n) => {
@@ -417,6 +421,7 @@ function Dispensar({ data, refresh, user, notify }) {
         memberId: member.id,
         employeeId: user.admin ? 0 : user.id,
         payment,
+        priceMode,
         items: cart.map((i) => ({ productId: i.productId, qty: i.qty })),
       });
       notify(payment === "fiado" ? `Apuntado como FIADO — debe ${eur(sale.total)}` : `Dispensación registrada — ${eur(sale.total)}`);
@@ -462,7 +467,7 @@ function Dispensar({ data, refresh, user, notify }) {
             <Field value={q} onChange={(e) => setQ(e.target.value)} placeholder="Nombre o nº de socio…" />
             <div style={{ marginTop: 10 }}>
               {results.map((m) => (
-                <div key={m.id} className="row" onClick={() => { setMember(m); setQ(""); }}
+                <div key={m.id} className="row" onClick={() => pickMember(m)}
                   style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 10px", borderRadius: 8, cursor: "pointer" }}>
                   <div>
                     <div style={{ fontWeight: 700 }}>{m.name}</div>
@@ -493,6 +498,15 @@ function Dispensar({ data, refresh, user, notify }) {
 
         {member && (
           <>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "0 0 12px", flexWrap: "wrap" }}>
+              <span className="mono" style={{ fontSize: 12, color: C.muted, letterSpacing: 1 }}>PRECIO</span>
+              {[["local", "Local"], ["turista", "Turista"]].map(([m, l]) => (
+                <button key={m} onClick={() => setPriceMode(m)}
+                  style={{ padding: "8px 18px", borderRadius: 20, border: `1px solid ${priceMode === m ? C.green : C.line}`, background: priceMode === m ? C.greenDark : "transparent", color: priceMode === m ? C.green : C.muted, fontWeight: 800, fontSize: 14 }}>
+                  {l}
+                </button>
+              ))}
+            </div>
             <div style={{ display: "flex", gap: 8, margin: "0 0 12px", flexWrap: "wrap" }}>
               {CATS.map((c) => (
                 <button key={c.id} onClick={() => setCat(c.id)}
@@ -507,7 +521,17 @@ function Dispensar({ data, refresh, user, notify }) {
                   <div style={{ fontWeight: 800, marginBottom: 2 }}>{p.name}</div>
                   <div className="mono" style={{ fontSize: 14, color: C.amber, marginBottom: 2 }}>{eur(priceOf(p))} / {p.unit}</div>
                   <div className="mono" style={{ fontSize: 12, color: p.stock <= 10 ? C.red : C.muted, marginBottom: 10 }}>stock {p.stock} {p.unit}</div>
-                  {qtyFor === p.id ? (
+                  {/* gram products: scale weight is the primary action */}
+                  {p.unit === "g" && scale.connected && qtyFor !== p.id ? (
+                    <div>
+                      <button onClick={() => scaleG && addToCart(p, scaleG)} disabled={!scaleG} className="mono"
+                        style={{ width: "100%", padding: "12px 8px", borderRadius: 8, border: `1px solid ${C.green}`, background: scaleG ? C.greenDark : C.surface2, color: scaleG ? C.green : C.muted, fontSize: 17, fontWeight: 800, opacity: scaleG ? 1 : 0.7 }}>
+                        {scaleG ? `⚖ Añadir ${scaleG.toFixed(2)} g` : (fresh && fresh.unit !== "g" ? "báscula: pon en gramos" : "coloca en balanza…")}
+                      </button>
+                      <button onClick={() => { setQtyFor(p.id); setQty(""); }}
+                        style={{ width: "100%", marginTop: 6, background: "none", border: "none", color: C.muted, fontSize: 13, textDecoration: "underline", cursor: "pointer" }}>manual</button>
+                    </div>
+                  ) : qtyFor === p.id ? (
                     <div>
                       {p.unit === "g" && (
                         <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}>
@@ -515,14 +539,6 @@ function Dispensar({ data, refresh, user, notify }) {
                             <button key={g} onClick={() => addToCart(p, g)} className="mono"
                               style={{ padding: "6px 10px", borderRadius: 6, border: `1px solid ${C.line}`, background: C.surface2, color: C.text, fontSize: 14 }}>{g}g</button>
                           ))}
-                          {scale.connected && (
-                            <button className="mono" disabled={!fresh || !fresh.stable || fresh.unit !== "g" || fresh.value <= 0}
-                              onClick={() => fresh && addToCart(p, +fresh.value.toFixed(2))}
-                              title={fresh && fresh.unit !== "g" ? "Pon la báscula en gramos" : "Usar el peso de la báscula"}
-                              style={{ padding: "6px 10px", borderRadius: 6, border: `1px solid ${C.green}`, background: C.greenDark, color: C.green, fontSize: 14, fontWeight: 700, opacity: !fresh || !fresh.stable || fresh.unit !== "g" || fresh.value <= 0 ? 0.4 : 1 }}>
-                              ⚖ {fresh && fresh.unit === "g" ? `${fresh.value.toFixed(2)}g` : "báscula"}
-                            </button>
-                          )}
                         </div>
                       )}
                       <div style={{ display: "flex", gap: 6 }}>
@@ -549,7 +565,7 @@ function Dispensar({ data, refresh, user, notify }) {
           {!member && <div style={{ color: C.muted, fontSize: 14, textAlign: "center", padding: "18px 0" }}>Selecciona un socio para empezar</div>}
           {member && (
             <div className="mono" style={{ fontSize: 14 }}>
-              <div style={{ color: C.muted, marginBottom: 8 }}>{member.num} · {member.type?.toUpperCase()}</div>
+              <div style={{ color: C.muted, marginBottom: 8 }}>{member.num} · precio <span style={{ color: C.green, fontWeight: 800 }}>{priceMode.toUpperCase()}</span></div>
               {cart.length === 0 && <div style={{ color: C.muted, padding: "10px 0" }}>— sin artículos —</div>}
               {cart.map((i, idx) => (
                 <div key={idx} style={{ display: "flex", justifyContent: "space-between", padding: "5px 0", gap: 8 }}>
@@ -653,13 +669,14 @@ function BarChart({ data, color, fmt }) {
 
 const EMPTY_NEW_MEMBER = { name: "", nationality: "", document: "", phone: "", email: "", type: "local", photo: null };
 
-function Socios({ data, refresh, notify }) {
+function Socios({ data, refresh, notify, isAdmin }) {
   const { members } = data;
   const [q, setQ] = useState("");
   const [selId, setSelId] = useState(null);
   const [detail, setDetail] = useState(null);   // full member incl photo
   const [stats, setStats] = useState(null);
   const [statDays, setStatDays] = useState(30); // chart/byProduct window
+  const [metric, setMetric] = useState("grams"); // grams | units | tokens
   const [history, setHistory] = useState([]);
   const [settling, setSettling] = useState(false);
   const [approveType, setApproveType] = useState({});
@@ -758,7 +775,20 @@ function Socios({ data, refresh, notify }) {
     <div className="fadein">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
         <h2 style={{ margin: 0, fontSize: 24 }}>Socios</h2>
-        <Btn kind="primary" onClick={() => setShowAdd(true)}>＋ Añadir nuevo socio</Btn>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          {isAdmin && (
+            <Btn onClick={async () => {
+              notify("Buscando registros en Gmail…");
+              try {
+                const r = await api.post("/api/import/run");
+                notify(r.skipped === "not_configured" ? "Email no configurado en el servidor"
+                  : r.imported > 0 ? `${r.imported} socios importados de Gmail` : "Sin registros nuevos en Gmail");
+                refresh();
+              } catch { notify("No se pudo conectar con Gmail — revisa las credenciales"); }
+            }}>⟳ Importar de Gmail</Btn>
+          )}
+          <Btn kind="primary" onClick={() => setShowAdd(true)}>＋ Añadir nuevo socio</Btn>
+        </div>
       </div>
 
       {pending.length > 0 && (
@@ -906,18 +936,28 @@ function Socios({ data, refresh, notify }) {
                     </button>
                   ))}
                 </div>
-                {P && (
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 14, marginBottom: 18 }}>
-                    <div style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 10, padding: 14 }}>
-                      <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 8 }}>TOKENS · {statDays <= 31 ? "POR DÍA" : statDays <= 190 ? "POR SEMANA" : "POR MES"}</div>
-                      <BarChart data={P.series.map((d) => ({ date: d.date, v: d.spent }))} color={C.amber} fmt={(v) => eur(v)} />
+                {P && (() => {
+                  const M = {
+                    grams: { key: "grams", label: "Gramos", color: C.green, fmt: (v) => `${v} g` },
+                    units: { key: "units", label: "Sweets/Edibles (uds)", color: C.blue, fmt: (v) => `${v} ud` },
+                    tokens: { key: "spent", label: "Tokens", color: C.amber, fmt: (v) => eur(v) },
+                  }[metric];
+                  const bucket = statDays <= 31 ? "POR DÍA" : statDays <= 190 ? "POR SEMANA" : "POR MES";
+                  return (
+                    <div style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 10, padding: 14, marginBottom: 18 }}>
+                      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 10 }}>
+                        {[["grams", "Gramos"], ["units", "Sweets/Edibles"], ["tokens", "Tokens"]].map(([m, l]) => (
+                          <button key={m} onClick={() => setMetric(m)}
+                            style={{ padding: "6px 12px", borderRadius: 16, fontSize: 13, fontWeight: 800, border: `1px solid ${metric === m ? C.green : C.line}`, background: metric === m ? C.greenDark : "transparent", color: metric === m ? C.green : C.muted }}>
+                            {l}
+                          </button>
+                        ))}
+                      </div>
+                      <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 8 }}>{M.label.toUpperCase()} · {bucket}</div>
+                      <BarChart data={P.series.map((d) => ({ date: d.date, v: d[M.key] }))} color={M.color} fmt={M.fmt} />
                     </div>
-                    <div style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 10, padding: 14 }}>
-                      <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 8 }}>CONSUMO (g) · {statDays <= 31 ? "POR DÍA" : statDays <= 190 ? "POR SEMANA" : "POR MES"}</div>
-                      <BarChart data={P.series.map((d) => ({ date: d.date, v: d.grams }))} color={C.green} fmt={(v) => `${v} g`} />
-                    </div>
-                  </div>
-                )}
+                  );
+                })()}
 
                 {P && P.byProduct?.length > 0 && (
                   <div style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 10, padding: 14, marginBottom: 18 }}>
@@ -968,6 +1008,133 @@ function Socios({ data, refresh, notify }) {
             )}
           </div>
         </>
+      )}
+    </div>
+  );
+}
+
+/* ============================ CAJA / CIERRE ============================ */
+const CLOSE_WHATSAPP = "34664857208";
+
+function Caja({ data, user, notify, isAdmin }) {
+  const [open, setOpen] = useState(null);       // { from, sales, summary }
+  const [closures, setClosures] = useState([]);
+  const [busy, setBusy] = useState(false);
+  const [openDay, setOpenDay] = useState(null);
+
+  const loadOpen = () => api.get("/api/caja/open").then(setOpen).catch(() => {});
+  const loadClosures = () => { if (isAdmin) api.get("/api/closures").then(setClosures).catch(() => {}); };
+  useEffect(() => { loadOpen(); loadClosures(); /* eslint-disable-next-line */ }, []);
+
+  const closeShift = async () => {
+    if (busy) return;
+    if (!window.confirm("¿Cerrar el turno? Se guardará el resumen y ya no se podrá modificar.")) return;
+    setBusy(true);
+    try {
+      const r = await api.post("/api/caja/close", { employeeId: user.admin ? 0 : user.id });
+      const msg = [
+        `*One Life Lanzarote — Cierre de turno*`,
+        `Empleado: ${r.employeeName}`,
+        `Fecha: ${new Date(r.to).toLocaleString("es-ES")}`,
+        ``,
+        `Ventas: ${r.salesN}`,
+        `TOTAL: ${r.total} tk`,
+        `Efectivo: ${r.cash} tk`,
+        `Tarjeta: ${r.card} tk`,
+        `Fiado (pendiente): ${r.fiado} tk`,
+        `Gramos: ${r.grams} g`,
+        `Sweets/Bebidas: ${r.units} ud`,
+      ].join("\n");
+      // one-tap WhatsApp to the club number, pre-filled
+      window.open(`https://wa.me/${CLOSE_WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank");
+      notify(`Turno cerrado — ${r.total} tk. Envía el WhatsApp que se ha abierto.`);
+      loadOpen(); loadClosures();
+    } catch {
+      notify("No se pudo cerrar el turno");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const s = open?.summary;
+  const Stat = ({ label, value, color }) => (
+    <div style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 10, padding: "12px 16px", flex: 1, minWidth: 130 }}>
+      <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 4 }}>{label}</div>
+      <div className="mono" style={{ fontSize: 20, fontWeight: 800, color: color || C.text }}>{value}</div>
+    </div>
+  );
+
+  return (
+    <div className="fadein">
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
+        <h2 style={{ margin: 0, fontSize: 24 }}>Caja {isAdmin ? "/ Cierres" : ""}</h2>
+        <Btn kind="amber" onClick={closeShift} disabled={busy || !s || s.salesN === 0}>
+          {busy ? "Cerrando…" : "Cerrar día / turno"}
+        </Btn>
+      </div>
+
+      {/* current open shift */}
+      <Panel style={{ padding: 18, marginBottom: 20 }}>
+        <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 12 }}>
+          TURNO ABIERTO {open ? `· desde ${timeStr(open.from)}` : ""}
+        </div>
+        {s && (
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 16 }}>
+            <Stat label="TOTAL" value={`${s.total} tk`} color={C.amber} />
+            <Stat label="EFECTIVO" value={`${s.cash} tk`} />
+            <Stat label="TARJETA" value={`${s.card} tk`} />
+            <Stat label="FIADO" value={`${s.fiado} tk`} color={s.fiado > 0 ? C.red : undefined} />
+            <Stat label="GRAMOS" value={`${s.grams} g`} color={C.green} />
+            <Stat label="SWEETS/BEBIDAS" value={`${s.units} ud`} color={C.blue} />
+            <Stat label="VENTAS" value={s.salesN} />
+          </div>
+        )}
+        <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 6 }}>VENTAS DEL TURNO</div>
+        {open && open.sales.length === 0 && <div style={{ color: C.muted, fontSize: 14 }}>Sin ventas todavía en este turno.</div>}
+        <div className="table-wrap">
+          {open && open.sales.map((sale) => {
+            const m = data.members.find((x) => x.id === sale.memberId);
+            return (
+              <div key={sale.id} className="mono" style={{ display: "flex", gap: 12, padding: "7px 0", borderTop: `1px solid ${C.line}`, fontSize: 13, flexWrap: "wrap" }}>
+                <span style={{ color: C.muted }}>{timeStr(sale.ts)}</span>
+                <span style={{ flex: 1, minWidth: 120 }}>{m?.name || "—"}</span>
+                <span style={{ color: C.muted }}>{sale.items.map((i) => `${i.name} ${i.qty}${i.unit === "g" ? "g" : "×"}`).join(", ")}</span>
+                <span>{sale.employeeName}</span>
+                <span style={{ color: sale.paid ? undefined : C.red, fontWeight: sale.paid ? undefined : 800 }}>{sale.paid ? (sale.paidMethod || sale.payment) : "FIADO"}</span>
+                <span style={{ color: C.amber }}>{eur(sale.total)}</span>
+              </div>
+            );
+          })}
+        </div>
+      </Panel>
+
+      {/* admin: day-by-day closures list */}
+      {isAdmin && (
+        <Panel style={{ padding: 18 }}>
+          <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 12 }}>CIERRES GUARDADOS (DÍA A DÍA)</div>
+          {closures.length === 0 && <div style={{ color: C.muted, fontSize: 14 }}>Aún no hay cierres guardados.</div>}
+          {closures.map((c) => (
+            <div key={c.id}>
+              <div className="row" onClick={() => setOpenDay(openDay === c.id ? null : c.id)}
+                style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 6px", borderTop: `1px solid ${C.line}`, cursor: "pointer", flexWrap: "wrap" }}>
+                <span className="mono" style={{ width: 150 }}>{new Date(c.ts).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</span>
+                <span style={{ fontWeight: 700, flex: 1, minWidth: 90 }}>{c.employeeName}</span>
+                <span className="mono" style={{ fontSize: 13, color: C.green }}>{c.grams} g</span>
+                <span className="mono" style={{ fontSize: 13, color: C.blue }}>{c.units} ud</span>
+                <span className="mono" style={{ fontSize: 13, color: C.muted }}>{c.salesN} ventas</span>
+                <span className="mono" style={{ fontSize: 15, color: C.amber, fontWeight: 800, width: 90, textAlign: "right" }}>{c.total} tk</span>
+              </div>
+              {openDay === c.id && (
+                <div className="mono" style={{ padding: "8px 6px 12px 20px", fontSize: 13, color: C.muted, display: "flex", gap: 16, flexWrap: "wrap" }}>
+                  <span>Efectivo: <b style={{ color: C.text }}>{c.cash} tk</b></span>
+                  <span>Tarjeta: <b style={{ color: C.text }}>{c.card} tk</b></span>
+                  <span>Fiado: <b style={{ color: c.fiado > 0 ? C.red : C.text }}>{c.fiado} tk</b></span>
+                  <span>Periodo: {timeStr(c.from)}–{timeStr(c.to)}</span>
+                </div>
+              )}
+            </div>
+          ))}
+        </Panel>
       )}
     </div>
   );

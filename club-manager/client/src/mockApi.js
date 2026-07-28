@@ -146,13 +146,14 @@ export async function mockRequest(method, path, body) {
       if (!Number.isFinite(qty) || qty <= 0) fail(400, "bad_qty");
       wanted.set(it.productId, (wanted.get(it.productId) || 0) + qty);
     }
+    const priceMode = body.priceMode === "turista" ? "turista" : body.priceMode === "local" ? "local" : (member.type === "turista" ? "turista" : "local");
     let total = 0;
     const lines = [];
     for (const [pid, qty] of wanted) {
       const p = s.products.find((x) => x.id === pid && x.active);
       if (!p) fail(400, "bad_product");
       if (qty > p.stock) fail(409, "insufficient_stock", { product: p.name, stock: p.stock });
-      const price = member.type === "turista" ? p.priceTourist : p.priceLocal;
+      const price = priceMode === "turista" ? p.priceTourist : p.priceLocal;
       total += qty * price;
       lines.push({ productId: pid, name: p.name, qty, unit: p.unit, price });
     }
@@ -169,6 +170,48 @@ export async function mockRequest(method, path, body) {
     needDevice();
     return clone(s.sales.filter((x) => x.memberId === Number(m[1])).sort((a, b) => b.ts - a.ts).slice(0, 100));
   }
+  const summarize = (rows) => {
+    let total = 0, cash = 0, card = 0, fiado = 0, grams = 0, units = 0;
+    for (const x of rows) {
+      total += x.total;
+      if (!x.paid) fiado += x.total;
+      else if ((x.paidMethod || x.payment) === "efectivo") cash += x.total;
+      else if ((x.paidMethod || x.payment) === "tarjeta") card += x.total;
+      for (const i of x.items) { if (i.unit === "g") grams += i.qty; else units += i.qty; }
+    }
+    const r2 = (n) => Math.round(n * 100) / 100;
+    return { salesN: rows.length, total: r2(total), cash: r2(cash), card: r2(card), fiado: r2(fiado), grams: r2(grams), units: r2(units) };
+  };
+  if (method === "GET" && route === "/api/caja/open") {
+    needDevice();
+    const startOfDay = new Date(isoOf(Date.now()) + "T00:00:00").getTime();
+    const lastClose = (s.closures || []).reduce((mx, c) => Math.max(mx, c.to), 0);
+    const from = Math.max(startOfDay, lastClose);
+    const rows = s.sales.filter((x) => x.ts >= from).sort((a, b) => b.ts - a.ts);
+    return clone({ from, sales: rows, summary: summarize(rows) });
+  }
+  if (method === "POST" && route === "/api/caja/close") {
+    needDevice();
+    const now = Date.now();
+    const startOfDay = new Date(isoOf(now) + "T00:00:00").getTime();
+    s.closures = s.closures || [];
+    const lastClose = s.closures.reduce((mx, c) => Math.max(mx, c.to), 0);
+    const from = Math.max(startOfDay, lastClose);
+    const rows = s.sales.filter((x) => x.ts >= from && x.ts <= now);
+    const sum = summarize(rows);
+    const emp = s.employees.find((e) => e.id === Number(body?.employeeId));
+    const rec = { id: Date.now(), ts: now, day: isoOf(now), employeeName: emp ? emp.name : "Administrador", from, to: now, ...sum };
+    s.closures.push(rec); save(s);
+    return clone(rec);
+  }
+  if (method === "GET" && route === "/api/closures") {
+    needAdmin();
+    return clone([...(s.closures || [])].sort((a, b) => b.ts - a.ts));
+  }
+  if (method === "POST" && route === "/api/import/run") {
+    needAdmin();
+    return { imported: 0, skipped: "not_configured" };
+  }
   if (method === "GET" && (m = route.match(/^\/api\/members\/(\d+)\/stats$/))) {
     needDevice();
     const id = Number(m[1]);
@@ -178,12 +221,14 @@ export async function mockRequest(method, path, body) {
     const rows = s.sales.filter((x) => x.memberId === id).map((x) => ({
       ts: x.ts, total: x.total, paid: x.paid,
       grams: x.items.filter((i) => i.unit === "g").reduce((a, i) => a + i.qty, 0),
+      units: x.items.filter((i) => i.unit === "ud").reduce((a, i) => a + i.qty, 0),
     }));
     const agg = (d) => {
       const sel = rows.filter((r) => r.ts >= now - d * DAY);
       return {
         spent: Math.round(sel.reduce((a, r) => a + r.total, 0) * 100) / 100,
         grams: Math.round(sel.reduce((a, r) => a + r.grams, 0) * 100) / 100,
+        units: Math.round(sel.reduce((a, r) => a + r.units, 0) * 100) / 100,
         ops: sel.length,
       };
     };
@@ -199,6 +244,7 @@ export async function mockRequest(method, path, body) {
         date: new Date(end2).toISOString().slice(0, 10),
         spent: Math.round(sel.reduce((a, r) => a + r.total, 0) * 100) / 100,
         grams: Math.round(sel.reduce((a, r) => a + r.grams, 0) * 100) / 100,
+        units: Math.round(sel.reduce((a, r) => a + r.units, 0) * 100) / 100,
       });
     }
     const byProductMap = {};

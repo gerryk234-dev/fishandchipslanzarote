@@ -140,6 +140,27 @@ if (!getSetting("employees_v2")) {
   console.log("[db] migrated staff list to: Mattia, Daimond, Max");
 }
 
+db.exec(`
+  CREATE TABLE IF NOT EXISTS closures (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ts INTEGER NOT NULL,                -- epoch ms of the close
+    day TEXT NOT NULL,                  -- ISO date the shift covers
+    employee_id INTEGER NOT NULL,
+    employee_name TEXT NOT NULL,
+    from_ts INTEGER NOT NULL,           -- first sale included
+    to_ts INTEGER NOT NULL,             -- close moment
+    sales_n INTEGER NOT NULL,
+    total REAL NOT NULL,               -- tokens
+    cash REAL NOT NULL,
+    card REAL NOT NULL,
+    fiado REAL NOT NULL,
+    grams REAL NOT NULL,
+    units INTEGER NOT NULL,            -- sweets/edibles/drinks count
+    note TEXT
+  );
+  CREATE INDEX IF NOT EXISTS idx_closures_day ON closures(day);
+`);
+
 const memberCols = db.prepare("SELECT name FROM pragma_table_info('members')").all().map((c) => c.name);
 if (!memberCols.includes("email")) db.exec("ALTER TABLE members ADD COLUMN email TEXT");
 if (!memberCols.includes("phone")) db.exec("ALTER TABLE members ADD COLUMN phone TEXT");
