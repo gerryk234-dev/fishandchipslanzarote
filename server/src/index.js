@@ -7,7 +7,7 @@ import { db, getSetting, setSetting } from "./db.js";
 import { verifySecret, signToken, verifyToken } from "./auth.js";
 import { generateCard } from "./card.js";
 import { sendWelcome } from "./mailer.js";
-import { startImporter } from "./importer.js";
+import { startImporter, runImportOnce } from "./importer.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 4000;
@@ -115,6 +115,11 @@ app.post("/api/sales", requireDevice, (req, res) => {
   const member = db.prepare("SELECT * FROM members WHERE id = ?").get(memberId);
   if (!member || member.status !== "activo") return res.status(400).json({ error: "member_not_active" });
 
+  // employee chooses local/tourist price per sale; falls back to the member's type
+  const priceMode = req.body?.priceMode === "turista" ? "turista"
+    : req.body?.priceMode === "local" ? "local"
+    : (member.type === "turista" ? "turista" : "local");
+
   let employeeName = "Administrador";
   const empId = Number(employeeId) || 0;
   if (empId !== 0) {
@@ -140,7 +145,7 @@ app.post("/api/sales", requireDevice, (req, res) => {
       const p = db.prepare("SELECT * FROM products WHERE id = ? AND active = 1").get(productId);
       if (!p) throw { code: 400, error: "bad_product" };
       if (qty > p.stock) throw { code: 409, error: "insufficient_stock", product: p.name, stock: p.stock };
-      const unitPrice = member.type === "turista" ? p.price_tourist : p.price_local;
+      const unitPrice = priceMode === "turista" ? p.price_tourist : p.price_local;
       total += qty * unitPrice;
       lines.push({ productId, name: p.name, qty, unit: p.unit, price: unitPrice });
       db.prepare("UPDATE products SET stock = ROUND(stock - ?, 2) WHERE id = ?").run(qty, productId);
@@ -181,6 +186,75 @@ app.post("/api/members/:id/settle", requireDevice, (req, res) => {
   db.prepare("UPDATE sales SET paid = 1, paid_ts = ?, paid_method = ? WHERE member_id = ? AND paid = 0")
     .run(Date.now(), method, req.params.id);
   res.json({ ok: true, settled: owed.t, sales: owed.n });
+});
+
+/* ================= caja / shift close ================= */
+
+function summarize(rows) {
+  let total = 0, cash = 0, card = 0, fiado = 0, grams = 0, units = 0;
+  for (const s of rows) {
+    total += s.total;
+    if (!s.paid) fiado += s.total;
+    else if ((s.paid_method || s.payment) === "efectivo") cash += s.total;
+    else if ((s.paid_method || s.payment) === "tarjeta") card += s.total;
+    const items = db.prepare("SELECT unit, qty FROM sale_items WHERE sale_id = ?").all(s.id);
+    for (const i of items) {
+      if (i.unit === "g") grams += i.qty; else units += i.qty;
+    }
+  }
+  const r2 = (n) => Math.round(n * 100) / 100;
+  return { salesN: rows.length, total: r2(total), cash: r2(cash), card: r2(card), fiado: r2(fiado), grams: r2(grams), units: r2(units) };
+}
+
+/* everything sold since the last shift close (or start of today), for the Caja screen */
+app.get("/api/caja/open", requireDevice, (req, res) => {
+  const startOfDay = new Date(new Date().toISOString().slice(0, 10) + "T00:00:00").getTime();
+  const lastClose = db.prepare("SELECT to_ts FROM closures ORDER BY to_ts DESC LIMIT 1").get();
+  const from = Math.max(startOfDay, lastClose?.to_ts || 0);
+  const rows = db.prepare("SELECT * FROM sales WHERE ts >= ? ORDER BY ts DESC").all(from);
+  res.json({ from, sales: rows.map(saleWithItems), summary: summarize(rows) });
+});
+
+/* close the shift: snapshot the summary, store it for the admin day-by-day list */
+app.post("/api/caja/close", requireDevice, (req, res) => {
+  const empId = Number(req.body?.employeeId) || 0;
+  let employeeName = "Administrador";
+  if (empId !== 0) {
+    const emp = db.prepare("SELECT * FROM employees WHERE id = ? AND active = 1").get(empId);
+    if (!emp) return res.status(400).json({ error: "bad_employee" });
+    employeeName = emp.name;
+  }
+  const now = Date.now();
+  const startOfDay = new Date(new Date().toISOString().slice(0, 10) + "T00:00:00").getTime();
+  const lastClose = db.prepare("SELECT to_ts FROM closures ORDER BY to_ts DESC LIMIT 1").get();
+  const from = Math.max(startOfDay, lastClose?.to_ts || 0);
+  const rows = db.prepare("SELECT * FROM sales WHERE ts >= ? AND ts <= ?").all(from, now);
+  const s = summarize(rows);
+  const day = new Date().toISOString().slice(0, 10);
+  const info = db.prepare(
+    "INSERT INTO closures (ts, day, employee_id, employee_name, from_ts, to_ts, sales_n, total, cash, card, fiado, grams, units, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+  ).run(now, day, empId, employeeName, from, now, s.salesN, s.total, s.cash, s.card, s.fiado, s.grams, s.units, String(req.body?.note || "").slice(0, 500) || null);
+  res.json({ id: Number(info.lastInsertRowid), day, employeeName, from, to: now, ...s });
+});
+
+/* admin: day-by-day list of shift closes */
+app.get("/api/closures", requireAdmin, (req, res) => {
+  const rows = db.prepare("SELECT * FROM closures ORDER BY ts DESC LIMIT 500").all();
+  res.json(rows.map((c) => ({
+    id: c.id, ts: c.ts, day: c.day, employeeName: c.employee_name,
+    from: c.from_ts, to: c.to_ts, salesN: c.sales_n, total: c.total,
+    cash: c.cash, card: c.card, fiado: c.fiado, grams: c.grams, units: c.units, note: c.note || null,
+  })));
+});
+
+/* admin: trigger a Gmail import now and report the result */
+app.post("/api/import/run", requireAdmin, async (req, res) => {
+  try {
+    const r = await runImportOnce();
+    res.json(r);
+  } catch (e) {
+    res.status(500).json({ error: e.message || "import_failed" });
+  }
 });
 
 /* ================= members / invites ================= */
@@ -325,12 +399,14 @@ app.get("/api/members/:id/stats", requireDevice, (req, res) => {
   const withGrams = rows.map((s) => ({
     ts: s.ts, total: s.total, paid: s.paid,
     grams: db.prepare("SELECT COALESCE(SUM(qty),0) g FROM sale_items WHERE sale_id = ? AND unit = 'g'").get(s.id).g,
+    units: db.prepare("SELECT COALESCE(SUM(qty),0) u FROM sale_items WHERE sale_id = ? AND unit = 'ud'").get(s.id).u,
   }));
   const agg = (d) => {
     const sel = withGrams.filter((s) => s.ts >= now - d * DAY);
     return {
       spent: Math.round(sel.reduce((a, s) => a + s.total, 0) * 100) / 100,
       grams: Math.round(sel.reduce((a, s) => a + s.grams, 0) * 100) / 100,
+      units: Math.round(sel.reduce((a, s) => a + s.units, 0) * 100) / 100,
       ops: sel.length,
     };
   };
@@ -348,6 +424,7 @@ app.get("/api/members/:id/stats", requireDevice, (req, res) => {
       date: new Date(end).toISOString().slice(0, 10),
       spent: Math.round(sel.reduce((a, s) => a + s.total, 0) * 100) / 100,
       grams: Math.round(sel.reduce((a, s) => a + s.grams, 0) * 100) / 100,
+      units: Math.round(sel.reduce((a, s) => a + s.units, 0) * 100) / 100,
     });
   }
   const byProduct = db.prepare(`

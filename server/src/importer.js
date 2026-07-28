@@ -62,9 +62,13 @@ function alreadyExists(reg) {
   return false;
 }
 
+export async function runImportOnce() {
+  return scanOnce();
+}
+
 async function scanOnce() {
   const user = process.env.SMTP_USER, pass = process.env.SMTP_PASS;
-  if (!user || !pass) return { skipped: "not_configured" };
+  if (!user || !pass) return { skipped: "not_configured", imported: 0 };
   const client = new ImapFlow({
     host: process.env.IMAP_HOST || "imap.gmail.com",
     port: Number(process.env.IMAP_PORT || 993),
