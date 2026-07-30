@@ -175,3 +175,21 @@ if (!saleCols.includes("paid")) {
   db.exec("ALTER TABLE sales ADD COLUMN paid_method TEXT");
   db.exec("UPDATE sales SET paid_ts = ts, paid_method = payment WHERE paid = 1");
 }
+
+const empCols = db.prepare("SELECT name FROM pragma_table_info('employees')").all().map((c) => c.name);
+if (!empCols.includes("pass_hash")) db.exec("ALTER TABLE employees ADD COLUMN pass_hash TEXT"); // per-employee login password
+
+/* ---- passwords are controlled from cPanel environment variables ----
+   Applied on EVERY startup so they can be changed without shell access:
+   just edit the env var in cPanel and restart the Node app.
+     CLUB_CODE            device / general password
+     ADMIN_PIN            admin password (letters + numbers allowed)
+     EMP_PASS_<NAME>      per-employee password, e.g. EMP_PASS_MATTIA
+   Values are hashed (scrypt) — the plain text never touches the database. */
+const norm = (s) => String(s || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+if (process.env.CLUB_CODE) setSetting("club_code_hash", hashSecret(process.env.CLUB_CODE));
+if (process.env.ADMIN_PIN) setSetting("admin_pin_hash", hashSecret(process.env.ADMIN_PIN));
+for (const emp of db.prepare("SELECT id, name FROM employees WHERE active = 1").all()) {
+  const v = process.env[`EMP_PASS_${norm(emp.name)}`];
+  if (v) db.prepare("UPDATE employees SET pass_hash = ? WHERE id = ?").run(hashSecret(v), emp.id);
+}
