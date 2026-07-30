@@ -28,9 +28,9 @@ function seed() {
     ({ id, num, name, nationality, type, status: "activo", joined, sponsor, phone, email }));
 
   const employees = [
-    { id: 1, name: "Mattia", initials: "MA" },
-    { id: 2, name: "Daimond", initials: "DA" },
-    { id: 3, name: "Max", initials: "MX" },
+    { id: 1, name: "Mattia", initials: "MA", hasPass: false },
+    { id: 2, name: "Daimond", initials: "DA", hasPass: false },
+    { id: 3, name: "Max", initials: "MX", hasPass: false },
   ];
 
   // realistic-looking recent sales so Informes has something to show
@@ -113,6 +113,9 @@ export async function mockRequest(method, path, body) {
   }
   if (method === "POST" && route === "/api/auth/admin/logout") {
     needDevice(); s.auth.admin = false; save(s); return { ok: true };
+  }
+  if (method === "POST" && route === "/api/auth/employee") {
+    needDevice(); return { ok: true }; // demo: no employee passwords
   }
   if (method === "GET" && route === "/api/state") {
     needDevice();

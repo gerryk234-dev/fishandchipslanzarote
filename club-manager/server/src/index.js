@@ -70,6 +70,16 @@ app.post("/api/auth/admin/logout", requireDevice, (req, res) => {
   res.json({ ok: true });
 });
 
+/* verify an employee's personal password before they take the counter */
+app.post("/api/auth/employee", requireDevice, (req, res) => {
+  const emp = db.prepare("SELECT * FROM employees WHERE id = ? AND active = 1").get(req.body?.employeeId);
+  if (!emp) return res.status(400).json({ error: "bad_employee" });
+  if (emp.pass_hash && !verifySecret(req.body?.password || "", emp.pass_hash)) {
+    return res.status(401).json({ error: "bad_password" });
+  }
+  res.json({ ok: true });
+});
+
 /* ================= state ================= */
 
 const productRow = (p) => ({
@@ -99,7 +109,8 @@ app.get("/api/state", requireDevice, (req, res) => {
     products: db.prepare("SELECT * FROM products WHERE active = 1 ORDER BY id").all().map(productRow),
     members: db.prepare("SELECT * FROM members WHERE status != 'baja' ORDER BY id").all()
       .map((m) => ({ ...memberRow(m), debt: debts.get(m.id) || 0 })),
-    employees: db.prepare("SELECT id, name, initials FROM employees WHERE active = 1 ORDER BY id").all(),
+    employees: db.prepare("SELECT id, name, initials, pass_hash FROM employees WHERE active = 1 ORDER BY id").all()
+      .map((e) => ({ id: e.id, name: e.name, initials: e.initials, hasPass: !!e.pass_hash })),
     invites: db.prepare("SELECT * FROM invites ORDER BY created DESC").all()
       .map((i) => ({ code: i.code, sponsorNum: i.sponsor_num, sponsorName: i.sponsor_name, created: i.created, usedBy: i.used_by })),
   });

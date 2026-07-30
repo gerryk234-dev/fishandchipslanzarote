@@ -324,6 +324,9 @@ function Login({ employees, onUser, onAdmin }) {
   const [pin, setPin] = useState("");
   const [err, setErr] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [empFor, setEmpFor] = useState(null);   // employee awaiting password
+  const [empPass, setEmpPass] = useState("");
+  const [empErr, setEmpErr] = useState(false);
 
   const tryPin = async () => {
     if (busy) return;
@@ -337,6 +340,25 @@ function Login({ employees, onUser, onAdmin }) {
     }
   };
 
+  const pickEmployee = (e) => {
+    if (!e.hasPass) { onUser(e); return; }   // no password set → straight in
+    setEmpFor(e); setEmpPass(""); setEmpErr(false);
+  };
+  const tryEmployee = async () => {
+    if (busy || !empFor) return;
+    setBusy(true);
+    try {
+      await api.post("/api/auth/employee", { employeeId: empFor.id, password: empPass });
+      onUser(empFor);
+    } catch {
+      setEmpErr(true); setEmpPass("");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const box = { fontSize: 22, textAlign: "center", width: 240, padding: "12px 14px", background: C.surface, borderRadius: 10, color: C.text };
+
   return (
     <div style={{ minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "'Outfit', sans-serif", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <S />
@@ -344,15 +366,29 @@ function Login({ employees, onUser, onAdmin }) {
         <div className="mono" style={{ color: C.green, letterSpacing: 4, fontSize: 13, marginBottom: 8 }}>ONE LIFE LANZAROTE</div>
         <h1 style={{ fontSize: 34, fontWeight: 800, margin: "0 0 6px" }}>Club Manager</h1>
 
-        {!pinMode ? (
+        {empFor ? (
+          <div style={{ marginTop: 20 }}>
+            <p style={{ color: C.muted, marginBottom: 14 }}>Contraseña de <b style={{ color: C.text }}>{empFor.name}</b></p>
+            <input autoFocus type="password" value={empPass}
+              onChange={(e) => { setEmpPass(e.target.value); setEmpErr(false); }}
+              onKeyDown={(e) => e.key === "Enter" && tryEmployee()}
+              style={{ ...box, border: `1px solid ${empErr ? C.red : C.line}` }} />
+            {empErr && <div style={{ color: C.red, fontSize: 14, marginTop: 8 }}>Contraseña incorrecta</div>}
+            <div style={{ display: "flex", gap: 10, justifyContent: "center", marginTop: 18 }}>
+              <Btn onClick={() => setEmpFor(null)}>Volver</Btn>
+              <Btn kind="primary" onClick={tryEmployee} disabled={busy}>Entrar</Btn>
+            </div>
+          </div>
+        ) : !pinMode ? (
           <>
             <p style={{ color: C.muted, marginBottom: 32 }}>¿Quién está en el mostrador?</p>
             <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
               {employees.map((e) => (
-                <button key={e.id} onClick={() => onUser(e)}
+                <button key={e.id} onClick={() => pickEmployee(e)}
                   style={{ background: C.surface, border: `1px solid ${C.line}`, borderRadius: 14, padding: "26px 30px", color: C.text, width: 130 }}>
                   <div className="mono" style={{ width: 52, height: 52, borderRadius: "50%", background: C.greenDark, color: C.green, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px", fontWeight: 800 }}>{e.initials}</div>
                   <div style={{ fontWeight: 700 }}>{e.name}</div>
+                  {e.hasPass && <div style={{ fontSize: 11, color: C.muted, marginTop: 3 }}>🔒 contraseña</div>}
                 </button>
               ))}
             </div>
@@ -362,13 +398,12 @@ function Login({ employees, onUser, onAdmin }) {
           </>
         ) : (
           <div style={{ marginTop: 20 }}>
-            <p style={{ color: C.muted, marginBottom: 14 }}>Introduce el PIN de administrador</p>
-            <input autoFocus type="password" inputMode="numeric" value={pin} maxLength={6}
+            <p style={{ color: C.muted, marginBottom: 14 }}>Contraseña de administrador</p>
+            <input autoFocus type="password" value={pin}
               onChange={(e) => { setPin(e.target.value); setErr(false); }}
               onKeyDown={(e) => e.key === "Enter" && tryPin()}
-              className="mono"
-              style={{ fontSize: 26, letterSpacing: 12, textAlign: "center", width: 200, padding: "12px 0", background: C.surface, border: `1px solid ${err ? C.red : C.line}`, borderRadius: 10, color: C.text }} />
-            {err && <div style={{ color: C.red, fontSize: 14, marginTop: 8 }}>PIN incorrecto</div>}
+              style={{ ...box, border: `1px solid ${err ? C.red : C.line}` }} />
+            {err && <div style={{ color: C.red, fontSize: 14, marginTop: 8 }}>Contraseña incorrecta</div>}
             <div style={{ display: "flex", gap: 10, justifyContent: "center", marginTop: 18 }}>
               <Btn onClick={() => setPinMode(false)}>Volver</Btn>
               <Btn kind="amber" onClick={tryPin} disabled={busy}>Entrar</Btn>
