@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import { api, DEMO } from "./api.js";
+import { api, DEMO, postSale, flushSales, queuedCount, setOfflineListener } from "./api.js";
 import { useScale } from "./scale.js";
 
 const DemoBadge = () => DEMO ? (
@@ -123,13 +123,16 @@ export default function App() {
   const [hist, setHist] = useState([]);          // visited-tab stack for the Volver button
   const [menuOpen, setMenuOpen] = useState(false);
   const [toast, setToast] = useState(null);
+  const [offline, setOffline] = useState(false);
+  const [queued, setQueued] = useState(queuedCount());
 
   const notify = useCallback((msg) => { setToast(msg); setTimeout(() => setToast(null), 2600); }, []);
 
   const refresh = useCallback(async () => {
     try {
-      const state = await api.get("/api/state");
+      const state = await api.getCached("/api/state");
       setData(state);
+      setOffline(!!state._offline);
       setPhase("ready");
     } catch (e) {
       if (e.status === 401) { setPhase("device"); setUser(null); }
@@ -141,6 +144,14 @@ export default function App() {
   useEffect(() => {
     const t = setInterval(refresh, POLL_MS);
     return () => clearInterval(t);
+  }, [refresh]);
+  useEffect(() => {
+    setOfflineListener(() => setQueued(queuedCount()));
+    const on = () => { setOffline(false); flushSales().then(() => { setQueued(queuedCount()); refresh(); }); };
+    const off = () => setOffline(true);
+    window.addEventListener("online", on);
+    window.addEventListener("offline", off);
+    return () => { window.removeEventListener("online", on); window.removeEventListener("offline", off); };
   }, [refresh]);
 
   if (phase === "loading") {
@@ -253,6 +264,12 @@ export default function App() {
       )}
 
       <main className="app-main" style={{ flex: 1, padding: 24, overflow: "auto" }}>
+        {(offline || queued > 0) && (
+          <div className="mono" style={{ background: offline ? "#4A2A22" : "#4A3A22", border: `1px solid ${offline ? C.red : C.amber}`, color: offline ? C.red : C.amber, borderRadius: 10, padding: "10px 14px", marginBottom: 14, fontSize: 13, fontWeight: 700 }}>
+            {offline ? "⚠ SIN CONEXIÓN — puedes seguir vendiendo; las ventas se guardan y se envían al reconectar." : ""}
+            {queued > 0 ? `${offline ? " · " : "↻ "}${queued} venta(s) pendiente(s) de sincronizar` : ""}
+          </div>
+        )}
         {hist.length > 0 && (
           <button onClick={goBack}
             style={{ background: "none", border: "none", color: C.muted, fontSize: 15, fontWeight: 700, padding: 0, marginBottom: 12, display: "inline-flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
@@ -452,14 +469,16 @@ function Dispensar({ data, refresh, user, notify }) {
     if (!member || cart.length === 0 || busy) return;
     setBusy(true);
     try {
-      const sale = await api.post("/api/sales", {
+      const sale = await postSale({
         memberId: member.id,
         employeeId: user.admin ? 0 : user.id,
         payment,
         priceMode,
         items: cart.map((i) => ({ productId: i.productId, qty: i.qty })),
-      });
-      notify(payment === "fiado" ? `Apuntado como FIADO — debe ${eur(sale.total)}` : `Dispensación registrada — ${eur(sale.total)}`);
+      }, +total.toFixed(2));
+      notify(sale.queued
+        ? `Guardado sin conexión — ${eur(sale.total)}. Se enviará al reconectar.`
+        : payment === "fiado" ? `Apuntado como FIADO — debe ${eur(sale.total)}` : `Dispensación registrada — ${eur(sale.total)}`);
       setCart([]); setMember(null); setQ(""); setPayment("efectivo");
       refresh();
     } catch (e) {
@@ -1056,33 +1075,22 @@ function Caja({ data, user, notify, isAdmin }) {
   const [closures, setClosures] = useState([]);
   const [busy, setBusy] = useState(false);
   const [openDay, setOpenDay] = useState(null);
+  const [result, setResult] = useState(null);   // last close result (for WhatsApp choice)
 
   const loadOpen = () => api.get("/api/caja/open").then(setOpen).catch(() => {});
   const loadClosures = () => { if (isAdmin) api.get("/api/closures").then(setClosures).catch(() => {}); };
   useEffect(() => { loadOpen(); loadClosures(); /* eslint-disable-next-line */ }, []);
 
+  const whatsappLink = (text) => `https://wa.me/${CLOSE_WHATSAPP}?text=${encodeURIComponent(text)}`;
+
   const closeShift = async () => {
     if (busy) return;
-    if (!window.confirm("¿Cerrar el turno? Se guardará el resumen y ya no se podrá modificar.")) return;
+    if (!window.confirm("¿Cerrar el turno? Se guardará el resumen, se enviará por email, y podrás enviarlo por WhatsApp.")) return;
     setBusy(true);
     try {
       const r = await api.post("/api/caja/close", { employeeId: user.admin ? 0 : user.id });
-      const msg = [
-        `*One Life Lanzarote — Cierre de turno*`,
-        `Empleado: ${r.employeeName}`,
-        `Fecha: ${new Date(r.to).toLocaleString("es-ES")}`,
-        ``,
-        `Ventas: ${r.salesN}`,
-        `TOTAL: ${r.total} tk`,
-        `Efectivo: ${r.cash} tk`,
-        `Tarjeta: ${r.card} tk`,
-        `Fiado (pendiente): ${r.fiado} tk`,
-        `Gramos: ${r.grams} g`,
-        `Sweets/Bebidas: ${r.units} ud`,
-      ].join("\n");
-      // one-tap WhatsApp to the club number, pre-filled
-      window.open(`https://wa.me/${CLOSE_WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank");
-      notify(`Turno cerrado — ${r.total} tk. Envía el WhatsApp que se ha abierto.`);
+      setResult(r);   // shows the choice panel (email status + WhatsApp button)
+      notify(`Turno cerrado — ${r.total} tk`);
       loadOpen(); loadClosures();
     } catch {
       notify("No se pudo cerrar el turno");
@@ -1107,6 +1115,28 @@ function Caja({ data, user, notify, isAdmin }) {
           {busy ? "Cerrando…" : "Cerrar día / turno"}
         </Btn>
       </div>
+
+      {/* after a close: email status + WhatsApp choice */}
+      {result && (
+        <Panel style={{ padding: 18, marginBottom: 20, borderColor: C.green }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+            <div>
+              <div style={{ fontWeight: 800, fontSize: 17, color: C.green }}>Turno cerrado — {result.total} tk</div>
+              <div className="mono" style={{ fontSize: 13, color: C.muted, marginTop: 4 }}>
+                {result.emailStatus === "sent" ? "✅ Email enviado a onelifesocialclub@gmail.com"
+                  : result.emailStatus === "not_configured" ? "✉ Email no configurado (revisa SMTP en el servidor)"
+                  : "⚠ El email no se pudo enviar"} · guardado en Cierres
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 8 }}>
+              <a href={whatsappLink(result.report)} target="_blank" rel="noopener" style={{ textDecoration: "none" }}>
+                <Btn kind="primary">📲 Enviar por WhatsApp</Btn>
+              </a>
+              <Btn onClick={() => setResult(null)}>Cerrar</Btn>
+            </div>
+          </div>
+        </Panel>
+      )}
 
       {/* current open shift */}
       <Panel style={{ padding: 18, marginBottom: 20 }}>

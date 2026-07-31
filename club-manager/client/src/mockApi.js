@@ -205,7 +205,8 @@ export async function mockRequest(method, path, body) {
     const emp = s.employees.find((e) => e.id === Number(body?.employeeId));
     const rec = { id: Date.now(), ts: now, day: isoOf(now), employeeName: emp ? emp.name : "Administrador", from, to: now, ...sum };
     s.closures.push(rec); save(s);
-    return clone(rec);
+    const report = ["One Life Lanzarote — Cierre de turno", `Empleado: ${rec.employeeName}`, `Fecha: ${new Date(now).toLocaleString("es-ES")}`, "", `Ventas: ${sum.salesN}`, `TOTAL: ${sum.total} tk`, `Efectivo: ${sum.cash} tk`, `Tarjeta: ${sum.card} tk`, `Fiado (pendiente): ${sum.fiado} tk`, `Gramos: ${sum.grams} g`, `Sweets/Bebidas: ${sum.units} ud`].join("\n");
+    return clone({ ...rec, emailStatus: "not_configured", report });
   }
   if (method === "GET" && route === "/api/closures") {
     needAdmin();

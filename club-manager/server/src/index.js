@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { db, getSetting, setSetting } from "./db.js";
 import { verifySecret, signToken, verifyToken } from "./auth.js";
 import { generateCard } from "./card.js";
-import { sendWelcome } from "./mailer.js";
+import { sendWelcome, sendPlain } from "./mailer.js";
 import { startImporter, runImportOnce } from "./importer.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -226,8 +226,8 @@ app.get("/api/caja/open", requireDevice, (req, res) => {
   res.json({ from, sales: rows.map(saleWithItems), summary: summarize(rows) });
 });
 
-/* close the shift: snapshot the summary, store it for the admin day-by-day list */
-app.post("/api/caja/close", requireDevice, (req, res) => {
+/* close the shift: snapshot the summary, store it, and email the report */
+app.post("/api/caja/close", requireDevice, async (req, res) => {
   const empId = Number(req.body?.employeeId) || 0;
   let employeeName = "Administrador";
   if (empId !== 0) {
@@ -245,7 +245,28 @@ app.post("/api/caja/close", requireDevice, (req, res) => {
   const info = db.prepare(
     "INSERT INTO closures (ts, day, employee_id, employee_name, from_ts, to_ts, sales_n, total, cash, card, fiado, grams, units, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
   ).run(now, day, empId, employeeName, from, now, s.salesN, s.total, s.cash, s.card, s.fiado, s.grams, s.units, String(req.body?.note || "").slice(0, 500) || null);
-  res.json({ id: Number(info.lastInsertRowid), day, employeeName, from, to: now, ...s });
+
+  const report = [
+    "One Life Lanzarote — Cierre de turno",
+    `Empleado: ${employeeName}`,
+    `Fecha: ${new Date(now).toLocaleString("es-ES")}`,
+    "",
+    `Ventas: ${s.salesN}`,
+    `TOTAL: ${s.total} tk`,
+    `Efectivo: ${s.cash} tk`,
+    `Tarjeta: ${s.card} tk`,
+    `Fiado (pendiente): ${s.fiado} tk`,
+    `Gramos: ${s.grams} g`,
+    `Sweets/Bebidas: ${s.units} ud`,
+  ].join("\n");
+  // automatically email the report to the club address
+  let emailStatus = "skipped";
+  try {
+    emailStatus = await sendPlain(process.env.CLOSE_EMAIL || "onelifesocialclub@gmail.com",
+      `Cierre de turno ${day} — ${employeeName}`, report);
+  } catch (e) { console.error("[close-email]", e.message); emailStatus = "failed"; }
+
+  res.json({ id: Number(info.lastInsertRowid), day, employeeName, from, to: now, ...s, emailStatus, report });
 });
 
 /* admin: day-by-day list of shift closes */

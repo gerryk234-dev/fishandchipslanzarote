@@ -47,3 +47,17 @@ export async function sendWelcome(member, pdfBytes) {
     return "failed";
   }
 }
+
+/* generic plain-text email (used for shift-close reports) */
+export async function sendPlain(to, subject, text) {
+  const t = transport();
+  if (!t) return "not_configured";
+  if (!to) return "no_email";
+  try {
+    await t.sendMail({ from: fromAddress(), to, subject, text });
+    return "sent";
+  } catch (e) {
+    console.error("[mailer]", e.message);
+    return "failed";
+  }
+}
