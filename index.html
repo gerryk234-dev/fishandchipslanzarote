@@ -4284,24 +4284,23 @@
       const notes = document.getElementById('orderNotes').value || '';
       const typeLabel = orderType === 'eat-in' ? 'Eat In' : 'Take Away';
       let total = 0;
-      let orderLines = items.map(m => {
+      const orderLines = items.map(m => {
         const line = m.price * orderCart[m.id];
         total += line;
-        return `• ${m.name} x${orderCart[m.id]} = €${line.toFixed(2)}`;
-      }).join('%0A');
-      const msg = encodeURIComponent(
+        return `• ${isEs ? m.nameEs : m.name} x${orderCart[m.id]} = €${line.toFixed(2)}`;
+      }).join('\n');
+      const text =
         `🐟 NEW ORDER — Hippie Chippy\n` +
         `━━━━━━━━━━━━━━━━━━\n` +
         `Name: ${name}\n` +
         `Type: ${typeLabel}\n` +
         `Time: ${time}\n` +
-        `\n📋 ORDER:\n`
-      ) + orderLines + encodeURIComponent(
+        `\n📋 ORDER:\n` +
+        orderLines +
         `\n\n💰 TOTAL: €${total.toFixed(2)}\n` +
         `📞 Phone: ${phone}\n` +
-        `📝 Notes: ${notes}\n\nThank you! 😊`
-      );
-      window.open(`https://wa.me/34612225843?text=${msg}`, '_blank');
+        `📝 Notes: ${notes}\n\nThank you! 😊`;
+      window.open(`https://wa.me/34612225843?text=${encodeURIComponent(text)}`, '_blank');
       // Show success
       document.querySelectorAll('.order-step').forEach(s => s.classList.remove('active'));
       document.getElementById('orderSuccess').classList.add('show');
