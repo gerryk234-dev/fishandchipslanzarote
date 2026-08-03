@@ -102,6 +102,9 @@ export async function mockRequest(method, path, body) {
   const needAdmin = () => { needDevice(); if (!s.auth.admin) fail(403, "admin_required"); };
   let m;
 
+  if (method === "GET" && route === "/api/version") {
+    return { version: "demo", time: new Date().toISOString() };
+  }
   if (method === "POST" && route === "/api/auth/device") {
     if (String(body?.code) !== "onelife") fail(401, "bad_code");
     s.auth.device = true; save(s); return { ok: true };

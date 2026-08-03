@@ -1,6 +1,6 @@
 import express from "express";
 import cookieParser from "cookie-parser";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { db, getSetting, setSetting } from "./db.js";
@@ -17,6 +17,13 @@ const SESSION_DAYS = 180;
 const app = express();
 app.use(express.json({ limit: "4mb" })); // member selfies arrive as data URLs
 app.use(cookieParser());
+
+/* Public health/version check — open in a browser to see what version the
+   server is really running. It lives under /api/ so the service worker never
+   caches it: this always reflects the live server, not the cached app. */
+let RUNNING_VERSION = "?";
+try { RUNNING_VERSION = readFileSync(join(__dirname, "..", "..", "VERSION"), "utf8").trim(); } catch { /* no file */ }
+app.get("/api/version", (_req, res) => res.json({ version: RUNNING_VERSION, time: new Date().toISOString() }));
 
 /* ================= auth ================= */
 
