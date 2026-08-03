@@ -185,13 +185,13 @@ if (!empCols.includes("pass_hash")) db.exec("ALTER TABLE employees ADD COLUMN pa
    can change any password from the in-app "Contraseñas" screen and it will stick
    (this block never runs again, thanks to the pw_defaults_v1 marker). Environment
    variables (below) still override these on every startup if you ever set them. */
-if (!getSetting("pw_defaults_v1")) {
-  const DEFAULT_CLUB  = "93d095b90fd504c7a0c5f5fb0cd1deca:d0e741798f6c381931a136b39c4fd32c9e627310e442d567c9c6ebc240528ee6";
-  const DEFAULT_ADMIN = "401e4f9e88c62e8f0f1905e466e7a7e4:77042e2683fcacffda371431c59b7b93e402981a403a8ba0d46ebf195558bcef";
+if (!getSetting("pw_defaults_v2")) {
+  const DEFAULT_CLUB  = "84e720505ee17848f40d1dc9b98b7f09:ef01d61abc604cc9aa6fc2e94f2a7ecbd481f60026cb1c85155e9c6a98ec03ac";
+  const DEFAULT_ADMIN = "8009b48a40274e05b6d45e21c1a957a0:bba860459f48394019e14bd1014307dac1c943458cedd91d4f68b92353c18916";
   const DEFAULT_EMP = {
-    MATTIA:  "98d5a7a8dae01f58994e75c698e8e364:0b8b0f20e98513cd2033981fc125f5e8536301e0fdba46b5ca807c705742f062",
-    MAX:     "05c6d846262f63dbaa7820ab2b0cd59e:77d74c3143931aa8c284fd632ec1158d5c429fe589426f0c986be2295f12035f",
-    DAIMOND: "2d0f9a7491974040665b9d51b67d600c:ee4cc44f65e2334c05612d2c8c6adb8047074a6d9f4aba5f4f3d380cc8b7fbac",
+    MATTIA:  "d0a740e4bf10f44fd1548e1c3694b4e8:6de33a560726bf3f3a4410b1a852102f2966177112f0584c389bdc73608d260f",
+    MAX:     "c16aac13380aa8a3f82d0e9cbb7713d6:0d1314334f2de5d65d8a68f5ca7fb120c1b862b643a8896df179e32b293a61af",
+    DAIMOND: "5428986b05decba36be460796b4f8237:b4e0c1e9ee49afc509aedf10beb66a8a223f17f27b41e7df9807e15dee4d59f1",
   };
   setSetting("club_code_hash", DEFAULT_CLUB);
   setSetting("admin_pin_hash", DEFAULT_ADMIN);
@@ -201,7 +201,8 @@ if (!getSetting("pw_defaults_v1")) {
     if (h) db.prepare("UPDATE employees SET pass_hash = ? WHERE id = ?").run(h, emp.id);
   }
   setSetting("pw_defaults_v1", "1");
-  console.log("[db] applied default club/admin/employee passwords (change them in-app under Contraseñas)");
+  setSetting("pw_defaults_v2", "1");
+  console.log("[db] applied club/admin/employee passwords (change them in-app under Contraseñas)");
 }
 
 /* ---- passwords are controlled from cPanel environment variables ----
