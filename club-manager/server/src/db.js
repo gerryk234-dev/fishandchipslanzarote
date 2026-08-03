@@ -179,6 +179,31 @@ if (!saleCols.includes("paid")) {
 const empCols = db.prepare("SELECT name FROM pragma_table_info('employees')").all().map((c) => c.name);
 if (!empCols.includes("pass_hash")) db.exec("ALTER TABLE employees ADD COLUMN pass_hash TEXT"); // per-employee login password
 
+/* ---- default passwords (applied ONCE per database) ----
+   So the club has working logins the moment it deploys — no cPanel steps needed.
+   Stored as scrypt hashes; the plain text never appears here. After this, the admin
+   can change any password from the in-app "Contraseñas" screen and it will stick
+   (this block never runs again, thanks to the pw_defaults_v1 marker). Environment
+   variables (below) still override these on every startup if you ever set them. */
+if (!getSetting("pw_defaults_v1")) {
+  const DEFAULT_CLUB  = "93d095b90fd504c7a0c5f5fb0cd1deca:d0e741798f6c381931a136b39c4fd32c9e627310e442d567c9c6ebc240528ee6";
+  const DEFAULT_ADMIN = "401e4f9e88c62e8f0f1905e466e7a7e4:77042e2683fcacffda371431c59b7b93e402981a403a8ba0d46ebf195558bcef";
+  const DEFAULT_EMP = {
+    MATTIA:  "98d5a7a8dae01f58994e75c698e8e364:0b8b0f20e98513cd2033981fc125f5e8536301e0fdba46b5ca807c705742f062",
+    MAX:     "05c6d846262f63dbaa7820ab2b0cd59e:77d74c3143931aa8c284fd632ec1158d5c429fe589426f0c986be2295f12035f",
+    DAIMOND: "2d0f9a7491974040665b9d51b67d600c:ee4cc44f65e2334c05612d2c8c6adb8047074a6d9f4aba5f4f3d380cc8b7fbac",
+  };
+  setSetting("club_code_hash", DEFAULT_CLUB);
+  setSetting("admin_pin_hash", DEFAULT_ADMIN);
+  const normName = (s) => String(s || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  for (const emp of db.prepare("SELECT id, name FROM employees WHERE active = 1").all()) {
+    const h = DEFAULT_EMP[normName(emp.name)];
+    if (h) db.prepare("UPDATE employees SET pass_hash = ? WHERE id = ?").run(h, emp.id);
+  }
+  setSetting("pw_defaults_v1", "1");
+  console.log("[db] applied default club/admin/employee passwords (change them in-app under Contraseñas)");
+}
+
 /* ---- passwords are controlled from cPanel environment variables ----
    Applied on EVERY startup so they can be changed without shell access:
    just edit the env var in cPanel and restart the Node app.

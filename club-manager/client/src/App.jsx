@@ -114,6 +114,58 @@ const Field = (props) => (
   <input {...props} style={{ width: "100%", padding: "11px 14px", background: C.bg, border: `1px solid ${C.line}`, borderRadius: 8, color: C.text, fontSize: 16, ...props.style }} />
 );
 
+/* ---------- install / offline ("añadir a pantalla de inicio") ---------- */
+const isStandalone = () =>
+  window.matchMedia?.("(display-mode: standalone)").matches || window.navigator.standalone === true;
+const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+
+function useInstallPrompt() {
+  const [deferred, setDeferred] = useState(null);
+  const [installed, setInstalled] = useState(isStandalone());
+  useEffect(() => {
+    const onPrompt = (e) => { e.preventDefault(); setDeferred(e); };
+    const onInstalled = () => { setInstalled(true); setDeferred(null); };
+    window.addEventListener("beforeinstallprompt", onPrompt);
+    window.addEventListener("appinstalled", onInstalled);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", onPrompt);
+      window.removeEventListener("appinstalled", onInstalled);
+    };
+  }, []);
+  const install = async () => {
+    if (!deferred) return false;
+    deferred.prompt();
+    try { await deferred.userChoice; } catch { /* ignore */ }
+    setDeferred(null);
+    return true;
+  };
+  return { canInstall: !!deferred, installed, install, ios: isIOS() };
+}
+
+/* Button shown on the login screens so staff can install the app for offline use.
+   Android/Chrome: one tap triggers the native install. iPhone: shows the steps. */
+function InstallApp() {
+  const { canInstall, installed, install, ios } = useInstallPrompt();
+  const [showIOS, setShowIOS] = useState(false);
+  if (installed || DEMO) return null;                 // already installed → nothing to do
+  if (!canInstall && !ios) return null;               // browser can't install here
+  return (
+    <div style={{ marginTop: 22 }}>
+      <button
+        onClick={() => (ios ? setShowIOS((v) => !v) : install())}
+        style={{ background: C.greenDark, border: `1px solid ${C.green}`, color: C.green, borderRadius: 10, padding: "12px 22px", fontWeight: 800, fontSize: 15, display: "inline-flex", alignItems: "center", gap: 8 }}>
+        ⬇ Instalar app (funciona sin internet)
+      </button>
+      {ios && showIOS && (
+        <div className="mono" style={{ color: C.muted, fontSize: 13, marginTop: 12, lineHeight: 1.6, maxWidth: 300, marginInline: "auto" }}>
+          En iPhone: pulsa <b style={{ color: C.text }}>Compartir</b> ⬆️ y luego{" "}
+          <b style={{ color: C.text }}>“Añadir a pantalla de inicio”</b>.
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ================================ APP ================================ */
 export default function App() {
   const [phase, setPhase] = useState("loading"); // loading | device | ready | offline
@@ -200,7 +252,7 @@ export default function App() {
 
   const isAdmin = !!user.admin;
   const NAV = isAdmin
-    ? [{ id: "informes", label: "Informes" }, { id: "socios", label: "Socios" }, { id: "caja", label: "Caja / Cierres" }, { id: "inventario", label: "Inventario" }, { id: "dispensar", label: "Dispensar" }]
+    ? [{ id: "informes", label: "Informes" }, { id: "socios", label: "Socios" }, { id: "caja", label: "Caja / Cierres" }, { id: "inventario", label: "Inventario" }, { id: "dispensar", label: "Dispensar" }, { id: "ajustes", label: "Contraseñas" }]
     : [{ id: "dispensar", label: "Dispensar" }, { id: "socios", label: "Socios" }, { id: "caja", label: "Caja" }, { id: "inventario", label: "Inventario" }];
   const pendingCount = data.members.filter((m) => m.status === "pendiente").length;
 
@@ -281,6 +333,7 @@ export default function App() {
         {tab === "caja" && <Caja data={data} user={user} notify={notify} isAdmin={isAdmin} />}
         {tab === "inventario" && <Inventario data={data} refresh={refresh} notify={notify} />}
         {tab === "informes" && isAdmin && <Informes data={data} />}
+        {tab === "ajustes" && isAdmin && <Passwords data={data} refresh={refresh} notify={notify} />}
       </main>
 
       {toast && (
@@ -329,6 +382,7 @@ function DeviceLogin({ onDone }) {
         <div className="mono" style={{ color: C.muted, fontSize: 12, marginTop: 16 }}>
           {DEMO ? "demo — código: onelife" : "Solo hace falta una vez por dispositivo"}
         </div>
+        <InstallApp />
       </div>
       <DemoBadge />
     </div>
@@ -412,6 +466,7 @@ function Login({ employees, onUser, onAdmin }) {
             <button onClick={() => setPinMode(true)} style={{ marginTop: 28, background: "none", border: `1px solid ${C.line}`, color: C.amber, borderRadius: 8, padding: "10px 22px", fontWeight: 700 }}>
               Acceso administrador
             </button>
+            <div><InstallApp /></div>
           </>
         ) : (
           <div style={{ marginTop: 20 }}>
@@ -430,6 +485,83 @@ function Login({ employees, onUser, onAdmin }) {
         )}
       </div>
       <DemoBadge />
+    </div>
+  );
+}
+
+/* ============================ CONTRASEÑAS (admin) ============================ */
+function Passwords({ data, refresh, notify }) {
+  const [club, setClub] = useState("");
+  const [admin, setAdmin] = useState("");
+  const [emp, setEmp] = useState({});      // { [id]: newPassword }
+  const [busy, setBusy] = useState(false);
+
+  const setEmpPass = (id, v) => setEmp((s) => ({ ...s, [id]: v }));
+
+  const save = async () => {
+    if (busy) return;
+    const payload = {};
+    if (club.trim()) payload.clubCode = club.trim();
+    if (admin.trim()) payload.adminPass = admin.trim();
+    const employees = {};
+    for (const [id, v] of Object.entries(emp)) if (v.trim()) employees[id] = v.trim();
+    if (Object.keys(employees).length) payload.employees = employees;
+    if (!Object.keys(payload).length) { notify("Escribe al menos una contraseña nueva"); return; }
+    setBusy(true);
+    try {
+      await api.post("/api/admin/passwords", payload);
+      setClub(""); setAdmin(""); setEmp({});
+      await refresh();
+      notify("Contraseñas actualizadas ✓");
+    } catch {
+      notify("No se pudieron guardar");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const row = { display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap", marginBottom: 12 };
+  const label = { width: 150, fontWeight: 700, color: C.muted, flexShrink: 0 };
+
+  return (
+    <div className="fadein" style={{ maxWidth: 620 }}>
+      <h2 style={{ fontSize: 26, fontWeight: 800, margin: "0 0 6px" }}>Contraseñas</h2>
+      <p style={{ color: C.muted, marginBottom: 20, fontSize: 15 }}>
+        Cambia aquí las contraseñas — se guardan al instante en el servidor del club.
+        Deja un campo en blanco para no tocarlo.
+      </p>
+
+      <Panel style={{ padding: 20, marginBottom: 18 }}>
+        <div style={{ fontWeight: 800, marginBottom: 14 }}>Acceso general</div>
+        <div style={row}>
+          <div style={label}>Código del club</div>
+          <Field type="text" value={club} placeholder="nueva contraseña del dispositivo"
+            onChange={(e) => setClub(e.target.value)} style={{ flex: 1, minWidth: 200 }} />
+        </div>
+        <div style={row}>
+          <div style={label}>Administrador</div>
+          <Field type="text" value={admin} placeholder="nueva contraseña de admin"
+            onChange={(e) => setAdmin(e.target.value)} style={{ flex: 1, minWidth: 200 }} />
+        </div>
+      </Panel>
+
+      <Panel style={{ padding: 20, marginBottom: 18 }}>
+        <div style={{ fontWeight: 800, marginBottom: 14 }}>Empleados</div>
+        {data.employees.map((e) => (
+          <div style={row} key={e.id}>
+            <div style={label}>{e.name} {e.hasPass ? "🔒" : ""}</div>
+            <Field type="text" value={emp[e.id] || ""} placeholder={e.hasPass ? "nueva contraseña" : "sin contraseña — escribe una"}
+              onChange={(ev) => setEmpPass(e.id, ev.target.value)} style={{ flex: 1, minWidth: 200 }} />
+          </div>
+        ))}
+        <div className="mono" style={{ color: C.muted, fontSize: 12, marginTop: 4 }}>
+          Escribe un espacio y bórralo para dejar a un empleado sin contraseña.
+        </div>
+      </Panel>
+
+      <Btn kind="primary" size="lg" onClick={save} disabled={busy}>
+        {busy ? "Guardando…" : "Guardar contraseñas"}
+      </Btn>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { db, getSetting, setSetting } from "./db.js";
-import { verifySecret, signToken, verifyToken } from "./auth.js";
+import { verifySecret, hashSecret, signToken, verifyToken } from "./auth.js";
 import { generateCard } from "./card.js";
 import { sendWelcome, sendPlain } from "./mailer.js";
 import { startImporter, runImportOnce } from "./importer.js";
@@ -76,6 +76,23 @@ app.post("/api/auth/employee", requireDevice, (req, res) => {
   if (!emp) return res.status(400).json({ error: "bad_employee" });
   if (emp.pass_hash && !verifySecret(req.body?.password || "", emp.pass_hash)) {
     return res.status(401).json({ error: "bad_password" });
+  }
+  res.json({ ok: true });
+});
+
+/* change passwords from inside the app (admin only) — no cPanel needed.
+   Body may include any of: { clubCode, adminPass, employees: { <id>: "<newpass>" } }
+   An empty string for an employee clears their password (no prompt for them). */
+app.post("/api/admin/passwords", requireAdmin, (req, res) => {
+  const { clubCode, adminPass, employees } = req.body || {};
+  if (typeof clubCode === "string" && clubCode.trim()) setSetting("club_code_hash", hashSecret(clubCode.trim()));
+  if (typeof adminPass === "string" && adminPass.trim()) setSetting("admin_pin_hash", hashSecret(adminPass.trim()));
+  if (employees && typeof employees === "object") {
+    for (const [id, pass] of Object.entries(employees)) {
+      if (typeof pass !== "string") continue;
+      const hash = pass.trim() ? hashSecret(pass.trim()) : null;
+      db.prepare("UPDATE employees SET pass_hash = ? WHERE id = ? AND active = 1").run(hash, Number(id));
+    }
   }
   res.json({ ok: true });
 });

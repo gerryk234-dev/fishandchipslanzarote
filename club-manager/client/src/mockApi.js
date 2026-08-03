@@ -117,6 +117,9 @@ export async function mockRequest(method, path, body) {
   if (method === "POST" && route === "/api/auth/employee") {
     needDevice(); return { ok: true }; // demo: no employee passwords
   }
+  if (method === "POST" && route === "/api/admin/passwords") {
+    needAdmin(); return { ok: true }; // demo: passwords are not persisted
+  }
   if (method === "GET" && route === "/api/state") {
     needDevice();
     return clone({
