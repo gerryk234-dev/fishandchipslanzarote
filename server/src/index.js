@@ -39,6 +39,10 @@ const setSession = (res, payload) => {
 
 const sessionOf = (req) => verifyToken(req.cookies?.session, TOKEN_SECRET);
 
+/* passwords are case-insensitive and whitespace-trimmed everywhere, so staff
+   can't get locked out by a stray capital or an autocorrect space on mobile */
+const normPass = (s) => String(s ?? "").trim().toLowerCase();
+
 const requireDevice = (req, res, next) => {
   const s = sessionOf(req);
   if (!s?.d) return res.status(401).json({ error: "device_not_authorized" });
@@ -56,7 +60,7 @@ const requireAdmin = (req, res, next) => {
 
 app.post("/api/auth/device", (req, res) => {
   const { code } = req.body || {};
-  if (!verifySecret(code || "", getSetting("club_code_hash"))) {
+  if (!verifySecret(normPass(code), getSetting("club_code_hash"))) {
     return res.status(401).json({ error: "bad_code" });
   }
   setSession(res, { d: 1 });
@@ -65,7 +69,7 @@ app.post("/api/auth/device", (req, res) => {
 
 app.post("/api/auth/admin", requireDevice, (req, res) => {
   const { pin } = req.body || {};
-  if (!verifySecret(pin || "", getSetting("admin_pin_hash"))) {
+  if (!verifySecret(normPass(pin), getSetting("admin_pin_hash"))) {
     return res.status(401).json({ error: "bad_pin" });
   }
   setSession(res, { d: 1, a: 1 });
@@ -81,7 +85,7 @@ app.post("/api/auth/admin/logout", requireDevice, (req, res) => {
 app.post("/api/auth/employee", requireDevice, (req, res) => {
   const emp = db.prepare("SELECT * FROM employees WHERE id = ? AND active = 1").get(req.body?.employeeId);
   if (!emp) return res.status(400).json({ error: "bad_employee" });
-  if (emp.pass_hash && !verifySecret(req.body?.password || "", emp.pass_hash)) {
+  if (emp.pass_hash && !verifySecret(normPass(req.body?.password), emp.pass_hash)) {
     return res.status(401).json({ error: "bad_password" });
   }
   res.json({ ok: true });
@@ -92,12 +96,12 @@ app.post("/api/auth/employee", requireDevice, (req, res) => {
    An empty string for an employee clears their password (no prompt for them). */
 app.post("/api/admin/passwords", requireAdmin, (req, res) => {
   const { clubCode, adminPass, employees } = req.body || {};
-  if (typeof clubCode === "string" && clubCode.trim()) setSetting("club_code_hash", hashSecret(clubCode.trim()));
-  if (typeof adminPass === "string" && adminPass.trim()) setSetting("admin_pin_hash", hashSecret(adminPass.trim()));
+  if (typeof clubCode === "string" && clubCode.trim()) setSetting("club_code_hash", hashSecret(normPass(clubCode)));
+  if (typeof adminPass === "string" && adminPass.trim()) setSetting("admin_pin_hash", hashSecret(normPass(adminPass)));
   if (employees && typeof employees === "object") {
     for (const [id, pass] of Object.entries(employees)) {
       if (typeof pass !== "string") continue;
-      const hash = pass.trim() ? hashSecret(pass.trim()) : null;
+      const hash = pass.trim() ? hashSecret(normPass(pass)) : null;
       db.prepare("UPDATE employees SET pass_hash = ? WHERE id = ? AND active = 1").run(hash, Number(id));
     }
   }
