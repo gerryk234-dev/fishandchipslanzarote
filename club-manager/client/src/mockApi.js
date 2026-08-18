@@ -127,6 +127,7 @@ export async function mockRequest(method, path, body) {
     needDevice();
     return clone({
       isAdmin: s.auth.admin,
+      webhookKey: s.auth.admin ? "demo-webhook-key" : undefined,
       products: s.products.filter((p) => p.active),
       members: s.members.filter((x) => x.status !== "baja").map((x) => ({
         ...x,

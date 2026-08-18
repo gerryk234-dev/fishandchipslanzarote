@@ -252,7 +252,7 @@ export default function App() {
 
   const isAdmin = !!user.admin;
   const NAV = isAdmin
-    ? [{ id: "informes", label: "Informes" }, { id: "socios", label: "Socios" }, { id: "caja", label: "Caja / Cierres" }, { id: "inventario", label: "Inventario" }, { id: "dispensar", label: "Dispensar" }, { id: "ajustes", label: "Contraseñas" }]
+    ? [{ id: "informes", label: "Informes" }, { id: "socios", label: "Socios" }, { id: "caja", label: "Caja / Cierres" }, { id: "inventario", label: "Inventario" }, { id: "dispensar", label: "Dispensar" }, { id: "ajustes", label: "Ajustes" }]
     : [{ id: "dispensar", label: "Dispensar" }, { id: "socios", label: "Socios" }, { id: "caja", label: "Caja" }, { id: "inventario", label: "Inventario" }];
   const pendingCount = data.members.filter((m) => m.status === "pendiente").length;
 
@@ -523,13 +523,35 @@ function Passwords({ data, refresh, notify }) {
   const row = { display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap", marginBottom: 12 };
   const label = { width: 150, fontWeight: 700, color: C.muted, flexShrink: 0 };
 
+  const hookUrl = data.webhookKey ? `${window.location.origin}/api/hook/register?key=${data.webhookKey}` : "";
+  const copyHook = async () => {
+    try { await navigator.clipboard.writeText(hookUrl); notify("Enlace copiado ✓"); }
+    catch { notify("Mantén pulsado el enlace para copiarlo"); }
+  };
+
   return (
     <div className="fadein" style={{ maxWidth: 620 }}>
-      <h2 style={{ fontSize: 26, fontWeight: 800, margin: "0 0 6px" }}>Contraseñas</h2>
+      <h2 style={{ fontSize: 26, fontWeight: 800, margin: "0 0 6px" }}>Ajustes</h2>
       <p style={{ color: C.muted, marginBottom: 20, fontSize: 15 }}>
-        Cambia aquí las contraseñas — se guardan al instante en el servidor del club.
-        Deja un campo en blanco para no tocarlo.
+        Contraseñas y conexión con la web. Todo se guarda al instante en el servidor del club.
       </p>
+
+      {data.webhookKey && (
+        <Panel style={{ padding: 20, marginBottom: 18, borderColor: C.green + "66" }}>
+          <div style={{ fontWeight: 800, marginBottom: 6 }}>🔗 Conectar la web de registro</div>
+          <div style={{ color: C.muted, fontSize: 14, marginBottom: 12, lineHeight: 1.5 }}>
+            Pega esta dirección en el <b style={{ color: C.text }}>Webhook</b> del formulario de tu web
+            (Elementor → el formulario → <b style={{ color: C.text }}>Acciones tras enviar → Webhook</b>).
+            Cada persona que se registre aparecerá aquí al instante como solicitud pendiente, con su foto —
+            sin pasar por Gmail.
+          </div>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+            <input readOnly value={hookUrl} onFocus={(e) => e.target.select()}
+              style={{ flex: 1, minWidth: 220, padding: "10px 12px", background: C.bg, border: `1px solid ${C.line}`, borderRadius: 8, color: C.text, fontSize: 13, fontFamily: "'IBM Plex Mono', monospace" }} />
+            <Btn kind="primary" onClick={copyHook}>Copiar</Btn>
+          </div>
+        </Panel>
+      )}
 
       <Panel style={{ padding: 20, marginBottom: 18 }}>
         <div style={{ fontWeight: 800, marginBottom: 14 }}>Acceso general</div>

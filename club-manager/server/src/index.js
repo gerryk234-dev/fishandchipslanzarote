@@ -4,10 +4,10 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { db, getSetting, setSetting } from "./db.js";
-import { verifySecret, hashSecret, signToken, verifyToken } from "./auth.js";
+import { verifySecret, hashSecret, randomHex, signToken, verifyToken } from "./auth.js";
 import { generateCard } from "./card.js";
 import { sendWelcome, sendPlain } from "./mailer.js";
-import { startImporter, runImportOnce } from "./importer.js";
+import { startImporter, runImportOnce, downloadPhoto } from "./importer.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 4000;
@@ -15,8 +15,14 @@ const TOKEN_SECRET = getSetting("token_secret");
 const SESSION_DAYS = 180;
 
 const app = express();
-app.use(express.json({ limit: "4mb" })); // member selfies arrive as data URLs
+app.use(express.json({ limit: "6mb" })); // member selfies arrive as data URLs
+app.use(express.urlencoded({ extended: true, limit: "6mb" })); // website form webhooks post form-encoded
 app.use(cookieParser());
+
+/* secret in the website-registration webhook URL, so only your site can post
+   sign-ups straight into the app. Generated once, shown to the admin in-app. */
+let WEBHOOK_KEY = getSetting("webhook_key");
+if (!WEBHOOK_KEY) { WEBHOOK_KEY = randomHex(12); setSetting("webhook_key", WEBHOOK_KEY); }
 
 /* Public health/version check — open in a browser to see what version the
    server is really running. It lives under /api/ so the service worker never
@@ -134,6 +140,7 @@ app.get("/api/state", requireDevice, (req, res) => {
   );
   res.json({
     isAdmin: !!req.session.a,
+    webhookKey: req.session.a ? WEBHOOK_KEY : undefined,
     products: db.prepare("SELECT * FROM products WHERE active = 1 ORDER BY id").all().map(productRow),
     members: db.prepare("SELECT * FROM members WHERE status != 'baja' ORDER BY id").all()
       .map((m) => ({ ...memberRow(m), debt: debts.get(m.id) || 0 })),
@@ -331,7 +338,7 @@ app.post("/api/invites", requireDevice, (req, res) => {
   res.json({ code });
 });
 
-function insertApplication({ name, nationality, code, email, phone, document }) {
+function insertApplication({ name, nationality, code, email, phone, document, photo }) {
   let invite = null;
   if (code) {
     invite = db.prepare("SELECT * FROM invites WHERE code = ? AND used_by IS NULL").get(code);
@@ -340,8 +347,8 @@ function insertApplication({ name, nationality, code, email, phone, document }) 
   db.exec("BEGIN");
   try {
     db.prepare(
-      "INSERT INTO members (num, name, nationality, type, status, joined, sponsor_num, email, phone, document) VALUES (NULL, ?, ?, NULL, 'pendiente', ?, ?, ?, ?, ?)"
-    ).run(name, nationality, new Date().toISOString().slice(0, 10), invite ? invite.sponsor_num : null, email || null, phone || null, document || null);
+      "INSERT INTO members (num, name, nationality, type, status, joined, sponsor_num, email, phone, document, photo) VALUES (NULL, ?, ?, NULL, 'pendiente', ?, ?, ?, ?, ?, ?)"
+    ).run(name, nationality, new Date().toISOString().slice(0, 10), invite ? invite.sponsor_num : null, email || null, phone || null, document || null, photo || null);
     if (invite) db.prepare("UPDATE invites SET used_by = ? WHERE code = ?").run(name, invite.code);
     db.exec("COMMIT");
   } catch (e) {
@@ -350,6 +357,25 @@ function insertApplication({ name, nationality, code, email, phone, document }) 
   }
   return { ok: true };
 }
+
+/* Pull a field from a submission that may be flat JSON, Elementor's
+   form_fields[...] map, or a fields[x][value] structure — matched by any of
+   several aliases, case/space/punctuation-insensitive. */
+function fieldFrom(body, aliases) {
+  const bag = {};
+  const norm = (k) => String(k).toLowerCase().replace(/[^a-z0-9]/g, "");
+  const add = (obj) => {
+    if (!obj || typeof obj !== "object") return;
+    for (const [k, v] of Object.entries(obj)) {
+      const val = v && typeof v === "object" && "value" in v ? v.value : v;
+      if (val != null && typeof val !== "object") bag[norm(k)] = String(val);
+    }
+  };
+  add(body); add(body?.form_fields); add(body?.fields); add(body?.data);
+  for (const a of aliases) { const k = norm(a); if (bag[k] && bag[k].trim()) return bag[k].trim(); }
+  return "";
+}
+const firstUrl = (s) => { const m = String(s || "").match(/https?:\/\/[^\s,'"]+/); return m ? m[0] : ""; };
 
 app.post("/api/applications", requireDevice, (req, res) => {
   const name = String(req.body?.name || "").trim();
@@ -391,6 +417,37 @@ app.post("/api/public/register", (req, res) => {
   });
   if (r.error) return res.status(400).json(r);
   res.json({ ok: true });
+});
+
+/* ---- direct website connection (onelifelanzarote.com registration form) ----
+   Point the form's "Webhook" action here and every sign-up lands in the app
+   instantly as a pending member — selfie included — with no Gmail in between:
+     https://club.onelifelanzarote.com/api/hook/register?key=<WEBHOOK_KEY>
+   Accepts flat JSON, Elementor form_fields[...], or fields[x][value].
+   The key authorises the trusted server-to-server call (no IP throttling). */
+app.post("/api/hook/register", async (req, res) => {
+  const key = String(req.query.key || req.body?.key || "").trim();
+  if (key !== WEBHOOK_KEY) return res.status(401).json({ error: "bad_key" });
+
+  const name = fieldFrom(req.body, ["name", "full name", "fullname", "nombre", "nombre completo", "your-name"]).slice(0, 120);
+  if (!name) return res.status(400).json({ error: "name_required" });
+  const email = fieldFrom(req.body, ["email", "correo", "e-mail", "your-email"]).slice(0, 120);
+  const phone = fieldFrom(req.body, ["phone", "phone number", "telefono", "teléfono", "whatsapp", "movil", "móvil", "tel"]).slice(0, 40);
+  const nationality = fieldFrom(req.body, ["nationality", "nacionalidad", "country", "pais", "país"]).slice(0, 60) || "—";
+  const document = fieldFrom(req.body, ["document", "dni", "nie", "passport", "pasaporte", "id passport number", "id/ passport number", "id", "documento"]).slice(0, 40);
+  const selfieUrl = firstUrl(fieldFrom(req.body, ["selfie", "photo", "foto", "upload a selfie", "upload", "image", "picture", "foto/selfie"]));
+
+  let photo = null;
+  if (selfieUrl) { try { photo = await downloadPhoto(selfieUrl); } catch { /* keep going without photo */ } }
+
+  try {
+    const r = insertApplication({ name, nationality, code: "", email, phone, document, photo });
+    if (r.error) return res.status(400).json(r);
+    console.log(`[webhook] registro web: ${name}${photo ? " (con selfie)" : ""}`);
+    res.json({ ok: true });
+  } catch {
+    res.status(500).json({ error: "server_error" });
+  }
 });
 
 app.delete("/api/members/:id", requireDevice, (req, res) => {

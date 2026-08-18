@@ -40,7 +40,7 @@ export function parseRegistration(text) {
   };
 }
 
-async function downloadPhoto(url) {
+export async function downloadPhoto(url) {
   if (!url) return null;
   try {
     const res = await fetch(url, { signal: AbortSignal.timeout(20000) });
