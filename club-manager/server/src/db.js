@@ -181,17 +181,18 @@ if (!empCols.includes("pass_hash")) db.exec("ALTER TABLE employees ADD COLUMN pa
 
 /* ---- default passwords (applied ONCE per database) ----
    So the club has working logins the moment it deploys — no cPanel steps needed.
-   Stored as scrypt hashes; the plain text never appears here. After this, the admin
-   can change any password from the in-app "Contraseñas" screen and it will stick
-   (this block never runs again, thanks to the pw_defaults_v1 marker). Environment
-   variables (below) still override these on every startup if you ever set them. */
-if (!getSetting("pw_defaults_v2")) {
-  const DEFAULT_CLUB  = "84e720505ee17848f40d1dc9b98b7f09:ef01d61abc604cc9aa6fc2e94f2a7ecbd481f60026cb1c85155e9c6a98ec03ac";
-  const DEFAULT_ADMIN = "8009b48a40274e05b6d45e21c1a957a0:bba860459f48394019e14bd1014307dac1c943458cedd91d4f68b92353c18916";
+   Passwords are CASE-INSENSITIVE and trimmed (hashes are of the normalized text),
+   so "Lecce1908", "lecce1908" and " LECCE1908 " all log in the same. The plain
+   text never appears here. After this the admin can change any password from the
+   in-app "Contraseñas" screen and it sticks (this block never runs again, thanks
+   to the pw_defaults_v3 marker). Nothing overrides these — no env vars to fight. */
+if (!getSetting("pw_defaults_v3")) {
+  const DEFAULT_CLUB  = "7216b6c44c686126d683c7113e443c25:3d9d7d74a59bbda3dd238d157da247056b16af3e1753f329008d84e777855094";
+  const DEFAULT_ADMIN = "124dc228d2d4a815e461af815afd6db4:b8fb99b24959bed161f3687efa1d30a2f44c41087f0680bbd19ab20200ddfad2";
   const DEFAULT_EMP = {
-    MATTIA:  "d0a740e4bf10f44fd1548e1c3694b4e8:6de33a560726bf3f3a4410b1a852102f2966177112f0584c389bdc73608d260f",
-    MAX:     "c16aac13380aa8a3f82d0e9cbb7713d6:0d1314334f2de5d65d8a68f5ca7fb120c1b862b643a8896df179e32b293a61af",
-    DAIMOND: "5428986b05decba36be460796b4f8237:b4e0c1e9ee49afc509aedf10beb66a8a223f17f27b41e7df9807e15dee4d59f1",
+    MATTIA:  "eb98d78aaf1dafa2fa310f328af1a167:098f4df2a10ec25c1537a9c3aea8be14108e3c0d1c3c013e30140732cba8e772",
+    MAX:     "36832785dafaa96c7aeae959d0bc95ea:ee28cd1197fdc1d70847f214217eb033a151a5f2b8dc40a248d902824f304a80",
+    DAIMOND: "3ebcfb73ee326a5aef8cb372b1d6a778:43b3e1092b2b3e6b9dcbb5ac5b11db1db6286237bf026777a0928b730ec4007a",
   };
   setSetting("club_code_hash", DEFAULT_CLUB);
   setSetting("admin_pin_hash", DEFAULT_ADMIN);
@@ -202,20 +203,6 @@ if (!getSetting("pw_defaults_v2")) {
   }
   setSetting("pw_defaults_v1", "1");
   setSetting("pw_defaults_v2", "1");
-  console.log("[db] applied club/admin/employee passwords (change them in-app under Contraseñas)");
-}
-
-/* ---- passwords are controlled from cPanel environment variables ----
-   Applied on EVERY startup so they can be changed without shell access:
-   just edit the env var in cPanel and restart the Node app.
-     CLUB_CODE            device / general password
-     ADMIN_PIN            admin password (letters + numbers allowed)
-     EMP_PASS_<NAME>      per-employee password, e.g. EMP_PASS_MATTIA
-   Values are hashed (scrypt) — the plain text never touches the database. */
-const norm = (s) => String(s || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
-if (process.env.CLUB_CODE) setSetting("club_code_hash", hashSecret(process.env.CLUB_CODE));
-if (process.env.ADMIN_PIN) setSetting("admin_pin_hash", hashSecret(process.env.ADMIN_PIN));
-for (const emp of db.prepare("SELECT id, name FROM employees WHERE active = 1").all()) {
-  const v = process.env[`EMP_PASS_${norm(emp.name)}`];
-  if (v) db.prepare("UPDATE employees SET pass_hash = ? WHERE id = ?").run(hashSecret(v), emp.id);
+  setSetting("pw_defaults_v3", "1");
+  console.log("[db] applied case-insensitive club/admin/employee passwords (change them in-app under Contraseñas)");
 }
