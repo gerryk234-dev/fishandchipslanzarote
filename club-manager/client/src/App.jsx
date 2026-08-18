@@ -919,6 +919,7 @@ function Socios({ data, refresh, notify, isAdmin }) {
   const [showAdd, setShowAdd] = useState(false);
   const [nm, setNm] = useState(EMPTY_NEW_MEMBER);
   const [saving, setSaving] = useState(false);
+  const [approvingAll, setApprovingAll] = useState(false);
 
   const pending = members.filter((m) => m.status === "pendiente");
   const active = members.filter((m) => m.status === "activo" && (m.name + m.num).toLowerCase().includes(q.toLowerCase()));
@@ -959,6 +960,18 @@ function Socios({ data, refresh, notify, isAdmin }) {
     if (!f) return;
     try { setter({ ...current, photo: await fileToDataUrl(f) }); }
     catch { notify("No se pudo leer la imagen"); }
+  };
+
+  const approveAll = async () => {
+    if (approvingAll) return;
+    if (!window.confirm(`¿Aprobar los ${pending.length} socios pendientes? Se activan como "Local" y reciben su número OL (puedes cambiar el tipo luego en su ficha).`)) return;
+    setApprovingAll(true);
+    try {
+      const r = await api.post("/api/members/approve-all", { type: "local" });
+      await refresh();
+      notify(`${r.approved} socios activados`);
+    } catch { notify("No se pudieron aprobar"); }
+    finally { setApprovingAll(false); }
   };
 
   /* update the photo of an already-saved member (from their profile sheet) */
@@ -1042,7 +1055,12 @@ function Socios({ data, refresh, notify, isAdmin }) {
 
       {pending.length > 0 && (
         <Panel style={{ padding: 18, marginBottom: 20, borderColor: C.amber + "66" }}>
-          <div style={{ fontWeight: 800, marginBottom: 10, fontSize: 17 }}>Solicitudes de la web <span className="mono" style={{ color: C.amber }}>({pending.length})</span></div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, marginBottom: 10, flexWrap: "wrap" }}>
+            <div style={{ fontWeight: 800, fontSize: 17 }}>Solicitudes de la web <span className="mono" style={{ color: C.amber }}>({pending.length})</span></div>
+            {isAdmin && pending.length > 1 && (
+              <Btn kind="amber" size="sm" onClick={approveAll} disabled={approvingAll}>{approvingAll ? "Aprobando…" : "✓ Aprobar todos"}</Btn>
+            )}
+          </div>
           {pending.map((m) => (
             <div key={m.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "10px 0", borderTop: `1px solid ${C.line}`, flexWrap: "wrap" }}>
               <div>

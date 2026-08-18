@@ -126,6 +126,16 @@ export async function mockRequest(method, path, body) {
   if (method === "POST" && route === "/api/members/import-csv") {
     needAdmin(); return { imported: 0, skipped: 0 }; // demo: no CSV import
   }
+  if (method === "POST" && route === "/api/members/approve-all") {
+    needAdmin();
+    let seq = Number(s.memberSeq || 5), approved = 0;
+    for (const mem of s.members.filter((x) => x.status === "pendiente")) {
+      seq += 1; mem.status = "activo"; mem.type = mem.type || "local";
+      mem.num = "OL-" + String(seq).padStart(4, "0"); approved++;
+    }
+    s.memberSeq = seq; save(s);
+    return { approved };
+  }
   if (method === "PATCH" && (m = route.match(/^\/api\/members\/(\d+)\/photo$/))) {
     needDevice();
     const mem = s.members.find((x) => x.id === Number(m[1]));
