@@ -1034,11 +1034,19 @@ function Socios({ data, refresh, notify, isAdmin }) {
               Al guardar se le asigna su número OL y, si tiene email, recibe automáticamente su carnet en PDF con la bienvenida y las condiciones del club.
             </div>
             <div style={{ display: "flex", gap: 16, alignItems: "flex-start", flexWrap: "wrap" }}>
-              <label style={{ cursor: "pointer", textAlign: "center" }}>
+              <div style={{ textAlign: "center" }}>
                 <Avatar photo={nm.photo} name={nm.name || "?"} size={96} />
-                <div style={{ color: C.green, fontSize: 13, fontWeight: 700, marginTop: 6 }}>{nm.photo ? "Cambiar foto" : "📷 Subir selfie"}</div>
-                <input type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => onPhoto(e, setNm, nm)} />
-              </label>
+                <div style={{ display: "flex", gap: 6, marginTop: 8, justifyContent: "center" }}>
+                  <label style={{ cursor: "pointer", background: C.greenDark, color: C.green, border: `1px solid ${C.green}`, borderRadius: 8, padding: "7px 10px", fontSize: 13, fontWeight: 700 }}>
+                    📷 Cámara
+                    <input type="file" accept="image/*" capture="user" style={{ display: "none" }} onChange={(e) => onPhoto(e, setNm, nm)} />
+                  </label>
+                  <label style={{ cursor: "pointer", background: C.surface2, color: C.text, border: `1px solid ${C.line}`, borderRadius: 8, padding: "7px 10px", fontSize: 13, fontWeight: 700 }}>
+                    🖼 Galería
+                    <input type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => onPhoto(e, setNm, nm)} />
+                  </label>
+                </div>
+              </div>
               <div style={{ flex: 1, minWidth: 220, display: "grid", gap: 10 }}>
                 <input style={inputStyle} placeholder="Nombre completo *" value={nm.name} onChange={(e) => setNm({ ...nm, name: e.target.value })} />
                 <input style={inputStyle} placeholder="Nacionalidad" value={nm.nationality} onChange={(e) => setNm({ ...nm, nationality: e.target.value })} />
