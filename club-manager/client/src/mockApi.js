@@ -123,6 +123,15 @@ export async function mockRequest(method, path, body) {
   if (method === "POST" && route === "/api/admin/passwords") {
     needAdmin(); return { ok: true }; // demo: passwords are not persisted
   }
+  if (method === "POST" && route === "/api/members/import-csv") {
+    needAdmin(); return { imported: 0, skipped: 0 }; // demo: no CSV import
+  }
+  if (method === "PATCH" && (m = route.match(/^\/api\/members\/(\d+)\/photo$/))) {
+    needDevice();
+    const mem = s.members.find((x) => x.id === Number(m[1]));
+    if (mem) { mem.photo = body?.photo || null; save(s); }
+    return { ok: true };
+  }
   if (method === "GET" && route === "/api/state") {
     needDevice();
     return clone({

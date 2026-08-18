@@ -495,8 +495,23 @@ function Passwords({ data, refresh, notify }) {
   const [admin, setAdmin] = useState("");
   const [emp, setEmp] = useState({});      // { [id]: newPassword }
   const [busy, setBusy] = useState(false);
+  const [importing, setImporting] = useState(false);
 
   const setEmpPass = (id, v) => setEmp((s) => ({ ...s, [id]: v }));
+
+  const onCsv = async (e) => {
+    const f = e.target.files?.[0]; e.target.value = "";
+    if (!f) return;
+    setImporting(true);
+    try {
+      const csv = await f.text();
+      const r = await api.post("/api/members/import-csv", { csv });
+      await refresh();
+      notify(`Importados ${r.imported} · omitidos ${r.skipped}`);
+    } catch (err) {
+      notify(err?.data?.error === "no_name_column" ? "El CSV necesita una columna de nombre" : "No se pudo importar el CSV");
+    } finally { setImporting(false); }
+  };
 
   const save = async () => {
     if (busy) return;
@@ -552,6 +567,19 @@ function Passwords({ data, refresh, notify }) {
           </div>
         </Panel>
       )}
+
+      <Panel style={{ padding: 20, marginBottom: 18 }}>
+        <div style={{ fontWeight: 800, marginBottom: 6 }}>📥 Importar socios (CSV)</div>
+        <div style={{ color: C.muted, fontSize: 14, marginBottom: 12, lineHeight: 1.5 }}>
+          Sube un archivo CSV (exportado de la web o de una hoja de cálculo) con columnas como{" "}
+          <span className="mono" style={{ color: C.text }}>Name, Email, Phone, Nationality, ID/Passport</span>.
+          Cada fila se añade como socio pendiente; los que ya existan se omiten.
+        </div>
+        <label style={{ display: "inline-block", cursor: importing ? "default" : "pointer", background: importing ? C.surface2 : C.green, color: importing ? C.muted : "#16210F", borderRadius: 8, padding: "11px 18px", fontWeight: 800 }}>
+          {importing ? "Importando…" : "Elegir archivo CSV"}
+          <input type="file" accept=".csv,text/csv" style={{ display: "none" }} disabled={importing} onChange={onCsv} />
+        </label>
+      </Panel>
 
       <Panel style={{ padding: 20, marginBottom: 18 }}>
         <div style={{ fontWeight: 800, marginBottom: 14 }}>Acceso general</div>
@@ -933,6 +961,19 @@ function Socios({ data, refresh, notify, isAdmin }) {
     catch { notify("No se pudo leer la imagen"); }
   };
 
+  /* update the photo of an already-saved member (from their profile sheet) */
+  const changePhoto = async (e) => {
+    const f = e.target.files?.[0]; e.target.value = "";
+    if (!f || !selId) return;
+    try {
+      const photo = await fileToDataUrl(f);
+      await api.patch(`/api/members/${selId}/photo`, { photo });
+      setDetail((d) => (d ? { ...d, photo } : d));
+      notify("Foto actualizada ✓");
+      refresh();
+    } catch { notify("No se pudo actualizar la foto"); }
+  };
+
   const saveNew = async () => {
     if (!nm.name.trim() || saving) { if (!nm.name.trim()) notify("El nombre es obligatorio"); return; }
     setSaving(true);
@@ -1117,6 +1158,14 @@ function Socios({ data, refresh, notify, isAdmin }) {
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8, flexShrink: 0 }}>
                     <button onClick={() => setSelId(null)} style={{ background: "none", border: "none", color: C.muted, fontSize: 24, cursor: "pointer", padding: "0 2px", lineHeight: 1 }}>✕</button>
                     <Avatar photo={detail.photo} name={detail.name} size={104} />
+                    <div style={{ display: "flex", gap: 6 }}>
+                      <label title="Hacer foto" style={{ cursor: "pointer", background: C.greenDark, color: C.green, border: `1px solid ${C.green}`, borderRadius: 8, padding: "5px 9px", fontSize: 14, fontWeight: 700 }}>
+                        📷<input type="file" accept="image/*" capture="user" style={{ display: "none" }} onChange={changePhoto} />
+                      </label>
+                      <label title="Elegir de galería" style={{ cursor: "pointer", background: C.surface2, color: C.text, border: `1px solid ${C.line}`, borderRadius: 8, padding: "5px 9px", fontSize: 14, fontWeight: 700 }}>
+                        🖼<input type="file" accept="image/*" style={{ display: "none" }} onChange={changePhoto} />
+                      </label>
+                    </div>
                   </div>
                 </div>
 

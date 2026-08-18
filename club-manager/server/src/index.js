@@ -457,6 +457,78 @@ app.delete("/api/members/:id", requireDevice, (req, res) => {
   res.json({ ok: true });
 });
 
+/* skip an incoming person we already have (by email, document, or exact name) */
+function memberExists({ email, document, name }) {
+  if (email && db.prepare("SELECT 1 FROM members WHERE lower(email) = lower(?)").get(email)) return true;
+  if (document && db.prepare("SELECT 1 FROM members WHERE upper(document) = upper(?)").get(document)) return true;
+  if (name && db.prepare("SELECT 1 FROM members WHERE lower(name) = lower(?) AND status != 'baja'").get(name)) return true;
+  return false;
+}
+
+/* minimal RFC-4180 CSV parser (handles quotes, commas and newlines in fields) */
+function parseCSV(text) {
+  const s = String(text).replace(/\r\n?/g, "\n");
+  const rows = []; let row = [], field = "", inQ = false;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (inQ) {
+      if (c === '"') { if (s[i + 1] === '"') { field += '"'; i++; } else inQ = false; }
+      else field += c;
+    } else if (c === '"') inQ = true;
+    else if (c === ",") { row.push(field); field = ""; }
+    else if (c === "\n") { row.push(field); rows.push(row); row = []; field = ""; }
+    else field += c;
+  }
+  if (field.length || row.length) { row.push(field); rows.push(row); }
+  return rows.filter((r) => r.some((c) => c.trim() !== ""));
+}
+
+/* bulk-import members from a CSV exported from the website (or a spreadsheet).
+   Header row is matched by column name; each row becomes a pending member. */
+app.post("/api/members/import-csv", requireAdmin, async (req, res) => {
+  const rows = parseCSV(req.body?.csv || "");
+  if (rows.length < 2) return res.status(400).json({ error: "empty_csv" });
+  const norm = (k) => String(k).toLowerCase().replace(/[^a-z0-9]/g, "");
+  const header = rows[0].map(norm);
+  const col = (aliases) => { for (const a of aliases) { const j = header.indexOf(norm(a)); if (j >= 0) return j; } return -1; };
+  const cols = {
+    name: col(["name", "full name", "fullname", "nombre", "nombre completo"]),
+    email: col(["email", "correo", "e-mail"]),
+    phone: col(["phone", "phone number", "telefono", "teléfono", "whatsapp", "movil", "móvil"]),
+    nationality: col(["nationality", "nacionalidad", "country", "pais", "país"]),
+    document: col(["document", "dni", "nie", "passport", "pasaporte", "id passport number", "id/ passport number", "id", "documento"]),
+    selfie: col(["selfie", "photo", "foto", "upload a selfie", "image", "picture"]),
+  };
+  if (cols.name < 0) return res.status(400).json({ error: "no_name_column" });
+  let imported = 0, skipped = 0;
+  for (let r = 1; r < rows.length; r++) {
+    const get = (k) => (cols[k] >= 0 ? String(rows[r][cols[k]] || "").trim() : "");
+    const name = get("name").slice(0, 120);
+    if (!name) { skipped++; continue; }
+    const email = get("email").slice(0, 120), document = get("document").slice(0, 40);
+    if (memberExists({ email, document, name })) { skipped++; continue; }
+    let photo = null;
+    const url = firstUrl(get("selfie"));
+    if (url) { try { photo = await downloadPhoto(url); } catch { /* no photo */ } }
+    try {
+      insertApplication({ name, nationality: get("nationality").slice(0, 60) || "—", code: "", email, phone: get("phone").slice(0, 40), document, photo });
+      imported++;
+    } catch { skipped++; }
+  }
+  console.log(`[csv] importados ${imported}, saltados ${skipped}`);
+  res.json({ imported, skipped });
+});
+
+/* set or replace a member's photo (data-URL selfie), e.g. from the counter camera */
+app.patch("/api/members/:id/photo", requireDevice, (req, res) => {
+  const m = db.prepare("SELECT * FROM members WHERE id = ? AND status != 'baja'").get(req.params.id);
+  if (!m) return res.status(400).json({ error: "bad_member" });
+  const photo = req.body?.photo;
+  if (photo && !PHOTO_RE.test(photo)) return res.status(400).json({ error: "bad_photo" });
+  db.prepare("UPDATE members SET photo = ? WHERE id = ?").run(photo || null, m.id);
+  res.json({ ok: true });
+});
+
 const PHOTO_RE = /^data:image\/(jpeg|jpg|png);base64,[A-Za-z0-9+/=]+$/;
 
 /* direct add by staff: creates an ACTIVE member with number, sends welcome email */
