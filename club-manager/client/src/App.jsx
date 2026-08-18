@@ -177,6 +177,7 @@ export default function App() {
   const [toast, setToast] = useState(null);
   const [offline, setOffline] = useState(false);
   const [queued, setQueued] = useState(queuedCount());
+  const [unlocked, setUnlocked] = useState(false); // club code asked on every fresh app open
 
   const notify = useCallback((msg) => { setToast(msg); setTimeout(() => setToast(null), 2600); }, []);
 
@@ -227,8 +228,10 @@ export default function App() {
     );
   }
 
-  if (phase === "device") {
-    return <DeviceLogin onDone={refresh} />;
+  // ask for the general club password on every fresh open (skip only when offline,
+  // so a cached device can still work during an internet cut)
+  if (phase === "device" || (phase === "ready" && !unlocked && !offline)) {
+    return <DeviceLogin onDone={async () => { setUnlocked(true); await refresh(); }} />;
   }
 
   if (!user) {
@@ -369,7 +372,7 @@ function DeviceLogin({ onDone }) {
       <div style={{ textAlign: "center" }} className="fadein">
         <div className="mono" style={{ color: C.green, letterSpacing: 4, fontSize: 13, marginBottom: 8 }}>ONE LIFE LANZAROTE</div>
         <h1 style={{ fontSize: 34, fontWeight: 800, margin: "0 0 6px" }}>Club Manager</h1>
-        <p style={{ color: C.muted, marginBottom: 24 }}>Autoriza este dispositivo con el código del club</p>
+        <p style={{ color: C.muted, marginBottom: 24 }}>Introduce la contraseña general del club</p>
         <input autoFocus type="password" value={code} className="mono"
           onChange={(e) => { setCode(e.target.value); setErr(false); }}
           onKeyDown={(e) => e.key === "Enter" && submit()}
@@ -377,10 +380,10 @@ function DeviceLogin({ onDone }) {
           style={{ fontSize: 20, textAlign: "center", width: 260, padding: "12px 0", background: C.surface, border: `1px solid ${err ? C.red : C.line}`, borderRadius: 10, color: C.text }} />
         {err && <div style={{ color: C.red, fontSize: 14, marginTop: 8 }}>Código incorrecto</div>}
         <div style={{ marginTop: 18 }}>
-          <Btn kind="primary" size="lg" onClick={submit} disabled={busy || !code.trim()}>Autorizar dispositivo</Btn>
+          <Btn kind="primary" size="lg" onClick={submit} disabled={busy || !code.trim()}>Entrar</Btn>
         </div>
         <div className="mono" style={{ color: C.muted, fontSize: 12, marginTop: 16 }}>
-          {DEMO ? "demo — código: onelife" : "Solo hace falta una vez por dispositivo"}
+          {DEMO ? "demo — código: onelife" : "Introduce la contraseña general para abrir la app"}
         </div>
         <InstallApp />
       </div>
