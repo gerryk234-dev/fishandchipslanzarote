@@ -664,6 +664,33 @@ app.post("/api/members/:id/approve", requireDevice, async (req, res) => {
   res.json({ ok: true, num, emailStatus });
 });
 
+/* approve every pending member at once (assigns OL numbers, keeps any type
+   already set, else uses the given default). No emails sent — fast for big
+   imported batches; staff can send a card individually from a profile later. */
+app.post("/api/members/approve-all", requireAdmin, (req, res) => {
+  const type = req.body?.type === "turista" ? "turista" : "local";
+  const pend = db.prepare("SELECT id FROM members WHERE status = 'pendiente' ORDER BY id").all();
+  let approved = 0;
+  db.exec("BEGIN");
+  try {
+    let seq = Number(getSetting("member_seq"));
+    for (const p of pend) {
+      seq += 1;
+      const num = "OL-" + String(seq).padStart(4, "0");
+      db.prepare("UPDATE members SET status = 'activo', type = COALESCE(type, ?), num = ? WHERE id = ?").run(type, num, p.id);
+      approved++;
+    }
+    setSetting("member_seq", String(seq));
+    db.exec("COMMIT");
+  } catch (e) {
+    db.exec("ROLLBACK");
+    console.error("[approve-all]", e.message);
+    return res.status(500).json({ error: "internal" });
+  }
+  console.log(`[approve-all] activados ${approved} socios`);
+  res.json({ approved });
+});
+
 /* ================= inventory ================= */
 
 const PRODUCT_CATS = ["flores", "hash", "polen", "dry", "comestibles", "bebidas"];
