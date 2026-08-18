@@ -765,9 +765,14 @@ app.get("/api/reports", requireAdmin, (req, res) => {
 app.get("/registro", (_req, res) => res.sendFile(join(__dirname, "..", "public", "registro.html")));
 
 const dist = join(__dirname, "..", "..", "client", "dist");
+const noCache = (res) => res.setHeader("Cache-Control", "no-cache, must-revalidate");
 if (existsSync(dist)) {
-  app.use(express.static(dist));
-  app.get(/^\/(?!api\/).*/, (_req, res) => res.sendFile(join(dist, "index.html")));
+  // hashed /assets/* can cache forever; sw.js + index.html must always revalidate
+  // so a new deploy is picked up immediately (no stale app stuck on a device)
+  app.use(express.static(dist, {
+    setHeaders: (res, p) => { if (p.endsWith("sw.js") || p.endsWith("index.html")) noCache(res); },
+  }));
+  app.get(/^\/(?!api\/).*/, (_req, res) => { noCache(res); res.sendFile(join(dist, "index.html")); });
 }
 
 app.listen(PORT, () => {
