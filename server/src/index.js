@@ -426,11 +426,21 @@ app.post("/api/public/register", (req, res) => {
    Accepts flat JSON, Elementor form_fields[...], or fields[x][value].
    The key authorises the trusted server-to-server call (no IP throttling). */
 app.post("/api/hook/register", async (req, res) => {
+  // capture what arrived (any attempt) so the admin can diagnose from /api/hook/last
+  try {
+    setSetting("last_hook", JSON.stringify({
+      t: new Date().toISOString(),
+      keyOk: String(req.query.key || req.body?.key || "").trim() === WEBHOOK_KEY,
+      contentType: req.headers["content-type"] || "",
+      body: req.body,
+    }).slice(0, 8000));
+  } catch { /* ignore */ }
+
   const key = String(req.query.key || req.body?.key || "").trim();
   if (key !== WEBHOOK_KEY) return res.status(401).json({ error: "bad_key" });
 
-  const name = fieldFrom(req.body, ["name", "full name", "fullname", "nombre", "nombre completo", "your-name"]).slice(0, 120);
-  if (!name) return res.status(400).json({ error: "name_required" });
+  const name = fieldFrom(req.body, ["name", "full name", "fullname", "nombre", "nombre completo", "your-name", "form_fields[name]"]).slice(0, 120);
+  if (!name) { try { setSetting("last_hook_result", "name_required"); } catch {} return res.status(400).json({ error: "name_required" }); }
   const email = fieldFrom(req.body, ["email", "correo", "e-mail", "your-email"]).slice(0, 120);
   const phone = fieldFrom(req.body, ["phone", "phone number", "telefono", "teléfono", "whatsapp", "movil", "móvil", "tel"]).slice(0, 40);
   const nationality = fieldFrom(req.body, ["nationality", "nacionalidad", "country", "pais", "país"]).slice(0, 60) || "—";
@@ -442,12 +452,26 @@ app.post("/api/hook/register", async (req, res) => {
 
   try {
     const r = insertApplication({ name, nationality, code: "", email, phone, document, photo });
-    if (r.error) return res.status(400).json(r);
+    if (r.error) { try { setSetting("last_hook_result", r.error); } catch {} return res.status(400).json(r); }
+    try { setSetting("last_hook_result", "ok: " + name); } catch {}
     console.log(`[webhook] registro web: ${name}${photo ? " (con selfie)" : ""}`);
     res.json({ ok: true });
   } catch {
     res.status(500).json({ error: "server_error" });
   }
+});
+
+/* diagnostic: open in a browser to see the last submission the form sent, and how
+   the app read it — reveals the exact field names to use:
+     https://club.onelifelanzarote.com/api/hook/last?key=<WEBHOOK_KEY> */
+app.get("/api/hook/last", (req, res) => {
+  if (String(req.query.key || "").trim() !== WEBHOOK_KEY) return res.status(401).json({ error: "bad_key" });
+  const raw = getSetting("last_hook");
+  res.json({
+    received: raw ? JSON.parse(raw) : null,
+    result: getSetting("last_hook_result") || null,
+    hint: raw ? undefined : "No form submission has reached the app yet.",
+  });
 });
 
 app.delete("/api/members/:id", requireDevice, (req, res) => {
