@@ -447,17 +447,34 @@ app.post("/api/hook/register", async (req, res) => {
   const document = fieldFrom(req.body, ["document", "dni", "nie", "passport", "pasaporte", "id passport number", "id/ passport number", "id", "documento"]).slice(0, 40);
   const selfieUrl = firstUrl(fieldFrom(req.body, ["selfie", "photo", "foto", "upload a selfie", "upload", "image", "picture", "foto/selfie"]));
 
-  let photo = null;
-  if (selfieUrl) { try { photo = await downloadPhoto(selfieUrl); } catch { /* keep going without photo */ } }
+  // skip anyone we already have
+  if (memberExists({ email, document, name })) {
+    try { setSetting("last_hook_result", "duplicate: " + name); } catch {}
+    return res.json({ ok: true, duplicate: true });
+  }
 
+  // Create the member NOW (no photo yet) and reply immediately, so the website's
+  // form gets a fast answer and doesn't time out. The selfie is fetched in the
+  // background and attached a moment later.
+  let memberId = null;
   try {
-    const r = insertApplication({ name, nationality, code: "", email, phone, document, photo });
-    if (r.error) { try { setSetting("last_hook_result", r.error); } catch {} return res.status(400).json(r); }
+    const info = db.prepare(
+      "INSERT INTO members (num, name, nationality, type, status, joined, sponsor_num, email, phone, document, photo) VALUES (NULL, ?, ?, NULL, 'pendiente', ?, NULL, ?, ?, ?, NULL)"
+    ).run(name, nationality, new Date().toISOString().slice(0, 10), email || null, phone || null, document || null);
+    memberId = Number(info.lastInsertRowid);
     try { setSetting("last_hook_result", "ok: " + name); } catch {}
-    console.log(`[webhook] registro web: ${name}${photo ? " (con selfie)" : ""}`);
-    res.json({ ok: true });
-  } catch {
-    res.status(500).json({ error: "server_error" });
+    console.log(`[webhook] registro web: ${name}`);
+  } catch (e) {
+    try { setSetting("last_hook_result", "error: " + e.message); } catch {}
+    return res.status(500).json({ error: "server_error" });
+  }
+  res.json({ ok: true });
+
+  // fetch the selfie afterwards, without holding up the reply
+  if (selfieUrl && memberId) {
+    downloadPhoto(selfieUrl)
+      .then((photo) => { if (photo) db.prepare("UPDATE members SET photo = ? WHERE id = ?").run(photo, memberId); })
+      .catch(() => {});
   }
 });
 
