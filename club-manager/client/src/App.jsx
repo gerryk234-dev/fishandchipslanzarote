@@ -27,7 +27,7 @@ const CATS = [
   { id: "comestibles", label: "Sweets & Cookies" }, { id: "bebidas", label: "Bebidas" },
 ];
 
-const POLL_MS = 15000;
+const POLL_MS = 8000;
 const todayISO = () => new Date().toISOString().slice(0, 10);
 /* the club charges in tokens (1 tk = 1 €) — all amounts display as tokens */
 const eur = (n) => `${n.toLocaleString("es-ES", { maximumFractionDigits: 2 })} tk`;

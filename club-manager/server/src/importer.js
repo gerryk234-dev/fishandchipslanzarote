@@ -20,7 +20,7 @@ import { db, getSetting, setSetting } from "./db.js";
    identical name. */
 
 const POLL_MS = 5 * 60 * 1000;
-const MAX_PHOTO_BYTES = 3 * 1024 * 1024;
+const MAX_PHOTO_BYTES = 8 * 1024 * 1024; // phone selfies are often 3-6 MB
 
 export function parseRegistration(text) {
   if (!text || !/Full name:/i.test(text)) return null;
@@ -45,11 +45,18 @@ export async function downloadPhoto(url) {
   try {
     const res = await fetch(url, { signal: AbortSignal.timeout(20000) });
     if (!res.ok) return null;
-    const type = (res.headers.get("content-type") || "").toLowerCase();
-    if (!/image\/(jpeg|jpg|png)/.test(type)) return null;
+    let type = (res.headers.get("content-type") || "").toLowerCase();
+    // if the header is missing or generic, infer the type from the file extension
+    if (!/image\/(jpe?g|png|webp)/.test(type)) {
+      const ext = (url.split(/[?#]/)[0].match(/\.(jpe?g|png|webp)$/i) || [])[1];
+      if (!ext) return null;
+      const e = ext.toLowerCase();
+      type = e === "png" ? "image/png" : e === "webp" ? "image/webp" : "image/jpeg";
+    }
     const buf = Buffer.from(await res.arrayBuffer());
     if (buf.length > MAX_PHOTO_BYTES) return null;
-    return `data:image/${type.includes("png") ? "png" : "jpeg"};base64,${buf.toString("base64")}`;
+    const mime = type.includes("png") ? "png" : type.includes("webp") ? "webp" : "jpeg";
+    return `data:image/${mime};base64,${buf.toString("base64")}`;
   } catch {
     return null;
   }
