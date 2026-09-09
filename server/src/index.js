@@ -425,6 +425,17 @@ app.post("/api/public/register", (req, res) => {
      https://club.onelifelanzarote.com/api/hook/register?key=<WEBHOOK_KEY>
    Accepts flat JSON, Elementor form_fields[...], or fields[x][value].
    The key authorises the trusted server-to-server call (no IP throttling). */
+/* remember the last ~15 webhook outcomes so the admin can see the pattern
+   (which sign-ups arrived, which were skipped as duplicates, etc.) */
+function logHook(result) {
+  try {
+    setSetting("last_hook_result", result);
+    const arr = JSON.parse(getSetting("hook_log") || "[]");
+    arr.unshift({ t: new Date().toISOString(), result });
+    setSetting("hook_log", JSON.stringify(arr.slice(0, 15)));
+  } catch { /* ignore */ }
+}
+
 app.post("/api/hook/register", async (req, res) => {
   // capture what arrived (any attempt) so the admin can diagnose from /api/hook/last
   try {
@@ -440,7 +451,7 @@ app.post("/api/hook/register", async (req, res) => {
   if (key !== WEBHOOK_KEY) return res.status(401).json({ error: "bad_key" });
 
   const name = fieldFrom(req.body, ["name", "full name", "fullname", "nombre", "nombre completo", "your-name", "form_fields[name]"]).slice(0, 120);
-  if (!name) { try { setSetting("last_hook_result", "name_required"); } catch {} return res.status(400).json({ error: "name_required" }); }
+  if (!name) { logHook("name_required"); return res.status(400).json({ error: "name_required" }); }
   const email = fieldFrom(req.body, ["email", "correo", "e-mail", "your-email"]).slice(0, 120);
   const phone = fieldFrom(req.body, ["phone", "phone number", "telefono", "teléfono", "whatsapp", "movil", "móvil", "tel"]).slice(0, 40);
   const nationality = fieldFrom(req.body, ["nationality", "nacionalidad", "country", "pais", "país"]).slice(0, 60) || "—";
@@ -449,7 +460,7 @@ app.post("/api/hook/register", async (req, res) => {
 
   // skip anyone we already have
   if (memberExists({ email, document, name })) {
-    try { setSetting("last_hook_result", "duplicate: " + name); } catch {}
+    logHook("duplicate: " + name);
     return res.json({ ok: true, duplicate: true });
   }
 
@@ -462,19 +473,20 @@ app.post("/api/hook/register", async (req, res) => {
       "INSERT INTO members (num, name, nationality, type, status, joined, sponsor_num, email, phone, document, photo) VALUES (NULL, ?, ?, NULL, 'pendiente', ?, NULL, ?, ?, ?, NULL)"
     ).run(name, nationality, new Date().toISOString().slice(0, 10), email || null, phone || null, document || null);
     memberId = Number(info.lastInsertRowid);
-    try { setSetting("last_hook_result", "ok: " + name); } catch {}
+    logHook("ok: " + name);
     console.log(`[webhook] registro web: ${name}`);
   } catch (e) {
-    try { setSetting("last_hook_result", "error: " + e.message); } catch {}
+    logHook("error: " + e.message);
     return res.status(500).json({ error: "server_error" });
   }
   res.json({ ok: true });
 
-  // fetch the selfie afterwards, without holding up the reply
+  // fetch the selfie afterwards, without holding up the reply. If the download
+  // fails (too big / odd type), store the URL itself so the browser can show it.
   if (selfieUrl && memberId) {
     downloadPhoto(selfieUrl)
-      .then((photo) => { if (photo) db.prepare("UPDATE members SET photo = ? WHERE id = ?").run(photo, memberId); })
-      .catch(() => {});
+      .then((photo) => db.prepare("UPDATE members SET photo = ? WHERE id = ?").run(photo || selfieUrl, memberId))
+      .catch(() => { try { db.prepare("UPDATE members SET photo = ? WHERE id = ?").run(selfieUrl, memberId); } catch {} });
   }
 });
 
@@ -487,6 +499,7 @@ app.get("/api/hook/last", (req, res) => {
   res.json({
     received: raw ? JSON.parse(raw) : null,
     result: getSetting("last_hook_result") || null,
+    recent: JSON.parse(getSetting("hook_log") || "[]"),
     hint: raw ? undefined : "No form submission has reached the app yet.",
   });
 });
