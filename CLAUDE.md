@@ -34,3 +34,7 @@ Other deliberate duplication to keep in sync:
 - **Design tokens**: each page defines the same CSS custom properties on `:root` — `--cream`, `--ink`, `--sea`, `--gold`, `--rust`, `--sage`, `--mist`, `--chalk`, `--radius`, `--transition` — with fonts Fraunces (`--ff-display`) and DM Sans (`--ff-body`) loaded from Google Fonts. Reuse these variables rather than hard-coding colors.
 - **SEO is a first-class concern**: pages carry extensive meta tags, geo tags, Open Graph, and Restaurant JSON-LD. Keep structured data consistent with visible content when editing hours, ratings, or contact info.
 - **Assets**: `images/img1.jpg` … `img39.jpg` and `logo.jpg` have non-descriptive names — view an image before reusing it. `videos/video1.mp4`–`video4.mp4` power the hero slideshow on `index.html`. Images use `loading="lazy"` and descriptive, SEO-oriented `alt` text.
+
+## `decades/` — separate site
+
+`decades/index.html` is a **separate, unrelated site** for Decades Sports & Show Bar (CC Calipso, Costa Teguise), not part of Hippie Chippy. It is a single self-contained bilingual page (same `data-lang` / `body.lang-es` convention, but its own design tokens and `decades_lang` storage key). Hippie Chippy's "apply to all six pages" rule does not apply to it. Booking/takeaway number: +34 631 275 201. Menu prices were transcribed from photos of the bar's menu board — re-check them against the current menu when editing.
