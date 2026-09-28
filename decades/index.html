@@ -125,7 +125,7 @@
     }
     .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 16px; }
     .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .brand-record { width: 38px; height: 38px; flex: none; }
+    .brand-record { width: 40px; height: 40px; flex: none; border-radius: 50%; }
     .brand-name { font-family: var(--ff-retro); font-size: 1.35rem; color: var(--gold); line-height: 1; }
     .brand-sub { display: block; font-family: var(--ff-display); font-size: 0.72rem; letter-spacing: 0.24em; color: var(--mist); margin-top: 3px; }
     .nav-links { display: flex; gap: 26px; list-style: none; }
@@ -142,6 +142,11 @@
     }
     .lang-btn.active { background: var(--gold); color: var(--night); }
     .nav-call { padding: 8px 18px; font-size: 1.05rem; }
+    .nav-quick {
+      display: none; text-decoration: none; font-family: var(--ff-display); font-size: 1.05rem; letter-spacing: 0.08em;
+      padding: 5px 12px; border-radius: 999px; border: 1px solid var(--gold); color: var(--gold);
+    }
+    .nav-quick:hover { background: var(--gold); color: var(--night); }
     .burger { display: none; background: none; border: 0; cursor: pointer; width: 40px; height: 40px; }
     .burger span { display: block; width: 24px; height: 2px; background: var(--chalk); margin: 5px auto; transition: var(--transition); }
     body.menu-open .burger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
@@ -167,12 +172,35 @@
       mask-image: linear-gradient(to bottom, transparent, #000 30%, #000 70%, transparent);
       -webkit-mask-image: linear-gradient(to bottom, transparent, #000 30%, #000 70%, transparent);
     }
-    .hero-record {
-      position: absolute; width: min(620px, 120vw); aspect-ratio: 1; right: -180px; bottom: -220px;
-      opacity: 0.35; animation: spin 18s linear infinite;
+    .hero-logo-bg {
+      position: absolute; left: 50%; top: 50%; width: min(860px, 125vw); aspect-ratio: 1;
+      transform: translate(-50%, -50%);
+      background: url(images/decades-logo.webp) center / contain no-repeat;
+      opacity: 0.22; filter: blur(1.5px) saturate(1.3) drop-shadow(0 0 60px rgba(160, 90, 255, 0.35));
+      animation: logoBreath 7s ease-in-out infinite;
     }
+    .hero-logo-bg::after {
+      content: ""; position: absolute; inset: -10%;
+      background: radial-gradient(circle, rgba(13, 11, 16, 0.55) 0%, rgba(13, 11, 16, 0.15) 45%, transparent 70%);
+    }
+    @keyframes logoBreath { 50% { transform: translate(-50%, -50%) scale(1.04); opacity: 0.3; } }
     @keyframes spin { to { transform: rotate(360deg); } }
     .hero-inner { position: relative; z-index: 1; }
+    .shortcuts { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-bottom: 34px; }
+    .shortcut {
+      display: flex; align-items: center; gap: 12px; text-decoration: none; text-align: left;
+      padding: 12px 20px 12px 14px; border-radius: 16px; min-width: 200px;
+      background: rgba(23, 19, 28, 0.72); border: 1px solid rgba(242, 193, 78, 0.45);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+    }
+    .shortcut:hover { transform: translateY(-3px); border-color: var(--gold); box-shadow: 0 10px 30px rgba(242, 193, 78, 0.25); }
+    .shortcut svg {
+      width: 42px; height: 42px; padding: 9px; border-radius: 12px; flex: none;
+      background: var(--gold); color: var(--night);
+    }
+    .shortcut b { display: block; font-family: var(--ff-display); font-weight: 400; font-size: 1.5rem; letter-spacing: 0.06em; line-height: 1; color: var(--chalk); }
+    .shortcut small { display: block; font-size: 0.8rem; color: var(--mist); margin-top: 3px; }
     .decade-pills { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
     .decade-pills span {
       font-family: var(--ff-display); letter-spacing: 0.1em; font-size: 1rem;
@@ -415,7 +443,7 @@
 
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      .hero-record, .ticker-track, .day.today, .bulbs i, .live-badge::before, .day-poster.karaoke::after { animation: none; }
+      .hero-logo-bg, .ticker-track, .day.today, .bulbs i, .live-badge::before, .day-poster.karaoke::after { animation: none; }
       .reveal { opacity: 1; transform: none; transition: none; }
     }
 
@@ -429,10 +457,18 @@
       .nav-links li a { display: block; padding: 14px 24px; font-size: 1.3rem; border-top: 1px solid var(--line); }
       .burger { display: block; }
       .nav-call { display: none; }
+      .nav-quick { display: inline-block; }
       .happy-grid, .visit-grid { grid-template-columns: 1fr; }
       .fab { display: grid; }
     }
     @media (max-width: 520px) {
+      .brand > span { display: none; }
+      .nav-right { gap: 8px; }
+      .shortcuts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 26px; }
+      .shortcut { flex-direction: column; min-width: 0; padding: 12px 6px; gap: 6px; text-align: center; }
+      .shortcut svg { width: 38px; height: 38px; padding: 8px; }
+      .shortcut b { font-size: 1.2rem; }
+      .shortcut small { display: none; }
       section { padding: 72px 0; }
       .menu-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
       .week { grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -538,7 +574,7 @@
   <nav>
     <div class="wrap nav-inner">
       <a href="#top" class="brand" aria-label="Decades – home">
-        <svg class="brand-record" aria-hidden="true"><use href="#record"/></svg>
+        <img class="brand-record" src="images/decades-logo-sm.webp" alt="" width="40" height="40">
         <span>
           <span class="brand-name">Decades</span>
           <span class="brand-sub">SPORTS &amp; SHOW BAR</span>
@@ -557,6 +593,8 @@
           <button class="lang-btn active" onclick="setLang('en', this)">EN</button>
           <button class="lang-btn" onclick="setLang('es', this)">ES</button>
         </div>
+        <a class="nav-quick" href="#whats-on"><span data-lang="en">Events</span><span data-lang="es">Eventos</span></a>
+        <a class="nav-quick" href="#menu"><span data-lang="en">Menu</span><span data-lang="es">Carta</span></a>
         <a class="btn nav-call" href="tel:+34631275201"><span data-lang="en">Takeaway</span><span data-lang="es">Para Llevar</span></a>
         <button class="burger" aria-label="Menu" aria-controls="navLinks" aria-expanded="false" onclick="toggleMenu()"><span></span><span></span><span></span></button>
       </div>
@@ -564,8 +602,22 @@
   </nav>
 
   <header class="hero" id="top">
-    <svg class="hero-record" aria-hidden="true"><use href="#record"/></svg>
+    <div class="hero-logo-bg" aria-hidden="true"></div>
     <div class="wrap hero-inner">
+      <div class="shortcuts" role="navigation" aria-label="Quick links">
+        <a class="shortcut" href="#whats-on">
+          <svg aria-hidden="true"><use href="#i-mic"/></svg>
+          <span><b><span data-lang="en">Events</span><span data-lang="es">Eventos</span></b><small><span data-lang="en">What's on this week</span><span data-lang="es">Programa semanal</span></small></span>
+        </a>
+        <a class="shortcut" href="#menu">
+          <svg aria-hidden="true"><use href="#i-food"/></svg>
+          <span><b><span data-lang="en">Menu</span><span data-lang="es">Carta</span></b><small><span data-lang="en">Food &amp; takeaway</span><span data-lang="es">Comida y para llevar</span></small></span>
+        </a>
+        <a class="shortcut" href="#drinks">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M8 22h8M12 11v11M3 3l9 9 9-9z"/></svg>
+          <span><b><span data-lang="en">Drinks</span><span data-lang="es">Bebidas</span></b><small><span data-lang="en">Cocktails &amp; happy hour</span><span data-lang="es">Cócteles y happy hour</span></small></span>
+        </a>
+      </div>
       <div class="decade-pills" aria-hidden="true"><span>50's</span><span>60's</span><span>70's</span><span>80's</span><span>90's</span></div>
       <h1>
         <span class="hero-logo">Decades</span>
