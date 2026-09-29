@@ -326,6 +326,105 @@
     .special img { width: 100%; height: auto; aspect-ratio: 5 / 7; object-fit: cover; object-position: top; }
     .special > span { display: block; padding: 12px 16px; }
 
+    /* ── Live posters (Happy Hour, House of Fun) ── */
+    .live-poster { cursor: default; }
+    .lp-art { position: relative; aspect-ratio: 5 / 7; overflow: hidden; container-type: inline-size; }
+
+    .hh .lp-art {
+      background:
+        radial-gradient(ellipse 80% 45% at 50% 0%, rgba(255, 61, 139, 0.35), transparent 70%),
+        radial-gradient(ellipse 90% 50% at 50% 100%, rgba(242, 193, 78, 0.28), transparent 70%),
+        linear-gradient(170deg, #2b0f33 0%, #16101f 55%, #1d1406 100%);
+      padding: 8% 8% 0; display: flex; flex-direction: column;
+    }
+    .hh-bubbles i {
+      position: absolute; bottom: -10px; width: var(--w); height: var(--w); border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fff8d8, rgba(242, 193, 78, 0.55) 60%, transparent 70%);
+      animation: bubbleUp var(--d) linear infinite; opacity: 0.8;
+    }
+    @keyframes bubbleUp {
+      0% { transform: translate(0, 0); opacity: 0; }
+      10% { opacity: 0.85; }
+      50% { transform: translate(6px, -55cqh); }
+      100% { transform: translate(-4px, -110cqh); opacity: 0; }
+    }
+    .hh-sign { position: relative; text-align: center; line-height: 0.85; }
+    .hh-happy {
+      display: block; font-family: var(--ff-retro); font-size: 15cqw; color: #ff5fa8;
+      text-shadow: 0 0 6px #ff3d8b, 0 0 18px #ff3d8b, 0 0 36px rgba(255, 61, 139, 0.6);
+      animation: neonFlicker 5s infinite;
+    }
+    .hh-hour {
+      display: block; font-family: var(--ff-display); font-size: 25cqw; letter-spacing: 0.06em; color: #ffe39a;
+      text-shadow: 0 0 8px var(--gold), 0 0 24px rgba(242, 193, 78, 0.7);
+      animation: neonPulse 2.4s ease-in-out infinite;
+    }
+    @keyframes neonFlicker {
+      0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+      20%, 24%, 55% { opacity: 0.35; text-shadow: none; }
+    }
+    @keyframes neonPulse { 50% { text-shadow: 0 0 14px var(--gold), 0 0 44px rgba(242, 193, 78, 0.95); } }
+    .hh-time {
+      position: relative; align-self: center; margin: 3cqw 0 4cqw; padding: 1.2cqw 4cqw; border-radius: 999px;
+      background: var(--neon-cyan); color: #10222b; font: 700 4cqw var(--ff-body); letter-spacing: 0.08em;
+    }
+    .hh-time b { margin-left: 1.5cqw; }
+    .hh-prices { position: relative; list-style: none; font-size: 4.4cqw; }
+    .hh-prices li {
+      display: flex; justify-content: space-between; gap: 2cqw; padding: 1.35cqw 0;
+      border-bottom: 1px dashed rgba(246, 239, 227, 0.14); color: var(--chalk);
+    }
+    .hh-prices b { font-family: var(--ff-display); font-weight: 400; font-size: 5.6cqw; color: var(--gold); white-space: nowrap; line-height: 1; }
+    .hh-prices small { font-family: var(--ff-body); font-size: 2.8cqw; color: var(--mist); }
+    .hh-foot { position: relative; margin-top: auto; padding: 3cqw 0; text-align: center; font-size: 3.2cqw; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mist); }
+
+    .hf .lp-art { background: #0d0b10; display: grid; place-items: center; }
+    .hf-check {
+      position: absolute; inset: -20%;
+      background: repeating-conic-gradient(#f6efe3 0 25%, #0d0b10 0 50%) 0 0 / 14cqw 14cqw;
+      opacity: 0.16; transform: rotate(-12deg); animation: checkDrift 14s linear infinite;
+    }
+    @keyframes checkDrift { to { background-position: 28cqw 14cqw; } }
+    .hf .lp-art::before {
+      content: ""; position: absolute; inset: 0;
+      background: radial-gradient(circle at 50% 48%, rgba(13, 11, 16, 0.2), rgba(13, 11, 16, 0.92) 72%);
+    }
+    .hf-record {
+      position: absolute; width: 92cqw; height: 92cqw; left: 4cqw; top: 22cqw; opacity: 0.55;
+      animation: spin 6s linear infinite;
+    }
+    .hf-sign {
+      position: relative; text-align: center; line-height: 0.9; padding: 6cqw 7cqw;
+      border: 2px solid var(--neon-green); border-radius: 5cqw;
+      box-shadow: 0 0 10px var(--neon-green), inset 0 0 14px rgba(126, 226, 107, 0.45);
+      background: rgba(13, 11, 16, 0.72); animation: signSwing 4s ease-in-out infinite; transform-origin: 50% -30%;
+    }
+    @keyframes signSwing { 0%, 100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
+    .hf-welcome { display: block; font-family: var(--ff-body); font-weight: 700; font-size: 4.2cqw; letter-spacing: 0.18em; text-transform: uppercase; color: var(--chalk); }
+    .hf-house, .hf-fun {
+      display: block; font-family: var(--ff-display); color: #d8ffcf; letter-spacing: 0.05em;
+      text-shadow: 0 0 6px var(--neon-green), 0 0 20px var(--neon-green), 0 0 40px rgba(126, 226, 107, 0.6);
+    }
+    .hf-house { font-size: 20cqw; margin-top: 2cqw; }
+    .hf-fun { font-size: 26cqw; color: #ffd9ec; text-shadow: 0 0 6px var(--neon-pink), 0 0 22px var(--neon-pink), 0 0 44px rgba(255, 61, 139, 0.6); animation: neonFlicker 6s 1.5s infinite; }
+    body.lang-es .hf-fun { font-size: 12cqw; letter-spacing: 0.02em; }
+    body.lang-es .hf-sign { padding: 6cqw 4cqw; }
+    body.lang-es .hf-house { font-size: 18cqw; }
+    .hf-of { display: block; font-family: var(--ff-retro); font-size: 7cqw; color: var(--gold); margin: 1cqw 0; }
+    .hf-notes i {
+      position: absolute; bottom: 8%; font-style: normal; font-size: 8cqw; color: var(--gold);
+      text-shadow: 0 0 10px rgba(242, 193, 78, 0.7); animation: noteFloat 4.5s ease-in infinite; opacity: 0;
+    }
+    .hf-notes i:nth-child(1) { left: 12%; }
+    .hf-notes i:nth-child(2) { left: 80%; animation-delay: 1.1s; color: var(--neon-pink); }
+    .hf-notes i:nth-child(3) { left: 26%; animation-delay: 2.2s; color: var(--neon-cyan); }
+    .hf-notes i:nth-child(4) { left: 68%; animation-delay: 3.3s; }
+    @keyframes noteFloat {
+      0% { transform: translateY(0) rotate(-10deg); opacity: 0; }
+      15% { opacity: 1; }
+      100% { transform: translateY(-120cqw) rotate(15deg); opacity: 0; }
+    }
+
     /* ── Lightbox ── */
     .lightbox {
       position: fixed; inset: 0; z-index: 100; background: rgba(5, 4, 8, 0.92);
@@ -489,7 +588,7 @@
 
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      .hero-logo-bg, .ticker-track, .day.today, .bulbs i, .live-badge::before, .day-poster.karaoke::after { animation: none; }
+      .hero-logo-bg, .ticker-track, .live-poster *, .live-poster *::before, .day.today, .bulbs i, .live-badge::before, .day-poster.karaoke::after { animation: none; }
       .reveal { opacity: 1; transform: none; transition: none; }
     }
 
@@ -776,8 +875,39 @@
         <h3 class="specials-title"><span data-lang="en">Special Nights &amp; Offers</span><span data-lang="es">Noches Especiales y Ofertas</span></h3>
         <div class="specials-row">
           <button class="special" onclick="openLb(this)"><img src="images/retro-brothers.jpg" alt="The Retro Brothers live at Decades Bar Costa Teguise, one night only" loading="lazy" width="900" height="1293"><span><span data-lang="en">The Retro Brothers, one night only</span><span data-lang="es">The Retro Brothers, una noche única</span></span></button>
-          <button class="special" onclick="openLb(this)"><img src="images/happy-hour.jpg" alt="Decades happy hour poster, every day 4 to 8pm" loading="lazy" width="900" height="1283"><span><span data-lang="en">Happy Hour, every day 4–8pm</span><span data-lang="es">Happy Hour, todos los días 16–20h</span></span></button>
-          <button class="special" onclick="openLb(this)"><img src="images/house-of-fun.jpg" alt="Welcome to the House of Fun sign at Decades" loading="lazy" width="900" height="1193"><span><span data-lang="en">Welcome to the House of Fun</span><span data-lang="es">Bienvenidos a la Casa de la Diversión</span></span></button>
+          <div class="special live-poster hh" role="img" aria-label="Happy Hour every day 4 to 8pm at Decades: pint of Dorada 2.50, Stella or Magners 3.50, litre of sangria 10, litre cocktails from 10, glass cocktail 5, buckets from 12, local spirit and mixer 4.50, 5 shot special from 10. Excluding shows.">
+            <div class="lp-art">
+              <div class="hh-bubbles" aria-hidden="true"><i style="left:38%;--d:3.4s;--w:8px;animation-delay:-2.4s"></i><i style="left:19%;--d:2.8s;--w:8px;animation-delay:-2.7s"></i><i style="left:45%;--d:4.7s;--w:4px;animation-delay:-1.1s"></i><i style="left:76%;--d:3.5s;--w:5px;animation-delay:-4.1s"></i><i style="left:41%;--d:3.2s;--w:4px;animation-delay:-4.1s"></i><i style="left:41%;--d:4.7s;--w:5px;animation-delay:-0.8s"></i><i style="left:45%;--d:4.2s;--w:6px;animation-delay:-0.4s"></i><i style="left:85%;--d:3.5s;--w:8px;animation-delay:-2.5s"></i><i style="left:30%;--d:3.2s;--w:6px;animation-delay:-0.4s"></i><i style="left:78%;--d:4.8s;--w:4px;animation-delay:-4.5s"></i><i style="left:81%;--d:4.4s;--w:6px;animation-delay:-4.2s"></i><i style="left:73%;--d:3.1s;--w:8px;animation-delay:-3.0s"></i><i style="left:63%;--d:3.8s;--w:5px;animation-delay:-1.5s"></i><i style="left:13%;--d:2.8s;--w:8px;animation-delay:-3.1s"></i><i style="left:43%;--d:3.9s;--w:8px;animation-delay:-3.5s"></i><i style="left:26%;--d:5.2s;--w:5px;animation-delay:-0.3s"></i></div>
+              <div class="hh-sign"><span class="hh-happy">Happy</span><span class="hh-hour">HOUR</span></div>
+              <div class="hh-time"><span data-lang="en">EVERY DAY</span><span data-lang="es">TODOS LOS DÍAS</span> <b>4–8PM</b></div>
+              <ul class="hh-prices">
+                <li><span><span data-lang="en">Pint Dorada</span><span data-lang="es">Pinta Dorada</span></span><b>€2.50</b></li>
+                <li><span><span data-lang="en">Pint Stella / Magners</span><span data-lang="es">Pinta Stella / Magners</span></span><b>€3.50</b></li>
+                <li><span><span data-lang="en">Litre Sangria</span><span data-lang="es">Litro Sangría</span></span><b>€10</b></li>
+                <li><span><span data-lang="en">Litre Cocktails</span><span data-lang="es">Cócteles Litro</span></span><b><small><span data-lang="en">from</span><span data-lang="es">desde</span></small> €10</b></li>
+                <li><span><span data-lang="en">Glass Cocktail</span><span data-lang="es">Cóctel Copa</span></span><b>€5</b></li>
+                <li><span><span data-lang="en">Bucket Deals</span><span data-lang="es">Cubos</span></span><b><small><span data-lang="en">from</span><span data-lang="es">desde</span></small> €12</b></li>
+                <li><span><span data-lang="en">Spirit + Mixer</span><span data-lang="es">Licor + Refresco</span></span><b>€4.50</b></li>
+                <li><span><span data-lang="en">5 Shot Special</span><span data-lang="es">5 Chupitos</span></span><b><small><span data-lang="en">from</span><span data-lang="es">desde</span></small> €10</b></li>
+              </ul>
+              <div class="hh-foot"><span data-lang="en">Excluding shows</span><span data-lang="es">Excepto espectáculos</span></div>
+            </div>
+            <span><span data-lang="en">Happy Hour, every day 4–8pm</span><span data-lang="es">Happy Hour, todos los días 16–20h</span></span>
+          </div>
+          <div class="special live-poster hf" role="img" aria-label="Welcome to the House of Fun at Decades">
+            <div class="lp-art">
+              <div class="hf-check" aria-hidden="true"></div>
+              <svg class="hf-record" viewBox="0 0 100 100" aria-hidden="true"><use href="#record"/></svg>
+              <div class="hf-sign">
+                <span class="hf-welcome"><span data-lang="en">Welcome to the</span><span data-lang="es">Bienvenidos a la</span></span>
+                <span class="hf-house"><span data-lang="en">HOUSE</span><span data-lang="es">CASA</span></span>
+                <span class="hf-of"><span data-lang="en">of</span><span data-lang="es">de la</span></span>
+                <span class="hf-fun"><span data-lang="en">FUN</span><span data-lang="es">DIVERSIÓN</span></span>
+              </div>
+              <div class="hf-notes" aria-hidden="true"><i>♪</i><i>♫</i><i>♪</i><i>♬</i></div>
+            </div>
+            <span><span data-lang="en">Welcome to the House of Fun</span><span data-lang="es">Bienvenidos a la Casa de la Diversión</span></span>
+          </div>
         </div>
       </div>
       <a class="fb-cta reveal" href="https://www.facebook.com/share/1DD5S94Wid/" target="_blank" rel="noopener">
