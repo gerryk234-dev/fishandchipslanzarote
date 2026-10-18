@@ -171,7 +171,20 @@ db.exec(`
     note TEXT
   );
   CREATE INDEX IF NOT EXISTS idx_closures_day ON closures(day);
+
+  CREATE TABLE IF NOT EXISTS weighings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ts INTEGER NOT NULL,                -- epoch ms
+    employee_id INTEGER NOT NULL,       -- 0 = admin
+    employee_name TEXT NOT NULL,
+    grams REAL NOT NULL,                -- grams weighed on the scale (no sale needed)
+    note TEXT
+  );
+  CREATE INDEX IF NOT EXISTS idx_weighings_ts ON weighings(ts);
 `);
+
+const closureCols = db.prepare("SELECT name FROM pragma_table_info('closures')").all().map((c) => c.name);
+if (!closureCols.includes("weighed_extra")) db.exec("ALTER TABLE closures ADD COLUMN weighed_extra REAL NOT NULL DEFAULT 0"); // standalone scale grams in the shift
 
 const memberCols = db.prepare("SELECT name FROM pragma_table_info('members')").all().map((c) => c.name);
 if (!memberCols.includes("email")) db.exec("ALTER TABLE members ADD COLUMN email TEXT");
