@@ -3,7 +3,7 @@ import cookieParser from "cookie-parser";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { db, getSetting, setSetting } from "./db.js";
+import { db, getSetting, setSetting, smtpCreds } from "./db.js";
 import { verifySecret, hashSecret, randomHex, signToken, verifyToken } from "./auth.js";
 import { generateCard } from "./card.js";
 import { sendWelcome, sendPlain } from "./mailer.js";
@@ -141,6 +141,7 @@ app.get("/api/state", requireDevice, (req, res) => {
   res.json({
     isAdmin: !!req.session.a,
     webhookKey: req.session.a ? WEBHOOK_KEY : undefined,
+    gmailUser: req.session.a ? (smtpCreds().user || "") : undefined,
     products: db.prepare("SELECT * FROM products WHERE active = 1 ORDER BY id").all().map(productRow),
     members: db.prepare("SELECT * FROM members WHERE status != 'baja' ORDER BY id").all()
       .map((m) => ({ ...memberRow(m), debt: debts.get(m.id) || 0 })),
@@ -322,6 +323,26 @@ app.post("/api/import/run", requireAdmin, async (req, res) => {
   } catch (e) {
     res.status(500).json({ error: e.message || "import_failed" });
   }
+});
+
+/* connect (or clear) the Gmail account used for sending emails and importing
+   registrations. Saves the address + app password, starts the importer, and
+   runs one import right away so the admin sees it work (or the error). */
+app.post("/api/admin/gmail", requireAdmin, async (req, res) => {
+  if (req.body?.clear) {
+    setSetting("smtp_user", "");
+    setSetting("smtp_pass", "");
+    return res.json({ ok: true, cleared: true });
+  }
+  const user = String(req.body?.user || "").trim();
+  const pass = String(req.body?.pass || "").replace(/\s+/g, ""); // app passwords are shown with spaces
+  if (user) setSetting("smtp_user", user);
+  if (pass) setSetting("smtp_pass", pass);
+  startImporter();
+  let result = null;
+  try { result = await runImportOnce(); }
+  catch (e) { return res.json({ ok: true, imported: 0, connectError: e.message || "could not connect" }); }
+  res.json({ ok: true, imported: result?.imported || 0, skipped: result?.skipped });
 });
 
 /* ================= members / invites ================= */

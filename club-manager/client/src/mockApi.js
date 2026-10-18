@@ -126,6 +126,9 @@ export async function mockRequest(method, path, body) {
   if (method === "POST" && route === "/api/members/import-csv") {
     needAdmin(); return { imported: 0, skipped: 0 }; // demo: no CSV import
   }
+  if (method === "POST" && route === "/api/admin/gmail") {
+    needAdmin(); return { ok: true, imported: 0 }; // demo: Gmail not connected
+  }
   if (method === "POST" && route === "/api/members/approve-all") {
     needAdmin();
     let seq = Number(s.memberSeq || 5), approved = 0;

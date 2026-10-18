@@ -1,6 +1,6 @@
 import { ImapFlow } from "imapflow";
 import { simpleParser } from "mailparser";
-import { db, getSetting, setSetting } from "./db.js";
+import { db, getSetting, setSetting, smtpCreds } from "./db.js";
 
 /* Gmail importer for onelifelanzarote.com registrations.
    The website (Elementor form) emails each registration as labelled lines:
@@ -74,7 +74,7 @@ export async function runImportOnce() {
 }
 
 async function scanOnce() {
-  const user = process.env.SMTP_USER, pass = process.env.SMTP_PASS;
+  const { user, pass } = smtpCreds();
   if (!user || !pass) return { skipped: "not_configured", imported: 0 };
   const client = new ImapFlow({
     host: process.env.IMAP_HOST || "imap.gmail.com",
@@ -113,15 +113,18 @@ async function scanOnce() {
   return { imported };
 }
 
+let importerTimer = null;
 export function startImporter() {
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-    console.log("[importer] sin credenciales de Gmail (SMTP_USER/SMTP_PASS) — importador desactivado");
+  const { user, pass } = smtpCreds();
+  if (!user || !pass) {
+    console.log("[importer] sin credenciales de Gmail — importador desactivado (conéctalo en Ajustes)");
     return;
   }
+  if (importerTimer) return; // already running; scanOnce() always reads the latest creds
   const run = () => scanOnce()
     .then((r) => { if (r.imported) console.log(`[importer] ${r.imported} solicitudes nuevas desde Gmail`); })
     .catch((e) => console.error("[importer]", e.message));
   run();
-  setInterval(run, POLL_MS);
+  importerTimer = setInterval(run, POLL_MS);
   console.log("[importer] vigilando el buzón de Gmail cada 5 min");
 }

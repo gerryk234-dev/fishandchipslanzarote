@@ -506,8 +506,30 @@ function Passwords({ data, refresh, notify }) {
   const [emp, setEmp] = useState({});      // { [id]: newPassword }
   const [busy, setBusy] = useState(false);
   const [importing, setImporting] = useState(false);
+  const [gUser, setGUser] = useState(data.gmailUser || "");
+  const [gPass, setGPass] = useState("");
+  const [gBusy, setGBusy] = useState(false);
 
   const setEmpPass = (id, v) => setEmp((s) => ({ ...s, [id]: v }));
+
+  const saveGmail = async () => {
+    if (gBusy) return;
+    if (!gUser.trim() || !gPass.trim()) { notify("Escribe el email y la contraseña de aplicación"); return; }
+    setGBusy(true);
+    try {
+      const r = await api.post("/api/admin/gmail", { user: gUser.trim(), pass: gPass.trim() });
+      setGPass("");
+      await refresh();
+      if (r.connectError) notify("Guardado, pero no conecta — revisa la contraseña de aplicación");
+      else notify(`Gmail conectado ✓${r.imported ? " · " + r.imported + " importados" : ""}`);
+    } catch { notify("No se pudo guardar"); }
+    finally { setGBusy(false); }
+  };
+  const disconnectGmail = async () => {
+    if (!window.confirm("¿Desconectar Gmail?")) return;
+    try { await api.post("/api/admin/gmail", { clear: true }); setGUser(""); await refresh(); notify("Gmail desconectado"); }
+    catch { notify("Error al desconectar"); }
+  };
 
   const onCsv = async (e) => {
     const f = e.target.files?.[0]; e.target.value = "";
@@ -577,6 +599,24 @@ function Passwords({ data, refresh, notify }) {
           </div>
         </Panel>
       )}
+
+      <Panel style={{ padding: 20, marginBottom: 18 }}>
+        <div style={{ fontWeight: 800, marginBottom: 6 }}>📧 Conectar Gmail <span style={{ color: C.muted, fontWeight: 500, fontSize: 13 }}>(opcional)</span></div>
+        <div style={{ color: C.muted, fontSize: 14, marginBottom: 12, lineHeight: 1.5 }}>
+          Para enviar los carnets por email y, como respaldo, importar registros del correo.
+          Necesitas una <b style={{ color: C.text }}>contraseña de aplicación</b> de Google (16 letras, no tu
+          contraseña normal — requiere la verificación en 2 pasos activada).
+          {data.gmailUser ? <><br /><span style={{ color: C.green, fontWeight: 700 }}>✓ Conectado: {data.gmailUser}</span></> : null}
+        </div>
+        <div style={{ display: "grid", gap: 10 }}>
+          <Field type="email" placeholder="onelifesocialclub@gmail.com" value={gUser} onChange={(e) => setGUser(e.target.value)} />
+          <Field type="text" placeholder="contraseña de aplicación (16 letras)" value={gPass} onChange={(e) => setGPass(e.target.value)} />
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <Btn kind="primary" onClick={saveGmail} disabled={gBusy}>{gBusy ? "Conectando…" : "Guardar y conectar"}</Btn>
+            {data.gmailUser && <Btn onClick={disconnectGmail}>Desconectar</Btn>}
+          </div>
+        </div>
+      </Panel>
 
       <Panel style={{ padding: 20, marginBottom: 18 }}>
         <div style={{ fontWeight: 800, marginBottom: 6 }}>📥 Importar socios (CSV)</div>
