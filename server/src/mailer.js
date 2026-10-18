@@ -1,32 +1,31 @@
 import nodemailer from "nodemailer";
 import { WELCOME_TEXT, TERMS_TEXT } from "./card.js";
+import { smtpCreds } from "./db.js";
 
 /* Welcome email with the membership-card PDF attached.
-   Configure via environment variables (e.g. a Gmail App Password):
-     SMTP_HOST=smtp.gmail.com  SMTP_PORT=465  SMTP_SECURE=1
-     SMTP_USER=club@gmail.com  SMTP_PASS=<app password>
-     SMTP_FROM="One Life Lanzarote <club@gmail.com>"
-   Without configuration, sendWelcome() returns "not_configured" and the
-   card PDF is still saved on disk / downloadable from the member profile. */
+   Credentials come from the in-app Ajustes screen (or SMTP_* env vars).
+   Without them, sendWelcome() returns "not_configured" and the card PDF is
+   still saved on disk / downloadable from the member profile. */
 
 function transport() {
-  if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) return null;
+  const c = smtpCreds();
+  if (!c.user || !c.pass) return null;
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT || 465),
-    secure: process.env.SMTP_SECURE !== "0",
-    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+    host: c.host,
+    port: c.port,
+    secure: c.secure,
+    auth: { user: c.user, pass: c.pass },
   });
 }
 
 /* Build a valid From: header. If SMTP_FROM is only a display name (no
-   address), wrap it around SMTP_USER so sending never fails on a bad From. */
+   address), wrap it around the user so sending never fails on a bad From. */
 function fromAddress() {
-  const from = (process.env.SMTP_FROM || "").trim();
-  const user = process.env.SMTP_USER;
-  if (!from) return user;
+  const c = smtpCreds();
+  const from = (c.from || "").trim();
+  if (!from) return c.user;
   if (from.includes("@")) return from;      // already a full address / name <addr>
-  return `${from} <${user}>`;               // display name only → attach the address
+  return `${from} <${c.user}>`;             // display name only → attach the address
 }
 
 export async function sendWelcome(member, pdfBytes) {

@@ -83,6 +83,18 @@ export const setSetting = (key, value) => {
   ).run(key, String(value));
 };
 
+/* Gmail / SMTP credentials — set in-app (admin → Ajustes) and stored here, or
+   via environment variables. Used by both the email sender and the Gmail
+   registration importer. */
+export const smtpCreds = () => ({
+  user: getSetting("smtp_user") || process.env.SMTP_USER || "",
+  pass: getSetting("smtp_pass") || process.env.SMTP_PASS || "",
+  host: process.env.SMTP_HOST || "smtp.gmail.com",
+  port: Number(process.env.SMTP_PORT || 465),
+  secure: process.env.SMTP_SECURE !== "0",
+  from: process.env.SMTP_FROM || "One Life Lanzarote",
+});
+
 /* ---- first-run seed ---- */
 const seeded = getSetting("seeded");
 if (!seeded) {
