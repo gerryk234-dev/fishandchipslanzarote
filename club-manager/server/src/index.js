@@ -458,23 +458,31 @@ app.post("/api/hook/register", async (req, res) => {
   const document = fieldFrom(req.body, ["document", "dni", "nie", "passport", "pasaporte", "id passport number", "id/ passport number", "id", "documento"]).slice(0, 40);
   const selfieUrl = firstUrl(fieldFrom(req.body, ["selfie", "photo", "foto", "upload a selfie", "upload", "image", "picture", "foto/selfie"]));
 
-  // skip anyone we already have
-  if (memberExists({ email, document, name })) {
-    logHook("duplicate: " + name);
-    return res.json({ ok: true, duplicate: true });
-  }
+  // if this person already exists (matched by email or ID), refresh their
+  // details instead of adding a duplicate; otherwise create a new pending member.
+  // Their OL number, status and type are kept — only the submitted details change.
+  const existing =
+    (email && db.prepare("SELECT * FROM members WHERE lower(email) = lower(?) AND status != 'baja'").get(email)) ||
+    (document && db.prepare("SELECT * FROM members WHERE upper(document) = upper(?) AND status != 'baja'").get(document)) ||
+    null;
 
-  // Create the member NOW (no photo yet) and reply immediately, so the website's
-  // form gets a fast answer and doesn't time out. The selfie is fetched in the
-  // background and attached a moment later.
   let memberId = null;
   try {
-    const info = db.prepare(
-      "INSERT INTO members (num, name, nationality, type, status, joined, sponsor_num, email, phone, document, photo) VALUES (NULL, ?, ?, NULL, 'pendiente', ?, NULL, ?, ?, ?, NULL)"
-    ).run(name, nationality, new Date().toISOString().slice(0, 10), email || null, phone || null, document || null);
-    memberId = Number(info.lastInsertRowid);
-    logHook("ok: " + name);
-    console.log(`[webhook] registro web: ${name}`);
+    if (existing) {
+      db.prepare(
+        "UPDATE members SET name = ?, nationality = ?, email = COALESCE(?, email), phone = COALESCE(?, phone), document = COALESCE(?, document) WHERE id = ?"
+      ).run(name, nationality, email || null, phone || null, document || null, existing.id);
+      memberId = existing.id;
+      logHook("updated: " + name);
+      console.log(`[webhook] datos actualizados: ${name}`);
+    } else {
+      const info = db.prepare(
+        "INSERT INTO members (num, name, nationality, type, status, joined, sponsor_num, email, phone, document, photo) VALUES (NULL, ?, ?, NULL, 'pendiente', ?, NULL, ?, ?, ?, NULL)"
+      ).run(name, nationality, new Date().toISOString().slice(0, 10), email || null, phone || null, document || null);
+      memberId = Number(info.lastInsertRowid);
+      logHook("ok: " + name);
+      console.log(`[webhook] registro web: ${name}`);
+    }
   } catch (e) {
     logHook("error: " + e.message);
     return res.status(500).json({ error: "server_error" });

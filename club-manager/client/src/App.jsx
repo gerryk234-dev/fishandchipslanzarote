@@ -35,6 +35,13 @@ const timeStr = (d) => new Date(d).toLocaleTimeString("es-ES", { hour: "2-digit"
 const dateES = (iso) => new Date(iso + "T12:00").toLocaleDateString("es-ES", { weekday: "short", day: "numeric", month: "short" });
 const isoOf = (ts) => new Date(ts).toISOString().slice(0, 10);
 
+/* member search — matches name/surname, OL number, email, or ID (document) */
+const matchMember = (m, q) => {
+  const s = (q || "").trim().toLowerCase();
+  if (!s) return true;
+  return `${m.name} ${m.num || ""} ${m.email || ""} ${m.document || ""}`.toLowerCase().includes(s);
+};
+
 /* ---------- styles ---------- */
 const S = () => (
   <style>{`
@@ -637,7 +644,7 @@ function Dispensar({ data, refresh, user, notify }) {
 
   const pickMember = (m) => { setMember(m); setQ(""); setPriceMode(m.type === "turista" ? "turista" : "local"); };
   const active = members.filter((m) => m.status === "activo");
-  const results = q ? active.filter((m) => (m.name + m.num).toLowerCase().includes(q.toLowerCase())) : [];
+  const results = q ? active.filter((m) => matchMember(m, q)) : [];
   const priceOf = (p) => (priceMode === "turista" ? p.priceTourist : p.priceLocal);
   const total = cart.reduce((s, i) => s + i.qty * i.price, 0);
 
@@ -703,7 +710,7 @@ function Dispensar({ data, refresh, user, notify }) {
         {!member ? (
           <Panel style={{ padding: 18 }}>
             <div style={{ fontSize: 14, color: C.muted, marginBottom: 8 }}>1 · Buscar socio</div>
-            <Field value={q} onChange={(e) => setQ(e.target.value)} placeholder="Nombre o nº de socio…" />
+            <Field value={q} onChange={(e) => setQ(e.target.value)} placeholder="Nombre, nº de socio, email o DNI…" />
             <div style={{ marginTop: 10 }}>
               {results.map((m) => (
                 <div key={m.id} className="row" onClick={() => pickMember(m)}
@@ -925,7 +932,7 @@ function Socios({ data, refresh, notify, isAdmin }) {
   const [approvingAll, setApprovingAll] = useState(false);
 
   const pending = members.filter((m) => m.status === "pendiente");
-  const active = members.filter((m) => m.status === "activo" && (m.name + m.num).toLowerCase().includes(q.toLowerCase()));
+  const active = members.filter((m) => m.status === "activo" && matchMember(m, q));
 
   useEffect(() => {
     if (!selId) { setDetail(null); setStats(null); setHistory([]); return; }
@@ -1088,7 +1095,7 @@ function Socios({ data, refresh, notify, isAdmin }) {
       )}
 
       <Panel style={{ padding: 18 }}>
-        <Field placeholder="Buscar socio…" value={q} onChange={(e) => setQ(e.target.value)} style={{ marginBottom: 10 }} />
+        <Field placeholder="Buscar por nombre, email o DNI…" value={q} onChange={(e) => setQ(e.target.value)} style={{ marginBottom: 10 }} />
         {active.map((m) => (
           <div key={m.id} className="row" onClick={() => setSelId(m.id)}
             style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "11px 10px", borderRadius: 8, cursor: "pointer" }}>
