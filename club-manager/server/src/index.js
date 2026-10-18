@@ -237,6 +237,22 @@ app.post("/api/members/:id/settle", requireDevice, (req, res) => {
 
 /* ================= caja / shift close ================= */
 
+/* record a weighing done on the scale even when no customer is being served —
+   so the club keeps count of EVERYTHING that passes over the scale */
+app.post("/api/weighings", requireDevice, (req, res) => {
+  const grams = Number(req.body?.grams);
+  if (!Number.isFinite(grams) || grams <= 0 || grams > 100000) return res.status(400).json({ error: "bad_grams" });
+  const empId = Number(req.body?.employeeId) || 0;
+  const employeeName = String(req.body?.employeeName || (empId === 0 ? "Administrador" : "")).slice(0, 80) || "—";
+  db.prepare("INSERT INTO weighings (ts, employee_id, employee_name, grams, note) VALUES (?, ?, ?, ?, ?)")
+    .run(Date.now(), empId, employeeName, Math.round(grams * 100) / 100, String(req.body?.note || "").slice(0, 200) || null);
+  res.json({ ok: true });
+});
+
+const weighedExtraBetween = (from, to) =>
+  Math.round((db.prepare("SELECT COALESCE(SUM(grams),0) g FROM weighings WHERE ts >= ? AND ts <= ?").get(from, to).g) * 100) / 100;
+
+
 function summarize(rows) {
   let total = 0, cash = 0, card = 0, fiado = 0, grams = 0, units = 0;
   for (const s of rows) {
@@ -259,7 +275,9 @@ app.get("/api/caja/open", requireDevice, (req, res) => {
   const lastClose = db.prepare("SELECT to_ts FROM closures ORDER BY to_ts DESC LIMIT 1").get();
   const from = Math.max(startOfDay, lastClose?.to_ts || 0);
   const rows = db.prepare("SELECT * FROM sales WHERE ts >= ? ORDER BY ts DESC").all(from);
-  res.json({ from, sales: rows.map(saleWithItems), summary: summarize(rows) });
+  const summary = summarize(rows);
+  const weighedExtra = weighedExtraBetween(from, Date.now());
+  res.json({ from, sales: rows.map(saleWithItems), summary: { ...summary, weighedExtra, weighedTotal: Math.round((summary.grams + weighedExtra) * 100) / 100 } });
 });
 
 /* close the shift: snapshot the summary, store it, and email the report */
@@ -277,10 +295,12 @@ app.post("/api/caja/close", requireDevice, async (req, res) => {
   const from = Math.max(startOfDay, lastClose?.to_ts || 0);
   const rows = db.prepare("SELECT * FROM sales WHERE ts >= ? AND ts <= ?").all(from, now);
   const s = summarize(rows);
+  const weighedExtra = weighedExtraBetween(from, now);
+  const weighedTotal = Math.round((s.grams + weighedExtra) * 100) / 100;
   const day = new Date().toISOString().slice(0, 10);
   const info = db.prepare(
-    "INSERT INTO closures (ts, day, employee_id, employee_name, from_ts, to_ts, sales_n, total, cash, card, fiado, grams, units, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-  ).run(now, day, empId, employeeName, from, now, s.salesN, s.total, s.cash, s.card, s.fiado, s.grams, s.units, String(req.body?.note || "").slice(0, 500) || null);
+    "INSERT INTO closures (ts, day, employee_id, employee_name, from_ts, to_ts, sales_n, total, cash, card, fiado, grams, units, weighed_extra, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+  ).run(now, day, empId, employeeName, from, now, s.salesN, s.total, s.cash, s.card, s.fiado, s.grams, s.units, weighedExtra, String(req.body?.note || "").slice(0, 500) || null);
 
   const report = [
     "One Life Lanzarote — Cierre de turno",
@@ -292,7 +312,9 @@ app.post("/api/caja/close", requireDevice, async (req, res) => {
     `Efectivo: ${s.cash} tk`,
     `Tarjeta: ${s.card} tk`,
     `Fiado (pendiente): ${s.fiado} tk`,
-    `Gramos: ${s.grams} g`,
+    `Gramos vendidos: ${s.grams} g`,
+    `Gramos pesados (sin venta): ${weighedExtra} g`,
+    `TOTAL pesado en báscula: ${weighedTotal} g`,
     `Sweets/Bebidas: ${s.units} ud`,
   ].join("\n");
   // automatically email the report to the club address
@@ -302,7 +324,7 @@ app.post("/api/caja/close", requireDevice, async (req, res) => {
       `Cierre de turno ${day} — ${employeeName}`, report);
   } catch (e) { console.error("[close-email]", e.message); emailStatus = "failed"; }
 
-  res.json({ id: Number(info.lastInsertRowid), day, employeeName, from, to: now, ...s, emailStatus, report });
+  res.json({ id: Number(info.lastInsertRowid), day, employeeName, from, to: now, ...s, weighedExtra, weighedTotal, emailStatus, report });
 });
 
 /* admin: day-by-day list of shift closes */
@@ -311,7 +333,9 @@ app.get("/api/closures", requireAdmin, (req, res) => {
   res.json(rows.map((c) => ({
     id: c.id, ts: c.ts, day: c.day, employeeName: c.employee_name,
     from: c.from_ts, to: c.to_ts, salesN: c.sales_n, total: c.total,
-    cash: c.cash, card: c.card, fiado: c.fiado, grams: c.grams, units: c.units, note: c.note || null,
+    cash: c.cash, card: c.card, fiado: c.fiado, grams: c.grams, units: c.units,
+    weighedExtra: c.weighed_extra || 0, weighedTotal: Math.round(((c.grams || 0) + (c.weighed_extra || 0)) * 100) / 100,
+    note: c.note || null,
   })));
 });
 

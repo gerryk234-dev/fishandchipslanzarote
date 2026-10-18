@@ -678,6 +678,7 @@ function Dispensar({ data, refresh, user, notify }) {
   const [qty, setQty] = useState("");
   const [busy, setBusy] = useState(false);
   const [priceMode, setPriceMode] = useState("local"); // employee-chosen price, per sale
+  const [weighBusy, setWeighBusy] = useState(false);
   const scale = useScale();
   const fresh = scale.reading && Date.now() - scale.reading.ts < 3000 ? scale.reading : null;
   const scaleG = fresh && fresh.unit === "g" && fresh.stable && fresh.value > 0 ? +fresh.value.toFixed(2) : null;
@@ -727,6 +728,17 @@ function Dispensar({ data, refresh, user, notify }) {
 
   const gramBtns = [0.5, 1, 2, 3.5, 5];
 
+  /* record a weighing on the scale even with no customer selected */
+  const logWeighing = async () => {
+    if (!scaleG || weighBusy) return;
+    setWeighBusy(true);
+    try {
+      await api.post("/api/weighings", { grams: scaleG, employeeId: user.admin ? 0 : user.id, employeeName: user.name });
+      notify(`Peso anotado: ${scaleG.toFixed(2)} g`);
+    } catch { notify("No se pudo anotar el peso"); }
+    finally { setWeighBusy(false); }
+  };
+
   return (
     <div className="fadein split" style={{ display: "flex", gap: 20 }}>
       <div style={{ flex: 1, minWidth: 0 }}>
@@ -742,6 +754,7 @@ function Dispensar({ data, refresh, user, notify }) {
                 {fresh ? `${fresh.value.toFixed(2)} ${fresh.unit}` : "— g"}
               </span>
               <Btn size="sm" onClick={scale.tare}>Tara</Btn>
+              <Btn size="sm" kind="primary" onClick={logWeighing} disabled={!scaleG || weighBusy} title="Anotar este peso (sin venta)">Anotar</Btn>
               <button onClick={scale.disconnect} title="Desconectar báscula"
                 style={{ background: "none", border: "none", color: C.muted, padding: 0, fontSize: 15 }}>✕</button>
             </div>
@@ -1428,7 +1441,9 @@ function Caja({ data, user, notify, isAdmin }) {
             <Stat label="EFECTIVO" value={`${s.cash} tk`} />
             <Stat label="TARJETA" value={`${s.card} tk`} />
             <Stat label="FIADO" value={`${s.fiado} tk`} color={s.fiado > 0 ? C.red : undefined} />
-            <Stat label="GRAMOS" value={`${s.grams} g`} color={C.green} />
+            <Stat label="GRAMOS VENDIDOS" value={`${s.grams} g`} color={C.green} />
+            <Stat label="PESADO SIN VENTA" value={`${s.weighedExtra ?? 0} g`} color={C.amber} />
+            <Stat label="TOTAL PESADO" value={`${s.weighedTotal ?? s.grams} g`} color={C.green} />
             <Stat label="SWEETS/BEBIDAS" value={`${s.units} ud`} color={C.blue} />
             <Stat label="VENTAS" value={s.salesN} />
           </div>

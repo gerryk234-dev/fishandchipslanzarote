@@ -214,13 +214,23 @@ export async function mockRequest(method, path, body) {
     const r2 = (n) => Math.round(n * 100) / 100;
     return { salesN: rows.length, total: r2(total), cash: r2(cash), card: r2(card), fiado: r2(fiado), grams: r2(grams), units: r2(units) };
   };
+  if (method === "POST" && route === "/api/weighings") {
+    needDevice();
+    s.weighings = s.weighings || [];
+    s.weighings.push({ ts: Date.now(), grams: Number(body?.grams) || 0 });
+    save(s);
+    return { ok: true };
+  }
+  const weighedExtra = (from, to) => (s.weighings || []).filter((w) => w.ts >= from && w.ts <= to).reduce((a, w) => a + w.grams, 0);
   if (method === "GET" && route === "/api/caja/open") {
     needDevice();
     const startOfDay = new Date(isoOf(Date.now()) + "T00:00:00").getTime();
     const lastClose = (s.closures || []).reduce((mx, c) => Math.max(mx, c.to), 0);
     const from = Math.max(startOfDay, lastClose);
     const rows = s.sales.filter((x) => x.ts >= from).sort((a, b) => b.ts - a.ts);
-    return clone({ from, sales: rows, summary: summarize(rows) });
+    const sum = summarize(rows);
+    const we = Math.round(weighedExtra(from, Date.now()) * 100) / 100;
+    return clone({ from, sales: rows, summary: { ...sum, weighedExtra: we, weighedTotal: Math.round((sum.grams + we) * 100) / 100 } });
   }
   if (method === "POST" && route === "/api/caja/close") {
     needDevice();
