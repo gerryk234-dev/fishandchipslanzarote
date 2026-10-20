@@ -1,8 +1,8 @@
 /* In-browser clone of the server API for the DEMO build (VITE_DEMO).
    Mirrors server/src/index.js logic; state persists in localStorage.
-   Demo credentials: club code "onelife", admin PIN "1234". */
+   Demo credentials: club code "12345", admin PIN "12345". */
 
-const KEY = "onelife-demo-v1";
+const KEY = "clubmanager-demo-v2";
 const CATS = ["flores", "hash", "polen", "dry", "comestibles", "bebidas"];
 let mem = null; // fallback when localStorage is unavailable
 
@@ -19,18 +19,18 @@ function seed() {
   ].map(([id, name, cat, unit, priceLocal, priceTourist, stock]) => ({ id, name, cat, unit, priceLocal, priceTourist, stock, active: 1 }));
 
   const members = [
-    [1, "OL-0001", "Carlos Medina", "España", "local", "2026-03-12", null, "+34 600 123 451", null],
-    [2, "OL-0002", "Laura Betancor", "España", "local", "2026-03-15", null, "+34 600 123 452", "laura@example.com"],
-    [3, "OL-0003", "James Whitfield", "Reino Unido", "turista", "2026-06-28", "OL-0001", "+44 7700 900123", null],
-    [4, "OL-0004", "Anna Keller", "Alemania", "turista", "2026-07-01", "OL-0002", null, "anna@example.com"],
-    [5, "OL-0005", "Yeray Cabrera", "España", "local", "2026-04-02", null, "+34 600 123 455", null],
+    [1, "DC-0001", "Carlos Medina", "España", "local", "2026-03-12", null, "+34 600 123 451", null],
+    [2, "DC-0002", "Laura Betancor", "España", "local", "2026-03-15", null, "+34 600 123 452", "laura@example.com"],
+    [3, "DC-0003", "James Whitfield", "Reino Unido", "turista", "2026-06-28", "DC-0001", "+44 7700 900123", null],
+    [4, "DC-0004", "Anna Keller", "Alemania", "turista", "2026-07-01", "DC-0002", null, "anna@example.com"],
+    [5, "DC-0005", "Yeray Cabrera", "España", "local", "2026-04-02", null, "+34 600 123 455", null],
   ].map(([id, num, name, nationality, type, joined, sponsor, phone, email]) =>
     ({ id, num, name, nationality, type, status: "activo", joined, sponsor, phone, email }));
 
   const employees = [
-    { id: 1, name: "Mattia", initials: "MA", hasPass: false },
-    { id: 2, name: "Daimond", initials: "DA", hasPass: false },
-    { id: 3, name: "Max", initials: "MX", hasPass: false },
+    { id: 1, name: "Alex", initials: "AL", hasPass: false },
+    { id: 2, name: "Sam", initials: "SA", hasPass: false },
+    { id: 3, name: "Noa", initials: "NO", hasPass: false },
   ];
 
   // realistic-looking recent sales so Informes has something to show
@@ -106,12 +106,12 @@ export async function mockRequest(method, path, body) {
     return { version: "demo", time: new Date().toISOString() };
   }
   if (method === "POST" && route === "/api/auth/device") {
-    if (String(body?.code) !== "onelife") fail(401, "bad_code");
+    if (String(body?.code) !== "12345") fail(401, "bad_code");
     s.auth.device = true; save(s); return { ok: true };
   }
   if (method === "POST" && route === "/api/auth/admin") {
     needDevice();
-    if (String(body?.pin) !== "1234") fail(401, "bad_pin");
+    if (String(body?.pin) !== "12345") fail(401, "bad_pin");
     s.auth.admin = true; save(s); return { ok: true };
   }
   if (method === "POST" && route === "/api/auth/admin/logout") {
@@ -134,7 +134,7 @@ export async function mockRequest(method, path, body) {
     let seq = Number(s.memberSeq || 5), approved = 0;
     for (const mem of s.members.filter((x) => x.status === "pendiente")) {
       seq += 1; mem.status = "activo"; mem.type = mem.type || "local";
-      mem.num = "OL-" + String(seq).padStart(4, "0"); approved++;
+      mem.num = "DC-" + String(seq).padStart(4, "0"); approved++;
     }
     s.memberSeq = seq; save(s);
     return { approved };
@@ -242,9 +242,11 @@ export async function mockRequest(method, path, body) {
     const rows = s.sales.filter((x) => x.ts >= from && x.ts <= now);
     const sum = summarize(rows);
     const emp = s.employees.find((e) => e.id === Number(body?.employeeId));
-    const rec = { id: Date.now(), ts: now, day: isoOf(now), employeeName: emp ? emp.name : "Administrador", from, to: now, ...sum };
+    const we = Math.round(weighedExtra(from, now) * 100) / 100;
+    const weighedTotal = Math.round((sum.grams + we) * 100) / 100;
+    const rec = { id: Date.now(), ts: now, day: isoOf(now), employeeName: emp ? emp.name : "Administrador", from, to: now, ...sum, weighedExtra: we, weighedTotal };
     s.closures.push(rec); save(s);
-    const report = ["One Life Lanzarote — Cierre de turno", `Empleado: ${rec.employeeName}`, `Fecha: ${new Date(now).toLocaleString("es-ES")}`, "", `Ventas: ${sum.salesN}`, `TOTAL: ${sum.total} tk`, `Efectivo: ${sum.cash} tk`, `Tarjeta: ${sum.card} tk`, `Fiado (pendiente): ${sum.fiado} tk`, `Gramos: ${sum.grams} g`, `Sweets/Bebidas: ${sum.units} ud`].join("\n");
+    const report = ["Club Manager — Cierre de turno", `Empleado: ${rec.employeeName}`, `Fecha: ${new Date(now).toLocaleString("es-ES")}`, "", `Ventas: ${sum.salesN}`, `TOTAL: ${sum.total} tk`, `Efectivo: ${sum.cash} tk`, `Tarjeta: ${sum.card} tk`, `Fiado (pendiente): ${sum.fiado} tk`, `Gramos vendidos: ${sum.grams} g`, `Gramos pesados (sin venta): ${we} g`, `TOTAL pesado: ${weighedTotal} g`, `Sweets/Bebidas: ${sum.units} ud`].join("\n");
     return clone({ ...rec, emailStatus: "not_configured", report });
   }
   if (method === "GET" && route === "/api/closures") {
@@ -328,7 +330,7 @@ export async function mockRequest(method, path, body) {
     if (!name) fail(400, "name_required");
     s.memberSeq += 1;
     const member = {
-      id: Date.now(), num: "OL-" + String(s.memberSeq).padStart(4, "0"), name,
+      id: Date.now(), num: "DC-" + String(s.memberSeq).padStart(4, "0"), name,
       nationality: String(body?.nationality || "").trim() || "—",
       type: body?.type === "turista" ? "turista" : "local",
       status: "activo", joined: isoOf(Date.now()), sponsor: null,
@@ -344,7 +346,7 @@ export async function mockRequest(method, path, body) {
     needDevice();
     const sponsor = s.members.find((x) => x.id === Number(body?.sponsorId) && x.status === "activo");
     if (!sponsor) fail(400, "bad_sponsor");
-    const code = "OL-INV-" + Math.random().toString(36).slice(2, 6).toUpperCase();
+    const code = "DC-INV-" + Math.random().toString(36).slice(2, 6).toUpperCase();
     s.invites.push({ code, sponsorNum: sponsor.num, sponsorName: sponsor.name, created: isoOf(Date.now()), usedBy: null });
     save(s);
     return { code };
@@ -376,7 +378,7 @@ export async function mockRequest(method, path, body) {
     s.memberSeq += 1;
     mem2.status = "activo";
     mem2.type = body?.type === "turista" ? "turista" : "local";
-    mem2.num = "OL-" + String(s.memberSeq).padStart(4, "0");
+    mem2.num = "DC-" + String(s.memberSeq).padStart(4, "0");
     save(s);
     return { ok: true, num: mem2.num };
   }

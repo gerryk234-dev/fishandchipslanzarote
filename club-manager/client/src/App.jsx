@@ -296,7 +296,7 @@ export default function App() {
       <aside className="sidebar" style={{ width: 190, borderRight: `1px solid ${C.line}`, padding: "20px 12px", display: "flex", flexDirection: "column", gap: 4, flexShrink: 0 }}>
         <button className="hamburger" onClick={() => setMenuOpen(true)} aria-label="Abrir menú"
           style={{ background: C.surface2, border: `1px solid ${C.line}`, borderRadius: 8, color: C.text, fontSize: 20, padding: "7px 12px", flexShrink: 0 }}>☰</button>
-        <div className="mono brand" style={{ color: C.green, letterSpacing: 3, fontSize: 11, padding: "0 10px", marginBottom: 14 }}>ONE LIFE<br />LANZAROTE</div>
+        <div className="mono brand" style={{ color: C.green, letterSpacing: 3, fontSize: 11, padding: "0 10px", marginBottom: 14 }}>{DEMO ? "CLUB" : "ONE LIFE"}<br />{DEMO ? "MANAGER" : "LANZAROTE"}</div>
         {navButtons()}
         <div className="userbox" style={{ marginTop: "auto", padding: 10, borderTop: `1px solid ${C.line}` }}>
           <div style={{ fontSize: 13, color: C.muted }}>{isAdmin ? "Sesión" : "En mostrador"}</div>
@@ -312,7 +312,7 @@ export default function App() {
         <>
           <div className="drawer-backdrop" onClick={() => setMenuOpen(false)} />
           <div className="drawer fadein">
-            <div className="mono" style={{ color: C.green, letterSpacing: 3, fontSize: 11, padding: "0 10px", marginBottom: 10 }}>ONE LIFE<br />LANZAROTE</div>
+            <div className="mono" style={{ color: C.green, letterSpacing: 3, fontSize: 11, padding: "0 10px", marginBottom: 10 }}>{DEMO ? "CLUB" : "ONE LIFE"}<br />{DEMO ? "MANAGER" : "LANZAROTE"}</div>
             {navButtons()}
             <div style={{ marginTop: "auto", padding: 10, borderTop: `1px solid ${C.line}` }}>
               <div style={{ fontWeight: 800, display: "flex", gap: 8, alignItems: "center" }}>{user.name} {isAdmin && <Badge kind="admin" />}</div>
@@ -377,7 +377,7 @@ function DeviceLogin({ onDone }) {
     <div style={{ minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "'Outfit', sans-serif", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <S />
       <div style={{ textAlign: "center" }} className="fadein">
-        <div className="mono" style={{ color: C.green, letterSpacing: 4, fontSize: 13, marginBottom: 8 }}>ONE LIFE LANZAROTE</div>
+        <div className="mono" style={{ color: C.green, letterSpacing: 4, fontSize: 13, marginBottom: 8 }}>{DEMO ? "SOFTWARE PARA CLUBES" : "ONE LIFE LANZAROTE"}</div>
         <h1 style={{ fontSize: 34, fontWeight: 800, margin: "0 0 6px" }}>Club Manager</h1>
         <p style={{ color: C.muted, marginBottom: 24 }}>Introduce la contraseña general del club</p>
         <input autoFocus type="password" value={code} className="mono"
@@ -390,7 +390,7 @@ function DeviceLogin({ onDone }) {
           <Btn kind="primary" size="lg" onClick={submit} disabled={busy || !code.trim()}>Entrar</Btn>
         </div>
         <div className="mono" style={{ color: C.muted, fontSize: 12, marginTop: 16 }}>
-          {DEMO ? "demo — código: onelife" : "Introduce la contraseña general para abrir la app"}
+          {DEMO ? "demo — código: 12345" : "Introduce la contraseña general para abrir la app"}
         </div>
         <InstallApp />
       </div>
@@ -444,7 +444,7 @@ function Login({ employees, onUser, onAdmin }) {
     <div style={{ minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "'Outfit', sans-serif", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <S />
       <div style={{ textAlign: "center" }} className="fadein">
-        <div className="mono" style={{ color: C.green, letterSpacing: 4, fontSize: 13, marginBottom: 8 }}>ONE LIFE LANZAROTE</div>
+        <div className="mono" style={{ color: C.green, letterSpacing: 4, fontSize: 13, marginBottom: 8 }}>{DEMO ? "SOFTWARE PARA CLUBES" : "ONE LIFE LANZAROTE"}</div>
         <h1 style={{ fontSize: 34, fontWeight: 800, margin: "0 0 6px" }}>Club Manager</h1>
 
         {empFor ? (
@@ -490,7 +490,7 @@ function Login({ employees, onUser, onAdmin }) {
               <Btn onClick={() => setPinMode(false)}>Volver</Btn>
               <Btn kind="amber" onClick={tryPin} disabled={busy}>Entrar</Btn>
             </div>
-            {DEMO && <div className="mono" style={{ color: C.muted, fontSize: 12, marginTop: 16 }}>demo — PIN: 1234</div>}
+            {DEMO && <div className="mono" style={{ color: C.muted, fontSize: 12, marginTop: 16 }}>demo — PIN: 12345</div>}
           </div>
         )}
       </div>
