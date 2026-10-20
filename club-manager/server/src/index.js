@@ -870,6 +870,8 @@ app.get("/api/reports", requireAdmin, (req, res) => {
 /* ================= static client ================= */
 
 app.get("/registro", (_req, res) => res.sendFile(join(__dirname, "..", "public", "registro.html")));
+/* white-labeled demo for showing/selling the app to other clubs (sample data) */
+app.get("/demo", (_req, res) => { res.setHeader("Cache-Control", "no-cache"); res.sendFile(join(__dirname, "..", "public", "demo.html")); });
 
 const dist = join(__dirname, "..", "..", "client", "dist");
 const noCache = (res) => res.setHeader("Cache-Control", "no-cache, must-revalidate");
