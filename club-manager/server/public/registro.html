@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Pre-registro de socios · One Life Lanzarote</title>
+<style>
+  :root { --bg:#171C15; --surface:#20261D; --line:#333D2F; --text:#EFEDE3; --muted:#9AA391; --green:#8FBF6F; --greendark:#3E5233; --red:#D9704F; }
+  * { box-sizing: border-box; }
+  body { margin:0; min-height:100vh; background:var(--bg); color:var(--text); font-family:'Outfit',system-ui,sans-serif; display:flex; align-items:center; justify-content:center; padding:20px; }
+  .card { width:100%; max-width:440px; background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:28px; }
+  .brand { color:var(--green); letter-spacing:4px; font-size:12px; font-family:monospace; margin-bottom:6px; }
+  h1 { font-size:24px; margin:0 0 4px; }
+  p.sub { color:var(--muted); font-size:14px; margin:0 0 22px; }
+  label { display:block; font-size:13px; color:var(--muted); margin:14px 0 5px; }
+  input { width:100%; padding:12px 14px; background:var(--bg); border:1px solid var(--line); border-radius:8px; color:var(--text); font-size:16px; font-family:inherit; }
+  input:focus { outline:2px solid var(--green); outline-offset:1px; }
+  .check { display:flex; gap:10px; align-items:flex-start; margin:18px 0 0; font-size:13px; color:var(--muted); }
+  .check input { width:auto; margin-top:2px; }
+  button { width:100%; margin-top:20px; padding:14px; border:none; border-radius:8px; background:var(--green); color:#16210F; font-size:16px; font-weight:700; font-family:inherit; cursor:pointer; }
+  button:disabled { opacity:.5; cursor:default; }
+  .msg { margin-top:14px; font-size:14px; display:none; }
+  .msg.err { color:var(--red); }
+  .msg.ok { color:var(--green); }
+  .done { text-align:center; padding:30px 0; display:none; }
+  .done .big { font-size:44px; }
+  .hp { position:absolute; left:-9999px; opacity:0; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="brand">ONE LIFE LANZAROTE</div>
+  <div id="form-wrap">
+    <h1>Pre-registro de socios</h1>
+    <p class="sub">Solicita tu alta como socio del club. Revisaremos tu solicitud y te contactaremos para completarla en el local.</p>
+    <form id="f" autocomplete="on">
+      <label for="name">Nombre completo *</label>
+      <input id="name" name="name" required maxlength="120" autocomplete="name">
+      <label for="nationality">Nacionalidad</label>
+      <input id="nationality" name="nationality" maxlength="60" autocomplete="country-name">
+      <label for="documentid">DNI / Pasaporte</label>
+      <input id="documentid" name="documentid" maxlength="40" autocomplete="off">
+      <label for="phone">Teléfono (WhatsApp)</label>
+      <input id="phone" name="phone" maxlength="40" inputmode="tel" autocomplete="tel">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" maxlength="120" autocomplete="email">
+      <label for="code">Código de invitación (si un socio te avala)</label>
+      <input id="code" name="code" maxlength="20" style="text-transform:uppercase" autocomplete="off">
+      <input class="hp" name="web" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="check">
+        <input type="checkbox" id="adult" required>
+        <label for="adult" style="margin:0">Confirmo que soy mayor de edad y solicito el alta voluntariamente como socio de la asociación.</label>
+      </div>
+      <button id="btn" type="submit">Enviar solicitud</button>
+      <div class="msg err" id="err"></div>
+    </form>
+  </div>
+  <div class="done" id="done">
+    <div class="big">🌿</div>
+    <h1>Solicitud recibida</h1>
+    <p class="sub">Gracias. El club revisará tu solicitud y te contactará por teléfono o email. Tu número de socio se te asignará al aprobarla.</p>
+  </div>
+</div>
+<script>
+  const f = document.getElementById('f');
+  f.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('btn');
+    const err = document.getElementById('err');
+    err.style.display = 'none';
+    const phone = f.phone.value.trim(), email = f.email.value.trim();
+    if (!phone && !email) {
+      err.textContent = 'Indica al menos un teléfono o un email para poder contactarte.';
+      err.style.display = 'block';
+      return;
+    }
+    btn.disabled = true; btn.textContent = 'Enviando…';
+    try {
+      const res = await fetch('/api/public/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: f.name.value, nationality: f.nationality.value, document: f.documentid.value,
+          phone, email, code: f.code.value, web: f.web.value,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        err.textContent = data.error === 'bad_invite' ? 'El código de invitación no es válido o ya se usó.'
+          : data.error === 'too_many_requests' ? 'Demasiados intentos — prueba de nuevo en un rato.'
+          : 'No se pudo enviar la solicitud. Inténtalo de nuevo.';
+        err.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Enviar solicitud';
+        return;
+      }
+      document.getElementById('form-wrap').style.display = 'none';
+      document.getElementById('done').style.display = 'block';
+    } catch {
+      err.textContent = 'Error de conexión. Inténtalo de nuevo.';
+      err.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Enviar solicitud';
+    }
+  });
+</script>
+</body>
+</html>
