@@ -1,0 +1,14 @@
+{
+  "name": "tickets-direct-lanzarote",
+  "private": true,
+  "type": "module",
+  "description": "SEO-first static web app for Tickets Direct Excursions Lanzarote, with a Claude-powered booking assistant.",
+  "scripts": {
+    "build": "node build.mjs",
+    "preview": "node build.mjs && python3 -m http.server 8080 -d dist"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.1.0"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "name": "Tickets Direct Excursions Lanzarote",
+  "shortName": "Tickets Direct",
+  "url": "https://excursionsticketsdirect.com",
+  "bookingBase": "https://excursionsticketsdirect.com/trip/",
+  "phone": "+34 633 229 244",
+  "phoneHref": "+34633229244",
+  "whatsapp": "34633229244",
+  "email": "info@excursionsticketsdirect.com",
+  "foundingYear": 2000,
+  "officeCount": 10,
+  "heritage": "Lineas Marítimas Romero",
+  "social": {
+    "facebook": null,
+    "instagram": "https://www.instagram.com/experience.lanzarote/",
+    "youtube": "https://www.youtube.com/@experiencelanzarote",
+    "tiktok": "https://www.tiktok.com/@experience.lanzarote",
+    "x": "https://x.com/tickets_lanza",
+    "tripadvisor": "https://www.tripadvisor.co.uk/Attraction_Review-g659633-d20326673-Reviews-Excursions_Tickets_Direct-Costa_Teguise_Lanzarote_Canary_Islands.html"
+  },
+  "promises": {
+    "en": [
+      [
+        "Since 2000",
+        "Over 25 years selling Lanzarote excursions, rooted in Lineas Marítimas Romero"
+      ],
+      [
+        "10 local offices",
+        "Walk-in offices in Costa Teguise, Puerto del Carmen and Playa Blanca"
+      ],
+      [
+        "Small deposit online",
+        "Reserve with a small deposit, pay the balance on the day"
+      ],
+      [
+        "Free cancellation",
+        "Cancel free of charge up to 24 hours before your activity"
+      ],
+      [
+        "Lowest price guarantee",
+        "Book direct with the local agency, no middleman mark-up"
+      ],
+      [
+        "24h support",
+        "Real local people on WhatsApp and phone, in English and Spanish"
+      ]
+    ],
+    "es": [
+      [
+        "Desde 2000",
+        "Más de 25 años vendiendo excursiones en Lanzarote, con la herencia de Líneas Marítimas Romero"
+      ],
+      [
+        "10 oficinas locales",
+        "Oficinas en Costa Teguise, Puerto del Carmen y Playa Blanca"
+      ],
+      [
+        "Pequeño depósito online",
+        "Reserva con un pequeño depósito y paga el resto el día de la excursión"
+      ],
+      [
+        "Cancelación gratuita",
+        "Cancela gratis hasta 24 horas antes de tu actividad"
+      ],
+      [
+        "Mejor precio garantizado",
+        "Reserva directo con la agencia local, sin intermediarios"
+      ],
+      [
+        "Atención 24h",
+        "Personas reales en WhatsApp y teléfono, en español e inglés"
+      ]
+    ]
+  }
+}

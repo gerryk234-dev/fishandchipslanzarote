@@ -1,0 +1,257 @@
+(() => {
+  const TD = window.TD || { lang: "en" };
+  const ES = TD.lang === "es";
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+
+  // ---- navigation ----
+  const menuBtn = $(".menu-btn");
+  const nav = $("#nav");
+  menuBtn?.addEventListener("click", () => {
+    const open = nav.classList.toggle("open");
+    menuBtn.setAttribute("aria-expanded", open);
+  });
+  $$(".dd > button").forEach((b) =>
+    b.addEventListener("click", () => {
+      const dd = b.parentElement;
+      const open = dd.classList.toggle("open");
+      b.setAttribute("aria-expanded", open);
+    }),
+  );
+
+  // ---- tour filters (/tours/) ----
+  const filters = $("#filters");
+  if (filters) {
+    const cards = $$("#results .card");
+    const grid = $("#results .cards");
+    const state = { tag: "", cat: "", resort: "", max: "" };
+    const params = new URLSearchParams(location.search);
+    for (const k of Object.keys(state)) if (params.get(k)) state[k] = params.get(k);
+    let picks = [];
+    const loadPicks = async () => {
+      if (!state.resort) return (picks = []);
+      try {
+        const data = await (await fetch(TD.data)).json();
+        picks = data.resorts.find((r) => r.slug === state.resort)?.picks || [];
+      } catch {
+        picks = [];
+      }
+    };
+    const apply = () => {
+      let n = 0;
+      for (const c of cards) {
+        const ok =
+          (!state.tag || c.dataset.tags.split(" ").includes(state.tag)) &&
+          (!state.cat || c.dataset.cat === state.cat) &&
+          (!state.max || Number(c.dataset.price) <= Number(state.max));
+        c.hidden = !ok;
+        if (ok) n++;
+      }
+      // Resort picks float to the top; every tour stays available from every resort.
+      const slug = (c) => c.querySelector("a").getAttribute("href").split("/").filter(Boolean).pop();
+      [...cards].sort((a, b) => (picks.includes(slug(b)) ? 1 : 0) - (picks.includes(slug(a)) ? 1 : 0)).forEach((c) => grid.appendChild(c));
+      $(".count span", filters).textContent = n;
+      $(".empty").hidden = n > 0;
+      const q = new URLSearchParams(Object.entries(state).filter(([, v]) => v));
+      history.replaceState(null, "", q.toString() ? `?${q}` : location.pathname);
+    };
+    $$(".chips button", filters).forEach((b) => {
+      b.setAttribute("aria-pressed", String(b.dataset.value === state.tag));
+      b.addEventListener("click", () => {
+        state.tag = b.dataset.value;
+        $$(".chips button", filters).forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+        apply();
+      });
+    });
+    $$("select[data-filter]", filters).forEach((s) => {
+      s.value = state[s.dataset.filter];
+      s.addEventListener("change", async () => {
+        state[s.dataset.filter] = s.value;
+        if (s.dataset.filter === "resort") await loadPicks();
+        apply();
+      });
+    });
+    loadPicks().then(apply);
+  }
+
+  // ---- assistant ----
+  const chat = $("#td-chat");
+  const fab = $("#td-chat-open");
+  if (!chat || !fab) return;
+  const log = $(".chat-log", chat);
+  const form = $(".chat-form", chat);
+  const input = $("input", form);
+  const convo = [];
+  let catalog = null;
+  let aiAvailable = true;
+
+  const store = {
+    get() {
+      try { return JSON.parse(sessionStorage.getItem("td_chat") || "[]"); } catch { return []; }
+    },
+    set(v) {
+      try { sessionStorage.setItem("td_chat", JSON.stringify(v.slice(-20))); } catch {}
+    },
+  };
+
+  const openChat = () => {
+    chat.hidden = false;
+    fab.hidden = true;
+    input.focus();
+    if (!catalog) fetch(TD.data).then((r) => r.json()).then((d) => (catalog = d)).catch(() => {});
+  };
+  fab.addEventListener("click", openChat);
+  $(".chat-x", chat).addEventListener("click", () => {
+    chat.hidden = true;
+    fab.hidden = false;
+  });
+
+  const addMsg = (who, text) => {
+    const div = document.createElement("div");
+    div.className = `msg ${who}`;
+    div.textContent = text;
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+    return div;
+  };
+  const addCards = (slugs) => {
+    if (!catalog || !slugs?.length) return;
+    const box = document.createElement("div");
+    box.className = "msg-cards";
+    for (const s of slugs) {
+      const t = catalog.tours.find((x) => x.slug === s);
+      if (!t) continue;
+      const a = document.createElement("a");
+      a.className = "mini";
+      a.href = t.url;
+      a.innerHTML = `<span></span><strong></strong>`;
+      a.querySelector("span").textContent = t.name;
+      const small = document.createElement("small");
+      small.textContent = `${t.duration} · ${t.catName}`;
+      a.querySelector("span").appendChild(small);
+      a.querySelector("strong").textContent = `${ES ? "Desde" : "From"} ${t.priceLabel}`;
+      box.appendChild(a);
+    }
+    log.appendChild(box);
+    log.scrollTop = log.scrollHeight;
+  };
+
+  // Restore the conversation within this browser tab.
+  for (const m of store.get()) {
+    convo.push(m);
+    addMsg(m.role === "user" ? "user" : "bot", m.content);
+  }
+
+  async function askAI() {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 30000);
+    try {
+      const r = await fetch(TD.api, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ lang: TD.lang, messages: convo.slice(-12) }),
+        signal: ctrl.signal,
+      });
+      if (!r.ok) throw new Error(String(r.status));
+      return await r.json();
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  // Instant local recommender: works offline and when the AI endpoint isn't deployed.
+  function localAnswer(text) {
+    const q = text.toLowerCase();
+    const rules = [
+      [/barco|boat|catamar|crucero(?! ?ist)|cruise(?! ?(ship|passenger))|sail|velero|dolphin|delf/, { cat: "boat-trips" }],
+      [/buggy|off.?road|todoterreno|polaris|can.?am/, { cat: "buggy-tours" }],
+      [/bus|autob|coach|volcan|timanfaya|cave|cueva|jameos|grand tour|highlight/, { cat: "bus-tours" }],
+      [/jet ?ski|moto de agua|parasail|parascend|water ?sport|acu[aá]tic|banana|donut/, { cat: "water-sports" }],
+      [/submarin/, { cat: "underwater" }],
+      [/fuerteventura|corralejo|ferry/, { cat: "ferries-islands" }],
+      [/pack|deal|discount|descuento|oferta|ahorr|save/, { tag: "pack" }],
+      [/kid|child|family|famil|niñ|bebe|beb[eé]|toddler/, { tag: "family" }],
+      [/couple|romantic|pareja|rom[aá]ntic|honeymoon|luna de miel/, { tag: "couples" }],
+      [/wind|rain|viento|lluvia|cancel/, { tag: "rainy-day" }],
+      [/adrenal|adventure|aventura|extreme/, { tag: "adventure" }],
+      [/graciosa/, { place: "la-graciosa" }],
+      [/lobos/, { place: "lobos-island" }],
+      [/market|mercadillo|teguise market/, { place: "teguise" }],
+    ];
+    const want = { cats: new Set(), tags: new Set(), places: new Set() };
+    for (const [re, v] of rules) if (re.test(q)) {
+      if (v.cat) want.cats.add(v.cat);
+      if (v.tag) want.tags.add(v.tag);
+      if (v.place) want.places.add(v.place);
+    }
+    const m = q.match(/(?:under|below|less than|max|menos de|hasta|por debajo de)?\s*€?\s*(\d{2,3})\s*(?:€|eur|euros?)?/);
+    const max = m && /under|below|less|max|menos|hasta|debajo|€|eur/.test(q) ? Number(m[1]) : null;
+    const resort = catalog?.resorts.find((r) => q.includes(r.name.toLowerCase()));
+    const cruise = /cruise (ship|passenger)|crucerist|vengo en crucero|on a cruise|cruise port|en crucero/.test(q);
+
+    const tours = catalog?.tours || [];
+    const scored = tours
+      .filter((t) => !max || t.price <= max)
+      .map((t) => {
+        let s = 0;
+        if (want.cats.has(t.cat)) s += 3;
+        for (const tag of want.tags) if (t.tags.includes(tag)) s += 2;
+        for (const p of want.places) if (t.places.includes(p)) s += 4;
+        if (resort?.picks.includes(t.slug)) s += 1.5;
+        if (cruise && t.hours && t.hours <= 5 && t.cat === "bus-tours") s += 4;
+        return [s, t];
+      })
+      .sort((a, b) => b[0] - a[0] || a[1].price - b[1].price);
+    const anyMatch = scored.length && scored[0][0] > 0;
+    const top = (anyMatch ? scored.filter(([s]) => s > 0) : scored.filter(([, t]) => ["lanzarotes-highlights-tour", "la-graciosa-all-inclusive-catamaran-cruise", "sunset-catamaran-dolphins"].includes(t.slug))).slice(0, 3).map(([, t]) => t.slug);
+
+    let reply;
+    if (!tours.length) reply = ES ? "Ahora mismo no puedo cargar el catálogo. Escríbenos por WhatsApp y te ayudamos al momento." : "I can't load the catalogue right now. Message us on WhatsApp and we'll help you straight away.";
+    else if (cruise) reply = ES ? "Para una escala de crucero recomendamos excursiones de medio día (unas 5 horas). Dinos tu hora de embarque por WhatsApp y confirmamos que encaja:" : "For a cruise stop we recommend half-day tours (about 5 hours). Send us your all-aboard time on WhatsApp and we'll confirm it fits:";
+    else if (anyMatch) reply = ES ? `Estas son mis recomendaciones${max ? ` por menos de ${max} €` : ""}${resort ? ` si te alojas en ${resort.name}` : ""}:` : `Here are my top picks${max ? ` under €${max}` : ""}${resort ? ` for guests staying in ${resort.name}` : ""}:`;
+    else reply = ES ? "Estas son las tres excursiones más populares. Cuéntame con quién viajas o qué te apetece y afino la recomendación:" : "These are our three most popular excursions. Tell me who you're travelling with or what you fancy and I'll narrow it down:";
+    if (resort) reply += ES ? `\n\nTenemos oficina en ${resort.name} por si prefieres reservar en persona.` : `\n\nWe also have an office in ${resort.name} if you'd rather book in person.`;
+    return { reply, tours: top };
+  }
+
+  async function send(text) {
+    text = text.trim();
+    if (!text) return;
+    addMsg("user", text);
+    convo.push({ role: "user", content: text });
+    input.value = "";
+    const typing = addMsg("bot typing", ES ? "Escribiendo…" : "Typing…");
+    if (!catalog) {
+      try { catalog = await (await fetch(TD.data)).json(); } catch {}
+    }
+    let res = null;
+    if (aiAvailable) {
+      try {
+        res = await askAI();
+      } catch {
+        aiAvailable = false; // endpoint missing or failing: use the local recommender for the rest of the visit
+      }
+    }
+    if (!res?.reply) res = localAnswer(text);
+    typing.remove();
+    addMsg("bot", res.reply);
+    addCards(res.tours);
+    if (res.handoff) {
+      const a = document.createElement("a");
+      a.className = "btn wa small";
+      a.href = `https://wa.me/${TD.wa}`;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.textContent = ES ? "Continuar por WhatsApp" : "Continue on WhatsApp";
+      log.appendChild(a);
+    }
+    convo.push({ role: "assistant", content: res.reply });
+    store.set(convo);
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    send(input.value);
+  });
+  $$(".chat-chips button", chat).forEach((b) => b.addEventListener("click", () => send(b.textContent)));
+})();

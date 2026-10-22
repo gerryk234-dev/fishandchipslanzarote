@@ -1,0 +1,57 @@
+{
+  "_note": "Addresses were taken from public listings (Wanderlog, Tripadvisor, Localo) and have NOT been checked by the business. Set verified:true once confirmed. Add the remaining offices so the list matches the real count (site.json officeCount). Only offices with a streetAddress are emitted in the LocalBusiness structured data.",
+  "offices": [
+    {
+      "id": "costa-teguise-playa-bastian",
+      "resort": "costa-teguise",
+      "name": "Tickets Direct Excursions Playa Bastián",
+      "streetAddress": "Av. del Mar, 28",
+      "postalCode": "35508",
+      "locality": "Costa Teguise",
+      "phone": null,
+      "hours": null,
+      "mapsQuery": "Tickets Direct Excursions Playa Bastian Costa Teguise",
+      "verified": false,
+      "sourceNote": "Wanderlog lists Av. del Mar 28; Tripadvisor lists Calle Anzuelo 38, 35510. Confirm which is current."
+    },
+    {
+      "id": "playa-blanca-port",
+      "resort": "playa-blanca",
+      "name": "Tickets Direct Excursions Playa Blanca Port",
+      "streetAddress": "Puerto de Playa Blanca, Punta Limones",
+      "postalCode": "35580",
+      "locality": "Playa Blanca",
+      "phone": null,
+      "hours": null,
+      "mapsQuery": "Tickets Direct Excursions Playa Blanca Port",
+      "verified": false,
+      "sourceNote": "Wanderlog / Trustindex listing."
+    },
+    {
+      "id": "playa-blanca-flamingo",
+      "resort": "playa-blanca",
+      "name": "Tickets Direct Excursions Flamingo Beach",
+      "streetAddress": "Calle Gran Canaria",
+      "postalCode": "35580",
+      "locality": "Playa Blanca",
+      "phone": null,
+      "hours": null,
+      "mapsQuery": "Tickets Direct Excursions Lanzarote Flamingo Beach",
+      "verified": false,
+      "sourceNote": "Localo listing."
+    },
+    {
+      "id": "puerto-del-carmen",
+      "resort": "puerto-del-carmen",
+      "name": "Tickets Direct Excursions Puerto del Carmen",
+      "streetAddress": null,
+      "postalCode": null,
+      "locality": "Puerto del Carmen",
+      "phone": null,
+      "hours": null,
+      "mapsQuery": "Tickets Direct Excursions Puerto del Carmen",
+      "verified": false,
+      "sourceNote": "No public address found. Add the street address(es) of the Puerto del Carmen office(s)."
+    }
+  ]
+}
