@@ -1,5 +1,5 @@
 {
-  "_note": "Addresses were taken from public listings (Wanderlog, Tripadvisor, Localo) and have NOT been checked by the business. Set verified:true once confirmed. Add the remaining offices so the list matches the real count (site.json officeCount). Only offices with a streetAddress are emitted in the LocalBusiness structured data.",
+  "_note": "The 10 Google Maps profiles the owner shared are in pendingMapsLinks. Each needs its name, street address, postcode, resort (costa-teguise | puerto-del-carmen | playa-blanca), phone and hours copied into an office entry, with mapsUrl set to its link. Set verified:true once checked. Only offices with a streetAddress are emitted in structured data.",
   "offices": [
     {
       "id": "costa-teguise-playa-bastian",
@@ -53,5 +53,17 @@
       "verified": false,
       "sourceNote": "No public address found. Add the street address(es) of the Puerto del Carmen office(s)."
     }
+  ],
+  "pendingMapsLinks": [
+    "https://maps.app.goo.gl/narSq2p33znJ9GdG9",
+    "https://maps.app.goo.gl/pdSrdT3E7yeEqKPM6",
+    "https://maps.app.goo.gl/zKWqGU6hA3qi4KGY9",
+    "https://maps.app.goo.gl/oCxVLkV6mM7oKjrLA",
+    "https://maps.app.goo.gl/wyR2zPUFZzsez3dV7",
+    "https://maps.app.goo.gl/1DKfsE2xXkPzHK319",
+    "https://maps.app.goo.gl/J3jY8otV25PL4WaD7",
+    "https://maps.app.goo.gl/oZDVvZHhPCPabMT28",
+    "https://maps.app.goo.gl/Wzz1DhPvkqaUuBzAA",
+    "https://maps.app.goo.gl/VFCr4GjQK79UP21L6"
   ]
 }

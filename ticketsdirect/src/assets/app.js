@@ -4,6 +4,27 @@
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 
+  // ---- installable app ----
+  if ("serviceWorker" in navigator) {
+    addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
+  }
+  let installEvent = null;
+  const installBtns = () => $$("[data-install]");
+  addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    installEvent = e;
+    installBtns().forEach((b) => (b.hidden = false));
+  });
+  addEventListener("appinstalled", () => installBtns().forEach((b) => (b.hidden = true)));
+  document.addEventListener("click", async (e) => {
+    const b = e.target.closest("[data-install]");
+    if (!b || !installEvent) return;
+    installEvent.prompt();
+    await installEvent.userChoice;
+    installEvent = null;
+    installBtns().forEach((x) => (x.hidden = true));
+  });
+
   // ---- navigation ----
   const menuBtn = $(".menu-btn");
   const nav = $("#nav");
@@ -37,19 +58,20 @@
         picks = [];
       }
     };
+    const has = (list, v) => list.split(" ").includes(v);
     const apply = () => {
       let n = 0;
       for (const c of cards) {
         const ok =
-          (!state.tag || c.dataset.tags.split(" ").includes(state.tag)) &&
-          (!state.cat || c.dataset.cat === state.cat) &&
+          (!state.tag || has(c.dataset.tags, state.tag)) &&
+          (!state.cat || has(c.dataset.cat, state.cat)) &&
+          (!state.resort || has(c.dataset.resorts, state.resort)) &&
           (!state.max || Number(c.dataset.price) <= Number(state.max));
         c.hidden = !ok;
         if (ok) n++;
       }
-      // Resort picks float to the top; every tour stays available from every resort.
-      const slug = (c) => c.querySelector("a").getAttribute("href").split("/").filter(Boolean).pop();
-      [...cards].sort((a, b) => (picks.includes(slug(b)) ? 1 : 0) - (picks.includes(slug(a)) ? 1 : 0)).forEach((c) => grid.appendChild(c));
+      // Our recommended picks for the chosen resort float to the top.
+      [...cards].sort((a, b) => (picks.includes(b.dataset.slug) ? 1 : 0) - (picks.includes(a.dataset.slug) ? 1 : 0)).forEach((c) => grid.appendChild(c));
       $(".count span", filters).textContent = n;
       $(".empty").hidden = n > 0;
       const q = new URLSearchParams(Object.entries(state).filter(([, v]) => v));
@@ -73,6 +95,19 @@
     });
     loadPicks().then(apply);
   }
+
+  // ---- video: load YouTube only when asked (keeps pages fast) ----
+  $$(".yt").forEach((b) =>
+    b.addEventListener("click", () => {
+      const f = document.createElement("iframe");
+      f.src = `https://www.youtube-nocookie.com/embed/${b.dataset.yt}?autoplay=1&rel=0`;
+      f.title = b.getAttribute("aria-label") || "Video";
+      f.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
+      f.allowFullscreen = true;
+      f.className = "yt-frame";
+      b.replaceWith(f);
+    }),
+  );
 
   // ---- assistant ----
   const chat = $("#td-chat");
@@ -167,16 +202,22 @@
       [/buggy|off.?road|todoterreno|polaris|can.?am/, { cat: "buggy-tours" }],
       [/bus|autob|coach|volcan|timanfaya|cave|cueva|jameos|grand tour|highlight/, { cat: "bus-tours" }],
       [/jet ?ski|moto de agua|parasail|parascend|water ?sport|acu[aá]tic|banana|donut/, { cat: "water-sports" }],
-      [/submarin/, { cat: "underwater" }],
+      [/submarin|dive|buceo|bautismo|snorkel/, { cat: "underwater" }],
+      [/rancho|texas|water ?park|aqualava|aquapark|parque acu|sea ?lion|le[oó]n marino/, { cat: "parks" }],
+      [/night|show|dinner|cena|noche|espect[aá]culo|drag|western/, { cat: "nightlife" }],
+      [/private|privad|charter|alquiler de barco|boat hire/, { cat: "private" }],
+      [/whale|ballena/, { cat: "boat-trips" }],
       [/fuerteventura|corralejo|ferry/, { cat: "ferries-islands" }],
       [/pack|deal|discount|descuento|oferta|ahorr|save/, { tag: "pack" }],
       [/kid|child|family|famil|niñ|bebe|beb[eé]|toddler/, { tag: "family" }],
       [/couple|romantic|pareja|rom[aá]ntic|honeymoon|luna de miel/, { tag: "couples" }],
       [/wind|rain|viento|lluvia|cancel/, { tag: "rainy-day" }],
       [/adrenal|adventure|aventura|extreme/, { tag: "adventure" }],
-      [/graciosa/, { place: "la-graciosa" }],
-      [/lobos/, { place: "lobos-island" }],
-      [/market|mercadillo|teguise market/, { place: "teguise" }],
+      [/graciosa/, { place: 296 }],
+      [/lobos/, { place: 321 }],
+      [/market|mercadillo|teguise market/, { place: 317 }],
+      [/timanfaya|volcan/, { place: 319 }],
+      [/papagayo/, { place: 314 }],
     ];
     const want = { cats: new Set(), tags: new Set(), places: new Set() };
     for (const [re, v] of rules) if (re.test(q)) {
@@ -194,16 +235,17 @@
       .filter((t) => !max || t.price <= max)
       .map((t) => {
         let s = 0;
-        if (want.cats.has(t.cat)) s += 3;
+        if (t.cats.some((c) => want.cats.has(c))) s += 3;
         for (const tag of want.tags) if (t.tags.includes(tag)) s += 2;
-        for (const p of want.places) if (t.places.includes(p)) s += 4;
+        for (const p of want.places) if (t.destinations.includes(p)) s += 4;
         if (resort?.picks.includes(t.slug)) s += 1.5;
+        if (resort && !t.resorts.includes(resort.slug)) s -= 2;
         if (cruise && t.hours && t.hours <= 5 && t.cat === "bus-tours") s += 4;
         return [s, t];
       })
       .sort((a, b) => b[0] - a[0] || a[1].price - b[1].price);
     const anyMatch = scored.length && scored[0][0] > 0;
-    const top = (anyMatch ? scored.filter(([s]) => s > 0) : scored.filter(([, t]) => ["lanzarotes-highlights-tour", "la-graciosa-all-inclusive-catamaran-cruise", "sunset-catamaran-dolphins"].includes(t.slug))).slice(0, 3).map(([, t]) => t.slug);
+    const top = (anyMatch ? scored.filter(([s]) => s > 0) : scored.filter(([, t]) => tours.indexOf(t) < 3)).slice(0, 3).map(([, t]) => t.slug);
 
     let reply;
     if (!tours.length) reply = ES ? "Ahora mismo no puedo cargar el catálogo. Escríbenos por WhatsApp y te ayudamos al momento." : "I can't load the catalogue right now. Message us on WhatsApp and we'll help you straight away.";

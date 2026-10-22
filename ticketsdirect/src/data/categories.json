@@ -1,138 +1,367 @@
 [
   {
-    "slug": "boat-trips", "icon": "boat", "color": "sea",
-    "name": { "en": "Boat Trips", "es": "Excursiones en barco" },
-    "h1": { "en": "Lanzarote Boat Trips 2026: Catamarans, Dolphins, La Graciosa & Lobos", "es": "Excursiones en barco en Lanzarote 2026: catamaranes, delfines, La Graciosa y Lobos" },
-    "meta": { "en": "Compare every Lanzarote boat trip: sunset catamarans, dolphin cruises, La Graciosa and Lobos Island. From €51, free cancellation up to 24h. Book direct with the local agency.", "es": "Compara todas las excursiones en barco en Lanzarote: catamaranes al atardecer, delfines, La Graciosa e Isla de Lobos. Desde 51 €, cancelación gratuita hasta 24 h." },
+    "slug": "boat-trips",
+    "icon": "boat",
+    "color": "sea",
+    "name": {
+      "en": "Boat Trips",
+      "es": "Excursiones en barco"
+    },
+    "h1": {
+      "en": "Lanzarote Boat Trips 2026: Catamarans, Dolphins, La Graciosa & Lobos",
+      "es": "Excursiones en barco en Lanzarote 2026: catamaranes, delfines, La Graciosa y Lobos"
+    },
+    "meta": {
+      "en": "Compare every Lanzarote boat trip: sunset catamarans, dolphin cruises, La Graciosa and Lobos Island. From €51, free cancellation up to 24h. Book direct with the local agency.",
+      "es": "Compara todas las excursiones en barco en Lanzarote: catamaranes al atardecer, delfines, La Graciosa e Isla de Lobos. Desde 51 €, cancelación gratuita hasta 24 h."
+    },
     "intro": {
       "en": "Boat trips are the most booked excursions in Lanzarote. You can choose a short sunset cruise with dolphin spotting, a full day on La Graciosa or Isla de Lobos, or a serious day of big game fishing. Our heritage is maritime: Tickets Direct grew out of Lineas Marítimas Romero, one of the island's best-known boat companies.",
       "es": "Las excursiones en barco son las más reservadas de Lanzarote. Puedes elegir un crucero corto al atardecer con delfines, un día completo en La Graciosa o la Isla de Lobos, o una jornada de pesca de altura. Nuestra herencia es marítima: Tickets Direct nació de Líneas Marítimas Romero, una de las navieras más conocidas de la isla."
     },
     "faqs": {
       "en": [
-        ["Which Lanzarote boat trip is best?", "For a first visit, the La Graciosa All-Inclusive Catamaran Cruise is the most popular full day. For a short evening plan, choose the Sunset Catamaran & Dolphins (2 hours, from €51). Families who want two islands in a day like the Lobos Island & Dolphins Cruise."],
-        ["Will I see dolphins?", "Dolphins live in Lanzarote's waters all year and are seen on many trips, but sightings in the wild can never be guaranteed."],
-        ["What happens if the boat trip is cancelled because of wind?", "If the sea is too rough, the operator cancels for safety. You can move to another day or switch to a land excursion such as the Caves Express or the Volcanoes Tour. Bookings can be cancelled for free up to 24 hours before the activity."],
-        ["Is the catamaran suitable for people who get seasick?", "The Atlantic can be choppy. Short coastal trips (2 hours) are the gentlest option. Take seasickness tablets before boarding and sit in the middle of the boat."]
+        [
+          "Which Lanzarote boat trip is best?",
+          "For a first visit, the La Graciosa All-Inclusive Catamaran Cruise is the most popular full day. For a short evening plan, choose the Sunset Catamaran & Dolphins (2 hours, from €51). Families who want two islands in a day like the Lobos Island & Dolphins Cruise."
+        ],
+        [
+          "Will I see dolphins?",
+          "Dolphins live in Lanzarote's waters all year and are seen on many trips, but sightings in the wild can never be guaranteed."
+        ],
+        [
+          "What happens if the boat trip is cancelled because of wind?",
+          "If the sea is too rough, the operator cancels for safety. You can move to another day or switch to a land excursion such as the Caves Express or the Volcanoes Tour. Bookings can be cancelled for free up to 24 hours before the activity."
+        ],
+        [
+          "Is the catamaran suitable for people who get seasick?",
+          "The Atlantic can be choppy. Short coastal trips (2 hours) are the gentlest option. Take seasickness tablets before boarding and sit in the middle of the boat."
+        ]
       ],
       "es": [
-        ["¿Cuál es la mejor excursión en barco en Lanzarote?", "Para una primera visita, el crucero en catamarán todo incluido a La Graciosa es el día completo más popular. Para un plan corto de tarde, el Catamarán al atardecer y delfines (2 horas, desde 51 €). Las familias que quieren dos islas en un día eligen el crucero a Lobos con delfines."],
-        ["¿Veré delfines?", "Los delfines viven en aguas de Lanzarote todo el año y se ven en muchas salidas, pero nunca se pueden garantizar avistamientos en libertad."],
-        ["¿Qué pasa si se cancela la excursión por viento?", "Si el mar está demasiado agitado, la naviera cancela por seguridad. Puedes cambiar de día o pasar a una excursión por tierra como Caves Express o la excursión a los volcanes. Puedes cancelar gratis hasta 24 horas antes."],
-        ["¿Es apto el catamarán si me mareo?", "El Atlántico puede estar movido. Las salidas cortas por la costa (2 horas) son las más suaves. Toma una pastilla para el mareo antes de embarcar y siéntate en el centro del barco."]
+        [
+          "¿Cuál es la mejor excursión en barco en Lanzarote?",
+          "Para una primera visita, el crucero en catamarán todo incluido a La Graciosa es el día completo más popular. Para un plan corto de tarde, el Catamarán al atardecer y delfines (2 horas, desde 51 €). Las familias que quieren dos islas en un día eligen el crucero a Lobos con delfines."
+        ],
+        [
+          "¿Veré delfines?",
+          "Los delfines viven en aguas de Lanzarote todo el año y se ven en muchas salidas, pero nunca se pueden garantizar avistamientos en libertad."
+        ],
+        [
+          "¿Qué pasa si se cancela la excursión por viento?",
+          "Si el mar está demasiado agitado, la naviera cancela por seguridad. Puedes cambiar de día o pasar a una excursión por tierra como Caves Express o la excursión a los volcanes. Puedes cancelar gratis hasta 24 horas antes."
+        ],
+        [
+          "¿Es apto el catamarán si me mareo?",
+          "El Atlántico puede estar movido. Las salidas cortas por la costa (2 horas) son las más suaves. Toma una pastilla para el mareo antes de embarcar y siéntate en el centro del barco."
+        ]
       ]
-    }
+    },
+    "wp": 267
   },
   {
-    "slug": "buggy-tours", "icon": "buggy", "color": "rust",
-    "name": { "en": "Buggy & Adventure Tours", "es": "Buggies y aventura" },
-    "h1": { "en": "Lanzarote Buggy Tours 2026: Can-Am, Polaris & Family Buggies", "es": "Excursiones en buggy en Lanzarote 2026: Can-Am, Polaris y buggies familiares" },
-    "meta": { "en": "Drive a buggy across Lanzarote's volcanic tracks. Compare Can-Am Maverick Turbo X3, Polaris and family buggy tours from €170. Free cancellation, local offices.", "es": "Conduce un buggy por las pistas volcánicas de Lanzarote. Compara Can-Am Maverick Turbo X3, Polaris y buggies familiares desde 170 €." },
+    "slug": "buggy-tours",
+    "icon": "buggy",
+    "color": "rust",
+    "name": {
+      "en": "Buggy & Adventure Tours",
+      "es": "Buggies y aventura"
+    },
+    "h1": {
+      "en": "Lanzarote Buggy Tours 2026: Can-Am, Polaris & Family Buggies",
+      "es": "Excursiones en buggy en Lanzarote 2026: Can-Am, Polaris y buggies familiares"
+    },
+    "meta": {
+      "en": "Drive a buggy across Lanzarote's volcanic tracks. Compare Can-Am Maverick Turbo X3, Polaris and family buggy tours from €170. Free cancellation, local offices.",
+      "es": "Conduce un buggy por las pistas volcánicas de Lanzarote. Compara Can-Am Maverick Turbo X3, Polaris y buggies familiares desde 170 €."
+    },
     "intro": {
       "en": "Buggy tours let you drive yourself across the volcanic dirt tracks that cars can't reach, following a guide. Choose by machine: the Polaris and Can-Am Trail routes are the classic three-hour tours, the Maverick Turbo X3 is the most powerful option, and the Family Buggy adds a volcano walk for kids.",
       "es": "En una excursión en buggy conduces tú mismo por pistas volcánicas a las que no llega un coche, siguiendo a un guía. Elige por máquina: Polaris y Can-Am Trail son las rutas clásicas de tres horas, el Maverick Turbo X3 es la opción más potente y el Buggy familiar añade una caminata por un volcán para los niños."
     },
     "faqs": {
       "en": [
-        ["Do I need a driving licence for a buggy tour?", "The driver needs a valid car driving licence. Passengers don't. We confirm the exact requirements when you book."],
-        ["Which buggy tour is best for families?", "The Family Buggy Tour + Volcano Trek (4 hours) is designed for families and includes a walk on a volcano."],
-        ["What should I wear?", "Clothes you don't mind getting dusty, closed shoes and sunglasses. Bring water and sun cream."]
+        [
+          "Do I need a driving licence for a buggy tour?",
+          "The driver needs a valid car driving licence. Passengers don't. We confirm the exact requirements when you book."
+        ],
+        [
+          "Which buggy tour is best for families?",
+          "The Family Buggy Tour + Volcano Trek (4 hours) is designed for families and includes a walk on a volcano."
+        ],
+        [
+          "What should I wear?",
+          "Clothes you don't mind getting dusty, closed shoes and sunglasses. Bring water and sun cream."
+        ]
       ],
       "es": [
-        ["¿Necesito carné de conducir para el buggy?", "El conductor necesita carné de coche en vigor. Los acompañantes no. Te confirmamos los requisitos exactos al reservar."],
-        ["¿Qué buggy es mejor para familias?", "El Buggy familiar + ruta por un volcán (4 horas) está pensado para familias e incluye una caminata por un volcán."],
-        ["¿Qué ropa llevo?", "Ropa que se pueda ensuciar, calzado cerrado y gafas de sol. Lleva agua y protector solar."]
+        [
+          "¿Necesito carné de conducir para el buggy?",
+          "El conductor necesita carné de coche en vigor. Los acompañantes no. Te confirmamos los requisitos exactos al reservar."
+        ],
+        [
+          "¿Qué buggy es mejor para familias?",
+          "El Buggy familiar + ruta por un volcán (4 horas) está pensado para familias e incluye una caminata por un volcán."
+        ],
+        [
+          "¿Qué ropa llevo?",
+          "Ropa que se pueda ensuciar, calzado cerrado y gafas de sol. Lleva agua y protector solar."
+        ]
       ]
-    }
+    },
+    "wp": 265
   },
   {
-    "slug": "bus-tours", "icon": "bus", "color": "sage",
-    "name": { "en": "Island Bus Tours", "es": "Excursiones en autobús" },
-    "h1": { "en": "Lanzarote Bus Tours 2026: Timanfaya Volcanoes, Caves & Grand Tour", "es": "Excursiones en autobús por Lanzarote 2026: volcanes de Timanfaya, cuevas y gran tour" },
-    "meta": { "en": "Guided Lanzarote coach tours to Timanfaya, the volcanic caves of the north and the island highlights. Half-day from €59, full-day grand tour €99. Book direct.", "es": "Excursiones guiadas en autobús a Timanfaya, las cuevas volcánicas del norte y lo mejor de Lanzarote. Medio día desde 59 €, gran tour 99 €." },
+    "slug": "bus-tours",
+    "icon": "bus",
+    "color": "sage",
+    "name": {
+      "en": "Island Bus Tours",
+      "es": "Excursiones en autobús"
+    },
+    "h1": {
+      "en": "Lanzarote Bus Tours 2026: Timanfaya Volcanoes, Caves & Grand Tour",
+      "es": "Excursiones en autobús por Lanzarote 2026: volcanes de Timanfaya, cuevas y gran tour"
+    },
+    "meta": {
+      "en": "Guided Lanzarote coach tours to Timanfaya, the volcanic caves of the north and the island highlights. Half-day from €59, full-day grand tour €99. Book direct.",
+      "es": "Excursiones guiadas en autobús a Timanfaya, las cuevas volcánicas del norte y lo mejor de Lanzarote. Medio día desde 59 €, gran tour 99 €."
+    },
     "intro": {
       "en": "Guided coach tours are the easiest way to see Lanzarote's famous sights without driving, parking or queueing for tickets. The Half Day Volcanoes Tour covers Timanfaya, Caves Express covers the lava tubes of the north, and Lanzarote's Highlights Tour does both in a full day.",
       "es": "Las excursiones guiadas en autobús son la forma más cómoda de ver los lugares más famosos de Lanzarote sin conducir, aparcar ni hacer colas. La excursión de medio día a los volcanes visita Timanfaya, Caves Express las cuevas del norte, y Lo Mejor de Lanzarote combina ambas en un día completo."
     },
     "faqs": {
       "en": [
-        ["Can I visit Timanfaya on my own?", "You can drive to the park, but the inner Route of the Volcanoes can only be seen from the official park coach, and parking fills up at busy times. A guided tour handles the transport and timing for you."],
-        ["Which tour should I book if I only have one day?", "Lanzarote's Highlights Tour (8 hours, €99) covers the volcanoes of the south and the highlights of the north in one day."],
-        ["Are bus tours good on a rainy or windy day?", "Yes. Caves Express is mostly underground and is the best choice when boat trips are cancelled."]
+        [
+          "Can I visit Timanfaya on my own?",
+          "You can drive to the park, but the inner Route of the Volcanoes can only be seen from the official park coach, and parking fills up at busy times. A guided tour handles the transport and timing for you."
+        ],
+        [
+          "Which tour should I book if I only have one day?",
+          "Lanzarote's Highlights Tour (8 hours, €99) covers the volcanoes of the south and the highlights of the north in one day."
+        ],
+        [
+          "Are bus tours good on a rainy or windy day?",
+          "Yes. Caves Express is mostly underground and is the best choice when boat trips are cancelled."
+        ]
       ],
       "es": [
-        ["¿Puedo visitar Timanfaya por mi cuenta?", "Puedes llegar en coche al parque, pero la Ruta de los Volcanes interior solo se recorre en la guagua oficial del parque, y el aparcamiento se llena en horas punta. Con una excursión guiada te olvidas del transporte y los horarios."],
-        ["¿Qué excursión reservo si solo tengo un día?", "Lo Mejor de Lanzarote (8 horas, 99 €) visita los volcanes del sur y lo mejor del norte en un solo día."],
-        ["¿Son buena opción con lluvia o viento?", "Sí. Caves Express es casi todo bajo tierra y es la mejor alternativa cuando se cancelan las salidas en barco."]
+        [
+          "¿Puedo visitar Timanfaya por mi cuenta?",
+          "Puedes llegar en coche al parque, pero la Ruta de los Volcanes interior solo se recorre en la guagua oficial del parque, y el aparcamiento se llena en horas punta. Con una excursión guiada te olvidas del transporte y los horarios."
+        ],
+        [
+          "¿Qué excursión reservo si solo tengo un día?",
+          "Lo Mejor de Lanzarote (8 horas, 99 €) visita los volcanes del sur y lo mejor del norte en un solo día."
+        ],
+        [
+          "¿Son buena opción con lluvia o viento?",
+          "Sí. Caves Express es casi todo bajo tierra y es la mejor alternativa cuando se cancelan las salidas en barco."
+        ]
       ]
-    }
+    },
+    "wp": 271
   },
   {
-    "slug": "water-sports", "icon": "wave", "color": "gold",
-    "name": { "en": "Water Sports", "es": "Deportes acuáticos" },
-    "h1": { "en": "Lanzarote Water Sports 2026: Jet Ski, Parascending & Fun Packs", "es": "Deportes acuáticos en Lanzarote 2026: moto de agua, parasailing y packs" },
-    "meta": { "en": "Jet ski tours, parascending and watersports packs in Lanzarote from €60. Guided, safe and bookable online with free cancellation up to 24h.", "es": "Motos de agua, parasailing y packs de deportes acuáticos en Lanzarote desde 60 €. Con guía y cancelación gratuita hasta 24 h." },
+    "slug": "water-sports",
+    "icon": "wave",
+    "color": "gold",
+    "name": {
+      "en": "Water Sports",
+      "es": "Deportes acuáticos"
+    },
+    "h1": {
+      "en": "Lanzarote Water Sports 2026: Jet Ski, Parascending & Fun Packs",
+      "es": "Deportes acuáticos en Lanzarote 2026: moto de agua, parasailing y packs"
+    },
+    "meta": {
+      "en": "Jet ski tours, parascending and watersports packs in Lanzarote from €60. Guided, safe and bookable online with free cancellation up to 24h.",
+      "es": "Motos de agua, parasailing y packs de deportes acuáticos en Lanzarote desde 60 €. Con guía y cancelación gratuita hasta 24 h."
+    },
     "intro": {
       "en": "For a short burst of adrenaline, Lanzarote's water sports are hard to beat: a 40-minute guided jet ski tour, an hour of parascending above the bay, or the Fun Pack with jet ski, banana and donut for two.",
       "es": "Para una dosis corta de adrenalina, los deportes acuáticos de Lanzarote son difíciles de superar: 40 minutos en moto de agua con guía, una hora de parasailing sobre la bahía o el Fun Pack con moto de agua, banana y donut para dos."
     },
     "faqs": {
       "en": [
-        ["Do I need a licence to ride a jet ski in Lanzarote?", "Guided jet ski tours normally don't require a licence. Age and requirements are confirmed when you book."],
-        ["Is parascending safe for beginners?", "Yes. You take off and land from the boat with a trained crew. No experience is needed."]
+        [
+          "Do I need a licence to ride a jet ski in Lanzarote?",
+          "Guided jet ski tours normally don't require a licence. Age and requirements are confirmed when you book."
+        ],
+        [
+          "Is parascending safe for beginners?",
+          "Yes. You take off and land from the boat with a trained crew. No experience is needed."
+        ]
       ],
       "es": [
-        ["¿Necesito licencia para la moto de agua?", "Las excursiones guiadas normalmente no requieren licencia. Te confirmamos la edad mínima y los requisitos al reservar."],
-        ["¿Es seguro el parasailing para principiantes?", "Sí. Despegas y aterrizas desde el barco con una tripulación preparada. No hace falta experiencia."]
+        [
+          "¿Necesito licencia para la moto de agua?",
+          "Las excursiones guiadas normalmente no requieren licencia. Te confirmamos la edad mínima y los requisitos al reservar."
+        ],
+        [
+          "¿Es seguro el parasailing para principiantes?",
+          "Sí. Despegas y aterrizas desde el barco con una tripulación preparada. No hace falta experiencia."
+        ]
       ]
-    }
+    },
+    "wp": 274
   },
   {
-    "slug": "underwater", "icon": "sub", "color": "sea",
-    "name": { "en": "Underwater Experiences", "es": "Experiencias submarinas" },
-    "h1": { "en": "Submarine Safari Lanzarote: See the Atlantic Without Getting Wet", "es": "Submarine Safari Lanzarote: el fondo del Atlántico sin mojarte" },
-    "meta": { "en": "Submarine Safari in Lanzarote from €65: a real passenger submarine, ideal for families and non-swimmers. Book direct with free cancellation.", "es": "Submarine Safari en Lanzarote desde 65 €: un submarino de pasajeros real, ideal para familias y quien no nada." },
+    "slug": "underwater",
+    "icon": "sub",
+    "color": "sea",
+    "name": {
+      "en": "Underwater Experiences",
+      "es": "Experiencias submarinas"
+    },
+    "h1": {
+      "en": "Submarine Safari Lanzarote: See the Atlantic Without Getting Wet",
+      "es": "Submarine Safari Lanzarote: el fondo del Atlántico sin mojarte"
+    },
+    "meta": {
+      "en": "Submarine Safari in Lanzarote from €65: a real passenger submarine, ideal for families and non-swimmers. Book direct with free cancellation.",
+      "es": "Submarine Safari en Lanzarote desde 65 €: un submarino de pasajeros real, ideal para familias y quien no nada."
+    },
     "intro": {
       "en": "The Submarine Safari takes you below the surface in a real passenger submarine. It suits families with young children, non-swimmers and anyone looking for something different on a windy day.",
       "es": "El Submarine Safari te lleva bajo el mar en un submarino de pasajeros real. Ideal para familias con niños pequeños, personas que no nadan y para un día de viento."
     },
     "faqs": {
-      "en": [["Is the submarine suitable for small children?", "Yes, it is one of the most family-friendly activities on the island and no swimming is needed."]],
-      "es": [["¿Es apto el submarino para niños pequeños?", "Sí, es una de las actividades más familiares de la isla y no hace falta nadar."]]
-    }
+      "en": [
+        [
+          "Is the submarine suitable for small children?",
+          "Yes, it is one of the most family-friendly activities on the island and no swimming is needed."
+        ]
+      ],
+      "es": [
+        [
+          "¿Es apto el submarino para niños pequeños?",
+          "Sí, es una de las actividades más familiares de la isla y no hace falta nadar."
+        ]
+      ]
+    },
+    "wp": 273
   },
   {
-    "slug": "ferries-islands", "icon": "ferry", "color": "sea",
-    "name": { "en": "Ferries & Island Trips", "es": "Ferris y otras islas" },
-    "h1": { "en": "Day Trips from Lanzarote to Fuerteventura, La Graciosa & Lobos", "es": "Excursiones desde Lanzarote a Fuerteventura, La Graciosa y Lobos" },
-    "meta": { "en": "Island-hopping from Lanzarote: Fuerteventura day trip from €64, La Graciosa catamaran and Lobos Island. Fast ferries from Playa Blanca and Órzola.", "es": "Excursiones a otras islas desde Lanzarote: Fuerteventura desde 64 €, La Graciosa en catamarán e Isla de Lobos." },
+    "slug": "ferries-islands",
+    "icon": "ferry",
+    "color": "sea",
+    "name": {
+      "en": "Ferries & Island Trips",
+      "es": "Ferris y otras islas"
+    },
+    "h1": {
+      "en": "Day Trips from Lanzarote to Fuerteventura, La Graciosa & Lobos",
+      "es": "Excursiones desde Lanzarote a Fuerteventura, La Graciosa y Lobos"
+    },
+    "meta": {
+      "en": "Island-hopping from Lanzarote: Fuerteventura day trip from €64, La Graciosa catamaran and Lobos Island. Fast ferries from Playa Blanca and Órzola.",
+      "es": "Excursiones a otras islas desde Lanzarote: Fuerteventura desde 64 €, La Graciosa en catamarán e Isla de Lobos."
+    },
     "intro": {
-      "en": "Lanzarote is the perfect base for island-hopping. The fast ferry from Playa Blanca reaches Corralejo in Fuerteventura in about 30 minutes, and La Graciosa is about 20 minutes from Órzola. Book a full day on another island, with transport arranged.",
-      "es": "Lanzarote es la base perfecta para saltar de isla en isla. El ferry rápido de Playa Blanca llega a Corralejo (Fuerteventura) en unos 30 minutos, y La Graciosa está a unos 20 minutos de Órzola. Reserva un día completo en otra isla con el transporte organizado."
+      "en": "Lanzarote is the perfect base for island-hopping. The fast ferry from Playa Blanca reaches Corralejo in Fuerteventura in about 30 minutes, and the crossing from Órzola to La Graciosa takes 20–40 minutes depending on the boat. Book a full day on another island, with transport arranged.",
+      "es": "Lanzarote es la base perfecta para saltar de isla en isla. El ferry rápido de Playa Blanca llega a Corralejo (Fuerteventura) en unos 30 minutos, y la travesía de Órzola a La Graciosa dura entre 20 y 40 minutos según el barco. Reserva un día completo en otra isla con el transporte organizado."
     },
     "faqs": {
       "en": [
-        ["How long is the ferry from Lanzarote to Fuerteventura?", "The fast ferry from Playa Blanca to Corralejo takes about 30 minutes."],
-        ["How long is the ferry to La Graciosa?", "About 20 minutes from Órzola to Caleta de Sebo. Transfers from the main resorts are available."]
+        [
+          "How long is the ferry from Lanzarote to Fuerteventura?",
+          "The fast ferry from Playa Blanca to Corralejo takes about 30 minutes."
+        ],
+        [
+          "How long is the ferry to La Graciosa?",
+          "Between 20 and 40 minutes from Órzola to Caleta de Sebo, depending on the boat (tour boats slow down to enjoy the cliffs). Transfers from the main resorts are available."
+        ]
       ],
       "es": [
-        ["¿Cuánto dura el ferry de Lanzarote a Fuerteventura?", "El ferry rápido de Playa Blanca a Corralejo tarda unos 30 minutos."],
-        ["¿Cuánto dura el ferry a La Graciosa?", "Unos 20 minutos de Órzola a Caleta de Sebo. Hay traslados desde los principales centros turísticos."]
+        [
+          "¿Cuánto dura el ferry de Lanzarote a Fuerteventura?",
+          "El ferry rápido de Playa Blanca a Corralejo tarda unos 30 minutos."
+        ],
+        [
+          "¿Cuánto dura el ferry a La Graciosa?",
+          "Entre 20 y 40 minutos de Órzola a Caleta de Sebo según el barco (los barcos de excursión van más despacio para disfrutar de los acantilados). Hay traslados desde los principales centros turísticos."
+        ]
       ]
-    }
+    },
+    "wp": 268
   },
   {
-    "slug": "special-packs", "icon": "pack", "color": "gold",
-    "name": { "en": "Packs & Discounts", "es": "Packs y descuentos" },
-    "h1": { "en": "Lanzarote Excursion Packs: Save by Booking Several Tours Together", "es": "Packs de excursiones en Lanzarote: ahorra reservando varias juntas" },
-    "meta": { "en": "Save on Lanzarote excursions with multi-tour packs: volcanoes + caves, Lanzarote + La Graciosa, Lanzarote + Lobos. Pack prices from €79.90.", "es": "Ahorra con packs de excursiones en Lanzarote: volcanes + cuevas, Lanzarote + La Graciosa, Lanzarote + Lobos. Desde 79,90 €." },
+    "slug": "special-packs",
+    "icon": "pack",
+    "color": "gold",
+    "name": {
+      "en": "Packs & Discounts",
+      "es": "Packs y descuentos"
+    },
+    "h1": {
+      "en": "Lanzarote Excursion Packs: Save by Booking Several Tours Together",
+      "es": "Packs de excursiones en Lanzarote: ahorra reservando varias juntas"
+    },
+    "meta": {
+      "en": "Save on Lanzarote excursions with multi-tour packs: volcanoes + caves, Lanzarote + La Graciosa, Lanzarote + Lobos. Pack prices from €79.90.",
+      "es": "Ahorra con packs de excursiones en Lanzarote: volcanes + cuevas, Lanzarote + La Graciosa, Lanzarote + Lobos. Desde 79,90 €."
+    },
     "intro": {
       "en": "Staying a week or more? Packs bundle several of our most popular excursions at a lower price than booking each one separately. Our office staff can help you plan the days so they fit your holiday.",
       "es": "¿Vienes una semana o más? Los packs agrupan varias de nuestras excursiones más populares a un precio más bajo que por separado. En nuestras oficinas te ayudamos a organizar los días para que encajen con tus vacaciones."
     },
     "faqs": {
-      "en": [["Can I choose the dates of each excursion in a pack?", "Yes. Our team confirms the date of each excursion in the pack with you after booking, so it fits your holiday."]],
-      "es": [["¿Puedo elegir la fecha de cada excursión del pack?", "Sí. Nuestro equipo confirma contigo la fecha de cada excursión del pack tras la reserva, para que encaje con tus vacaciones."]]
+      "en": [
+        [
+          "Can I choose the dates of each excursion in a pack?",
+          "Yes. Our team confirms the date of each excursion in the pack with you after booking, so it fits your holiday."
+        ]
+      ],
+      "es": [
+        [
+          "¿Puedo elegir la fecha de cada excursión del pack?",
+          "Sí. Nuestro equipo confirma contigo la fecha de cada excursión del pack tras la reserva, para que encaje con tus vacaciones."
+        ]
+      ]
+    },
+    "wp": 272
+  },
+  {
+    "slug": "parks",
+    "wp": 266,
+    "icon": "wave",
+    "color": "gold",
+    "name": {
+      "en": "Rancho Texas & Water Parks",
+      "es": "Rancho Texas y parques acuáticos"
     }
+  },
+  {
+    "slug": "nightlife",
+    "wp": 269,
+    "icon": "star",
+    "color": "rust",
+    "name": {
+      "en": "Nightlife & Events",
+      "es": "Noche y eventos"
+    }
+  },
+  {
+    "slug": "private",
+    "wp": 270,
+    "icon": "boat",
+    "color": "sea",
+    "name": {
+      "en": "Private Tours & Boat Hire",
+      "es": "Tours privados y alquiler de barcos"
+    }
+  },
+  {
+    "slug": "buggy-lanzarote",
+    "wp": 561,
+    "icon": "buggy",
+    "color": "rust",
+    "name": {
+      "en": "Buggy Tours in Lanzarote",
+      "es": "Buggies en Lanzarote"
+    },
+    "secondary": true
   }
 ]

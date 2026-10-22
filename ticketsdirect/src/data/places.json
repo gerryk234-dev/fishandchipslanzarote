@@ -1,86 +1,318 @@
 [
   {
     "slug": "la-graciosa",
-    "name": { "en": "La Graciosa", "es": "La Graciosa" },
-    "h1": { "en": "La Graciosa Day Trip from Lanzarote: Ferry, Catamaran & Tips (2026)", "es": "Excursión a La Graciosa desde Lanzarote: ferry, catamarán y consejos (2026)" },
-    "meta": { "en": "How to visit La Graciosa from Lanzarote: the 20-minute ferry from Órzola, all-inclusive catamaran cruises, what to see and our honest tips. Trips from €64.", "es": "Cómo visitar La Graciosa desde Lanzarote: ferry de 20 minutos desde Órzola, catamarán todo incluido y consejos. Desde 64 €." },
+    "name": {
+      "en": "La Graciosa",
+      "es": "La Graciosa"
+    },
+    "h1": {
+      "en": "La Graciosa Day Trip from Lanzarote: Ferry, Catamaran & Tips (2026)",
+      "es": "Excursión a La Graciosa desde Lanzarote: ferry, catamarán y consejos (2026)"
+    },
+    "meta": {
+      "en": "How to visit La Graciosa from Lanzarote: the 20-minute ferry from Órzola, all-inclusive catamaran cruises, what to see and our honest tips. Trips from €64.",
+      "es": "Cómo visitar La Graciosa desde Lanzarote: ferry de 20 minutos desde Órzola, catamarán todo incluido y consejos. Desde 64 €."
+    },
     "facts": {
-      "en": [["Where", "Off the north tip of Lanzarote"], ["Ferry", "About 20 minutes, Órzola to Caleta de Sebo"], ["Cars", "No paved roads, only sand tracks"], ["Best for", "Beaches, swimming, slow travel"]],
-      "es": [["Dónde", "Frente al extremo norte de Lanzarote"], ["Ferry", "Unos 20 minutos, Órzola a Caleta de Sebo"], ["Coches", "Sin carreteras asfaltadas, solo pistas de arena"], ["Ideal para", "Playas, baño y desconexión"]]
+      "en": [
+        [
+          "Where",
+          "Off the north tip of Lanzarote"
+        ],
+        [
+          "Ferry",
+          "About 20–40 minutes from Órzola to Caleta de Sebo, depending on the boat"
+        ],
+        [
+          "Cars",
+          "No paved roads, only sand tracks"
+        ],
+        [
+          "Best for",
+          "Beaches, swimming, slow travel"
+        ]
+      ],
+      "es": [
+        [
+          "Dónde",
+          "Frente al extremo norte de Lanzarote"
+        ],
+        [
+          "Ferry",
+          "Entre 20 y 40 minutos de Órzola a Caleta de Sebo, según el barco"
+        ],
+        [
+          "Coches",
+          "Sin carreteras asfaltadas, solo pistas de arena"
+        ],
+        [
+          "Ideal para",
+          "Playas, baño y desconexión"
+        ]
+      ]
     },
     "intro": {
       "en": "La Graciosa is the eighth Canary Island: a small, car-free island of sand tracks, white houses and turquoise bays, just off Lanzarote's northern tip. You can take the public ferry from Órzola yourself, or join a catamaran cruise that includes transfers, swimming stops and food and drinks on board. If this is your first visit, the catamaran is the easier option because the timings and transport are handled for you.",
       "es": "La Graciosa es la octava isla canaria: una isla pequeña y sin coches, de pistas de arena, casas blancas y bahías turquesa, justo frente al extremo norte de Lanzarote. Puedes ir por tu cuenta en el ferry de Órzola o unirte a un crucero en catamarán con traslados, paradas para bañarte y comida y bebida a bordo. Para una primera visita, el catamarán es más cómodo porque los horarios y el transporte están organizados."
-    }
+    },
+    "wp": 296
   },
   {
     "slug": "lobos-island",
-    "name": { "en": "Isla de Lobos", "es": "Isla de Lobos" },
-    "h1": { "en": "Lobos Island from Lanzarote: How to Visit, Permit & Dolphin Cruises (2026)", "es": "Isla de Lobos desde Lanzarote: cómo ir, permiso y cruceros con delfines (2026)" },
-    "meta": { "en": "Visit Isla de Lobos from Lanzarote: the boat options, the access permit, time on the island and dolphin cruises from €72. Honest local advice.", "es": "Visita la Isla de Lobos desde Lanzarote: opciones en barco, permiso de acceso, tiempo en la isla y cruceros con delfines desde 72 €." },
+    "name": {
+      "en": "Isla de Lobos",
+      "es": "Isla de Lobos"
+    },
+    "h1": {
+      "en": "Lobos Island from Lanzarote: How to Visit, Permit & Dolphin Cruises (2026)",
+      "es": "Isla de Lobos desde Lanzarote: cómo ir, permiso y cruceros con delfines (2026)"
+    },
+    "meta": {
+      "en": "Visit Isla de Lobos from Lanzarote: the boat options, the access permit, time on the island and dolphin cruises from €72. Honest local advice.",
+      "es": "Visita la Isla de Lobos desde Lanzarote: opciones en barco, permiso de acceso, tiempo en la isla y cruceros con delfines desde 72 €."
+    },
     "facts": {
-      "en": [["Where", "Between Lanzarote and Fuerteventura"], ["Status", "Protected natural park"], ["Access", "Visitor numbers are limited with an access permit"], ["Best for", "Walking, nature, swimming"]],
-      "es": [["Dónde", "Entre Lanzarote y Fuerteventura"], ["Protección", "Parque natural protegido"], ["Acceso", "Número de visitantes limitado mediante permiso"], ["Ideal para", "Senderismo, naturaleza y baño"]]
+      "en": [
+        [
+          "Where",
+          "Between Lanzarote and Fuerteventura"
+        ],
+        [
+          "Status",
+          "Protected natural park"
+        ],
+        [
+          "Access",
+          "Visitor numbers are limited with an access permit"
+        ],
+        [
+          "Best for",
+          "Walking, nature, swimming"
+        ]
+      ],
+      "es": [
+        [
+          "Dónde",
+          "Entre Lanzarote y Fuerteventura"
+        ],
+        [
+          "Protección",
+          "Parque natural protegido"
+        ],
+        [
+          "Acceso",
+          "Número de visitantes limitado mediante permiso"
+        ],
+        [
+          "Ideal para",
+          "Senderismo, naturaleza y baño"
+        ]
+      ]
     },
     "intro": {
       "en": "Isla de Lobos is a tiny protected islet in the strait between Lanzarote and Fuerteventura. It belongs to Fuerteventura, so from Lanzarote the easiest way to visit is an organised boat trip that crosses the strait and handles the logistics. Visitor numbers are controlled with an access permit; when you book an organised excursion, ask us whether the permit is included. Bring water, sun protection and walking shoes: there is very little shade on the island.",
       "es": "La Isla de Lobos es un pequeño islote protegido en el estrecho entre Lanzarote y Fuerteventura. Pertenece a Fuerteventura, así que desde Lanzarote lo más cómodo es una excursión organizada en barco que cruza el estrecho y se encarga de la logística. El número de visitantes está controlado mediante un permiso de acceso; al reservar una excursión organizada, pregúntanos si el permiso está incluido. Lleva agua, protección solar y calzado cómodo: en la isla casi no hay sombra."
-    }
+    },
+    "wp": 321
   },
   {
     "slug": "fuerteventura",
-    "name": { "en": "Fuerteventura", "es": "Fuerteventura" },
-    "h1": { "en": "Fuerteventura Day Trip from Lanzarote: Fast Ferry & Full-Day Tour (2026)", "es": "Excursión a Fuerteventura desde Lanzarote: ferry rápido y día completo (2026)" },
-    "meta": { "en": "Visit Fuerteventura from Lanzarote in a day: the 30-minute fast ferry from Playa Blanca to Corralejo, the dunes and beaches. Full-day trip from €64.", "es": "Visita Fuerteventura desde Lanzarote en un día: ferry rápido de 30 minutos de Playa Blanca a Corralejo, dunas y playas. Desde 64 €." },
+    "name": {
+      "en": "Fuerteventura",
+      "es": "Fuerteventura"
+    },
+    "h1": {
+      "en": "Fuerteventura Day Trip from Lanzarote: Fast Ferry & Full-Day Tour (2026)",
+      "es": "Excursión a Fuerteventura desde Lanzarote: ferry rápido y día completo (2026)"
+    },
+    "meta": {
+      "en": "Visit Fuerteventura from Lanzarote in a day: the 30-minute fast ferry from Playa Blanca to Corralejo, the dunes and beaches. Full-day trip from €64.",
+      "es": "Visita Fuerteventura desde Lanzarote en un día: ferry rápido de 30 minutos de Playa Blanca a Corralejo, dunas y playas. Desde 64 €."
+    },
     "facts": {
-      "en": [["Ferry", "About 30 minutes, Playa Blanca to Corralejo"], ["Highlights", "Corralejo dunes and beaches"], ["Trip length", "Full day (about 10 hours)"]],
-      "es": [["Ferry", "Unos 30 minutos, Playa Blanca a Corralejo"], ["Imprescindible", "Dunas y playas de Corralejo"], ["Duración", "Día completo (unas 10 horas)"]]
+      "en": [
+        [
+          "Ferry",
+          "About 30 minutes, Playa Blanca to Corralejo"
+        ],
+        [
+          "Highlights",
+          "Corralejo dunes and beaches"
+        ],
+        [
+          "Trip length",
+          "Full day (about 10 hours)"
+        ]
+      ],
+      "es": [
+        [
+          "Ferry",
+          "Unos 30 minutos, Playa Blanca a Corralejo"
+        ],
+        [
+          "Imprescindible",
+          "Dunas y playas de Corralejo"
+        ],
+        [
+          "Duración",
+          "Día completo (unas 10 horas)"
+        ]
+      ]
     },
     "intro": {
       "en": "Fuerteventura is Lanzarote's neighbour to the south, famous for its long golden beaches and the dunes of Corralejo. The fast ferry from Playa Blanca crosses in about 30 minutes, so a day trip is easy. Fuerteventura Delights is a full-day excursion with the transport organised, so you can enjoy a second Canary Island during your holiday.",
       "es": "Fuerteventura es la vecina del sur de Lanzarote, famosa por sus largas playas doradas y las dunas de Corralejo. El ferry rápido desde Playa Blanca cruza en unos 30 minutos, así que la excursión de un día es fácil. Fuerteventura Delights es un día completo con el transporte organizado para que disfrutes de una segunda isla canaria en tus vacaciones."
-    }
+    },
+    "wp": 290
   },
   {
     "slug": "timanfaya",
-    "name": { "en": "Timanfaya National Park", "es": "Parque Nacional de Timanfaya" },
-    "h1": { "en": "Timanfaya National Park Tours: Guided Tour vs Driving Yourself (2026)", "es": "Excursiones a Timanfaya: excursión guiada o por tu cuenta (2026)" },
-    "meta": { "en": "How to visit Timanfaya, Lanzarote's volcano national park: guided tours from €59, what the park coach covers, timing tips and the best combined tours.", "es": "Cómo visitar Timanfaya, el parque nacional de volcanes de Lanzarote: excursiones guiadas desde 59 €, la ruta en guagua y consejos." },
+    "name": {
+      "en": "Timanfaya National Park",
+      "es": "Parque Nacional de Timanfaya"
+    },
+    "h1": {
+      "en": "Timanfaya National Park Tours: Guided Tour vs Driving Yourself (2026)",
+      "es": "Excursiones a Timanfaya: excursión guiada o por tu cuenta (2026)"
+    },
+    "meta": {
+      "en": "How to visit Timanfaya, Lanzarote's volcano national park: guided tours from €59, what the park coach covers, timing tips and the best combined tours.",
+      "es": "Cómo visitar Timanfaya, el parque nacional de volcanes de Lanzarote: excursiones guiadas desde 59 €, la ruta en guagua y consejos."
+    },
     "facts": {
-      "en": [["What", "Volcanic landscape from the 1730–1736 eruptions"], ["Inner route", "Route of the Volcanoes, by official park coach only"], ["Tours", "Half day from €59, full day from €99"]],
-      "es": [["Qué es", "Paisaje volcánico de las erupciones de 1730–1736"], ["Ruta interior", "Ruta de los Volcanes, solo en la guagua oficial del parque"], ["Excursiones", "Medio día desde 59 €, día completo desde 99 €"]]
+      "en": [
+        [
+          "What",
+          "Volcanic landscape from the 1730–1736 eruptions"
+        ],
+        [
+          "Inner route",
+          "Route of the Volcanoes, by official park coach only"
+        ],
+        [
+          "Tours",
+          "Half day from €59, full day from €99"
+        ]
+      ],
+      "es": [
+        [
+          "Qué es",
+          "Paisaje volcánico de las erupciones de 1730–1736"
+        ],
+        [
+          "Ruta interior",
+          "Ruta de los Volcanes, solo en la guagua oficial del parque"
+        ],
+        [
+          "Excursiones",
+          "Medio día desde 59 €, día completo desde 99 €"
+        ]
+      ]
     },
     "intro": {
       "en": "Timanfaya National Park protects the lava fields and craters created by the great eruptions of 1730–1736, the landscape that makes Lanzarote unique. You can drive to the park yourself, but the inner Route of the Volcanoes is only open on the official park coach, and the car park can fill up at busy times. A guided tour takes care of transport and timing, and our full-day tours combine Timanfaya with the island's other highlights.",
       "es": "El Parque Nacional de Timanfaya protege los campos de lava y cráteres de las grandes erupciones de 1730–1736, el paisaje que hace única a Lanzarote. Puedes ir en coche por tu cuenta, pero la Ruta de los Volcanes interior solo se recorre en la guagua oficial del parque, y el aparcamiento se llena en horas punta. Una excursión guiada se encarga del transporte y los horarios, y nuestras excursiones de día completo combinan Timanfaya con lo mejor de la isla."
-    }
+    },
+    "wp": 319
   },
   {
     "slug": "north-caves",
-    "name": { "en": "Jameos del Agua & Cueva de los Verdes", "es": "Jameos del Agua y Cueva de los Verdes" },
-    "h1": { "en": "Jameos del Agua & Cueva de los Verdes Tours: Lanzarote's Volcanic Caves", "es": "Excursiones a Jameos del Agua y Cueva de los Verdes: las cuevas volcánicas de Lanzarote" },
-    "meta": { "en": "Visit Lanzarote's volcanic caves in the north on a guided tour: lava tubes of the La Corona volcano and César Manrique's creations. Caves Express from €69.", "es": "Visita las cuevas volcánicas del norte de Lanzarote con guía: tubos de lava del volcán de La Corona y obras de César Manrique. Desde 69 €." },
+    "name": {
+      "en": "Jameos del Agua & Cueva de los Verdes",
+      "es": "Jameos del Agua y Cueva de los Verdes"
+    },
+    "h1": {
+      "en": "Jameos del Agua & Cueva de los Verdes Tours: Lanzarote's Volcanic Caves",
+      "es": "Excursiones a Jameos del Agua y Cueva de los Verdes: las cuevas volcánicas de Lanzarote"
+    },
+    "meta": {
+      "en": "Visit Lanzarote's volcanic caves in the north on a guided tour: lava tubes of the La Corona volcano and César Manrique's creations. Caves Express from €69.",
+      "es": "Visita las cuevas volcánicas del norte de Lanzarote con guía: tubos de lava del volcán de La Corona y obras de César Manrique. Desde 69 €."
+    },
     "facts": {
-      "en": [["Where", "North-east Lanzarote, near Órzola"], ["What", "Lava tubes of the La Corona volcano"], ["Rain or wind?", "Mostly underground, works in any weather"]],
-      "es": [["Dónde", "Noreste de Lanzarote, cerca de Órzola"], ["Qué es", "Tubos de lava del volcán de La Corona"], ["¿Lluvia o viento?", "Casi todo bajo tierra, ideal con cualquier tiempo"]]
+      "en": [
+        [
+          "Where",
+          "North-east Lanzarote, near Órzola"
+        ],
+        [
+          "What",
+          "Lava tubes of the La Corona volcano"
+        ],
+        [
+          "Rain or wind?",
+          "Mostly underground, works in any weather"
+        ]
+      ],
+      "es": [
+        [
+          "Dónde",
+          "Noreste de Lanzarote, cerca de Órzola"
+        ],
+        [
+          "Qué es",
+          "Tubos de lava del volcán de La Corona"
+        ],
+        [
+          "¿Lluvia o viento?",
+          "Casi todo bajo tierra, ideal con cualquier tiempo"
+        ]
+      ]
     },
     "intro": {
       "en": "In the north-east of Lanzarote, an eruption of the La Corona volcano left a lava tube that runs for kilometres towards the sea. Parts of it are now two of the island's most visited sights: the Cueva de los Verdes, a guided walk through the tunnel, and Jameos del Agua, transformed by artist César Manrique. Because they are mostly underground, the caves are the best plan for a windy or rainy day.",
       "es": "En el noreste de Lanzarote, una erupción del volcán de La Corona dejó un tubo de lava que recorre kilómetros hasta el mar. Hoy alberga dos de los lugares más visitados de la isla: la Cueva de los Verdes, un recorrido guiado por el túnel, y los Jameos del Agua, transformados por el artista César Manrique. Al estar casi todo bajo tierra, las cuevas son el mejor plan para un día de viento o lluvia."
-    }
+    },
+    "wp": 302
   },
   {
     "slug": "teguise",
-    "name": { "en": "Teguise Sunday Market", "es": "Mercadillo de Teguise" },
-    "h1": { "en": "Teguise Sunday Market: How to Go & Combine It with La Graciosa", "es": "Mercadillo de Teguise: cómo ir y combinarlo con La Graciosa" },
-    "meta": { "en": "Teguise Sunday market in Lanzarote's old capital: when it runs, how to get there without parking stress and our Sunday Market + La Graciosa combo from €65.", "es": "El mercadillo de Teguise en la antigua capital de Lanzarote: cuándo es, cómo llegar sin problemas de aparcamiento y el combinado con La Graciosa desde 65 €." },
+    "name": {
+      "en": "Teguise Sunday Market",
+      "es": "Mercadillo de Teguise"
+    },
+    "h1": {
+      "en": "Teguise Sunday Market: How to Go & Combine It with La Graciosa",
+      "es": "Mercadillo de Teguise: cómo ir y combinarlo con La Graciosa"
+    },
+    "meta": {
+      "en": "Teguise Sunday market in Lanzarote's old capital: when it runs, how to get there without parking stress and our Sunday Market + La Graciosa combo from €65.",
+      "es": "El mercadillo de Teguise en la antigua capital de Lanzarote: cuándo es, cómo llegar sin problemas de aparcamiento y el combinado con La Graciosa desde 65 €."
+    },
     "facts": {
-      "en": [["When", "Sunday mornings"], ["Where", "Teguise, the island's historic capital"], ["Tip", "Arrive early, parking fills up quickly"]],
-      "es": [["Cuándo", "Domingos por la mañana"], ["Dónde", "Teguise, la capital histórica de la isla"], ["Consejo", "Llega temprano, el aparcamiento se llena rápido"]]
+      "en": [
+        [
+          "When",
+          "Sunday mornings"
+        ],
+        [
+          "Where",
+          "Teguise, the island's historic capital"
+        ],
+        [
+          "Tip",
+          "Arrive early, parking fills up quickly"
+        ]
+      ],
+      "es": [
+        [
+          "Cuándo",
+          "Domingos por la mañana"
+        ],
+        [
+          "Dónde",
+          "Teguise, la capital histórica de la isla"
+        ],
+        [
+          "Consejo",
+          "Llega temprano, el aparcamiento se llena rápido"
+        ]
+      ]
     },
     "intro": {
       "en": "Every Sunday morning, the streets of Teguise, Lanzarote's old capital, fill with market stalls selling local crafts, food and souvenirs. It is one of the busiest days on the island, and parking is the hardest part. Our Sunday Market + La Graciosa excursion takes you to the market and then on to La Graciosa for the afternoon, so you don't have to drive.",
       "es": "Cada domingo por la mañana, las calles de Teguise, la antigua capital de Lanzarote, se llenan de puestos de artesanía, comida y recuerdos. Es uno de los días con más ambiente de la isla, y aparcar es lo más difícil. Nuestra excursión Mercadillo + La Graciosa te lleva al mercadillo y después a La Graciosa por la tarde, sin que tengas que conducir."
-    }
+    },
+    "wp": 317
   }
 ]

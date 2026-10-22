@@ -2,7 +2,6 @@
   "name": "Tickets Direct Excursions Lanzarote",
   "shortName": "Tickets Direct",
   "url": "https://excursionsticketsdirect.com",
-  "bookingBase": "https://excursionsticketsdirect.com/trip/",
   "phone": "+34 633 229 244",
   "phoneHref": "+34633229244",
   "whatsapp": "34633229244",
@@ -11,7 +10,7 @@
   "officeCount": 10,
   "heritage": "Lineas Marítimas Romero",
   "social": {
-    "facebook": null,
+    "facebook": "https://www.facebook.com/profile.php?id=100094135025554",
     "instagram": "https://www.instagram.com/experience.lanzarote/",
     "youtube": "https://www.youtube.com/@experiencelanzarote",
     "tiktok": "https://www.tiktok.com/@experience.lanzarote",
@@ -71,5 +70,6 @@
         "Personas reales en WhatsApp y teléfono, en español e inglés"
       ]
     ]
-  }
+  },
+  "bookingOrigin": "https://excursionsticketsdirect.com"
 }

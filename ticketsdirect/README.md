@@ -1,78 +1,93 @@
-# Tickets Direct Excursions Lanzarote: web app
+# Tickets Direct Excursions Lanzarote: website + installable app
 
-An SEO-first rebuild of excursionsticketsdirect.com. Every page is pre-rendered HTML in English and Spanish, so Google and AI assistants (ChatGPT, Claude, Perplexity, Gemini) can read all of it. A booking assistant sits in the corner of every page.
+An SEO-first rebuild of excursionsticketsdirect.com that works as a normal website and as an installable app on phones, tablets and computers.
 
-> This folder is unrelated to the Hippie Chippy site in the rest of this repository. Move it to its own repository before deploying, and don't merge it into this repo's `main` branch: GitHub Pages serves that branch on hippiechippy.com.
+- Every page is pre-rendered HTML in English and Spanish, so Google and AI assistants (ChatGPT, Claude, Perplexity, Gemini) can read all of it.
+- All tour content, prices and photos come straight from the existing WordPress site.
+- A booking assistant sits on every page.
 
-## What's inside
+> This folder lives in the Hippie Chippy repository but is a separate project. Don't merge it into this repo's `main` branch: GitHub Pages serves that branch on hippiechippy.com. Deploy it from its own Vercel project (below).
 
-| Path | What it is |
+## How it fits together
+
+```
+WordPress (WP Travel Engine)  ──npm run import──▶  src/data/catalog.json + src/assets/img/trips/*.webp
+                                                        │
+editorial: src/data/{categories,resorts,places,offices,site}.json, src/content/guides.mjs
+                                                        │
+                                   npm run build ──▶  dist/  (305 pages, sitemap, PWA, llms.txt)
+                                                        │
+                                   api/chat.js  ◀── same catalogue (src/lib/catalog.mjs)
+```
+
+| Command | What it does |
 |---|---|
-| `build.mjs` | Zero-dependency generator: `node build.mjs` writes the site to `dist/` |
-| `src/data/*.json` | The single source of truth: tours, categories, resorts, places, offices, reviews, company facts |
-| `src/content/guides.mjs` | Editorial guides (EN + ES). `[[tours:a,b]]` and `[[prices]]` pull live data from the catalogue |
-| `src/assets/` | CSS, the client script (filters + assistant widget), logo, social image |
-| `api/chat.js` | The AI assistant endpoint (Vercel function, Claude API) |
-| `vercel.json` | Build, output and function config |
+| `npm run import` | Pulls all trips, prices (adult/child, transfer options), itineraries, includes, FAQs, galleries, videos, pickup towns, categories and destinations, in **EN and ES**, from the WordPress REST API. Downloads the photos and optimises them to WebP. Results are cached in `.cache/`; use `-- --fresh` to refetch. |
+| `npm run build` | Generates the site into `dist/` |
+| `npm run gbp` | Regenerates `docs/google-business-profiles.md` (Google Business Profile kit) from the live catalogue |
+| `npm run preview` | Builds and serves the site on http://localhost:8080 |
 
-### Pages generated (109)
+Edit tours in WordPress as usual, then run `npm run import && npm run build`, or let the Vercel build do it.
 
-- **24 tour pages per language.** English pages keep the existing `/trip/<slug>/` URLs, so current rankings carry over. Spanish pages are at `/es/excursion/<slug>/`.
-- **7 activity hubs**: boat trips, buggies, bus tours, water sports, underwater, ferries/islands, packs.
-- **3 resort pages**: excursions from Costa Teguise, Puerto del Carmen and Playa Blanca, each with travel times and the local office.
-- **6 destination pages**: La Graciosa, Lobos, Fuerteventura, Timanfaya, the north caves, the Teguise market.
-- **7 guides**: best excursions, price list, cruise port, windy days, kids, booking direct, winter.
-- **Trust and support pages**: offices, about, FAQ, contact.
-- **Machine-readable files**: `sitemap.xml` (with hreflang), `robots.txt` (AI crawlers explicitly allowed), `llms.txt`, `llms-full.txt`, `/data/tours-{en,es}.json`.
+## What's generated
 
-### SEO and AI-search features
+- **83 tour pages in each language**, at the exact same URLs as today (`/trip/<slug>/` and `/es/trip/<spanish-slug>/`), so rankings and backlinks carry over. Each page has:
+  - a photo gallery and the full description
+  - a step-by-step itinerary, and what's included and not included
+  - a YouTube video (loads only on click)
+  - pickup towns, which link to the resort pages
+  - the places visited, and all of that tour's FAQs from WordPress
+  - a price box with adult/child prices and transfer options, the deposit %, Book and WhatsApp buttons
+- **Category pages** at the existing `/trip-types/…` URLs.
+- **38 destination pages** at the existing `/destinations/…` URLs, using your long WordPress descriptions plus the tours that visit each place.
+- **New pages competitors don't have:**
+  - 3 resort pages ("Excursions from Costa Teguise / Puerto del Carmen / Playa Blanca"), listing only tours that really pick up there, with your offices
+  - 7 guides: prices, cruise port, windy days, kids, booking direct, winter, best excursions
+  - offices, about, FAQ and contact pages
+- **Fixes to SEO problems on the current site:**
+  - **hreflang links**: the WordPress site prints none, so Google can't pair English and Spanish pages.
+  - Product/TouristTrip structured data with real adult/child `Offer`s.
+  - Breadcrumbs, FAQ structured data, an XML sitemap with language alternates.
+- **AI assistants:** `robots.txt` explicitly welcomes AI crawlers. `llms.txt` and `llms-full.txt` give a plain-text catalogue with every tour, price, pickup and FAQ, and `/data/tours-*.json` is open for tools.
 
-- JSON-LD on every page:
-  - `TravelAgency` with offices as departments
-  - `Product`+`TouristTrip` with `Offer` prices
-  - `FAQPage`, `BreadcrumbList`, `ItemList`, `Article`, `TouristDestination`
-- `hreflang` EN/ES with an x-default, plus canonical URLs and Open Graph tags.
-- Prices are typed once, in `tours.json`. Every page, price table, the structured data, `llms.txt` and the assistant read from that same file, so prices can't drift out of sync.
-- Short, factual answer blocks (FAQs, quick-facts tables). These are the passages AI assistants quote.
+## The app (phones, tablets, computers)
+
+The site is a Progressive Web App:
+- manifest with icons and shortcuts
+- an offline-capable service worker
+- an "Install app" button that appears when the browser supports it
+- an `/app/` page with install steps for Android, iPhone/iPad and desktop
+
+To also list it in app stores:
+- **Google Play and Microsoft Store:** package the live URL with [PWABuilder](https://www.pwabuilder.com). It generates the store packages from the manifest; no code changes are needed.
+- **Apple App Store:** needs a thin native wrapper (e.g. Capacitor) and an Apple developer account.
 
 ## The booking assistant
 
-- **With `ANTHROPIC_API_KEY` set**, `/api/chat` uses Claude (`claude-opus-5-5` at low effort; override it with the `CHAT_MODEL` env var). The full catalogue is in a cached system prompt.
-  - It recommends up to 3 tours and shows them as bookable cards.
-  - It hands complex cases (existing bookings, complaints, group quotes) to WhatsApp.
-  - Server-side refusal fallbacks are on (`fallbacks: "default"`).
-- **Without the key, or if the API is down**, the widget falls back to a built-in recommender that runs in the browser. It matches activity, kids, budget, resort, windy days and cruise stops. The site never shows a broken assistant.
+- **With `ANTHROPIC_API_KEY` set**, `/api/chat` uses Claude (`claude-opus-5-5` at low effort; change it with `CHAT_MODEL`). All 83 tours, prices, child prices, pickups and durations are in a cached system prompt.
+  - It recommends up to 3 tours as bookable cards.
+  - It hands bookings issues, complaints and group quotes to WhatsApp.
+  - Server-side refusal fallbacks are on.
+- **Without a key, or if the API is down**, a built-in recommender answers instantly in the browser. It matches activity, kids, budget, resort pickup, windy days, cruise stops and places.
 
-## Run and deploy
+## Deploy (Vercel)
 
-```bash
-npm install          # only needed for the AI endpoint
-npm run preview      # builds and serves dist/ on http://localhost:8080
-```
+1. Create a Vercel project from this repository and set **Root Directory** to `ticketsdirect`.
+2. Set the environment variables:
+   - `ANTHROPIC_API_KEY`
+   - optionally `SITE_URL` (default https://excursionsticketsdirect.com)
+   - optionally `BOOKING_ORIGIN`: where the "Book now" buttons go, default https://excursionsticketsdirect.com
+3. Deploy.
 
-**Deploy (Vercel):**
-1. Import the repository.
-2. Add the environment variable `ANTHROPIC_API_KEY`. Optionally add `SITE_URL`; it defaults to https://excursionsticketsdirect.com.
-3. Deploy. `vercel.json` already sets the build command, the output folder and the API function.
+**Moving the real domain over:**
+1. Keep WordPress running as the booking engine on a subdomain, e.g. `book.excursionsticketsdirect.com`.
+2. Set `BOOKING_ORIGIN` to that subdomain and `WP_URL` for imports.
+3. Point the main domain at Vercel. Tour, category and destination URLs are identical, so no redirects are needed for them.
 
-**Switching the real domain over.** The "Book now" buttons point to `bookingBase` in `src/data/site.json`, which is currently the live booking pages on the existing site.
-1. Before pointing excursionsticketsdirect.com at this app, move the existing booking engine to a subdomain (e.g. `book.excursionsticketsdirect.com`).
-2. Update `bookingBase` to that subdomain.
-3. Then switch DNS. Tour URLs stay the same, so no redirects are needed for them.
-4. Add 301 redirects in `vercel.json` for old blog and category URLs.
+## Owner checklist
 
-## Owner checklist before going live
-
-These facts couldn't be verified from public sources. The build prints a warning until the office data is complete.
-
-- [ ] **Offices** (`src/data/offices.json`): only 4 of the 10 offices could be found publicly, and none are confirmed.
-  - Costa Teguise has two conflicting addresses (Av. del Mar 28 vs Calle Anzuelo 38).
-  - Add the rest, including the Puerto del Carmen address(es), plus opening hours and phones.
-  - Set `verified: true` on each office once confirmed.
-- [ ] **Tour details**: the live tour pages block automated reading, so the descriptions are written from tour names and public facts. Check each one and add real itineraries, inclusions, pickup points, minimum ages and photos (`"image"` field per tour).
-- [ ] **Pack durations**: the live site lists the 170€ packs as "2 Hours". They are shown here as multi-excursion packs instead.
-- [ ] **Policies**: confirm the wording on weather cancellations ("we offer another date or a different excursion") and the lowest price guarantee.
-- [ ] **Reviews** (`src/data/reviews.json`): paste real reviews from Google, Tripadvisor or Trustindex. Never invent them. Aggregate ratings are only output when real data is added.
-- [ ] **Facebook URL**: add it in `site.json` (currently `null`).
-- [ ] **Google Business Profile**: claim a profile for each office and link it to its resort page.
-- [ ] **Search Console and Bing Webmaster Tools**: submit `sitemap.xml` after launch.
+- [ ] **Offices:** I couldn't open the 10 Google Maps links from this environment because the network blocks Google. They're stored in `src/data/offices.json` → `pendingMapsLinks`. Copy each office's name, address, phone and hours into `offices`, set `mapsUrl`, then `verified: true`.
+- [ ] **Two tours have no price in WordPress** and are hidden until priced: *Katfish Premium Cruises* and *Chillout Cruise Playa Blanca*.
+- [ ] **Reviews:** paste real reviews into `src/data/reviews.json`. Never invent them.
+- [ ] **Google Business Profiles:** work through `docs/google-business-profiles.md`.
+- [ ] **Search Console and Bing Webmaster Tools:** submit `sitemap.xml` after launch.

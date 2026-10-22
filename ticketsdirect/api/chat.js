@@ -3,41 +3,43 @@
 // Returns: { reply: string, tours: string[], handoff: boolean }
 // Requires ANTHROPIC_API_KEY in the deployment environment. Without it the widget
 // falls back to its built-in local recommender, so the site keeps working.
-import fs from "node:fs";
 import path from "node:path";
 import Anthropic from "@anthropic-ai/sdk";
+import { loadCatalog, UNIT, formatPrice, formatDuration } from "../src/lib/catalog.mjs";
 
 const MODEL = process.env.CHAT_MODEL || "claude-opus-5-5";
 const MAX_TURNS = 12;
 const MAX_CHARS = 1500;
 const MAX_TOOL_ROUNDS = 4;
 
-const dataDir = path.join(process.cwd(), "src", "data");
-const load = (f) => JSON.parse(fs.readFileSync(path.join(dataDir, f), "utf8"));
-const site = load("site.json");
-const tours = load("tours.json");
-const categories = load("categories.json");
-const resorts = load("resorts.json");
-const { offices } = load("offices.json");
+const { site, tours, tourBy, categories, resorts, offices, locTerm } = loadCatalog(path.join(process.cwd(), "src", "data"));
 const tourSlugs = new Set(tours.map((t) => t.slug));
 
 const client = new Anthropic();
 
-const tourUrl = (lang, slug) => `${lang === "es" ? "/es/excursion" : "/trip"}/${slug}/`;
-const fmtHours = (h) => (h == null ? "multi-excursion pack" : h < 1 ? `${Math.round(h * 60)} min` : `${h} h`);
+const strip = (html) => String(html ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+const short = (s, n) => (s.length <= n ? s : s.slice(0, s.lastIndexOf(" ", n)) + "…");
 
 // The catalogue goes in the system prompt so it is cached across requests and the model
 // never has to guess prices. Built once per cold start, so the prefix stays byte-identical.
 const catalogText = categories
+  .filter((c) => !c.secondary)
   .map((c) => {
-    const list = tours.filter((t) => t.cat === c.slug);
+    const list = tours.filter((t) => t.cat === c.slug).sort((a, b) => b.popularity - a.popularity);
+    if (!list.length) return "";
     return `## ${c.name.en}\n${list
-      .map((t) => `- slug=${t.slug} | ${t.name.en} / ${t.name.es} | from €${t.price}${t.priceNote ? ` (${t.priceNote.en})` : ""} | ${fmtHours(t.hours)} | tags: ${t.tags.join(", ")} | ${t.summary.en}`)
+      .map((t) => {
+        const unit = t.unit && t.unit !== "per-person" ? ` ${UNIT.en[t.unit]}` : "";
+        const child = t.child ? `; child ${t.child.ages} ${formatPrice("en", t.child.price)}` : "";
+        const pickups = t.pickups.map((id) => locTerm[id]?.name.en).filter((n) => n && n !== "Lanzarote").join(", ");
+        return `- slug=${t.slug} | ${t.name.en} / ${t.name.es} | from ${formatPrice("en", t.price)}${unit}${child} | ${formatDuration("en", t)} | pickup: ${pickups || "on request"} | tags: ${t.tags.join(", ")} | ${short(t.seo.en?.description || strip(t.overview.en), 220)}`;
+      })
       .join("\n")}`;
   })
+  .filter(Boolean)
   .join("\n\n");
 const resortText = resorts
-  .map((r) => `- ${r.name}: ${r.intro.en} Top picks: ${r.picks.join(", ")}. Travel times: ${r.distances.en.map(([a, b]) => `${a} ${b}`).join("; ")}.`)
+  .map((r) => `- ${r.name}: ${r.intro.en} Our picks: ${r.picks.join(", ")}. Travel times: ${r.distances.en.map(([a, b]) => `${a} ${b}`).join("; ")}.`)
   .join("\n");
 const officeText = offices
   .map((o) => `- ${o.name} (${o.locality})${o.streetAddress ? `: ${o.streetAddress}, ${o.postalCode || ""} ${o.locality}` : ": address not published, give WhatsApp for directions"}`)
@@ -48,7 +50,7 @@ const SYSTEM = `You are the booking assistant on the website of ${site.name}, a 
 Facts about the company (use these, never invent others):
 - Selling excursions in Lanzarote since ${site.foundingYear}; grew out of ${site.heritage}, a Lanzarote boat company.
 - ${site.officeCount} walk-in offices in the three main resorts: Costa Teguise, Puerto del Carmen and Playa Blanca. The only excursion company that sells online and has offices in all three.
-- Booking: reserve online with a small deposit, pay the balance on the day. Free cancellation up to 24 hours before the activity. Lowest price guarantee.
+- Booking: reserve online with a deposit (usually 35%), pay the balance on the day. E-ticket and pickup details are sent at booking. Free cancellation up to 24 hours before the activity. Lowest price guarantee.
 - Support 24h on WhatsApp/phone ${site.phone}, email ${site.email}. English and Spanish.
 - Fast ferry Playa Blanca–Corralejo (Fuerteventura) about 30 min. Ferry Órzola–La Graciosa about 20 min.
 - Dolphin sightings are likely but never guaranteed. Boat trips can be cancelled by the operator in strong wind; then guests can change date or switch to a land tour such as Caves Express.
@@ -195,5 +197,5 @@ export default async function handler(req, res) {
       : "Our team can help with this best on WhatsApp; they answer 24h.";
     handoff = true;
   }
-  return res.status(200).json({ reply, tours: shown, handoff, links: shown.map((s) => tourUrl(lang, s)) });
+  return res.status(200).json({ reply, tours: shown, handoff, links: shown.map((s) => tourBy[s].path[lang] || tourBy[s].path.en) });
 }
