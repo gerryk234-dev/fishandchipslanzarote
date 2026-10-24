@@ -1,5 +1,5 @@
 {
-  "_note": "From the owner's 10 Google Business Profiles (read 2026-10-24). 'gbp' records what each profile showed then, used by the profile audit in npm run gbp. Fill in 'hours' (full week) per office; Google only showed one day.",
+  "_note": "From the owner's Google Business Profiles (read 2026-10-24). All physical offices open daily 09:30–18:00 (owner, 2026-10-24). puerto-calero-charters is a Google profile for boat trips and charters, not a walk-in office (physical:false): it is kept out of office lists and LocalBusiness data. 'gbp' records what each profile showed, used by the audit in npm run gbp.",
   "offices": [
     {
       "id": "playa-blanca-playa-dorada",
@@ -9,7 +9,11 @@
       "postalCode": "35580",
       "locality": "Playa Blanca",
       "phone": "+34 633 22 92 44",
-      "hours": null,
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
       "geo": [
         28.8623104,
         -13.8248522
@@ -20,8 +24,10 @@
       "gbp": {
         "category": "Sightseeing tour agency",
         "rating": "4.4",
-        "website": "http://excursionsticketsdirect.com/"
-      }
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": "9:30–18:00"
+      },
+      "physical": true
     },
     {
       "id": "playa-blanca-flamingo",
@@ -31,7 +37,11 @@
       "postalCode": "35580",
       "locality": "Playa Blanca",
       "phone": "+34 633 22 92 44",
-      "hours": null,
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
       "geo": [
         28.8581227,
         -13.8419208
@@ -42,8 +52,10 @@
       "gbp": {
         "category": "Tour agency",
         "rating": "5.0",
-        "website": "http://excursionsticketsdirect.com/"
-      }
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": "9:30–18:00"
+      },
+      "physical": true
     },
     {
       "id": "playa-blanca-port",
@@ -53,7 +65,11 @@
       "postalCode": "35580",
       "locality": "Playa Blanca",
       "phone": "+34 675 83 08 81",
-      "hours": null,
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
       "geo": [
         28.859247,
         -13.835167
@@ -64,8 +80,10 @@
       "gbp": {
         "category": "Boat tour agency",
         "rating": "4.8",
-        "website": "http://excursionsticketsdirect.com/"
-      }
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": "9:30–18:00"
+      },
+      "physical": true
     },
     {
       "id": "puerto-del-carmen-buggy",
@@ -75,7 +93,11 @@
       "postalCode": "35510",
       "locality": "Puerto del Carmen",
       "phone": "+34 699 32 64 75",
-      "hours": null,
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
       "geo": [
         28.92066,
         -13.6471035
@@ -86,8 +108,10 @@
       "gbp": {
         "category": "Travel agency",
         "rating": "5.0",
-        "website": "http://excursionsticketsdirect.com/"
-      }
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": "Open 24 hours"
+      },
+      "physical": true
     },
     {
       "id": "puerto-del-carmen-old-town",
@@ -97,7 +121,11 @@
       "postalCode": "35518",
       "locality": "Puerto del Carmen",
       "phone": "+34 699 32 64 75",
-      "hours": null,
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
       "geo": [
         28.9283957,
         -13.6775422
@@ -108,8 +136,10 @@
       "gbp": {
         "category": "Tourist information center",
         "rating": "5.0",
-        "website": "http://excursionsticketsdirect.com/"
-      }
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": "9:30–18:00"
+      },
+      "physical": true
     },
     {
       "id": "puerto-del-carmen-beach",
@@ -119,7 +149,11 @@
       "postalCode": "35510",
       "locality": "Puerto del Carmen",
       "phone": "+34 602 67 78 73",
-      "hours": null,
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
       "geo": [
         28.9204398,
         -13.650112
@@ -130,8 +164,10 @@
       "gbp": {
         "category": "Tour agency",
         "rating": "5.0",
-        "website": "http://excursionsticketsdirect.com/"
-      }
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": "9:00–21:00"
+      },
+      "physical": true
     },
     {
       "id": "puerto-del-carmen-anzuelo",
@@ -141,7 +177,11 @@
       "postalCode": "35510",
       "locality": "Puerto del Carmen",
       "phone": "+34 699 32 64 75",
-      "hours": null,
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
       "geo": [
         28.9205847,
         -13.6535199
@@ -152,8 +192,10 @@
       "gbp": {
         "category": "Tour agency",
         "rating": "4.2",
-        "website": "http://excursionsticketsdirect.com/"
-      }
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": "9:00–18:00"
+      },
+      "physical": true
     },
     {
       "id": "costa-teguise-center",
@@ -163,7 +205,11 @@
       "postalCode": "35508",
       "locality": "Costa Teguise",
       "phone": "+34 633 22 92 44",
-      "hours": null,
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
       "geo": [
         28.9968515,
         -13.4902233
@@ -174,8 +220,10 @@
       "gbp": {
         "category": "Bus tour agency",
         "rating": "4.7",
-        "website": "http://excursionsticketsdirect.com/"
-      }
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": null
+      },
+      "physical": true
     },
     {
       "id": "costa-teguise-playa-bastian",
@@ -185,7 +233,11 @@
       "postalCode": "35508",
       "locality": "Costa Teguise",
       "phone": "+34 633 22 92 44",
-      "hours": null,
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
       "geo": [
         28.9947498,
         -13.4983871
@@ -196,8 +248,10 @@
       "gbp": {
         "category": "ATV rental service",
         "rating": "4.5",
-        "website": "http://excursionsticketsdirect.com/"
-      }
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": "9:30–18:00"
+      },
+      "physical": true
     },
     {
       "id": "costa-teguise-cucharas",
@@ -207,7 +261,11 @@
       "postalCode": "35508",
       "locality": "Costa Teguise",
       "phone": "+34 608 24 05 42",
-      "hours": null,
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
       "geo": [
         29.0011002,
         -13.4867861
@@ -218,7 +276,34 @@
       "gbp": {
         "category": "Tour agency",
         "rating": "4.4",
-        "website": "http://excursionsticketsdirect.com/"
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": "9:00–17:00"
+      },
+      "physical": true
+    },
+    {
+      "id": "puerto-calero-charters",
+      "resort": null,
+      "name": "Tickets Direct Excursions Lanzarote: Boat Trips and Private Charters",
+      "streetAddress": "Cortijo Viejo, 43",
+      "postalCode": "35571",
+      "locality": "Puerto Calero",
+      "phone": "+34 633 22 92 44",
+      "hours": null,
+      "geo": [
+        28.9177064,
+        -13.7067947
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJRXhPzyRYRgwRMTfimNzLg0o",
+      "mapsQuery": "Tickets Direct Excursions Lanzarote: Boat Trips and Private Charters",
+      "verified": true,
+      "physical": false,
+      "gbp": {
+        "category": "Boat tour agency",
+        "rating": "4.6",
+        "website": "https://excursionsticketsdirect.com/trip-types/lanzarote-boat-trips/",
+        "hoursShown": "9:00–21:00",
+        "formerName": "Excursions Lanzarote: Boat Trips and Private Charters"
       }
     }
   ]

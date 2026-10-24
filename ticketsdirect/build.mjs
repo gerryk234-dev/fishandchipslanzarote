@@ -222,6 +222,8 @@ function trustStrip(lang) {
   return `<ul class="trust">${site.promises[lang].map(([h, p], i) => `<li>${icon(icons[i])}<div><strong>${esc(h)}</strong><span>${esc(p)}</span></div></li>`).join("")}</ul>`;
 }
 
+const hoursText = (lang, h) => (h.days === "daily" ? (lang === "en" ? `Open every day ${h.opens}–${h.closes}` : `Abierto todos los días ${h.opens}–${h.closes}`) : "");
+
 function officeList(lang, list) {
   const L = T[lang];
   return `<div class="grid offices">${list
@@ -232,7 +234,7 @@ function officeList(lang, list) {
   <h3>${icon("pin")}${esc(o.name)}</h3>
   ${o.streetAddress ? `<p>${esc(o.streetAddress)}<br>${esc(o.postalCode || "")} ${esc(o.locality)}, Lanzarote</p>` : `<p>${esc(o.locality)}, Lanzarote<br><small>${esc(L.addressTbc)}</small></p>`}
   ${o.phone ? `<p><a href="tel:${o.phone.replace(/\s/g, "")}">${icon("phone")}${esc(o.phone)}</a></p>` : ""}
-  ${o.hours ? `<p><small>${esc(o.hours)}</small></p>` : ""}
+  ${o.hours ? `<p><small>${icon("clock")}${esc(hoursText(lang, o.hours))}</small></p>` : ""}
   <p class="office-links"><a href="${maps}" rel="noopener" target="_blank">${L.directions}</a>${r ? ` · <a href="${url(lang, "resort", r.slug)}">${esc(r.name)}</a>` : ""}</p>
 </article>`;
     })
@@ -293,6 +295,7 @@ function officeLd(o) {
     name: o.name,
     telephone: o.phone || site.phone,
     address: { "@type": "PostalAddress", streetAddress: o.streetAddress, postalCode: o.postalCode || undefined, addressLocality: o.locality, addressRegion: "Las Palmas", addressCountry: "ES" },
+    ...(o.hours?.days === "daily" ? { openingHoursSpecification: { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], opens: o.hours.opens, closes: o.hours.closes } } : {}),
     ...(o.geo ? { geo: { "@type": "GeoCoordinates", latitude: o.geo[0], longitude: o.geo[1] } } : {}),
     ...(o.mapsUrl ? { hasMap: o.mapsUrl } : {}),
     parentOrganization: { "@id": ORG_ID },

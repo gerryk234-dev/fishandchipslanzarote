@@ -86,7 +86,7 @@ To also list it in app stores:
 
 ## Owner checklist
 
-- [ ] **Offices:** all 10 offices come from your Google profiles (`src/data/offices.json`). Add each office's full weekly opening `hours` there; Google only showed one day.
+- [x] **Offices:** all 10 physical offices (09:30–18:00 every day) plus the Puerto Calero boat-charter profile (not a walk-in office, kept off the site's office list) are in `src/data/offices.json`.
 - [ ] **Google Business Profiles:** work through the per-profile audit in `docs/google-business-profiles.md` (section 7): categories, website links, names, the Costa Teguise Center address, and a possible duplicate in Puerto del Carmen.
 - [ ] **Two tours have no price in WordPress** and are hidden until priced: *Katfish Premium Cruises* and *Chillout Cruise Playa Blanca*.
 - [ ] **Reviews:** paste real reviews into `src/data/reviews.json`. Never invent them.

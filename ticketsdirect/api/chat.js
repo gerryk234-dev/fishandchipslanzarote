@@ -42,8 +42,8 @@ const resortText = resorts
   .map((r) => `- ${r.name}: ${r.intro.en} Our picks: ${r.picks.join(", ")}. Travel times: ${r.distances.en.map(([a, b]) => `${a} ${b}`).join("; ")}.`)
   .join("\n");
 const officeText = offices
-  .map((o) => `- ${o.name} (${o.locality})${o.streetAddress ? `: ${o.streetAddress}, ${o.postalCode || ""} ${o.locality}` : ": address not published, give WhatsApp for directions"}`)
-  .join("\n");
+  .map((o) => `- ${o.name} (${o.locality})${o.streetAddress ? `: ${o.streetAddress}, ${o.postalCode || ""} ${o.locality}` : ""}${o.hours?.days === "daily" ? `, open every day ${o.hours.opens}–${o.hours.closes}` : ""}`)
+  .join("\n") + "\n- Boat trips and private charters also depart from Puerto Calero marina (not a walk-in office; book online, by WhatsApp or at any office).";
 
 const SYSTEM = `You are the booking assistant on the website of ${site.name}, a local excursion agency that only operates in Lanzarote (Canary Islands, Spain). You help visitors pick the right excursion quickly and then send them to book it.
 

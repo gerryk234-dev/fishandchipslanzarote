@@ -8,7 +8,7 @@ import { loadCatalog, formatPrice, formatDuration } from "../src/lib/catalog.mjs
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const C = loadCatalog(path.join(root, "src/data"));
-const { site, tours, resorts, offices } = C;
+const { site, tours, resorts, offices, profiles } = C;
 const raw = JSON.parse(fs.readFileSync(path.join(root, "src/data/offices.json"), "utf8"));
 const SITE = site.url.replace(/\/$/, "");
 const utm = (p, office) => `${SITE}${p}?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=${office}`;
@@ -129,24 +129,34 @@ w(`## 6. Photos`);
 w();
 w(`Profiles with many recent photos get far more clicks. Per profile: exterior of the office (so people find it), interior with staff, the logo, a cover photo, and 3–5 tour photos per month. Optimised tour photos are already in \`src/assets/img/trips/\`; geotagging is ignored by Google, so focus on quality and frequency.`);
 w();
-w(`## 7. Audit of your ${offices.length} profiles`);
+w(`## 7. Audit of your ${profiles.length} profiles`);
 w();
 w(`What each profile showed when checked, and what to change. The website's offices page and structured data now use exactly these names, addresses and phones, so keep both in sync.`);
 w();
 w(`| Office | Resort | Rating | Category now | Phone | Fixes |`);
 w(`|---|---|---|---|---|---|`);
 const resortName = Object.fromEntries(resorts.map((r) => [r.slug, r.name]));
-for (const o of offices) {
+for (const o of profiles) {
+  const charter = o.physical === false;
   const g = o.gbp || {};
   const fixes = [];
-  if (g.category && g.category !== "Tour agency") fixes.push(`primary category → **Tour agency** (keep "${g.category}" as secondary${/ATV|information/i.test(g.category) ? " only if it's really what customers find there" : ""})`);
-  if (/^http:/.test(g.website || "") || /\.com\/?$/.test(g.website || "")) fixes.push(`website → \`${utm(`/excursions-from/${o.resort}/`, o.id)}\``);
+  if (charter) {
+    fixes.push(`not a walk-in office: in the profile set it as a **service-area business** and hide the street address (Google requires staff at the address during opening hours to show it); keep the map pin's area as Puerto Calero`);
+    fixes.push(`keep **Boat tour agency** as primary (it's the right fit for a charter-only profile), add *Yacht charter* / *Boat rental service* as secondary if you offer them`);
+    fixes.push(`website: keep the boat trips page, with tracking → \`${utm("/trip-types/lanzarote-boat-trips/", o.id)}\``);
+    if (g.formerName) fixes.push(`renamed from "${g.formerName}": done ✔. Make sure the new name matches your signage/branding, and don't add more keywords`);
+  }
+  if (!charter && g.category && g.category !== "Tour agency") fixes.push(`primary category → **Tour agency** (keep "${g.category}" as secondary${/ATV|information/i.test(g.category) ? " only if it's really what customers find there" : ""})`);
+  if (!charter && (/^http:/.test(g.website || "") || /\.com\/?$/.test(g.website || ""))) fixes.push(`website → \`${utm(`/excursions-from/${o.resort}/`, o.id)}\``);
   if (!/^Tickets Direct Excursions/.test(o.name)) fixes.push(`name doesn't start with "Tickets Direct Excursions": use the brand first, exactly as on the shopfront${/^Buggy/.test(o.name) ? '; keyword-first names ("Buggy Tours Lanzarote…") risk suspension' : ""}`);
   if (/Tahíche|Apartamento/i.test(o.streetAddress)) fixes.push(`address shows "Apartamento Tahiche 122 … 35508 Lanzarote": put the street first and set the town to **Costa Teguise**`);
   if (o.postalCode === "35510" || o.postalCode === "35518") fixes.push(`Google lists the town as **Tías** (the municipality); make sure "Puerto del Carmen" appears in the address line and description`);
-  if (!o.hours) fixes.push("add full weekly + holiday hours");
+  const want = o.hours?.days === "daily" ? `${o.hours.opens}–${o.hours.closes}`.replace("09:30", "9:30") : null;
+  if (want && g.hoursShown !== want) fixes.push(`hours: Google showed **${g.hoursShown || "no hours"}**; set **every day ${want}**, plus holiday hours`);
+  else if (want) fixes.push("hours ✔ (add holiday hours for Christmas, New Year and Easter)");
+  if (charter) fixes.push(`hours: Google shows ${g.hoursShown}. Use the hours you actually answer charter enquiries / departures run`);
   if (Number(g.rating) < 4.5) fixes.push(`rating ${g.rating}: reply to every low review and start the review routine (section 5) here first`);
-  w(`| [${o.name}](${o.mapsUrl}) | ${resortName[o.resort]} | ${g.rating ?? "?"} | ${g.category ?? "?"} | ${o.phone} | ${fixes.map((f) => `• ${f}`).join("<br>")} |`);
+  w(`| [${o.name}](${o.mapsUrl}) | ${o.resort ? resortName[o.resort] : `${o.locality} (charters)`} | ${g.rating ?? "?"} | ${g.category ?? "?"} | ${o.phone} | ${fixes.map((f) => `• ${f}`).join("<br>")} |`);
 }
 w();
 w(`**Across all profiles:**`);

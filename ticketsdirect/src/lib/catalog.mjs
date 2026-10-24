@@ -16,7 +16,9 @@ export function loadCatalog(dataDir) {
   const categories = read("categories.json");
   const resorts = read("resorts.json");
   const places = read("places.json");
-  const { offices } = read("offices.json");
+  // Every Google profile we run; only physical ones are walk-in offices shown on the site.
+  const profiles = read("offices.json").offices;
+  const offices = profiles.filter((o) => o.physical !== false);
 
   const catByWp = Object.fromEntries(categories.map((c) => [c.wp, c]));
   const resortByWp = Object.fromEntries(resorts.map((r) => [r.wp, r]));
@@ -89,7 +91,7 @@ export function loadCatalog(dataDir) {
     .filter((d) => d.path?.en && tours.some((t) => t.destinations.includes(d.id)))
     .map((d) => ({ ...d, curated: placeByWp[d.id] || null }));
 
-  return { site, raw, categories, resorts, places, offices, tours, tourBy, catBy, destinations, destTerm, locTerm, placeByWp, importedAt: raw.importedAt };
+  return { site, raw, categories, resorts, places, offices, profiles, tours, tourBy, catBy, destinations, destTerm, locTerm, placeByWp, importedAt: raw.importedAt };
 }
 
 export const UNIT = {
