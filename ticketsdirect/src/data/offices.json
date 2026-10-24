@@ -1,6 +1,182 @@
 {
-  "_note": "The 10 Google Maps profiles the owner shared are in pendingMapsLinks. Each needs its name, street address, postcode, resort (costa-teguise | puerto-del-carmen | playa-blanca), phone and hours copied into an office entry, with mapsUrl set to its link. Set verified:true once checked. Only offices with a streetAddress are emitted in structured data.",
+  "_note": "From the owner's 10 Google Business Profiles (read 2026-10-24). 'gbp' records what each profile showed then, used by the profile audit in npm run gbp. Fill in 'hours' (full week) per office; Google only showed one day.",
   "offices": [
+    {
+      "id": "playa-blanca-playa-dorada",
+      "resort": "playa-blanca",
+      "name": "Tickets Direct Excursions Playa Dorada",
+      "streetAddress": "Av. Marítima",
+      "postalCode": "35580",
+      "locality": "Playa Blanca",
+      "phone": "+34 633 22 92 44",
+      "hours": null,
+      "geo": [
+        28.8623104,
+        -13.8248522
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/narSq2p33znJ9GdG9",
+      "mapsQuery": "Tickets Direct Excursions Playa Dorada",
+      "verified": true,
+      "gbp": {
+        "category": "Sightseeing tour agency",
+        "rating": "4.4",
+        "website": "http://excursionsticketsdirect.com/"
+      }
+    },
+    {
+      "id": "playa-blanca-flamingo",
+      "resort": "playa-blanca",
+      "name": "Tickets Direct Excursions Lanzarote Flamingo Beach",
+      "streetAddress": "C. Gran Canaria",
+      "postalCode": "35580",
+      "locality": "Playa Blanca",
+      "phone": "+34 633 22 92 44",
+      "hours": null,
+      "geo": [
+        28.8581227,
+        -13.8419208
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/pdSrdT3E7yeEqKPM6",
+      "mapsQuery": "Tickets Direct Excursions Lanzarote Flamingo Beach",
+      "verified": true,
+      "gbp": {
+        "category": "Tour agency",
+        "rating": "5.0",
+        "website": "http://excursionsticketsdirect.com/"
+      }
+    },
+    {
+      "id": "playa-blanca-port",
+      "resort": "playa-blanca",
+      "name": "Tickets Direct Excursions Playa Blanca Port",
+      "streetAddress": "Punta Limones (Puerto de Playa Blanca)",
+      "postalCode": "35580",
+      "locality": "Playa Blanca",
+      "phone": "+34 675 83 08 81",
+      "hours": null,
+      "geo": [
+        28.859247,
+        -13.835167
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/zKWqGU6hA3qi4KGY9",
+      "mapsQuery": "Tickets Direct Excursions Playa Blanca Port",
+      "verified": true,
+      "gbp": {
+        "category": "Boat tour agency",
+        "rating": "4.8",
+        "website": "http://excursionsticketsdirect.com/"
+      }
+    },
+    {
+      "id": "puerto-del-carmen-buggy",
+      "resort": "puerto-del-carmen",
+      "name": "Buggy Tours Lanzarote Tickets Direct Excursions",
+      "streetAddress": "Av. de las Playas",
+      "postalCode": "35510",
+      "locality": "Puerto del Carmen",
+      "phone": "+34 699 32 64 75",
+      "hours": null,
+      "geo": [
+        28.92066,
+        -13.6471035
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/oCxVLkV6mM7oKjrLA",
+      "mapsQuery": "Buggy Tours Lanzarote Tickets Direct Excursions",
+      "verified": true,
+      "gbp": {
+        "category": "Travel agency",
+        "rating": "5.0",
+        "website": "http://excursionsticketsdirect.com/"
+      }
+    },
+    {
+      "id": "puerto-del-carmen-old-town",
+      "resort": "puerto-del-carmen",
+      "name": "Tickets Direct Excursions Old Town PDC",
+      "streetAddress": "C. Reina Sofía, 60",
+      "postalCode": "35518",
+      "locality": "Puerto del Carmen",
+      "phone": "+34 699 32 64 75",
+      "hours": null,
+      "geo": [
+        28.9283957,
+        -13.6775422
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/wyR2zPUFZzsez3dV7",
+      "mapsQuery": "Tickets Direct Excursions Old Town PDC",
+      "verified": true,
+      "gbp": {
+        "category": "Tourist information center",
+        "rating": "5.0",
+        "website": "http://excursionsticketsdirect.com/"
+      }
+    },
+    {
+      "id": "puerto-del-carmen-beach",
+      "resort": "puerto-del-carmen",
+      "name": "Excursions Tickets Direct Puerto del Carmen Beach",
+      "streetAddress": "Av. de las Playas, 39",
+      "postalCode": "35510",
+      "locality": "Puerto del Carmen",
+      "phone": "+34 602 67 78 73",
+      "hours": null,
+      "geo": [
+        28.9204398,
+        -13.650112
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/1DKfsE2xXkPzHK319",
+      "mapsQuery": "Excursions Tickets Direct Puerto del Carmen Beach",
+      "verified": true,
+      "gbp": {
+        "category": "Tour agency",
+        "rating": "5.0",
+        "website": "http://excursionsticketsdirect.com/"
+      }
+    },
+    {
+      "id": "puerto-del-carmen-anzuelo",
+      "resort": "puerto-del-carmen",
+      "name": "Tickets Direct Excursions Anzuelo",
+      "streetAddress": "C. Anzuelo, 38",
+      "postalCode": "35510",
+      "locality": "Puerto del Carmen",
+      "phone": "+34 699 32 64 75",
+      "hours": null,
+      "geo": [
+        28.9205847,
+        -13.6535199
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/J3jY8otV25PL4WaD7",
+      "mapsQuery": "Tickets Direct Excursions Anzuelo",
+      "verified": true,
+      "gbp": {
+        "category": "Tour agency",
+        "rating": "4.2",
+        "website": "http://excursionsticketsdirect.com/"
+      }
+    },
+    {
+      "id": "costa-teguise-center",
+      "resort": "costa-teguise",
+      "name": "Tickets Direct Excursions Costa Teguise Center",
+      "streetAddress": "C. las Olas, Local 10 (Apartamentos Tahíche 122)",
+      "postalCode": "35508",
+      "locality": "Costa Teguise",
+      "phone": "+34 633 22 92 44",
+      "hours": null,
+      "geo": [
+        28.9968515,
+        -13.4902233
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/oZDVvZHhPCPabMT28",
+      "mapsQuery": "Tickets Direct Excursions Costa Teguise Center",
+      "verified": true,
+      "gbp": {
+        "category": "Bus tour agency",
+        "rating": "4.7",
+        "website": "http://excursionsticketsdirect.com/"
+      }
+    },
     {
       "id": "costa-teguise-playa-bastian",
       "resort": "costa-teguise",
@@ -8,62 +184,42 @@
       "streetAddress": "Av. del Mar, 28",
       "postalCode": "35508",
       "locality": "Costa Teguise",
-      "phone": null,
+      "phone": "+34 633 22 92 44",
       "hours": null,
-      "mapsQuery": "Tickets Direct Excursions Playa Bastian Costa Teguise",
-      "verified": false,
-      "sourceNote": "Wanderlog lists Av. del Mar 28; Tripadvisor lists Calle Anzuelo 38, 35510. Confirm which is current."
+      "geo": [
+        28.9947498,
+        -13.4983871
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/Wzz1DhPvkqaUuBzAA",
+      "mapsQuery": "Tickets Direct Excursions Playa Bastián",
+      "verified": true,
+      "gbp": {
+        "category": "ATV rental service",
+        "rating": "4.5",
+        "website": "http://excursionsticketsdirect.com/"
+      }
     },
     {
-      "id": "playa-blanca-port",
-      "resort": "playa-blanca",
-      "name": "Tickets Direct Excursions Playa Blanca Port",
-      "streetAddress": "Puerto de Playa Blanca, Punta Limones",
-      "postalCode": "35580",
-      "locality": "Playa Blanca",
-      "phone": null,
+      "id": "costa-teguise-cucharas",
+      "resort": "costa-teguise",
+      "name": "Tickets Direct Excursions Costa Teguise Cucharas",
+      "streetAddress": "Avenida Las Canarias 14, C.C. Las Cucharas, Local 4012",
+      "postalCode": "35508",
+      "locality": "Costa Teguise",
+      "phone": "+34 608 24 05 42",
       "hours": null,
-      "mapsQuery": "Tickets Direct Excursions Playa Blanca Port",
-      "verified": false,
-      "sourceNote": "Wanderlog / Trustindex listing."
-    },
-    {
-      "id": "playa-blanca-flamingo",
-      "resort": "playa-blanca",
-      "name": "Tickets Direct Excursions Flamingo Beach",
-      "streetAddress": "Calle Gran Canaria",
-      "postalCode": "35580",
-      "locality": "Playa Blanca",
-      "phone": null,
-      "hours": null,
-      "mapsQuery": "Tickets Direct Excursions Lanzarote Flamingo Beach",
-      "verified": false,
-      "sourceNote": "Localo listing."
-    },
-    {
-      "id": "puerto-del-carmen",
-      "resort": "puerto-del-carmen",
-      "name": "Tickets Direct Excursions Puerto del Carmen",
-      "streetAddress": null,
-      "postalCode": null,
-      "locality": "Puerto del Carmen",
-      "phone": null,
-      "hours": null,
-      "mapsQuery": "Tickets Direct Excursions Puerto del Carmen",
-      "verified": false,
-      "sourceNote": "No public address found. Add the street address(es) of the Puerto del Carmen office(s)."
+      "geo": [
+        29.0011002,
+        -13.4867861
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/VFCr4GjQK79UP21L6",
+      "mapsQuery": "Tickets Direct Excursions Costa Teguise Cucharas",
+      "verified": true,
+      "gbp": {
+        "category": "Tour agency",
+        "rating": "4.4",
+        "website": "http://excursionsticketsdirect.com/"
+      }
     }
-  ],
-  "pendingMapsLinks": [
-    "https://maps.app.goo.gl/narSq2p33znJ9GdG9",
-    "https://maps.app.goo.gl/pdSrdT3E7yeEqKPM6",
-    "https://maps.app.goo.gl/zKWqGU6hA3qi4KGY9",
-    "https://maps.app.goo.gl/oCxVLkV6mM7oKjrLA",
-    "https://maps.app.goo.gl/wyR2zPUFZzsez3dV7",
-    "https://maps.app.goo.gl/1DKfsE2xXkPzHK319",
-    "https://maps.app.goo.gl/J3jY8otV25PL4WaD7",
-    "https://maps.app.goo.gl/oZDVvZHhPCPabMT28",
-    "https://maps.app.goo.gl/Wzz1DhPvkqaUuBzAA",
-    "https://maps.app.goo.gl/VFCr4GjQK79UP21L6"
   ]
 }

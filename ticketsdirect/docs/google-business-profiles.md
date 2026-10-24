@@ -1,6 +1,6 @@
 # Google Business Profile kit: Tickets Direct Excursions Lanzarote
 
-Generated 2026-10-22 from the live catalogue (83 excursions). Re-run `npm run gbp` after prices change.
+Generated 2026-10-24 from the live catalogue (83 excursions). Re-run `npm run gbp` after prices change.
 
 Your 10 profiles are the fastest way to beat the small agencies: Google shows the "map pack" above every organic result for searches like *excursions Costa Teguise* or *boat trips Playa Blanca*, and the big platforms (GetYourGuide, Civitatis) have no offices there, so they can't appear in it. Ranking in the map pack depends on **relevance** (categories, services, description), **distance** (you have offices in all three resorts) and **prominence** (reviews, photos, activity). This kit covers all three.
 
@@ -26,9 +26,13 @@ Your 10 profiles are the fastest way to beat the small agencies: Google shows th
 
 ### Costa Teguise
 
-Offices in this resort (fill in from your profiles): Tickets Direct Excursions Playa Bastián.
+Offices in this resort: [Tickets Direct Excursions Costa Teguise Center](https://maps.app.goo.gl/oZDVvZHhPCPabMT28) (C. las Olas, Local 10 (Apartamentos Tahíche 122)) · [Tickets Direct Excursions Playa Bastián](https://maps.app.goo.gl/Wzz1DhPvkqaUuBzAA) (Av. del Mar, 28) · [Tickets Direct Excursions Costa Teguise Cucharas](https://maps.app.goo.gl/VFCr4GjQK79UP21L6) (Avenida Las Canarias 14, C.C. Las Cucharas, Local 4012).
 
-**Website link (use `office-id` per profile):** `https://excursionsticketsdirect.com/excursions-from/costa-teguise/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=costa-teguise-office-id`
+**Website links (one per profile):**
+
+- Tickets Direct Excursions Costa Teguise Center: `https://excursionsticketsdirect.com/excursions-from/costa-teguise/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=costa-teguise-center`
+- Tickets Direct Excursions Playa Bastián: `https://excursionsticketsdirect.com/excursions-from/costa-teguise/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=costa-teguise-playa-bastian`
+- Tickets Direct Excursions Costa Teguise Cucharas: `https://excursionsticketsdirect.com/excursions-from/costa-teguise/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=costa-teguise-cucharas`
 
 **Description (EN, 642/750 chars):**
 
@@ -78,9 +82,14 @@ Offices in this resort (fill in from your profiles): Tickets Direct Excursions P
 
 ### Puerto del Carmen
 
-Offices in this resort (fill in from your profiles): Tickets Direct Excursions Puerto del Carmen.
+Offices in this resort: [Buggy Tours Lanzarote Tickets Direct Excursions](https://maps.app.goo.gl/oCxVLkV6mM7oKjrLA) (Av. de las Playas) · [Tickets Direct Excursions Old Town PDC](https://maps.app.goo.gl/wyR2zPUFZzsez3dV7) (C. Reina Sofía, 60) · [Excursions Tickets Direct Puerto del Carmen Beach](https://maps.app.goo.gl/1DKfsE2xXkPzHK319) (Av. de las Playas, 39) · [Tickets Direct Excursions Anzuelo](https://maps.app.goo.gl/J3jY8otV25PL4WaD7) (C. Anzuelo, 38).
 
-**Website link (use `office-id` per profile):** `https://excursionsticketsdirect.com/excursions-from/puerto-del-carmen/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=puerto-del-carmen-office-id`
+**Website links (one per profile):**
+
+- Buggy Tours Lanzarote Tickets Direct Excursions: `https://excursionsticketsdirect.com/excursions-from/puerto-del-carmen/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=puerto-del-carmen-buggy`
+- Tickets Direct Excursions Old Town PDC: `https://excursionsticketsdirect.com/excursions-from/puerto-del-carmen/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=puerto-del-carmen-old-town`
+- Excursions Tickets Direct Puerto del Carmen Beach: `https://excursionsticketsdirect.com/excursions-from/puerto-del-carmen/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=puerto-del-carmen-beach`
+- Tickets Direct Excursions Anzuelo: `https://excursionsticketsdirect.com/excursions-from/puerto-del-carmen/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=puerto-del-carmen-anzuelo`
 
 **Description (EN, 623/750 chars):**
 
@@ -130,9 +139,13 @@ Offices in this resort (fill in from your profiles): Tickets Direct Excursions P
 
 ### Playa Blanca
 
-Offices in this resort (fill in from your profiles): Tickets Direct Excursions Playa Blanca Port, Tickets Direct Excursions Flamingo Beach.
+Offices in this resort: [Tickets Direct Excursions Playa Dorada](https://maps.app.goo.gl/narSq2p33znJ9GdG9) (Av. Marítima) · [Tickets Direct Excursions Lanzarote Flamingo Beach](https://maps.app.goo.gl/pdSrdT3E7yeEqKPM6) (C. Gran Canaria) · [Tickets Direct Excursions Playa Blanca Port](https://maps.app.goo.gl/zKWqGU6hA3qi4KGY9) (Punta Limones (Puerto de Playa Blanca)).
 
-**Website link (use `office-id` per profile):** `https://excursionsticketsdirect.com/excursions-from/playa-blanca/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=playa-blanca-office-id`
+**Website links (one per profile):**
+
+- Tickets Direct Excursions Playa Dorada: `https://excursionsticketsdirect.com/excursions-from/playa-blanca/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=playa-blanca-playa-dorada`
+- Tickets Direct Excursions Lanzarote Flamingo Beach: `https://excursionsticketsdirect.com/excursions-from/playa-blanca/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=playa-blanca-flamingo`
+- Tickets Direct Excursions Playa Blanca Port: `https://excursionsticketsdirect.com/excursions-from/playa-blanca/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=playa-blanca-port`
 
 **Description (EN, 612/750 chars):**
 
@@ -231,17 +244,26 @@ Ask these from the profile and answer them as the owner; they show up in Maps an
 
 Profiles with many recent photos get far more clicks. Per profile: exterior of the office (so people find it), interior with staff, the logo, a cover photo, and 3–5 tour photos per month. Optimised tour photos are already in `src/assets/img/trips/`; geotagging is ignored by Google, so focus on quality and frequency.
 
-## 7. Your 10 profiles
+## 7. Audit of your 10 profiles
 
-Work through each one with the checklist above and copy its exact name, address, phone and hours into `src/data/offices.json` (set `mapsUrl` to the link) so the website and Google match:
+What each profile showed when checked, and what to change. The website's offices page and structured data now use exactly these names, addresses and phones, so keep both in sync.
 
-- [ ] https://maps.app.goo.gl/narSq2p33znJ9GdG9
-- [ ] https://maps.app.goo.gl/pdSrdT3E7yeEqKPM6
-- [ ] https://maps.app.goo.gl/zKWqGU6hA3qi4KGY9
-- [ ] https://maps.app.goo.gl/oCxVLkV6mM7oKjrLA
-- [ ] https://maps.app.goo.gl/wyR2zPUFZzsez3dV7
-- [ ] https://maps.app.goo.gl/1DKfsE2xXkPzHK319
-- [ ] https://maps.app.goo.gl/J3jY8otV25PL4WaD7
-- [ ] https://maps.app.goo.gl/oZDVvZHhPCPabMT28
-- [ ] https://maps.app.goo.gl/Wzz1DhPvkqaUuBzAA
-- [ ] https://maps.app.goo.gl/VFCr4GjQK79UP21L6
+| Office | Resort | Rating | Category now | Phone | Fixes |
+|---|---|---|---|---|---|
+| [Tickets Direct Excursions Playa Dorada](https://maps.app.goo.gl/narSq2p33znJ9GdG9) | Playa Blanca | 4.4 | Sightseeing tour agency | +34 633 22 92 44 | • primary category → **Tour agency** (keep "Sightseeing tour agency" as secondary)<br>• website → `https://excursionsticketsdirect.com/excursions-from/playa-blanca/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=playa-blanca-playa-dorada`<br>• add full weekly + holiday hours<br>• rating 4.4: reply to every low review and start the review routine (section 5) here first |
+| [Tickets Direct Excursions Lanzarote Flamingo Beach](https://maps.app.goo.gl/pdSrdT3E7yeEqKPM6) | Playa Blanca | 5.0 | Tour agency | +34 633 22 92 44 | • website → `https://excursionsticketsdirect.com/excursions-from/playa-blanca/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=playa-blanca-flamingo`<br>• add full weekly + holiday hours |
+| [Tickets Direct Excursions Playa Blanca Port](https://maps.app.goo.gl/zKWqGU6hA3qi4KGY9) | Playa Blanca | 4.8 | Boat tour agency | +34 675 83 08 81 | • primary category → **Tour agency** (keep "Boat tour agency" as secondary)<br>• website → `https://excursionsticketsdirect.com/excursions-from/playa-blanca/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=playa-blanca-port`<br>• add full weekly + holiday hours |
+| [Buggy Tours Lanzarote Tickets Direct Excursions](https://maps.app.goo.gl/oCxVLkV6mM7oKjrLA) | Puerto del Carmen | 5.0 | Travel agency | +34 699 32 64 75 | • primary category → **Tour agency** (keep "Travel agency" as secondary)<br>• website → `https://excursionsticketsdirect.com/excursions-from/puerto-del-carmen/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=puerto-del-carmen-buggy`<br>• name doesn't start with "Tickets Direct Excursions": use the brand first, exactly as on the shopfront; keyword-first names ("Buggy Tours Lanzarote…") risk suspension<br>• Google lists the town as **Tías** (the municipality); make sure "Puerto del Carmen" appears in the address line and description<br>• add full weekly + holiday hours |
+| [Tickets Direct Excursions Old Town PDC](https://maps.app.goo.gl/wyR2zPUFZzsez3dV7) | Puerto del Carmen | 5.0 | Tourist information center | +34 699 32 64 75 | • primary category → **Tour agency** (keep "Tourist information center" as secondary only if it's really what customers find there)<br>• website → `https://excursionsticketsdirect.com/excursions-from/puerto-del-carmen/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=puerto-del-carmen-old-town`<br>• Google lists the town as **Tías** (the municipality); make sure "Puerto del Carmen" appears in the address line and description<br>• add full weekly + holiday hours |
+| [Excursions Tickets Direct Puerto del Carmen Beach](https://maps.app.goo.gl/1DKfsE2xXkPzHK319) | Puerto del Carmen | 5.0 | Tour agency | +34 602 67 78 73 | • website → `https://excursionsticketsdirect.com/excursions-from/puerto-del-carmen/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=puerto-del-carmen-beach`<br>• name doesn't start with "Tickets Direct Excursions": use the brand first, exactly as on the shopfront<br>• Google lists the town as **Tías** (the municipality); make sure "Puerto del Carmen" appears in the address line and description<br>• add full weekly + holiday hours |
+| [Tickets Direct Excursions Anzuelo](https://maps.app.goo.gl/J3jY8otV25PL4WaD7) | Puerto del Carmen | 4.2 | Tour agency | +34 699 32 64 75 | • website → `https://excursionsticketsdirect.com/excursions-from/puerto-del-carmen/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=puerto-del-carmen-anzuelo`<br>• Google lists the town as **Tías** (the municipality); make sure "Puerto del Carmen" appears in the address line and description<br>• add full weekly + holiday hours<br>• rating 4.2: reply to every low review and start the review routine (section 5) here first |
+| [Tickets Direct Excursions Costa Teguise Center](https://maps.app.goo.gl/oZDVvZHhPCPabMT28) | Costa Teguise | 4.7 | Bus tour agency | +34 633 22 92 44 | • primary category → **Tour agency** (keep "Bus tour agency" as secondary)<br>• website → `https://excursionsticketsdirect.com/excursions-from/costa-teguise/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=costa-teguise-center`<br>• address shows "Apartamento Tahiche 122 … 35508 Lanzarote": put the street first and set the town to **Costa Teguise**<br>• add full weekly + holiday hours |
+| [Tickets Direct Excursions Playa Bastián](https://maps.app.goo.gl/Wzz1DhPvkqaUuBzAA) | Costa Teguise | 4.5 | ATV rental service | +34 633 22 92 44 | • primary category → **Tour agency** (keep "ATV rental service" as secondary only if it's really what customers find there)<br>• website → `https://excursionsticketsdirect.com/excursions-from/costa-teguise/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=costa-teguise-playa-bastian`<br>• add full weekly + holiday hours |
+| [Tickets Direct Excursions Costa Teguise Cucharas](https://maps.app.goo.gl/VFCr4GjQK79UP21L6) | Costa Teguise | 4.4 | Tour agency | +34 608 24 05 42 | • website → `https://excursionsticketsdirect.com/excursions-from/costa-teguise/?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_content=costa-teguise-cucharas`<br>• add full weekly + holiday hours<br>• rating 4.4: reply to every low review and start the review routine (section 5) here first |
+
+**Across all profiles:**
+
+- **Website links:** all 10 point to `http://excursionsticketsdirect.com/` (the homepage, without https). Point each one to its resort page with the tracking link above, so Google ties each office to its own area and you can see which office brings bookings (Google Analytics → Acquisition → `utm_content`).
+- **Categories:** you currently use 7 different primary categories. Use **Tour agency** as primary on every office, plus secondaries that are true for that office.
+- **Phones:** 5 different numbers are in use (+34 633 22 92 44, +34 675 83 08 81, +34 699 32 64 75, +34 602 67 78 73, +34 608 24 05 42). That's fine if each one is answered, but the website now shows each office's own number, so update `offices.json` if any change.
+- **Duplicates:** Puerto del Carmen has two profiles on Av. de las Playas (*Buggy Tours…* and *…Puerto del Carmen Beach*, about 300 m apart). If they're the same shop, merge them in Business Profile Manager; duplicates split reviews and can get both suspended.

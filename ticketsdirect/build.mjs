@@ -231,6 +231,7 @@ function officeList(lang, list) {
       return `<article class="office" id="${o.id}">
   <h3>${icon("pin")}${esc(o.name)}</h3>
   ${o.streetAddress ? `<p>${esc(o.streetAddress)}<br>${esc(o.postalCode || "")} ${esc(o.locality)}, Lanzarote</p>` : `<p>${esc(o.locality)}, Lanzarote<br><small>${esc(L.addressTbc)}</small></p>`}
+  ${o.phone ? `<p><a href="tel:${o.phone.replace(/\s/g, "")}">${icon("phone")}${esc(o.phone)}</a></p>` : ""}
   ${o.hours ? `<p><small>${esc(o.hours)}</small></p>` : ""}
   <p class="office-links"><a href="${maps}" rel="noopener" target="_blank">${L.directions}</a>${r ? ` · <a href="${url(lang, "resort", r.slug)}">${esc(r.name)}</a>` : ""}</p>
 </article>`;

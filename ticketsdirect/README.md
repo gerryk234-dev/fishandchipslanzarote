@@ -86,8 +86,8 @@ To also list it in app stores:
 
 ## Owner checklist
 
-- [ ] **Offices:** I couldn't open the 10 Google Maps links from this environment because the network blocks Google. They're stored in `src/data/offices.json` → `pendingMapsLinks`. Copy each office's name, address, phone and hours into `offices`, set `mapsUrl`, then `verified: true`.
+- [ ] **Offices:** all 10 offices come from your Google profiles (`src/data/offices.json`). Add each office's full weekly opening `hours` there; Google only showed one day.
+- [ ] **Google Business Profiles:** work through the per-profile audit in `docs/google-business-profiles.md` (section 7): categories, website links, names, the Costa Teguise Center address, and a possible duplicate in Puerto del Carmen.
 - [ ] **Two tours have no price in WordPress** and are hidden until priced: *Katfish Premium Cruises* and *Chillout Cruise Playa Blanca*.
 - [ ] **Reviews:** paste real reviews into `src/data/reviews.json`. Never invent them.
-- [ ] **Google Business Profiles:** work through `docs/google-business-profiles.md`.
 - [ ] **Search Console and Bing Webmaster Tools:** submit `sitemap.xml` after launch.
