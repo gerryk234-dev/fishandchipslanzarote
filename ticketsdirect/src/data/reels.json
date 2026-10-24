@@ -1,0 +1,113 @@
+{
+  "_note": "Shorts, Reels and TikToks shown in the video rail and on /reels/. platform: youtube | instagram | tiktok. For YouTube give the 11-character video id (works for Shorts too); for Instagram/TikTok give the full post URL in 'url'. 'tour' links the video to a tour (its photo is used as the cover and it gets a Book button). Order = order on the site.",
+  "items": [
+    {
+      "platform": "youtube",
+      "id": "PYYx7w01AUE",
+      "tour": "la-graciosa-all-inclusive-catamaran-cruise",
+      "title": {
+        "en": "La Graciosa All-inclusive Catamaran Cruise",
+        "es": "Catamaran en Isla La Graciosa"
+      }
+    },
+    {
+      "platform": "youtube",
+      "id": "9UbcjK2huT0",
+      "tour": "lobos-island-dolphins-cruise",
+      "title": {
+        "en": "Lobos Island & Dolphins Cruise",
+        "es": "Lobos Island & Dolphins Cruise"
+      }
+    },
+    {
+      "platform": "youtube",
+      "id": "s_FQy3W_cJk",
+      "tour": "i-love-sunset-catamaran-cruise",
+      "title": {
+        "en": "I Love Sunset Catamaran Cruise",
+        "es": "I Love Sunset Catamaran (Puesta de Sol)"
+      }
+    },
+    {
+      "platform": "youtube",
+      "id": "b1h5v6Ybx_c",
+      "tour": "papagayo-all-inclusive-catamaran-cruise",
+      "title": {
+        "en": "Papagayo Lanzarote Catamaran Cruise",
+        "es": "Catamarán a Playas Papagayo Lanzarote"
+      }
+    },
+    {
+      "platform": "youtube",
+      "id": "5oT6kMSwhQU",
+      "tour": "buggy-tour-maverick-can-am-trail",
+      "title": {
+        "en": "Lanzarote Buggy Tour Maverick Can-am Trail",
+        "es": "Ruta en Buggy Maverick Can-am Trail"
+      }
+    },
+    {
+      "platform": "youtube",
+      "id": "Rd826sm6gg0",
+      "tour": "boat-cruise-watersports",
+      "title": {
+        "en": "Boat Cruise + Watersports",
+        "es": "Crucero en barco + deportes acuáticos"
+      }
+    },
+    {
+      "platform": "youtube",
+      "id": "kPin5y_BJq4",
+      "tour": "lanzarote-karting",
+      "title": {
+        "en": "Lanzarote Karting",
+        "es": "Lanzarote Karts"
+      }
+    },
+    {
+      "platform": "youtube",
+      "id": "SDSKpvP4LOE",
+      "tour": "try-dive",
+      "title": {
+        "en": "Try Dive",
+        "es": "Bautizo de buceo"
+      }
+    },
+    {
+      "platform": "youtube",
+      "id": "I4hy_axIKe8",
+      "tour": "super-buggy-tour-lanzabuggy",
+      "title": {
+        "en": "Super Buggy Tour Maverick Turbo X3 – Lanzarote’s Ultimate Off-Road Adventure",
+        "es": "Excursión en Super Buggy Maverick Turbo X3 – La Aventura Todoterreno Definitiva de Lanzarote"
+      }
+    },
+    {
+      "platform": "youtube",
+      "id": "PMEvL-5SGWU",
+      "tour": "40-minute-jet-ski-tour-an-unforgettable-lanzarote-adventure",
+      "title": {
+        "en": "40-Minute Jet Ski Tour: An Unforgettable Lanzarote Adventure",
+        "es": "Excursión en moto acuática de 40 minutos: una aventura inolvidable en Lanzarote"
+      }
+    },
+    {
+      "platform": "youtube",
+      "id": "MWNh7vMbBDI",
+      "tour": "submarine-safari",
+      "title": {
+        "en": "Submarine Safari",
+        "es": "Safari en Submarino"
+      }
+    },
+    {
+      "platform": "youtube",
+      "id": "XECuJzm05-0",
+      "tour": "lanzaxtreme-polaris-tours",
+      "title": {
+        "en": "LanzaXtreme Polaris Tours",
+        "es": "LanzaXtreme Polaris Slingshot Tours"
+      }
+    }
+  ]
+}

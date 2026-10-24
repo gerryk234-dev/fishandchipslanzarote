@@ -11,6 +11,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const C = loadCatalog(path.join(here, "src/data"));
 const { site, tours, tourBy, categories, catBy, resorts, places, offices, destinations } = C;
 const reviews = JSON.parse(fs.readFileSync(path.join(here, "src/data/reviews.json"), "utf8"));
+const reels = JSON.parse(fs.readFileSync(path.join(here, "src/data/reels.json"), "utf8")).items;
 
 const SITE = (process.env.SITE_URL || site.url).replace(/\/$/, "");
 const BOOK = (process.env.BOOKING_ORIGIN || site.bookingOrigin).replace(/\/$/, "");
@@ -20,6 +21,15 @@ const ORG_ID = `${SITE}/#organization`;
 const BUILD_ID = Date.now().toString(36);
 const mainCats = categories.filter((c) => !c.secondary && tours.some((t) => t.cats.includes(c.slug)));
 const minPrice = Math.min(...tours.map((t) => t.price));
+const BESTSELLERS = new Set([...tours].sort((a, b) => b.popularity - a.popularity).slice(0, 10).map((t) => t.slug));
+// Average of the walk-in offices' Google ratings (shown as such; review counts aren't public here, so no schema).
+const ratedOffices = offices.filter((o) => Number(o.gbp?.rating));
+const avgRating = ratedOffices.length ? (ratedOffices.reduce((n, o) => n + Number(o.gbp.rating), 0) / ratedOffices.length).toFixed(1) : null;
+// Spanish URL segment for activity-by-resort pages.
+const CAT_ES = { "boat-trips": "excursiones-en-barco", "buggy-tours": "buggies", "bus-tours": "excursiones-en-autobus", "water-sports": "deportes-acuaticos", underwater: "buceo-y-submarino", "ferries-islands": "ferris-y-otras-islas", "special-packs": "packs", parks: "parques", nightlife: "noche-y-espectaculos", private: "tours-privados" };
+const comboSlug = (lang, c) => (lang === "es" ? CAT_ES[c.slug] || c.slug : c.slug);
+const combos = resorts.flatMap((r) => mainCats.map((c) => ({ r, c, list: tours.filter((t) => t.resorts.includes(r.slug) && t.cats.includes(c.slug)) }))).filter((x) => x.list.length >= 3);
+const comboUrl = (lang, r, c) => `${url(lang, "resort", r.slug)}${comboSlug(lang, c)}/`;
 
 // ---------- i18n ----------
 const T = {
@@ -61,6 +71,12 @@ const T = {
     quickFacts: "Quick facts", toursTo: (n) => `Excursions to ${n}`, aboutPlace: (n) => `About ${n}`,
     langs: "Languages", minAge: (n) => `Minimum age ${n}`, installApp: "Install app",
     bk: { option: "Option", date: "Date", checking: "Checking availability…", pickDate: "Choose a date", noDates: "No online dates right now: ask us on WhatsApp", total: "Total", depositToday: "Deposit today", onDay: "rest on the day", travellers: "Travellers", waBook: "Book on WhatsApp" },
+    badges: { best: "Bestseller", family: "Family favourite" },
+    reelsTitle: "Watch before you book", reelsLead: "Real clips from our boats, buggies and tours.", reelsNav: "Reels", watchOn: "Watch on", bookThis: "Book this tour",
+    counters: { tours: "excursions", since: "selling since", offices: "walk-in offices", rating: "avg. Google rating of our offices" },
+    byActivity: "By activity", fromResort: "From your resort",
+    comboH1: (c, r, n) => `${c} from ${r} 2026: ${n} tours with pickup`,
+    comboLead: (c, r, n, min, d) => `${n} ${c.toLowerCase()} collect guests from ${r}, from ${min}. Durations range from ${d}. Book online with a deposit, or walk into one of our ${r} offices.`,
     pickupPointsTitle: "Pickup & meeting points", kind: { pickup: "Pickup", meeting: "Meeting point" }, time: "Time", timeOnTicket: "on your e-ticket", collectionIn: (n) => `Collection points in ${n}`,
     app: {
       title: "Get the Tickets Direct app", install: "Install the app", nav: "Get the app",
@@ -112,6 +128,12 @@ const T = {
     quickFacts: "Datos rápidos", toursTo: (n) => `Excursiones a ${n}`, aboutPlace: (n) => `Sobre ${n}`,
     langs: "Idiomas", minAge: (n) => `Edad mínima ${n}`, installApp: "Instalar app",
     bk: { option: "Opción", date: "Fecha", checking: "Consultando disponibilidad…", pickDate: "Elige una fecha", noDates: "Ahora no hay fechas online: pregúntanos por WhatsApp", total: "Total", depositToday: "Depósito hoy", onDay: "resto el día de la excursión", travellers: "Viajeros", waBook: "Reservar por WhatsApp" },
+    badges: { best: "Más vendida", family: "Favorita en familia" },
+    reelsTitle: "Míralo antes de reservar", reelsLead: "Vídeos reales de nuestros barcos, buggies y excursiones.", reelsNav: "Vídeos", watchOn: "Ver en", bookThis: "Reservar esta excursión",
+    counters: { tours: "excursiones", since: "vendiendo desde", offices: "oficinas", rating: "valoración media en Google de nuestras oficinas" },
+    byActivity: "Por actividad", fromResort: "Desde tu zona",
+    comboH1: (c, r, n) => `${c} desde ${r} 2026: ${n} excursiones con recogida`,
+    comboLead: (c, r, n, min, d) => `${n} excursiones de ${c.toLowerCase()} recogen en ${r}, desde ${min}. Duración de ${d}. Reserva online con depósito o ven a una de nuestras oficinas de ${r}.`,
     pickupPointsTitle: "Puntos de recogida y encuentro", kind: { pickup: "Recogida", meeting: "Punto de encuentro" }, time: "Hora", timeOnTicket: "en tu e-ticket", collectionIn: (n) => `Puntos de recogida en ${n}`,
     app: {
       title: "Descarga la app de Tickets Direct", install: "Instalar la app", nav: "Descarga la app",
@@ -131,8 +153,8 @@ const T = {
 // Tours, categories and destinations keep the exact URLs of the WordPress site (from catalog.json),
 // so existing Google rankings and backlinks carry over. Our own pages use the segments below.
 const SEG = {
-  en: { tours: "trip", resort: "excursions-from", destinations: "destinations", guide: "guides", offices: "offices", about: "about", faq: "faq", contact: "contact", app: "app" },
-  es: { tours: "trip", resort: "excursiones-desde", destinations: "destinations", guide: "guias", offices: "oficinas", about: "sobre-nosotros", faq: "preguntas-frecuentes", contact: "contacto", app: "app" },
+  en: { reels: "reels", tours: "trip", resort: "excursions-from", destinations: "destinations", guide: "guides", offices: "offices", about: "about", faq: "faq", contact: "contact", app: "app" },
+  es: { reels: "reels", tours: "trip", resort: "excursiones-desde", destinations: "destinations", guide: "guias", offices: "oficinas", about: "sobre-nosotros", faq: "preguntas-frecuentes", contact: "contacto", app: "app" },
 };
 const prefix = (lang) => (lang === "en" ? "" : `/${lang}`);
 function url(lang, kind, slug) {
@@ -192,9 +214,10 @@ function tourCard(lang, t) {
   const media = img
     ? `<img src="${img.thumb}" alt="${esc(img.alt || t.name[lang])}" loading="lazy" decoding="async" width="560" height="350">`
     : `<div class="card-art art-${c.color}">${icon(c.icon, "art-icon")}</div>`;
-  return `<article class="card" data-cat="${t.cats.join(" ")}" data-tags="${t.tags.join(" ")}" data-price="${t.price}" data-resorts="${t.resorts.join(" ")}" data-slug="${t.slug}">
+  const flag = BESTSELLERS.has(t.slug) ? L.badges.best : t.tags.includes("family") && t.child ? L.badges.family : "";
+  return `<article class="card rv" data-cat="${t.cats.join(" ")}" data-tags="${t.tags.join(" ")}" data-price="${t.price}" data-resorts="${t.resorts.join(" ")}" data-slug="${t.slug}">
   <a class="card-link" href="${url(lang, "tour", t.slug)}">
-    <div class="card-media">${media}<span class="badge">${esc(catName(lang, c))}</span></div>
+    <div class="card-media">${media}<span class="badge">${esc(catName(lang, c))}</span>${flag ? `<span class="flag">${icon("star")}${esc(flag)}</span>` : ""}</div>
     <div class="card-body">
       <h3>${esc(t.name[lang])}</h3>
       <p class="card-meta">${icon("clock")}${esc(dur(lang, t))}</p>
@@ -205,6 +228,20 @@ function tourCard(lang, t) {
 </article>`;
 }
 const cardGrid = (lang, list) => `<div class="grid cards">${list.map((t) => tourCard(lang, t)).join("\n")}</div>`;
+// Horizontal swipe rail (scroll-snap); arrows are enhanced by app.js.
+const rail = (inner, label) => `<div class="rail" data-rail><button class="rail-btn prev" type="button" aria-label="${label} ‹">‹</button><div class="rail-track">${inner}</div><button class="rail-btn next" type="button" aria-label="${label} ›">›</button></div>`;
+
+function reelCard(lang, r) {
+  const t = r.tour && tourBy[r.tour];
+  const img = t?.images[0];
+  const title = r.title?.[lang] || t?.name[lang] || "";
+  const href = r.platform === "youtube" ? `https://www.youtube.com/watch?v=${r.id}` : r.url;
+  return `<a class="reel rv" href="${esc(href)}" target="_blank" rel="noopener" data-platform="${r.platform}"${r.platform === "youtube" ? ` data-yt="${r.id}"` : ""}${t ? ` data-book="${url(lang, "tour", t.slug)}"` : ""} data-title="${esc(title)}">
+  ${img ? `<img src="${img.src}" alt="" loading="lazy" decoding="async">` : ""}
+  <span class="reel-play">${icon("play")}</span>
+  <span class="reel-meta"><strong>${esc(title)}</strong>${t ? `<small>${T[lang].from} ${price(lang, t.price)}</small>` : ""}</span>
+</a>`;
+}
 
 function faqBlock(lang, faqs, title) {
   if (!faqs?.length) return "";
@@ -248,6 +285,7 @@ function officeList(lang, list) {
       const maps = o.mapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.mapsQuery)}`;
       return `<article class="office" id="${o.id}">
   <h3>${icon("pin")}${esc(o.name)}</h3>
+  ${Number(o.gbp?.rating) ? `<p class="g-rating"><a href="${o.mapsUrl}" rel="noopener" target="_blank">★ ${esc(o.gbp.rating)} Google</a></p>` : ""}
   ${o.streetAddress ? `<p>${esc(o.streetAddress)}<br>${esc(o.postalCode || "")} ${esc(o.locality)}, Lanzarote</p>` : `<p>${esc(o.locality)}, Lanzarote<br><small>${esc(L.addressTbc)}</small></p>`}
   ${o.phone ? `<p><a href="tel:${o.phone.replace(/\s/g, "")}">${icon("phone")}${esc(o.phone)}</a></p>` : ""}
   ${o.hours ? `<p><small>${icon("clock")}${esc(hoursText(lang, o.hours))}</small></p>` : ""}
@@ -358,6 +396,7 @@ function header(lang, alt) {
     <div class="dd"><button aria-expanded="false">${L.nav.activities}</button><div class="dd-menu">${mainCats.map((c) => `<a href="${url(lang, "cat", c.slug)}">${esc(catName(lang, c))}</a>`).join("")}</div></div>
     <div class="dd"><button aria-expanded="false">${L.nav.resorts}</button><div class="dd-menu">${resorts.map((r) => `<a href="${url(lang, "resort", r.slug)}">${esc(r.name)}</a>`).join("")}<a href="${url(lang, "guide", "lanzarote-shore-excursions-cruise-port")}">${lang === "en" ? "Cruise passengers" : "Cruceristas"}</a></div></div>
     <div class="dd"><button aria-expanded="false">${L.nav.islands}</button><div class="dd-menu">${topDest.map((d) => `<a href="${destUrl(lang, d)}">${esc(d.name[lang])}</a>`).join("")}<a href="${url(lang, "destinations")}">${L.seeAll} →</a></div></div>
+    <a href="${url(lang, "reels")}">${L.reelsNav}</a>
     <a href="${url(lang, "guide")}">${L.nav.guides}</a>
     <a href="${url(lang, "offices")}">${L.nav.offices}</a>
     <a class="lang" href="${otherHref}" hreflang="${other}" lang="${other}">${other.toUpperCase()}</a>
@@ -377,7 +416,7 @@ function footer(lang) {
     <p><a class="btn ghost light small" href="${url(lang, "app")}">${icon("download")}${L.app.nav}</a></p></div>
   <div><h2>${L.nav.activities}</h2><ul>${mainCats.map((c) => `<li><a href="${url(lang, "cat", c.slug)}">${esc(catName(lang, c))}</a></li>`).join("")}</ul></div>
   <div><h2>${L.nav.resorts}</h2><ul>${resorts.map((r) => `<li><a href="${url(lang, "resort", r.slug)}">${esc(r.name)}</a></li>`).join("")}</ul><h2>${L.nav.islands}</h2><ul>${destinations.filter((d) => d.curated).map((d) => `<li><a href="${destUrl(lang, d)}">${esc(d.name[lang])}</a></li>`).join("")}<li><a href="${url(lang, "destinations")}">${L.seeAll}</a></li></ul></div>
-  <div><h2>Tickets Direct</h2><ul><li><a href="${url(lang, "about")}">${L.nav.about}</a></li><li><a href="${url(lang, "offices")}">${L.nav.offices}</a></li><li><a href="${url(lang, "faq")}">${L.faqTitle}</a></li><li><a href="${url(lang, "contact")}">${L.contact}</a></li><li><a href="${url(lang, "guide")}">${L.nav.guides}</a></li><li><a href="${url(lang, "app")}">${L.app.nav}</a></li></ul>
+  <div><h2>Tickets Direct</h2><ul><li><a href="${url(lang, "about")}">${L.nav.about}</a></li><li><a href="${url(lang, "offices")}">${L.nav.offices}</a></li><li><a href="${url(lang, "faq")}">${L.faqTitle}</a></li><li><a href="${url(lang, "contact")}">${L.contact}</a></li><li><a href="${url(lang, "guide")}">${L.nav.guides}</a></li><li><a href="${url(lang, "reels")}">${L.reelsNav}</a></li><li><a href="${url(lang, "app")}">${L.app.nav}</a></li></ul>
     <h2>${L.followUs}</h2><ul class="social">${Object.entries(site.social).filter(([, v]) => v).map(([k, v]) => `<li><a href="${v}" rel="noopener" target="_blank">${k[0].toUpperCase() + k.slice(1)}</a></li>`).join("")}</ul></div>
 </div>
 <div class="wrap foot-legal"><p>© ${new Date().getFullYear()} ${esc(site.name)} · <a href="${legal("cancellation-policy")}">${L.cancellation}</a> · <a href="${legal("terms-and-conditions")}">${L.terms}</a> · <a href="${legal("privacy-policy")}">${L.privacy}</a> · <a href="${legal("cookie-policy")}">${L.cookies}</a> · <a href="${legal("legal-notice")}">${L.legal}</a></p></div>
@@ -393,6 +432,7 @@ function chatWidget(lang) {
   <form class="chat-form"><label class="sr" for="chat-in">${esc(c.placeholder)}</label><input id="chat-in" autocomplete="off" maxlength="500" placeholder="${esc(c.placeholder)}"><button class="btn small">${c.send}</button></form>
   <a class="chat-human" href="https://wa.me/${site.whatsapp}" rel="noopener" target="_blank">${icon("wa")}${c.human}</a>
 </div>
+<dialog id="reel-dialog" class="reel-dialog"><div class="reel-frame"></div><p class="reel-actions"><a class="btn small" data-book href="#">${T[lang].bookThis}</a> <a class="btn ghost small" data-out href="#" target="_blank" rel="noopener">${T[lang].watchOn} YouTube</a> <button class="btn ghost small" data-close type="button">×</button></p></dialog>
 <button id="td-chat-open" class="chat-fab">${icon("chat")}<span>${c.open}</span></button>`;
 }
 
@@ -459,7 +499,8 @@ function homePage(lang) {
   const alt = altOf("home");
   const popular = [...tours].sort(byPopularity).slice(0, 8);
   const topDest = destinations.filter((d) => d.curated).concat(destinations.filter((d) => !d.curated).sort((a, b) => b.count - a.count)).slice(0, 8);
-  const hero = popular.find((t) => t.images.length)?.images[0];
+  const slides = popular.filter((t) => t.images.length).slice(0, 4).map((t) => t.images[0]);
+  const hero = slides[0];
   const homeFaqs = lang === "en"
     ? [
         ["What are the best excursions in Lanzarote?", `Our most booked excursions are ${popular.slice(0, 3).map((t) => `${t.name.en} (from ${price("en", t.price)})`).join(", ")}.`],
@@ -474,8 +515,9 @@ function homePage(lang) {
         ["¿Tickets Direct es una empresa local?", `Sí. Vendemos excursiones en Lanzarote desde ${site.foundingYear} y nacimos de Líneas Marítimas Romero, una de las navieras más conocidas de la isla.`],
       ];
   const body = `
-<section class="hero"><div class="wrap hero-grid">
-  <div>
+<section class="hero2">
+  <div class="hero-slides" aria-hidden="true">${slides.map((im, i) => `<img src="${im.src}" alt="" width="${im.w}" height="${im.h}"${i ? ' loading="lazy"' : ' fetchpriority="high"'} style="--i:${i}">`).join("")}</div>
+  <div class="wrap hero2-inner">
     <p class="eyebrow">${lang === "en" ? `Local agency · since ${site.foundingYear}` : `Agencia local · desde ${site.foundingYear}`}</p>
     <h1>${esc(L.heroTitle)}</h1>
     <p class="lead">${esc(L.heroLead(tours.length))}</p>
@@ -487,17 +529,19 @@ function homePage(lang) {
     </form>
     <p class="hero-chips">${["family", "couples", "adventure", "island-hop", "rainy-day"].map((k) => `<a href="${url(lang, "tours")}?tag=${k}">${esc(L.filters[k])}</a>`).join("")}</p>
   </div>
-  <div class="hero-card">
-    ${hero ? `<img class="hero-photo" src="${hero.src}" alt="${esc(hero.alt)}" width="${hero.w}" height="${hero.h}" fetchpriority="high">` : `<div class="hero-art"></div>`}
-    <div class="hero-stat"><strong>${site.foundingYear}</strong><span>${lang === "en" ? "founded in Lanzarote" : "fundada en Lanzarote"}</span></div>
-    <div class="hero-stat s2"><strong>${site.officeCount}</strong><span>${lang === "en" ? "offices in 3 resorts" : "oficinas en 3 zonas"}</span></div>
-  </div>
-</div></section>
-<section class="wrap">${trustStrip(lang)}</section>
-<section class="wrap section"><div class="sec-head"><h2>${L.popular}</h2><a href="${url(lang, "tours")}">${L.seeAll} (${tours.length}) →</a></div>${cardGrid(lang, popular)}</section>
+</section>
+<section class="wrap counters" aria-label="Tickets Direct in numbers">
+  <div><strong data-count="${tours.length}">${tours.length}</strong><span>${L.counters.tours}</span></div>
+  <div><strong data-count="${site.foundingYear}" data-from="1990">${site.foundingYear}</strong><span>${L.counters.since}</span></div>
+  <div><strong data-count="${offices.length}">${offices.length}</strong><span>${L.counters.offices}</span></div>
+  ${avgRating ? `<div><strong>${avgRating}★</strong><span>${L.counters.rating}</span></div>` : ""}
+</section>
+<div class="marquee" aria-hidden="true"><div class="marquee-track">${[...site.promises[lang], ...site.promises[lang]].map(([h]) => `<span>${icon("check")}${esc(h)}</span>`).join("")}</div></div>
+<section class="wrap section"><div class="sec-head"><h2>${L.popular}</h2><a href="${url(lang, "tours")}">${L.seeAll} (${tours.length}) →</a></div>${rail(popular.map((t) => tourCard(lang, t)).join(""), L.popular)}</section>
+${reels.length ? `<section class="section reels-band"><div class="wrap"><div class="sec-head"><div><h2>${L.reelsTitle}</h2><p class="lead">${L.reelsLead}</p></div><a href="${url(lang, "reels")}">${L.seeAll} →</a></div>${rail(reels.slice(0, 10).map((r) => reelCard(lang, r)).join(""), L.reelsTitle)}</div></section>` : ""}
 <section class="band"><div class="wrap section"><h2>${L.stay}</h2><p class="lead">${esc(L.stayLead)}</p>
-<div class="grid resorts">${resorts.map((r) => `<a class="resort" href="${url(lang, "resort", r.slug)}"><span class="resort-art"></span><strong>${esc(r.name)}</strong><span>${esc(r.intro[lang].split(". ")[0])}.</span><span class="more">${icon("pin")}${tours.filter((t) => t.resorts.includes(r.slug)).length} ${lang === "en" ? "excursions with pickup · our office" : "excursiones con recogida · oficina"} →</span></a>`).join("")}</div></div></section>
-<section class="wrap section"><h2>${L.nav.activities}</h2><div class="grid cats">${mainCats.map((c) => `<a class="cat cat-${c.color}" href="${url(lang, "cat", c.slug)}">${icon(c.icon, "cat-icon")}<strong>${esc(catName(lang, c))}</strong><span>${tours.filter((t) => t.cats.includes(c.slug)).length} · ${L.from} ${price(lang, Math.min(...tours.filter((t) => t.cats.includes(c.slug)).map((t) => t.price)))}</span></a>`).join("")}</div></section>
+<div class="grid resorts">${resorts.map((r) => `<a class="resort rv" href="${url(lang, "resort", r.slug)}"><span class="resort-art"></span><strong>${esc(r.name)}</strong><span>${esc(r.intro[lang].split(". ")[0])}.</span><span class="more">${icon("pin")}${tours.filter((t) => t.resorts.includes(r.slug)).length} ${lang === "en" ? "excursions with pickup · our office" : "excursiones con recogida · oficina"} →</span></a>`).join("")}</div></div></section>
+<section class="wrap section"><h2>${L.nav.activities}</h2><div class="grid cats">${mainCats.map((c) => `<a class="cat cat-${c.color} rv" href="${url(lang, "cat", c.slug)}">${icon(c.icon, "cat-icon")}<strong>${esc(catName(lang, c))}</strong><span>${tours.filter((t) => t.cats.includes(c.slug)).length} · ${L.from} ${price(lang, Math.min(...tours.filter((t) => t.cats.includes(c.slug)).map((t) => t.price)))}</span></a>`).join("")}</div></section>
 <section class="band dark"><div class="wrap section why"><div><h2>${L.whyTitle}</h2><p class="lead">${esc(L.whyLead)}</p><h3>${L.heritageTitle}</h3><p>${esc(L.heritage)}</p><p><a class="btn light" href="${url(lang, "about")}">${L.nav.about}</a> <a class="btn ghost light" href="${url(lang, "offices")}">${L.nav.offices}</a></p></div>
 <ul class="why-list">${site.promises[lang].map(([h, p]) => `<li>${icon("check")}<div><strong>${esc(h)}</strong><span>${esc(p)}</span></div></li>`).join("")}</ul></div></section>
 <section class="wrap section"><div class="sec-head"><h2>${L.islandsTitle}</h2><a href="${url(lang, "destinations")}">${L.seeAll} →</a></div><div class="grid places">${topDest.map((d) => destTile(lang, d)).join("")}</div></section>
@@ -603,6 +647,7 @@ function categoryPage(lang, c) {
   const meta = c.meta?.[lang] || clip(`${catName(lang, c)}: ${list.length} ${T[lang].results} ${lang === "en" ? "in Lanzarote from" : "en Lanzarote desde"} ${price(lang, Math.min(...list.map((t) => t.price)))}. ${T[lang].freeCancel}.`, 160);
   const body = `<div class="wrap">${bc.html}</div>
 <section class="wrap section page-head"><p class="eyebrow">${icon(c.icon)}${esc(catName(lang, c))}</p><h1>${esc(h1)}</h1>${intro ? `<p class="lead">${esc(intro)}</p>` : ""}</section>
+${combos.some((x) => x.c === c) ? `<section class="wrap"><p class="pills"><strong>${T[lang].fromResort}:</strong> ${combos.filter((x) => x.c === c).map((x) => `<a href="${comboUrl(lang, x.r, c)}">${esc(x.r.name)} (${x.list.length})</a>`).join("")}</p></section>` : ""}
 <section class="wrap">${cardGrid(lang, list)}</section>
 ${wpText && plain(wpText).length > 200 ? `<section class="wrap section"><div class="prose prose-wrap">${wpText}</div></section>` : ""}
 <section class="wrap section">${faqBlock(lang, c.faqs?.[lang])}</section>
@@ -624,10 +669,44 @@ function resortPage(lang, r) {
   <aside class="side"><h2>${L.distances}</h2><table class="dist"><tbody>${r.distances[lang].map(([a, b]) => `<tr><th scope="row">${esc(a)}</th><td>${esc(b)}</td></tr>`).join("")}</tbody></table>
   <h2>${L.officeHere}</h2>${officeList(lang, local)}</aside>
 </section>
+${combos.some((x) => x.r === r) ? `<section class="wrap section"><h2>${L.byActivity}</h2><p class="pills">${combos.filter((x) => x.r === r).map((x) => `<a href="${comboUrl(lang, r, x.c)}">${esc(catName(lang, x.c))} (${x.list.length})</a>`).join("")}</p></section>` : ""}
 <section class="wrap section"><h2>${lang === "en" ? `All ${fromHere.length + picks.length} excursions with pickup in ${r.name}` : `Las ${fromHere.length + picks.length} excursiones con recogida en ${r.name}`}</h2>${cardGrid(lang, fromHere)}</section>
 ${C.pickupPoints.some((p) => p.resort === r.slug) ? `<section class="wrap section"><h2>${esc(L.collectionIn(r.name))}</h2>${pointsTable(lang, C.pickupPoints.filter((p) => p.resort === r.slug))}</section>` : ""}
 <section class="wrap section">${faqBlock(lang, r.faqs[lang])}</section>`;
   page({ lang, path: alt[lang], alt, title: clip(r.h1[lang], 70), description: r.meta[lang], body, ld: [itemListLd(lang, [...picks, ...fromHere]), bc.ld, faqLd(r.faqs[lang]), ...local.filter((o) => o.streetAddress).map((o) => ({ "@context": "https://schema.org", ...officeLd(o) }))], ogImage: picks.find((t) => t.images.length)?.images[0].src });
+}
+
+function comboPage(lang, { r, c, list }) {
+  const L = T[lang];
+  const sorted = [...list].sort(byPopularity);
+  const p = comboUrl(lang, r, c);
+  const alt = { en: comboUrl("en", r, c), es: comboUrl("es", r, c) };
+  const cn = catName(lang, c);
+  const bc = breadcrumbs(lang, [[r.name, url(lang, "resort", r.slug)], [cn, p]]);
+  const hrs = list.map((t) => t.hours).filter(Boolean);
+  const durs = hrs.length ? `${dur(lang, list.find((t) => t.hours === Math.min(...hrs)))} – ${dur(lang, list.find((t) => t.hours === Math.max(...hrs)))}` : "";
+  const cheapest = [...list].sort((a, b) => a.price - b.price)[0];
+  const fam = list.filter((t) => t.tags.includes("family"));
+  const local = offices.filter((o) => o.resort === r.slug);
+  const faqs = lang === "en"
+    ? [[`What is the cheapest ${cn.toLowerCase()} option from ${r.name}?`, `${cheapest.name.en}, from ${price("en", cheapest.price)}${unitLabel("en", cheapest) ? ` ${unitLabel("en", cheapest)}` : ""}.`], [`Do these tours pick up in ${r.name}?`, `Yes. All ${list.length} tours on this page offer pickup in ${r.name}; the exact point and time are on your e-ticket.`], ...(fam.length ? [[`Which are best for families?`, fam.slice(0, 3).map((t) => t.name.en).join(", ") + "."]] : [])]
+    : [[`¿Cuál es la opción más barata de ${cn.toLowerCase()} desde ${r.name}?`, `${cheapest.name.es}, desde ${price("es", cheapest.price)}${unitLabel("es", cheapest) ? ` ${unitLabel("es", cheapest)}` : ""}.`], [`¿Estas excursiones recogen en ${r.name}?`, `Sí. Las ${list.length} excursiones de esta página tienen recogida en ${r.name}; el punto y la hora exactos van en tu e-ticket.`], ...(fam.length ? [[`¿Cuáles son mejores para familias?`, fam.slice(0, 3).map((t) => t.name.es).join(", ") + "."]] : [])];
+  const body = `<div class="wrap">${bc.html}</div>
+<section class="wrap section page-head"><p class="eyebrow">${icon(c.icon)}${esc(cn)} · ${icon("pin")}${esc(r.name)}</p><h1>${esc(L.comboH1(cn, r.name, list.length))}</h1><p class="lead">${esc(L.comboLead(cn, r.name, list.length, price(lang, cheapest.price), durs))}</p></section>
+<section class="wrap">${cardGrid(lang, sorted)}</section>
+<section class="wrap section split"><div>${faqBlock(lang, faqs)}</div><aside class="side"><h2>${L.officeHere}</h2>${officeList(lang, local)}</aside></section>
+<section class="wrap section"><h2>${L.byActivity}</h2><p class="pills">${combos.filter((x) => x.r === r && x.c !== c).map((x) => `<a href="${comboUrl(lang, r, x.c)}">${esc(catName(lang, x.c))}</a>`).join("")}</p></section>`;
+  page({ lang, path: p, alt, title: clip(L.comboH1(cn, r.name, list.length), 70), description: clip(L.comboLead(cn, r.name, list.length, price(lang, cheapest.price), durs), 158), body, ld: [itemListLd(lang, sorted), bc.ld, faqLd(faqs)], ogImage: sorted.find((t) => t.images.length)?.images[0].src });
+}
+
+function reelsPage(lang) {
+  const L = T[lang];
+  const alt = altOf("reels");
+  const bc = breadcrumbs(lang, [[L.reelsNav, alt[lang]]]);
+  const body = `<div class="wrap">${bc.html}</div>
+<section class="wrap section page-head"><h1>${esc(L.reelsTitle)}</h1><p class="lead">${esc(L.reelsLead)}</p><p class="pills">${Object.entries(site.social).filter(([k, v]) => v && ["instagram", "tiktok", "youtube"].includes(k)).map(([k, v]) => `<a href="${v}" target="_blank" rel="noopener">${k[0].toUpperCase() + k.slice(1)}</a>`).join("")}</p></section>
+<section class="wrap"><div class="reels-grid">${reels.map((r) => reelCard(lang, r)).join("")}</div></section>`;
+  page({ lang, path: alt[lang], alt, title: `${L.reelsTitle} | Tickets Direct Lanzarote`, description: L.reelsLead, body, ld: [bc.ld] });
 }
 
 function destinationPage(lang, d) {
@@ -956,6 +1035,8 @@ for (const lang of LANGS) {
   tours.filter((t) => lang === "en" || t.hasEs).forEach((t) => tourPage(lang, t));
   categories.forEach((c) => (lang === "en" || c.path.es) && categoryPage(lang, c));
   resorts.forEach((r) => resortPage(lang, r));
+  combos.forEach((x) => comboPage(lang, x));
+  if (reels.length) reelsPage(lang);
   destinationsIndex(lang);
   destinations.forEach((d) => (lang === "en" || d.path.es) && destinationPage(lang, d));
   guidesIndex(lang);

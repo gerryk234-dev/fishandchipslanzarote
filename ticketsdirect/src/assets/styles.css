@@ -382,3 +382,114 @@ select { appearance: none; width: 100%; padding: 11px 36px 11px 12px; border: 1p
 .bk-total { margin: 0; font-weight: 600; font-size: .95rem; }
 .bk .btn.block { margin-top: 0; }
 .points td { vertical-align: top; }
+
+/* ===== Visual layer: hero slideshow, rails, reels, motion ===== */
+/* Full-bleed hero: photos cross-fade with a slow zoom; text sits on a dark-to-clear wash. */
+.hero2 { position: relative; overflow: hidden; color: #fff; min-height: min(78vh, 720px); display: flex; align-items: flex-end; background: #0b2a33; }
+.hero-slides { position: absolute; inset: 0; }
+.hero-slides img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; animation: slide 24s infinite; animation-delay: calc(var(--i) * 6s); }
+.hero-slides img:first-child { opacity: 1; }
+.hero2::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgb(8 30 37 / 10%) 0%, rgb(8 30 37 / 35%) 45%, rgb(8 30 37 / 82%) 100%); }
+.hero2-inner { position: relative; z-index: 1; padding-block: 120px 36px; }
+.hero2 h1 { max-width: 15ch; color: #fff; text-shadow: 0 2px 24px rgb(0 0 0 / 35%); animation: rise .8s .1s both; }
+.hero2 .lead { color: rgb(255 255 255 / 90%); max-width: 60ch; animation: rise .8s .25s both; }
+.hero2 .eyebrow { color: var(--gold); animation: rise .8s both; }
+.hero2 .finder { animation: rise .8s .4s both; color: var(--ink); max-width: 760px; }
+.hero2 .hero-chips a { background: rgb(255 255 255 / 14%); border-color: rgb(255 255 255 / 35%); color: #fff; backdrop-filter: blur(6px); }
+.hero2 .hero-chips a:hover { background: #fff; color: var(--sea); }
+@keyframes slide { 0% { opacity: 0; transform: scale(1.08); } 4% { opacity: 1; } 25% { opacity: 1; } 30% { opacity: 0; transform: scale(1); } 100% { opacity: 0; } }
+@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+/* Counters */
+.counters { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: -28px; position: relative; z-index: 2; }
+.counters div { background: #fff; border-radius: 16px; padding: 16px 18px; box-shadow: var(--shadow); display: flex; flex-direction: column; }
+.counters strong { font: 800 clamp(1.6rem, 3vw, 2.2rem) var(--ff-display); color: var(--lava); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.counters span { font-size: .85rem; color: var(--muted); }
+
+/* Promise marquee */
+.marquee { overflow: hidden; margin-top: 28px; background: var(--sea); color: #fff; padding: 12px 0; }
+.marquee-track { display: flex; gap: 40px; width: max-content; animation: marquee 40s linear infinite; }
+.marquee span { display: inline-flex; align-items: center; font-weight: 600; white-space: nowrap; }
+.marquee .i { color: var(--gold); }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* Swipe rails */
+.rail { position: relative; }
+.rail-track { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(260px, 300px); gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 6px 2px 18px; scrollbar-width: none; overscroll-behavior-x: contain; }
+.rail-track::-webkit-scrollbar { display: none; }
+.rail-track > * { scroll-snap-align: start; }
+.rail-btn { position: absolute; top: 40%; z-index: 3; width: 44px; height: 44px; border-radius: 50%; border: 0; background: #fff; box-shadow: var(--shadow); font: 700 1.5rem/1 var(--ff-body); color: var(--sea); cursor: pointer; display: none; }
+.rail-btn.prev { left: -14px; } .rail-btn.next { right: -14px; }
+.js .rail-btn { display: block; }
+.rail-btn[disabled] { opacity: 0; pointer-events: none; }
+@media (hover: none) { .js .rail-btn { display: none; } }
+
+/* Cards: lift, photo zoom, flags */
+.card { transition: transform .25s ease, box-shadow .25s ease; }
+.card:hover { transform: translateY(-6px); box-shadow: 0 2px 4px rgb(22 32 31 / 8%), 0 18px 40px rgb(22 32 31 / 16%); }
+.card-media { overflow: hidden; }
+.card-media img { transition: transform .6s ease; }
+.card:hover .card-media img { transform: scale(1.07); }
+.flag { position: absolute; right: 10px; bottom: 10px; display: inline-flex; align-items: center; gap: 2px; padding: 4px 10px; border-radius: 999px; background: var(--gold); color: #3a2603; font-size: .74rem; font-weight: 700; box-shadow: 0 4px 12px rgb(0 0 0 / 20%); }
+.flag .i { width: .95em; height: .95em; margin-right: 2px; fill: currentColor; }
+.cat { transition: transform .2s ease, filter .2s ease; }
+.cat:hover { transform: translateY(-4px) rotate(-.6deg); }
+.cat:hover .cat-icon { animation: wobble .5s ease; }
+@keyframes wobble { 30% { transform: rotate(-10deg) scale(1.1); } 60% { transform: rotate(8deg); } }
+.resort { transition: transform .25s ease, box-shadow .25s ease; }
+.resort:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+
+/* Reels: vertical 9:16 cards */
+.reels-band { background: #0d2a31; color: #fff; }
+.reels-band .lead { color: rgb(255 255 255 / 75%); margin: 0; }
+.reels-band .sec-head a { color: var(--gold); }
+.reel { position: relative; display: block; aspect-ratio: 9 / 16; max-width: 100%; border-radius: 18px; overflow: hidden; background: #123c4a; color: #fff; text-decoration: none; box-shadow: 0 10px 30px rgb(0 0 0 / 25%); }
+.reels-band .rail-track { grid-auto-columns: minmax(170px, 210px); }
+.reel img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s ease; }
+.reel:hover img { transform: scale(1.08); }
+.reel::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgb(0 0 0 / 75%)); }
+.reel-play { position: absolute; top: 50%; left: 50%; z-index: 1; width: 58px; height: 58px; margin: -29px 0 0 -29px; display: grid; place-items: center; border-radius: 50%; background: rgb(255 255 255 / 22%); backdrop-filter: blur(6px); animation: pulse 2.4s ease-in-out infinite; }
+.reel-play .i { width: 26px; height: 26px; margin: 0 0 0 3px; fill: #fff; }
+.reel-meta { position: absolute; left: 12px; right: 12px; bottom: 12px; z-index: 1; display: flex; flex-direction: column; gap: 2px; }
+.reel-meta strong { font-size: .92rem; line-height: 1.25; }
+.reel-meta small { color: var(--gold); font-weight: 700; }
+.reel:hover { color: #fff; }
+@keyframes pulse { 50% { transform: scale(1.12); } }
+.reels-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px; }
+.reel-dialog { border: 0; padding: 0; border-radius: 20px; background: #000; width: min(420px, 92vw); max-height: 92vh; }
+.reel-dialog::backdrop { background: rgb(5 20 25 / 80%); backdrop-filter: blur(4px); }
+.reel-frame { aspect-ratio: 9 / 16; max-height: 78vh; }
+.reel-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+.reel-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 0; padding: 10px; background: #0d2a31; }
+.reel-actions .btn.ghost { color: #fff; border-color: rgb(255 255 255 / 50%); }
+
+/* Office rating */
+.g-rating { margin: -4px 0 6px; font-size: .85rem; }
+.g-rating a { color: #b97d12; font-weight: 700; text-decoration: none; }
+
+/* Header shrinks with a shadow once the page scrolls */
+.site-head { transition: box-shadow .2s ease, background .2s ease; }
+.site-head.scrolled { box-shadow: 0 6px 20px rgb(22 32 31 / 10%); background: rgb(248 243 234 / 98%); }
+
+/* Scroll reveal: only when JS is running, so content is never hidden without it */
+.js .rv { opacity: 0; transform: translateY(22px); transition: opacity .6s ease, transform .6s ease; }
+.js .rv.in { opacity: 1; transform: none; }
+
+@media (max-width: 760px) {
+  .hero2 { min-height: 0; }
+  .hero2-inner { padding-block: 96px 28px; }
+  .counters { grid-template-columns: 1fr 1fr; margin-top: 16px; }
+  .rail-track { grid-auto-columns: 78%; }
+  .reels-band .rail-track { grid-auto-columns: 46%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-slides img { animation: none; }
+  .hero-slides img:not(:first-child) { display: none; }
+  .marquee-track, .reel-play, .hero2 h1, .hero2 .lead, .hero2 .eyebrow, .hero2 .finder { animation: none; }
+  .js .rv { opacity: 1; transform: none; transition: none; }
+}
+
+/* Keep the desktop menu on one line; switch to the menu button a little earlier. */
+.nav > a, .dd > button, .nav .btn { white-space: nowrap; }
+@media (min-width: 981px) and (max-width: 1280px) { .nav > a, .dd > button { padding: 8px 7px; font-size: .9rem; } .nav [data-install] { display: none; } }

@@ -25,6 +25,79 @@
     installBtns().forEach((x) => (x.hidden = true));
   });
 
+  // ---- motion: reveal on scroll, counters, header shadow ----
+  document.documentElement.classList.add("js");
+  const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const io = "IntersectionObserver" in window && !calm
+    ? new IntersectionObserver((entries) => entries.forEach((e) => e.isIntersecting && (e.target.classList.add("in"), io.unobserve(e.target))), { rootMargin: "0px 0px -8% 0px" })
+    : null;
+  $$(".rv").forEach((el, i) => {
+    el.style.transitionDelay = `${(i % 4) * 70}ms`;
+    io ? io.observe(el) : el.classList.add("in");
+  });
+  const countUp = (el) => {
+    const to = Number(el.dataset.count);
+    const from = Number(el.dataset.from || 0);
+    const t0 = performance.now();
+    const step = (t) => {
+      const k = Math.min(1, (t - t0) / 1400);
+      el.textContent = Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3)));
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+  if (!calm && "IntersectionObserver" in window) {
+    const co = new IntersectionObserver((entries) => entries.forEach((e) => e.isIntersecting && (countUp(e.target), co.unobserve(e.target))));
+    $$("[data-count]").forEach((el) => co.observe(el));
+  }
+  const head = $(".site-head");
+  addEventListener("scroll", () => head?.classList.toggle("scrolled", scrollY > 10), { passive: true });
+
+  // ---- swipe rails ----
+  $$("[data-rail]").forEach((r) => {
+    const track = $(".rail-track", r);
+    const prev = $(".rail-btn.prev", r);
+    const next = $(".rail-btn.next", r);
+    const sync = () => {
+      prev.disabled = track.scrollLeft < 8;
+      next.disabled = track.scrollLeft + track.clientWidth > track.scrollWidth - 8;
+    };
+    const by = (d) => track.scrollBy({ left: d * track.clientWidth * 0.85, behavior: calm ? "auto" : "smooth" });
+    prev.addEventListener("click", () => by(-1));
+    next.addEventListener("click", () => by(1));
+    track.addEventListener("scroll", sync, { passive: true });
+    sync();
+  });
+
+  // ---- reels: play YouTube in a lightbox; other platforms open in a new tab ----
+  const dlg = $("#reel-dialog");
+  if (dlg && dlg.showModal) {
+    const frame = $(".reel-frame", dlg);
+    const close = () => {
+      frame.innerHTML = "";
+      dlg.close();
+    };
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest(".reel[data-yt]");
+      if (!a) return;
+      e.preventDefault();
+      const f = document.createElement("iframe");
+      f.src = `https://www.youtube-nocookie.com/embed/${a.dataset.yt}?autoplay=1&rel=0&playsinline=1`;
+      f.title = a.dataset.title || "Video";
+      f.allow = "autoplay; encrypted-media; picture-in-picture";
+      f.allowFullscreen = true;
+      frame.replaceChildren(f);
+      $("[data-out]", dlg).href = a.href;
+      const book = $("[data-book]", dlg);
+      book.hidden = !a.dataset.book;
+      if (a.dataset.book) book.href = a.dataset.book;
+      dlg.showModal();
+    });
+    $("[data-close]", dlg).addEventListener("click", close);
+    dlg.addEventListener("click", (e) => e.target === dlg && close());
+    dlg.addEventListener("cancel", () => (frame.innerHTML = ""));
+  }
+
   // ---- navigation ----
   const menuBtn = $(".menu-btn");
   const nav = $("#nav");
