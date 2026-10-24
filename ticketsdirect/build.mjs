@@ -51,7 +51,7 @@ const T = {
     filters: { all: "All", family: "Family", couples: "Couples", adventure: "Adventure", "half-day": "Half day", "full-day": "Full day", "island-hop": "Other islands", wildlife: "Wildlife", "rainy-day": "Windy / rainy day", nightlife: "Nightlife", pack: "Packs" },
     maxPrice: "Max price", results: "excursions", noResults: "No excursions match these filters.",
     contact: "Contact", call: "Call", email: "Email", followUs: "Follow us",
-    reviewsTitle: "What our guests say", readReviews: "Read our reviews on Tripadvisor",
+    reviewsTitle: "What our guests say", readReviews: "Read our reviews on Tripadvisor", googleReviews: (r, n) => `Rated ${r}★ on average across our ${n} offices on Google. Read the reviews for the office nearest you:`,
     heroTitle: "Lanzarote excursions, booked direct with the locals",
     heroLead: (n) => `${n} boat trips, volcano tours, buggies, water sports and island trips, sold by a Lanzarote agency since ${site.foundingYear}, with ${site.officeCount} offices in Costa Teguise, Puerto del Carmen and Playa Blanca.`,
     whyTitle: "Why book with Tickets Direct?",
@@ -108,7 +108,7 @@ const T = {
     filters: { all: "Todas", family: "Familias", couples: "Parejas", adventure: "Aventura", "half-day": "Medio día", "full-day": "Día completo", "island-hop": "Otras islas", wildlife: "Fauna", "rainy-day": "Día de viento / lluvia", nightlife: "Noche", pack: "Packs" },
     maxPrice: "Precio máx.", results: "excursiones", noResults: "Ninguna excursión coincide con estos filtros.",
     contact: "Contacto", call: "Llamar", email: "Email", followUs: "Síguenos",
-    reviewsTitle: "Lo que dicen nuestros clientes", readReviews: "Lee nuestras opiniones en Tripadvisor",
+    reviewsTitle: "Lo que dicen nuestros clientes", readReviews: "Lee nuestras opiniones en Tripadvisor", googleReviews: (r, n) => `Valoración media de ${r}★ en Google entre nuestras ${n} oficinas. Lee las opiniones de la oficina más cercana:`,
     heroTitle: "Excursiones en Lanzarote, reservadas directo con los de aquí",
     heroLead: (n) => `${n} excursiones en barco, volcanes, buggies, deportes acuáticos y otras islas, de la mano de una agencia de Lanzarote desde ${site.foundingYear}, con ${site.officeCount} oficinas en Costa Teguise, Puerto del Carmen y Playa Blanca.`,
     whyTitle: "¿Por qué reservar con Tickets Direct?",
@@ -301,7 +301,10 @@ function reviewsBlock(lang) {
   const quotes = list.length
     ? `<div class="grid reviews">${list.slice(0, 6).map((r) => `<figure class="review"><div class="stars" aria-label="${r.rating}/5">${"★".repeat(r.rating)}</div><blockquote>${esc(r.text)}</blockquote><figcaption>${esc(r.author)} · ${esc(r.source)}</figcaption></figure>`).join("")}</div>`
     : "";
-  return `<section class="band"><div class="wrap section"><h2>${L.reviewsTitle}</h2>${quotes}<p><a class="btn ghost" href="${site.social.tripadvisor}" rel="noopener" target="_blank">${icon("star")}${L.readReviews}</a></p></div></section>`;
+  // Google ratings per office are stronger than the Tripadvisor listing, so point visitors there.
+  const best = [...ratedOffices].sort((a, b) => Number(b.gbp.rating) - Number(a.gbp.rating));
+  const gLinks = best.map((o) => `<a href="${o.mapsUrl}" rel="noopener" target="_blank">★ ${esc(o.gbp.rating)} · ${esc(o.locality)}</a>`).join("");
+  return `<section class="band"><div class="wrap section"><h2>${L.reviewsTitle}</h2>${quotes}${avgRating ? `<p class="lead">${esc(L.googleReviews(avgRating, ratedOffices.length))}</p><p class="pills g-pills">${gLinks}</p>` : ""}</div></section>`;
 }
 
 function expandShortcodes(lang, html) {
