@@ -72,7 +72,7 @@ const T = {
     langs: "Languages", minAge: (n) => `Minimum age ${n}`, installApp: "Install app",
     bk: { option: "Option", date: "Date", checking: "Checking availability…", pickDate: "Choose a date", noDates: "No online dates right now: ask us on WhatsApp", total: "Total", depositToday: "Deposit today", onDay: "rest on the day", travellers: "Travellers", waBook: "Book on WhatsApp" },
     badges: { best: "Bestseller", family: "Family favourite" },
-    reelsTitle: "Watch before you book", reelsLead: "Real clips from our boats, buggies and tours.", reelsNav: "Reels", watchOn: "Watch on", bookThis: "Book this tour",
+    reelsTitle: "Watch before you book", reelsLead: "Real clips from our boats, buggies and tours.", reelsNav: "Reels", watchOn: "Watch on", bookThis: "Book this tour", subscribe: "Subscribe on YouTube", tourShorts: "Watch this tour",
     counters: { tours: "excursions", since: "selling since", offices: "walk-in offices", rating: "avg. Google rating of our offices" },
     byActivity: "By activity", fromResort: "From your resort",
     comboH1: (c, r, n) => `${c} from ${r} 2026: ${n} tours with pickup`,
@@ -129,7 +129,7 @@ const T = {
     langs: "Idiomas", minAge: (n) => `Edad mínima ${n}`, installApp: "Instalar app",
     bk: { option: "Opción", date: "Fecha", checking: "Consultando disponibilidad…", pickDate: "Elige una fecha", noDates: "Ahora no hay fechas online: pregúntanos por WhatsApp", total: "Total", depositToday: "Depósito hoy", onDay: "resto el día de la excursión", travellers: "Viajeros", waBook: "Reservar por WhatsApp" },
     badges: { best: "Más vendida", family: "Favorita en familia" },
-    reelsTitle: "Míralo antes de reservar", reelsLead: "Vídeos reales de nuestros barcos, buggies y excursiones.", reelsNav: "Vídeos", watchOn: "Ver en", bookThis: "Reservar esta excursión",
+    reelsTitle: "Míralo antes de reservar", reelsLead: "Vídeos reales de nuestros barcos, buggies y excursiones.", reelsNav: "Vídeos", watchOn: "Ver en", bookThis: "Reservar esta excursión", subscribe: "Suscríbete en YouTube", tourShorts: "Mira esta excursión",
     counters: { tours: "excursiones", since: "vendiendo desde", offices: "oficinas", rating: "valoración media en Google de nuestras oficinas" },
     byActivity: "Por actividad", fromResort: "Desde tu zona",
     comboH1: (c, r, n) => `${c} desde ${r} 2026: ${n} excursiones con recogida`,
@@ -235,9 +235,11 @@ function reelCard(lang, r) {
   const t = r.tour && tourBy[r.tour];
   const img = t?.images[0];
   const title = r.title?.[lang] || t?.name[lang] || "";
-  const href = r.platform === "youtube" ? `https://www.youtube.com/watch?v=${r.id}` : r.url;
+  const href = r.platform === "youtube" ? `https://www.youtube.com/shorts/${r.id}` : r.url;
+  // Tour photo when linked (self-hosted, fast); otherwise the Short's own vertical cover from YouTube.
+  const cover = img ? img.src : r.platform === "youtube" ? `https://i.ytimg.com/vi/${r.id}/oardefault.jpg` : null;
   return `<a class="reel rv" href="${esc(href)}" target="_blank" rel="noopener" data-platform="${r.platform}"${r.platform === "youtube" ? ` data-yt="${r.id}"` : ""}${t ? ` data-book="${url(lang, "tour", t.slug)}"` : ""} data-title="${esc(title)}">
-  ${img ? `<img src="${img.src}" alt="" loading="lazy" decoding="async">` : ""}
+  ${cover ? `<img src="${cover}" alt="" loading="lazy" decoding="async">` : ""}
   <span class="reel-play">${icon("play")}</span>
   <span class="reel-meta"><strong>${esc(title)}</strong>${t ? `<small>${T[lang].from} ${price(lang, t.price)}</small>` : ""}</span>
 </a>`;
@@ -605,7 +607,8 @@ function tourPage(lang, t) {
     ${t.overview[lang] ? `<h2>${L.overview}</h2><div class="prose">${t.overview[lang]}</div>` : ""}
     ${t.itinerary[lang].length ? `<h2>${L.itinerary}</h2><ol class="steps">${t.itinerary[lang].map((s) => `<li><strong>${esc(s.title)}</strong>${s.text ? `<p>${esc(s.text)}</p>` : ""}</li>`).join("")}</ol>` : ""}
     ${t.includes[lang].length || t.excludes[lang].length ? `<div class="incl">${t.includes[lang].length ? `<div><h2>${L.includes}</h2><ul class="ticks">${t.includes[lang].map((x) => `<li>${icon("check")}${esc(x)}</li>`).join("")}</ul></div>` : ""}${t.excludes[lang].length ? `<div><h2>${L.excludes}</h2><ul class="ticks no">${t.excludes[lang].map((x) => `<li>${icon("x")}${esc(x)}</li>`).join("")}</ul></div>` : ""}</div>` : ""}
-    ${yt ? `<h2>${L.video}</h2><button class="yt" data-yt="${yt}" aria-label="${esc(L.video)}: ${esc(t.name[lang])}"><img src="https://i.ytimg.com/vi/${yt}/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">${icon("play", "yt-play")}</button>` : ""}
+    ${reels.some((r) => r.tour === t.slug) ? `<h2>${L.tourShorts}</h2><div class="tour-shorts">${reels.filter((r) => r.tour === t.slug).slice(0, 4).map((r) => reelCard(lang, r)).join("")}</div>` : ""}
+    ${yt && !reels.some((r) => r.tour === t.slug && r.id === yt) ? `<h2>${L.video}</h2><button class="yt" data-yt="${yt}" aria-label="${esc(L.video)}: ${esc(t.name[lang])}"><img src="https://i.ytimg.com/vi/${yt}/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">${icon("play", "yt-play")}</button>` : ""}
     ${pickupNames.length ? `<h2>${L.pickupsTitle}</h2><p class="pills">${pickupNames.map((p) => { const r = resorts.find((x) => x.wp === p.id); return r ? `<a href="${url(lang, "resort", r.slug)}">${esc(p.name[lang])}</a>` : `<span>${esc(p.name[lang])}</span>`; }).join("")}</p>` : ""}
     ${t.pickupPoints.length ? `<h2>${L.pickupPointsTitle}</h2>${pointsTable(lang, t.pickupPoints)}` : ""}
     ${dests.length ? `<h2>${L.placesTitle}</h2><p class="pills">${dests.map((x) => `<a href="${destUrl(lang, x)}">${esc(x.name[lang])}</a>`).join("")}</p>` : ""}
@@ -707,7 +710,7 @@ function reelsPage(lang) {
   const alt = altOf("reels");
   const bc = breadcrumbs(lang, [[L.reelsNav, alt[lang]]]);
   const body = `<div class="wrap">${bc.html}</div>
-<section class="wrap section page-head"><h1>${esc(L.reelsTitle)}</h1><p class="lead">${esc(L.reelsLead)}</p><p class="pills">${Object.entries(site.social).filter(([k, v]) => v && ["instagram", "tiktok", "youtube"].includes(k)).map(([k, v]) => `<a href="${v}" target="_blank" rel="noopener">${k[0].toUpperCase() + k.slice(1)}</a>`).join("")}</p></section>
+<section class="wrap section page-head"><h1>${esc(L.reelsTitle)}</h1><p class="lead">${esc(L.reelsLead)}</p><p><a class="btn" href="${site.social.youtube}?sub_confirmation=1" target="_blank" rel="noopener">${icon("play")}${L.subscribe}</a></p><p class="pills">${Object.entries(site.social).filter(([k, v]) => v && ["instagram", "tiktok", "youtube"].includes(k)).map(([k, v]) => `<a href="${v}" target="_blank" rel="noopener">${k[0].toUpperCase() + k.slice(1)}</a>`).join("")}</p></section>
 <section class="wrap"><div class="reels-grid">${reels.map((r) => reelCard(lang, r)).join("")}</div></section>`;
   page({ lang, path: alt[lang], alt, title: `${L.reelsTitle} | Tickets Direct Lanzarote`, description: L.reelsLead, body, ld: [bc.ld] });
 }

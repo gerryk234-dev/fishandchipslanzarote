@@ -1,113 +1,416 @@
 {
-  "_note": "Shorts, Reels and TikToks shown in the video rail and on /reels/. platform: youtube | instagram | tiktok. For YouTube give the 11-character video id (works for Shorts too); for Instagram/TikTok give the full post URL in 'url'. 'tour' links the video to a tour (its photo is used as the cover and it gets a Book button). Order = order on the site.",
+  "_note": "Shorts from youtube.com/@experiencelanzarote (imported 2026-10-24). platform: youtube | instagram | tiktok. YouTube uses the 11-character id; Instagram/TikTok use 'url'. 'tour' links a Short to a tour (cover photo + Book button). Order = order on the site: bookable, most-watched first.",
+  "channel": "https://www.youtube.com/@experiencelanzarote/shorts",
   "items": [
-    {
-      "platform": "youtube",
-      "id": "PYYx7w01AUE",
-      "tour": "la-graciosa-all-inclusive-catamaran-cruise",
-      "title": {
-        "en": "La Graciosa All-inclusive Catamaran Cruise",
-        "es": "Catamaran en Isla La Graciosa"
-      }
-    },
-    {
-      "platform": "youtube",
-      "id": "9UbcjK2huT0",
-      "tour": "lobos-island-dolphins-cruise",
-      "title": {
-        "en": "Lobos Island & Dolphins Cruise",
-        "es": "Lobos Island & Dolphins Cruise"
-      }
-    },
-    {
-      "platform": "youtube",
-      "id": "s_FQy3W_cJk",
-      "tour": "i-love-sunset-catamaran-cruise",
-      "title": {
-        "en": "I Love Sunset Catamaran Cruise",
-        "es": "I Love Sunset Catamaran (Puesta de Sol)"
-      }
-    },
-    {
-      "platform": "youtube",
-      "id": "b1h5v6Ybx_c",
-      "tour": "papagayo-all-inclusive-catamaran-cruise",
-      "title": {
-        "en": "Papagayo Lanzarote Catamaran Cruise",
-        "es": "Catamarán a Playas Papagayo Lanzarote"
-      }
-    },
     {
       "platform": "youtube",
       "id": "5oT6kMSwhQU",
       "tour": "buggy-tour-maverick-can-am-trail",
       "title": {
-        "en": "Lanzarote Buggy Tour Maverick Can-am Trail",
-        "es": "Ruta en Buggy Maverick Can-am Trail"
-      }
+        "en": "Lanzarote buggy tours",
+        "es": "Buggies en Lanzarote"
+      },
+      "views": 6600
     },
     {
       "platform": "youtube",
-      "id": "Rd826sm6gg0",
-      "tour": "boat-cruise-watersports",
+      "id": "Tt5fvsaCO9Y",
+      "tour": "rancho-texas-park-interaction-with-dolphins",
       "title": {
-        "en": "Boat Cruise + Watersports",
-        "es": "Crucero en barco + deportes acuáticos"
-      }
+        "en": "Rancho Texas dolphin show",
+        "es": "Espectáculo de delfines en Rancho Texas"
+      },
+      "views": 1600
     },
     {
       "platform": "youtube",
-      "id": "kPin5y_BJq4",
-      "tour": "lanzarote-karting",
+      "id": "VNqP8z5m2Rg",
+      "tour": "jet-ski-lanzarote-20-minute-express-jet-ski-rental",
       "title": {
-        "en": "Lanzarote Karting",
-        "es": "Lanzarote Karts"
-      }
+        "en": "Jet ski in Costa Teguise",
+        "es": "Moto de agua en Costa Teguise"
+      },
+      "views": 1200
+    },
+    {
+      "platform": "youtube",
+      "id": "PMEvL-5SGWU",
+      "tour": "jet-ski-lanzarote-20-minute-express-jet-ski-rental",
+      "title": {
+        "en": "Jet ski rentals Lanzarote",
+        "es": "Alquiler de motos de agua"
+      },
+      "views": 880
+    },
+    {
+      "platform": "youtube",
+      "id": "b1h5v6Ybx_c",
+      "tour": "i-love-papagayo-catamaran-cruise",
+      "title": {
+        "en": "I Love Papagayo catamaran",
+        "es": "Catamarán I Love Papagayo"
+      },
+      "views": 781
+    },
+    {
+      "platform": "youtube",
+      "id": "qc9N36s26GM",
+      "tour": "4-seater-buggy-tour-50-off-road",
+      "title": {
+        "en": "4-seater family buggy tour",
+        "es": "Buggy familiar de 4 plazas"
+      },
+      "views": 762
+    },
+    {
+      "platform": "youtube",
+      "id": "IW5yQ_btNpM",
+      "tour": "caves-express",
+      "title": {
+        "en": "Jameos del Agua tour",
+        "es": "Excursión a Jameos del Agua"
+      },
+      "views": 754
     },
     {
       "platform": "youtube",
       "id": "SDSKpvP4LOE",
       "tour": "try-dive",
       "title": {
-        "en": "Try Dive",
-        "es": "Bautizo de buceo"
-      }
+        "en": "Scuba diving in Lanzarote",
+        "es": "Buceo en Lanzarote"
+      },
+      "views": 716
     },
     {
       "platform": "youtube",
-      "id": "I4hy_axIKe8",
+      "id": "PYYx7w01AUE",
+      "tour": "la-graciosa-all-inclusive-catamaran-cruise",
+      "title": {
+        "en": "La Graciosa catamaran cruise",
+        "es": "Catamarán a La Graciosa"
+      },
+      "views": 619
+    },
+    {
+      "platform": "youtube",
+      "id": "eq15fXYKK6c",
+      "tour": "lobos-island-dolphins-cruise",
+      "title": {
+        "en": "Isla de Lobos & dolphins",
+        "es": "Isla de Lobos y delfines"
+      },
+      "views": 602
+    },
+    {
+      "platform": "youtube",
+      "id": "BKQUge0k4Lg",
+      "tour": "sea-trekkin",
+      "title": {
+        "en": "Sea trekking Lanzarote",
+        "es": "Sea trekking en Lanzarote"
+      },
+      "views": 441
+    },
+    {
+      "platform": "youtube",
+      "id": "k9qI_rPiAfQ",
+      "tour": "lanzarote-dolphins-whales-watching",
+      "title": {
+        "en": "Dolphin watching trips",
+        "es": "Avistamiento de delfines"
+      },
+      "views": 362
+    },
+    {
+      "platform": "youtube",
+      "id": "9UbcjK2huT0",
+      "tour": "lobos-island-dolphins-cruise",
+      "title": {
+        "en": "Lobos Island & dolphins cruise",
+        "es": "Crucero a Lobos con delfines"
+      },
+      "views": 336
+    },
+    {
+      "platform": "youtube",
+      "id": "O43fCWBD7-U",
+      "tour": "rancho-texas-animal-splash-park-entry",
+      "title": {
+        "en": "Rancho Texas Animal Splash",
+        "es": "Rancho Texas Animal Splash"
+      },
+      "views": 333
+    },
+    {
+      "platform": "youtube",
+      "id": "zlWCMi3ocYk",
+      "tour": "sunday-market-la-graciosa",
+      "title": {
+        "en": "Teguise Sunday market",
+        "es": "Mercadillo de Teguise"
+      },
+      "views": 301
+    },
+    {
+      "platform": "youtube",
+      "id": "RcxWmeksnwc",
       "tour": "super-buggy-tour-lanzabuggy",
       "title": {
-        "en": "Super Buggy Tour Maverick Turbo X3 – Lanzarote’s Ultimate Off-Road Adventure",
-        "es": "Excursión en Super Buggy Maverick Turbo X3 – La Aventura Todoterreno Definitiva de Lanzarote"
-      }
+        "en": "Lanzarote's hottest buggy adventure",
+        "es": "La aventura en buggy más intensa"
+      },
+      "views": 238
     },
     {
       "platform": "youtube",
-      "id": "PMEvL-5SGWU",
-      "tour": "40-minute-jet-ski-tour-an-unforgettable-lanzarote-adventure",
+      "id": "P9yDByct0m4",
+      "tour": "fuerteventura-delight",
       "title": {
-        "en": "40-Minute Jet Ski Tour: An Unforgettable Lanzarote Adventure",
-        "es": "Excursión en moto acuática de 40 minutos: una aventura inolvidable en Lanzarote"
-      }
+        "en": "Fuerteventura from Lanzarote",
+        "es": "Fuerteventura desde Lanzarote"
+      },
+      "views": 213
     },
     {
       "platform": "youtube",
-      "id": "MWNh7vMbBDI",
-      "tour": "submarine-safari",
+      "id": "jsqRgDsZ2Ug",
+      "tour": "rancho-texas-animal-splash-park-entry",
       "title": {
-        "en": "Submarine Safari",
-        "es": "Safari en Submarino"
-      }
+        "en": "Rancho Texas Lanzarote Park",
+        "es": "Rancho Texas Lanzarote Park"
+      },
+      "views": 209
     },
     {
       "platform": "youtube",
-      "id": "XECuJzm05-0",
-      "tour": "lanzaxtreme-polaris-tours",
+      "id": "V-GxdDVorR0",
+      "tour": "northern-treasures",
       "title": {
-        "en": "LanzaXtreme Polaris Tours",
-        "es": "LanzaXtreme Polaris Slingshot Tours"
-      }
+        "en": "Jameos del Agua, Lanzarote's jewel",
+        "es": "Jameos del Agua, la joya de Lanzarote"
+      },
+      "views": 198
+    },
+    {
+      "platform": "youtube",
+      "id": "zyd5UvLE8t0",
+      "tour": "fuerteventura-express-transfer-ferry",
+      "title": {
+        "en": "Our Playa Blanca harbour office",
+        "es": "Nuestra oficina del puerto de Playa Blanca"
+      },
+      "views": 189
+    },
+    {
+      "platform": "youtube",
+      "id": "s_FQy3W_cJk",
+      "tour": "dolphins-whales-watching-lanzarote",
+      "title": {
+        "en": "Dolphin sightseeing tours",
+        "es": "Excursiones para ver delfines"
+      },
+      "views": 172
+    },
+    {
+      "platform": "youtube",
+      "id": "ENKd2Oqjll0",
+      "tour": "lanzarote-grand-tour",
+      "title": {
+        "en": "Lanzarote Grand Tour",
+        "es": "Gran Tour de Lanzarote"
+      },
+      "views": 160
+    },
+    {
+      "platform": "youtube",
+      "id": "PA3pOdpiiig",
+      "tour": "jet-ski-lanzarote-20-minute-express-jet-ski-rental",
+      "title": {
+        "en": "Jet ski: feel the adrenaline",
+        "es": "Moto de agua: pura adrenalina"
+      },
+      "views": 120
+    },
+    {
+      "platform": "youtube",
+      "id": "J38_zHFjczc",
+      "tour": "full-day-volcanoes",
+      "title": {
+        "en": "Lanzarote, land of volcanoes",
+        "es": "Lanzarote, tierra de volcanes"
+      },
+      "views": 106
+    },
+    {
+      "platform": "youtube",
+      "id": "ZrGJvCRM7yE",
+      "tour": "full-day-volcanoes",
+      "title": {
+        "en": "La Geria vineyards",
+        "es": "Viñedos de La Geria"
+      },
+      "views": 104
+    },
+    {
+      "platform": "youtube",
+      "id": "j5CDrJiLMbM",
+      "tour": "buggy-tour-maverick-can-am-trail",
+      "title": {
+        "en": "Buggy by Timanfaya National Park",
+        "es": "Buggy junto a Timanfaya"
+      },
+      "views": 98
+    },
+    {
+      "platform": "youtube",
+      "id": "CAfJJ8S3OGQ",
+      "tour": "south-tour",
+      "title": {
+        "en": "Camels, La Geria wine & El Golfo",
+        "es": "Camellos, vino de La Geria y El Golfo"
+      },
+      "views": 85
+    },
+    {
+      "platform": "youtube",
+      "id": "rkhHJo7mDlw",
+      "tour": "short-south-tour-volcano",
+      "title": {
+        "en": "Short volcano tour",
+        "es": "Excursión corta a los volcanes"
+      },
+      "views": 77
+    },
+    {
+      "platform": "youtube",
+      "id": "FYwxMnwyQeM",
+      "tour": "i-love-la-graciosa-catamaran-cruise",
+      "title": {
+        "en": "I Love La Graciosa catamaran",
+        "es": "Catamarán I Love La Graciosa"
+      },
+      "views": 68
+    },
+    {
+      "platform": "youtube",
+      "id": "VOrIiLw7ouk",
+      "tour": "cesar-manrique-tour",
+      "title": {
+        "en": "César Manrique tour",
+        "es": "Ruta César Manrique"
+      },
+      "views": 42
+    },
+    {
+      "platform": "youtube",
+      "id": "8Y11SZV-zEQ",
+      "tour": "lanzarotes-highlights-tour",
+      "title": {
+        "en": "Lanzarote Highlights Tour",
+        "es": "Lo mejor de Lanzarote"
+      },
+      "views": 40
+    },
+    {
+      "platform": "youtube",
+      "id": "Wj3aWVsE5LY",
+      "tour": "i-love-sunset-catamaran-cruise",
+      "title": {
+        "en": "Lanzarote sunset cruises",
+        "es": "Cruceros al atardecer"
+      },
+      "views": 37
+    },
+    {
+      "platform": "youtube",
+      "id": "rxTaQRYb7Vw",
+      "tour": "special-catamaran-cruise",
+      "title": {
+        "en": "Exclusive catamaran from Puerto del Carmen",
+        "es": "Catamarán exclusivo desde Puerto del Carmen"
+      },
+      "views": 35
+    },
+    {
+      "platform": "youtube",
+      "id": "vuKQUyScdjw",
+      "tour": "south-tour",
+      "title": {
+        "en": "Treasures of the volcanic south",
+        "es": "Los tesoros del sur volcánico"
+      },
+      "views": 31
+    },
+    {
+      "platform": "youtube",
+      "id": "Rd826sm6gg0",
+      "tour": "boat-cruise-watersports",
+      "title": {
+        "en": "Boat cruise + watersports",
+        "es": "Crucero + deportes acuáticos"
+      },
+      "views": 30
+    },
+    {
+      "platform": "youtube",
+      "id": "p_BVEaBuMWc",
+      "tour": "sunset-catamaran-dolphins",
+      "title": {
+        "en": "The best sunsets in Europe",
+        "es": "Las mejores puestas de sol de Europa"
+      },
+      "views": 24
+    },
+    {
+      "platform": "youtube",
+      "id": "Q0WU1HUOBIQ",
+      "tour": null,
+      "title": {
+        "en": "Katfish premium cruise",
+        "es": "Crucero premium Katfish"
+      },
+      "views": 273
+    },
+    {
+      "platform": "youtube",
+      "id": "gUQ7AmAPcSs",
+      "tour": null,
+      "title": {
+        "en": "Summer 2026 in Lanzarote",
+        "es": "Verano 2026 en Lanzarote"
+      },
+      "views": 159
+    },
+    {
+      "platform": "youtube",
+      "id": "ZLKyWpjADrQ",
+      "tour": null,
+      "title": {
+        "en": "Boats, buggies and jet skis",
+        "es": "Barcos, buggies y motos de agua"
+      },
+      "views": 98
+    },
+    {
+      "platform": "youtube",
+      "id": "oupEnf89Mug",
+      "tour": null,
+      "title": {
+        "en": "Discover Lanzarote with Tickets Direct",
+        "es": "Descubre Lanzarote con Tickets Direct"
+      },
+      "views": 74
+    },
+    {
+      "platform": "youtube",
+      "id": "GHJKQa7LTMI",
+      "tour": null,
+      "title": {
+        "en": "Our Costa Teguise office",
+        "es": "Nuestra oficina de Costa Teguise"
+      },
+      "views": 62
     }
   ]
 }
