@@ -497,3 +497,123 @@ select { appearance: none; width: 100%; padding: 11px 36px 11px 12px; border: 1p
 /* Shorts on a tour page */
 .tour-shorts { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-bottom: 24px; max-width: 680px; }
 .tour-shorts .reel { border-radius: 14px; }
+
+/* ===== Tickets Direct brand theme =====
+   Colours from the Excursions Tickets Direct logo: navy ring #2f2483, yellow "i" #f8e800,
+   sky-blue badge #0090d8 → #284090, white wordmark. These override the tokens above. */
+:root {
+  --navy: #2f2483;
+  --navy-2: #1f1863;
+  --blue: #0077c8;
+  --sky: #0090d8;
+  --yellow: #f8e800;
+  --yellow-2: #e9d900;
+  --ink: #1b1840;
+  --muted: #555a78;
+  --sea: var(--navy);
+  --sea-2: var(--blue);
+  --sea-soft: #e7f2fb;
+  --lava: var(--navy);
+  --lava-2: var(--navy-2);
+  --gold: var(--yellow);
+  --sand: #f5f7fc;
+  --sand-2: #e9eef8;
+  --line: #dde3f1;
+  --shadow: 0 1px 2px rgb(31 24 99 / 6%), 0 10px 28px rgb(31 24 99 / 10%);
+}
+body { background: var(--sand); color: var(--ink); }
+
+/* Navy header so the white wordmark reads */
+.site-head, .site-head.scrolled { background: rgb(47 36 131 / 97%); border-bottom: 0; }
+.site-head.scrolled { box-shadow: 0 6px 24px rgb(31 24 99 / 35%); }
+.logo img { height: 44px; width: auto; transition: transform .3s ease; }
+.logo:hover img { transform: scale(1.04); }
+.nav > a, .dd > button { color: #fff; }
+.nav > a:hover, .dd > button:hover { background: rgb(255 255 255 / 12%); color: var(--yellow); }
+.nav .lang { color: var(--yellow); }
+.nav .btn.ghost { color: #fff; border-color: rgb(255 255 255 / 55%); }
+.dd-menu a { color: var(--ink); }
+.dd-menu a:hover { background: var(--sea-soft); color: var(--navy); }
+.menu-btn { background: var(--yellow); border-color: var(--yellow); color: var(--navy); }
+@media (max-width: 980px) { .nav { background: var(--navy); } .dd-menu a { color: #fff; } .dd-menu a:hover { background: rgb(255 255 255 / 10%); color: var(--yellow); } }
+
+/* Buttons: yellow call-to-action with navy text, like the "i" */
+.btn { background: var(--yellow); border-color: var(--yellow); color: var(--navy); font-weight: 700; }
+.btn:hover { background: var(--yellow-2); border-color: var(--yellow-2); color: var(--navy); box-shadow: 0 6px 18px rgb(248 232 0 / 35%); }
+.btn.ghost { background: transparent; color: var(--navy); border-color: var(--navy); }
+.btn.ghost:hover { background: var(--navy); color: #fff; box-shadow: none; }
+.btn.light { background: #fff; border-color: #fff; color: var(--navy); }
+.btn.ghost.light { background: transparent; color: #fff; border-color: #fff; }
+.btn.wa { background: var(--wa); border-color: var(--wa); color: #fff; }
+.btn.wa:hover { background: #17844a; border-color: #17844a; color: #fff; box-shadow: none; }
+.mobile-book .btn, .bk [data-book] { box-shadow: 0 6px 18px rgb(248 232 0 / 40%); }
+
+/* Prices and accents */
+.card-price strong, .bb-price strong, .mobile-book strong, .counters strong, .hero-stat strong { color: var(--navy); }
+.eyebrow { color: var(--blue); }
+.badge { color: var(--navy); }
+.flag { background: var(--yellow); color: var(--navy); }
+a { color: var(--blue); }
+a:hover { color: var(--navy); }
+.art-sea { background: linear-gradient(135deg, var(--sky), var(--navy)); }
+.art-rust { background: linear-gradient(135deg, #3a2fa0, var(--navy-2)); }
+.art-sage { background: linear-gradient(135deg, #2aa3e0, #1060b0); }
+.art-gold { background: linear-gradient(135deg, #fff36b, #d8c800); }
+.cat-sea { background: linear-gradient(135deg, var(--sky), #1060b0); }
+.cat-rust { background: linear-gradient(135deg, #3a2fa0, var(--navy-2)); }
+.cat-sage { background: linear-gradient(135deg, #2aa3e0, #284090); }
+.cat-gold { background: linear-gradient(135deg, var(--yellow), #e0c600); color: var(--navy); }
+.cat-gold:hover { color: var(--navy); }
+.resort-art, .resort:nth-child(2) .resort-art, .resort:nth-child(3) .resort-art { background: linear-gradient(160deg, var(--sky) 0%, #1060b0 55%, var(--navy) 100%); position: relative; }
+.resort-art::after { content: ""; position: absolute; right: 14px; bottom: -22px; width: 54px; height: 54px; border-radius: 50%; background: url(brand/logo-round-96.webp) center / cover; box-shadow: 0 6px 16px rgb(0 0 0 / 25%); }
+.resort strong { margin-top: 14px; }
+.band.dark, .reels-band { background: linear-gradient(160deg, var(--navy) 0%, var(--navy-2) 60%, #16114a 100%); }
+.why-list .i, .marquee .i { color: var(--yellow); }
+.marquee { background: linear-gradient(90deg, var(--sky), #1060b0 50%, var(--navy)); }
+.chips button[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); }
+.steps li::before { background: var(--navy); }
+.ticks .i { color: var(--blue); }
+.opt b, .bk-row b { color: var(--navy); }
+.chat-fab { background: var(--navy); box-shadow: 0 10px 30px rgb(47 36 131 / 45%); }
+.chat-head { background: var(--navy); }
+.msg.user { background: var(--blue); }
+.g-rating a { color: #9a8a00; }
+.site-foot { background: linear-gradient(180deg, var(--navy-2), #120e3c); }
+.foot-logo { display: flex; align-items: center; gap: 12px; }
+.foot-logo img:first-child { border-radius: 50%; }
+.cta-box, .app-promo { background: #e7f2fb; }
+.reel-actions { background: var(--navy-2); }
+.reels-band .sec-head a { color: var(--yellow); }
+.reel-meta small { color: var(--yellow); }
+:focus-visible { outline-color: var(--yellow); }
+
+/* Hero: navy-tinted wash, animated wave and the round badge */
+.hero2 { background: var(--navy-2); padding-bottom: 40px; }
+.hero2::after { background: linear-gradient(180deg, rgb(31 24 99 / 15%) 0%, rgb(31 24 99 / 40%) 45%, rgb(22 17 74 / 88%) 100%); }
+.hero2 .eyebrow { color: var(--yellow); }
+.hero-badge { position: absolute; z-index: 2; right: max(24px, calc((100vw - 1200px) / 2)); top: 96px; width: 132px; height: 132px; border-radius: 50%; box-shadow: 0 12px 40px rgb(0 0 0 / 35%); animation: badge-in 1s .6s both, bob 6s 1.6s ease-in-out infinite; }
+.hero-wave { position: absolute; left: 0; right: 0; bottom: -1px; z-index: 1; width: 100%; height: 70px; }
+.hero-wave path { fill: var(--sand); }
+.hero-wave .w2 { fill: rgb(0 144 216 / 35%); animation: wave 9s ease-in-out infinite alternate; transform-origin: center; }
+@keyframes badge-in { from { opacity: 0; transform: scale(.4) rotate(-120deg); } to { opacity: 1; transform: none; } }
+@keyframes bob { 50% { transform: translateY(-10px) rotate(4deg); } }
+@keyframes wave { to { transform: translateX(-6%) scaleY(1.25); } }
+.counters { margin-top: -52px; }
+
+/* Intro splash on the first home-page visit of a session: logo pops in, then fades away */
+.splash { position: fixed; inset: 0; z-index: 200; display: grid; place-content: center; justify-items: center; gap: 14px; background: radial-gradient(circle at 50% 45%, #1060b0 0%, var(--navy) 55%, var(--navy-2) 100%); color: #fff; font: 800 1.1rem var(--ff-display); letter-spacing: .04em; pointer-events: none; animation: splash-out .5s 1.3s forwards; }
+.splash img { width: 160px; height: 160px; border-radius: 50%; box-shadow: 0 0 0 0 rgb(248 232 0 / 60%); animation: splash-logo 1s cubic-bezier(.2, 1.4, .4, 1) both, ring 1.2s .5s ease-out; }
+.splash span { animation: rise .6s .45s both; color: var(--yellow); }
+.no-splash .splash { display: none; }
+@keyframes splash-logo { from { opacity: 0; transform: scale(.3) rotate(-200deg); } to { opacity: 1; transform: none; } }
+@keyframes ring { to { box-shadow: 0 0 0 40px rgb(248 232 0 / 0%); } }
+@keyframes splash-out { to { opacity: 0; visibility: hidden; } }
+
+@media (max-width: 760px) {
+  .hero-badge { display: none; }
+  .counters { margin-top: -20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .splash { display: none; }
+  .hero-badge, .hero-wave .w2 { animation: none; }
+}

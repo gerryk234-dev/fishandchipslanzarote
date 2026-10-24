@@ -53,6 +53,7 @@ const T = {
     contact: "Contact", call: "Call", email: "Email", followUs: "Follow us",
     reviewsTitle: "What our guests say", readReviews: "Read our reviews on Tripadvisor", googleReviews: (r, n) => `Rated ${r}★ on average across our ${n} offices on Google. Read the reviews for the office nearest you:`,
     heroTitle: "Lanzarote excursions, booked direct with the locals",
+    tagline: "Lanzarote's One Stop Shop",
     heroLead: (n) => `${n} boat trips, volcano tours, buggies, water sports and island trips, sold by a Lanzarote agency since ${site.foundingYear}, with ${site.officeCount} offices in Costa Teguise, Puerto del Carmen and Playa Blanca.`,
     whyTitle: "Why book with Tickets Direct?",
     whyLead: "We are the only excursion company that sells online and has walk-in offices in all three main resorts of Lanzarote. Book on the web, then talk to us face to face.",
@@ -110,6 +111,7 @@ const T = {
     contact: "Contacto", call: "Llamar", email: "Email", followUs: "Síguenos",
     reviewsTitle: "Lo que dicen nuestros clientes", readReviews: "Lee nuestras opiniones en Tripadvisor", googleReviews: (r, n) => `Valoración media de ${r}★ en Google entre nuestras ${n} oficinas. Lee las opiniones de la oficina más cercana:`,
     heroTitle: "Excursiones en Lanzarote, reservadas directo con los de aquí",
+    tagline: "Tu tienda de excursiones en Lanzarote",
     heroLead: (n) => `${n} excursiones en barco, volcanes, buggies, deportes acuáticos y otras islas, de la mano de una agencia de Lanzarote desde ${site.foundingYear}, con ${site.officeCount} oficinas en Costa Teguise, Puerto del Carmen y Playa Blanca.`,
     whyTitle: "¿Por qué reservar con Tickets Direct?",
     whyLead: "Somos la única empresa de excursiones que vende online y tiene oficinas en los tres grandes centros turísticos de Lanzarote. Reserva en la web y habla con nosotros en persona.",
@@ -394,7 +396,7 @@ function header(lang, alt) {
   const topDest = destinations.filter((d) => d.curated).concat(destinations.filter((d) => !d.curated).sort((a, b) => b.count - a.count)).slice(0, 8);
   return `<a class="skip" href="#main">${lang === "en" ? "Skip to content" : "Saltar al contenido"}</a>
 <header class="site-head"><div class="wrap head-row">
-  <a class="logo" href="${url(lang, "home")}" aria-label="${esc(site.name)}"><img src="/assets/logo.svg" alt="" width="36" height="36"><span><strong>Tickets Direct</strong><small>Excursions Lanzarote</small></span></a>
+  <a class="logo" href="${url(lang, "home")}" aria-label="${esc(site.name)}"><img src="/assets/brand/logo-header.png" alt="Excursions Tickets Direct" width="167" height="44"></a>
   <button class="menu-btn" aria-expanded="false" aria-controls="nav">${lang === "en" ? "Menu" : "Menú"}</button>
   <nav id="nav" class="nav" aria-label="Main">
     <a href="${url(lang, "tours")}">${L.nav.tours}</a>
@@ -415,7 +417,7 @@ function footer(lang) {
   const L = T[lang];
   const legal = (p) => `${BOOK}/${p}/`;
   return `<footer class="site-foot"><div class="wrap foot-grid">
-  <div><p class="logo foot-logo"><img src="/assets/logo.svg" alt="" width="32" height="32"><strong>Tickets Direct</strong></p>
+  <div><p class="foot-logo"><img src="/assets/brand/logo-round-96.webp" alt="Excursions Tickets Direct" width="72" height="72" loading="lazy"><img src="/assets/brand/logo-header.png" alt="" width="167" height="44" loading="lazy"></p>
     <p>${esc(L.heritage)}</p>
     <p><a href="tel:${site.phoneHref}">${icon("phone")}${site.phone}</a><br><a href="mailto:${site.email}">${icon("mail")}${site.email}</a><br><a href="https://wa.me/${site.whatsapp}" rel="noopener">${icon("wa")}WhatsApp 24h</a></p>
     <p><a class="btn ghost light small" href="${url(lang, "app")}">${icon("download")}${L.app.nav}</a></p></div>
@@ -464,8 +466,9 @@ ${noindex ? '<meta name="robots" content="noindex">' : '<meta name="robots" cont
 <meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${canonical}"><meta property="og:image" content="${ogImage ? abs(ogImage) : `${SITE}/assets/og-default.png`}"><meta property="og:locale" content="${L.locale}">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0f4c5c">
-<link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+<meta name="theme-color" content="#2f2483">
+<link rel="icon" href="/assets/brand/favicon-64.png" type="image/png">
+${p === "/" || p === "/es/" ? `<script>try{sessionStorage.getItem("td_intro")?document.documentElement.classList.add("no-splash"):sessionStorage.setItem("td_intro","1")}catch(e){}</script>` : ""}
 <link rel="manifest" href="/manifest-${lang}.webmanifest">
 <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
@@ -520,10 +523,11 @@ function homePage(lang) {
         ["¿Tickets Direct es una empresa local?", `Sí. Vendemos excursiones en Lanzarote desde ${site.foundingYear} y nacimos de Líneas Marítimas Romero, una de las navieras más conocidas de la isla.`],
       ];
   const body = `
+<div class="splash" aria-hidden="true"><img src="/assets/brand/logo-round-256.webp" alt="" width="160" height="160"><span>${esc(L.tagline)}</span></div>
 <section class="hero2">
   <div class="hero-slides" aria-hidden="true">${slides.map((im, i) => `<img src="${im.src}" alt="" width="${im.w}" height="${im.h}"${i ? ' loading="lazy"' : ' fetchpriority="high"'} style="--i:${i}">`).join("")}</div>
   <div class="wrap hero2-inner">
-    <p class="eyebrow">${lang === "en" ? `Local agency · since ${site.foundingYear}` : `Agencia local · desde ${site.foundingYear}`}</p>
+    <p class="eyebrow">${esc(L.tagline)} · ${lang === "en" ? `since ${site.foundingYear}` : `desde ${site.foundingYear}`}</p>
     <h1>${esc(L.heroTitle)}</h1>
     <p class="lead">${esc(L.heroLead(tours.length))}</p>
     <form class="finder" action="${url(lang, "tours")}" method="get">
@@ -534,6 +538,8 @@ function homePage(lang) {
     </form>
     <p class="hero-chips">${["family", "couples", "adventure", "island-hop", "rainy-day"].map((k) => `<a href="${url(lang, "tours")}?tag=${k}">${esc(L.filters[k])}</a>`).join("")}</p>
   </div>
+  <img class="hero-badge" src="/assets/brand/logo-round-256.webp" alt="" width="132" height="132" aria-hidden="true">
+  <svg class="hero-wave" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 C 240 80 480 0 720 40 S 1200 80 1440 40 V80 H0Z"/><path class="w2" d="M0 50 C 240 10 480 90 720 50 S 1200 10 1440 50 V80 H0Z"/></svg>
 </section>
 <section class="wrap counters" aria-label="Tickets Direct in numbers">
   <div><strong data-count="${tours.length}">${tours.length}</strong><span>${L.counters.tours}</span></div>
@@ -881,8 +887,8 @@ function pwa() {
       display: "standalone",
       display_override: ["window-controls-overlay", "standalone"],
       orientation: "any",
-      background_color: "#f8f3ea",
-      theme_color: "#0f4c5c",
+      background_color: "#f5f7fc",
+      theme_color: "#2f2483",
       categories: ["travel", "lifestyle"],
       icons: [
         { src: "/assets/icons/icon-192.png", sizes: "192x192", type: "image/png" },
@@ -900,7 +906,7 @@ function pwa() {
       ],
     }, null, 2));
   }
-  const precache = ["/", "/es/", url("en", "app"), url("es", "app"), "/assets/styles.css", "/assets/app.js", "/assets/logo.svg", "/assets/icons/icon-192.png", "/data/tours-en.json", "/data/tours-es.json"];
+  const precache = ["/", "/es/", url("en", "app"), url("es", "app"), "/assets/styles.css", "/assets/app.js", "/assets/brand/logo-header.png", "/assets/icons/icon-192.png", "/data/tours-en.json", "/data/tours-es.json"];
   write("/sw.js", `// Generated by build.mjs. Network-first for pages (always fresh prices), cache-first for static assets.
 const CACHE = "td-${BUILD_ID}";
 const PRECACHE = ${JSON.stringify(precache)};
