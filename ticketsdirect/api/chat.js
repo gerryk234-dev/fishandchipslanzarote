@@ -32,7 +32,7 @@ const catalogText = categories
         const unit = t.unit && t.unit !== "per-person" ? ` ${UNIT.en[t.unit]}` : "";
         const child = t.child ? `; child ${t.child.ages} ${formatPrice("en", t.child.price)}` : "";
         const pickups = t.pickups.map((id) => locTerm[id]?.name.en).filter((n) => n && n !== "Lanzarote").join(", ");
-        return `- slug=${t.slug} | ${t.name.en} / ${t.name.es} | from ${formatPrice("en", t.price)}${unit}${child} | ${formatDuration("en", t)} | pickup: ${pickups || "on request"} | tags: ${t.tags.join(", ")} | ${short(t.seo.en?.description || strip(t.overview.en), 220)}`;
+        return `- slug=${t.slug} | ${t.name.en} / ${t.name.es} | from ${formatPrice("en", t.price)}${unit}${child} | ${formatDuration("en", t)} | pickup: ${pickups || "on request"}${t.pickupPoints.length ? ` (points: ${t.pickupPoints.map((x) => `${x.name.en}${x.time ? ` ${x.time}` : ""}`).join("; ")})` : ""} | tags: ${t.tags.join(", ")} | ${short(t.seo.en?.description || strip(t.overview.en), 220)}`;
       })
       .join("\n")}`;
   })

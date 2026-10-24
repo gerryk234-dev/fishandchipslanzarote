@@ -60,6 +60,8 @@ const T = {
     destTitle: "Lanzarote destinations", destLead: "Every place our excursions visit, with the tours that take you there.",
     quickFacts: "Quick facts", toursTo: (n) => `Excursions to ${n}`, aboutPlace: (n) => `About ${n}`,
     langs: "Languages", minAge: (n) => `Minimum age ${n}`, installApp: "Install app",
+    bk: { option: "Option", date: "Date", checking: "Checking availability…", pickDate: "Choose a date", noDates: "No online dates right now: ask us on WhatsApp", total: "Total", depositToday: "Deposit today", onDay: "rest on the day", travellers: "Travellers", waBook: "Book on WhatsApp" },
+    pickupPointsTitle: "Pickup & meeting points", kind: { pickup: "Pickup", meeting: "Meeting point" }, time: "Time", timeOnTicket: "on your e-ticket", collectionIn: (n) => `Collection points in ${n}`,
     app: {
       title: "Get the Tickets Direct app", install: "Install the app", nav: "Get the app",
       lead: "Install Tickets Direct on your phone, tablet or computer: one tap to all Lanzarote excursions, prices and our assistant, even with a weak connection.",
@@ -109,6 +111,8 @@ const T = {
     destTitle: "Destinos en Lanzarote", destLead: "Todos los lugares que visitan nuestras excursiones, con las excursiones que te llevan.",
     quickFacts: "Datos rápidos", toursTo: (n) => `Excursiones a ${n}`, aboutPlace: (n) => `Sobre ${n}`,
     langs: "Idiomas", minAge: (n) => `Edad mínima ${n}`, installApp: "Instalar app",
+    bk: { option: "Opción", date: "Fecha", checking: "Consultando disponibilidad…", pickDate: "Elige una fecha", noDates: "Ahora no hay fechas online: pregúntanos por WhatsApp", total: "Total", depositToday: "Depósito hoy", onDay: "resto el día de la excursión", travellers: "Viajeros", waBook: "Reservar por WhatsApp" },
+    pickupPointsTitle: "Puntos de recogida y encuentro", kind: { pickup: "Recogida", meeting: "Punto de encuentro" }, time: "Hora", timeOnTicket: "en tu e-ticket", collectionIn: (n) => `Puntos de recogida en ${n}`,
     app: {
       title: "Descarga la app de Tickets Direct", install: "Instalar la app", nav: "Descarga la app",
       lead: "Instala Tickets Direct en tu móvil, tablet u ordenador: todas las excursiones de Lanzarote, precios y nuestro asistente a un toque, incluso con mala conexión.",
@@ -223,6 +227,18 @@ function trustStrip(lang) {
 }
 
 const hoursText = (lang, h) => (h.days === "daily" ? (lang === "en" ? `Open every day ${h.opens}–${h.closes}` : `Abierto todos los días ${h.opens}–${h.closes}`) : "");
+
+// WordPress stores traveller types in English only; translate the common ones for display.
+const PAX_ES = { adult: "Adulto", adults: "Adultos", child: "Niño", children: "Niños", kid: "Niño", infant: "Bebé", baby: "Bebé", pensioner: "Pensionista", senior: "Mayor", student: "Estudiante", person: "Persona", group: "Grupo", vehicle: "Vehículo" };
+const paxLabel = (lang, label) => (lang === "es" && PAX_ES[label.trim().toLowerCase()]) || label;
+
+function pointsTable(lang, list) {
+  const L = T[lang];
+  const rName = (slug) => resorts.find((r) => r.slug === slug)?.name || "";
+  return `<div class="table-wrap"><table class="prices points"><tbody>${list
+    .map((p) => `<tr><td><strong>${esc(p.name[lang] || p.name.en)}</strong>${p.notes?.[lang] ? `<br><small>${esc(p.notes[lang])}</small>` : ""}</td><td>${esc(L.kind[p.kind] || L.kind.pickup)}${p.resort ? ` · ${esc(rName(p.resort))}` : ""}</td><td>${p.time ? `<strong>${esc(p.time)}</strong>` : `<small>${L.time} ${L.timeOnTicket}</small>`}</td><td>${p.geo ? `<a href="https://www.google.com/maps/search/?api=1&query=${p.geo.join(",")}" rel="noopener" target="_blank">${L.directions}</a>` : ""}</td></tr>`)
+    .join("")}</tbody></table></div>`;
+}
 
 function officeList(lang, list) {
   const L = T[lang];
@@ -544,6 +560,7 @@ function tourPage(lang, t) {
     ${t.includes[lang].length || t.excludes[lang].length ? `<div class="incl">${t.includes[lang].length ? `<div><h2>${L.includes}</h2><ul class="ticks">${t.includes[lang].map((x) => `<li>${icon("check")}${esc(x)}</li>`).join("")}</ul></div>` : ""}${t.excludes[lang].length ? `<div><h2>${L.excludes}</h2><ul class="ticks no">${t.excludes[lang].map((x) => `<li>${icon("x")}${esc(x)}</li>`).join("")}</ul></div>` : ""}</div>` : ""}
     ${yt ? `<h2>${L.video}</h2><button class="yt" data-yt="${yt}" aria-label="${esc(L.video)}: ${esc(t.name[lang])}"><img src="https://i.ytimg.com/vi/${yt}/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">${icon("play", "yt-play")}</button>` : ""}
     ${pickupNames.length ? `<h2>${L.pickupsTitle}</h2><p class="pills">${pickupNames.map((p) => { const r = resorts.find((x) => x.wp === p.id); return r ? `<a href="${url(lang, "resort", r.slug)}">${esc(p.name[lang])}</a>` : `<span>${esc(p.name[lang])}</span>`; }).join("")}</p>` : ""}
+    ${t.pickupPoints.length ? `<h2>${L.pickupPointsTitle}</h2>${pointsTable(lang, t.pickupPoints)}` : ""}
     ${dests.length ? `<h2>${L.placesTitle}</h2><p class="pills">${dests.map((x) => `<a href="${destUrl(lang, x)}">${esc(x.name[lang])}</a>`).join("")}</p>` : ""}
     <h2>${L.goodToKnow}</h2>
     <ul class="ticks muted">${gtk.map((g) => `<li>${icon("check")}${esc(g)}</li>`).join("")}${t.info[lang].filter(([k]) => !/cancel/i.test(k)).map(([k, v]) => `<li>${icon("check")}<span><strong>${esc(k)}:</strong> ${esc(v)}</span></li>`).join("")}</ul>
@@ -552,13 +569,18 @@ function tourPage(lang, t) {
   <aside class="book-box" aria-label="${L.book}">
     <p class="bb-price"><span>${L.from}</span> <strong>${price(lang, t.price)}</strong> <small>${esc(unitLabel(lang, t) || UNIT[lang]["per-person"])}</small></p>
     <p class="bb-meta">${icon("clock")}${esc(d)}</p>
-    ${pkgTable.length ? `<details class="opts"${pkgTable.length > 1 || t.child ? " open" : ""}><summary>${L.options}</summary>${pkgTable.map((p) => `<div class="opt">${pkgTable.length > 1 ? `<strong>${esc(p.name)}</strong>` : ""}<ul>${p.categories.filter((x) => x.price > 0).map((x) => `<li><span>${esc(x.label)}${x.ages ? ` <small>(${esc(x.ages)})</small>` : ""}</span><b>${price(lang, x.price)}</b></li>`).join("")}</ul></div>`).join("")}</details>` : ""}
-    <a class="btn block" href="${bookingUrl(lang, t)}" rel="noopener">${L.book}</a>
-    <a class="btn wa block" href="${waTour(lang, t)}" rel="noopener" target="_blank">${icon("wa")}${L.ask}</a>
+    <form class="bk" id="book" data-trip="${t.id}" data-deposit="${t.deposit || ""}" data-name="${esc(t.name[lang])}" data-i18n="${esc(JSON.stringify(L.bk))}">
+      ${pkgTable.length > 1 ? `<label class="bk-field"><span>${L.bk.option}</span><select name="pkg">${pkgTable.map((p, i) => `<option value="${i}" data-id="${p.id ?? ""}">${esc(p.name)}</option>`).join("")}</select></label>` : ""}
+      <label class="bk-field bk-live"><span>${L.bk.date}</span><select name="date" disabled><option>${L.bk.checking}</option></select></label>
+      ${pkgTable.map((p, i) => `<div class="bk-pax" data-pkg="${i}"${i ? " hidden" : ""}>${p.categories.filter((x) => x.price > 0).map((x, j) => `<div class="bk-row" data-price="${x.price}" data-label="${esc(x.label)}"><span>${esc(paxLabel(lang, x.label))}${x.ages ? ` <small>(${esc(x.ages)})</small>` : ""}</span><b>${price(lang, x.price)}</b><span class="bk-step bk-live"><button type="button" data-d="-1" aria-label="−">−</button><output>${j === 0 ? 2 : 0}</output><button type="button" data-d="1" aria-label="+">+</button></span></div>`).join("")}</div>`).join("")}
+      <p class="bk-total bk-live" aria-live="polite"></p>
+      <a class="btn block" data-book href="${bookingUrl(lang, t)}" rel="noopener">${L.book}</a>
+      <a class="btn wa block" data-wa href="${waTour(lang, t)}" rel="noopener" target="_blank">${icon("wa")}${L.ask}</a>
+    </form>
     <ul class="bb-trust"><li>${icon("check")}${L.freeCancel}</li><li>${icon("check")}${esc(L.deposit(t.deposit))}</li><li>${icon("pin")}${lang === "en" ? `${site.officeCount} offices across Lanzarote` : `${site.officeCount} oficinas en Lanzarote`}</li><li>${icon("shield")}${lang === "en" ? `Local agency since ${site.foundingYear}` : `Agencia local desde ${site.foundingYear}`}</li></ul>
   </aside>
 </article>
-<div class="mobile-book"><span><small>${L.from}</small> <strong>${price(lang, t.price)}</strong></span><a class="btn" href="${bookingUrl(lang, t)}" rel="noopener">${L.book}</a></div>
+<div class="mobile-book"><span><small>${L.from}</small> <strong>${price(lang, t.price)}</strong></span><a class="btn" href="#book">${L.book}</a></div>
 <section class="wrap section"><h2>${L.related}</h2>${cardGrid(lang, [...related, ...fill])}</section>`;
   page({
     lang, path: url(lang, "tour", t.slug), alt, ogType: "product", ogImage: hero?.src,
@@ -603,6 +625,7 @@ function resortPage(lang, r) {
   <h2>${L.officeHere}</h2>${officeList(lang, local)}</aside>
 </section>
 <section class="wrap section"><h2>${lang === "en" ? `All ${fromHere.length + picks.length} excursions with pickup in ${r.name}` : `Las ${fromHere.length + picks.length} excursiones con recogida en ${r.name}`}</h2>${cardGrid(lang, fromHere)}</section>
+${C.pickupPoints.some((p) => p.resort === r.slug) ? `<section class="wrap section"><h2>${esc(L.collectionIn(r.name))}</h2>${pointsTable(lang, C.pickupPoints.filter((p) => p.resort === r.slug))}</section>` : ""}
 <section class="wrap section">${faqBlock(lang, r.faqs[lang])}</section>`;
   page({ lang, path: alt[lang], alt, title: clip(r.h1[lang], 70), description: r.meta[lang], body, ld: [itemListLd(lang, [...picks, ...fromHere]), bc.ld, faqLd(r.faqs[lang]), ...local.filter((o) => o.streetAddress).map((o) => ({ "@context": "https://schema.org", ...officeLd(o) }))], ogImage: picks.find((t) => t.images.length)?.images[0].src });
 }

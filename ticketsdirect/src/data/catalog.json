@@ -1,6 +1,6 @@
 {
  "source": "https://excursionsticketsdirect.com",
- "importedAt": "2026-10-22",
+ "importedAt": "2026-10-24",
  "trips": [
   {
    "id": 12131,
@@ -125,6 +125,7 @@
     "child": null,
     "packages": [
      {
+      "id": 12133,
       "name": "Mizu Fishing",
       "primary": true,
       "categories": [
@@ -511,6 +512,7 @@
     "child": null,
     "packages": [
      {
+      "id": 12220,
       "name": "3-hour tour",
       "primary": true,
       "categories": [
@@ -725,6 +727,7 @@
     "child": null,
     "packages": [
      {
+      "id": 11929,
       "name": "Wakeboard group – 3 participants",
       "primary": true,
       "categories": [
@@ -738,6 +741,7 @@
       ]
      },
      {
+      "id": 11938,
       "name": "Wakeboard group – 4 participants",
       "primary": false,
       "categories": [
@@ -751,6 +755,7 @@
       ]
      },
      {
+      "id": 11939,
       "name": "Wakeboard group – 5 participants",
       "primary": false,
       "categories": [
@@ -764,6 +769,7 @@
       ]
      },
      {
+      "id": 11940,
       "name": "Wakeboard group – 6 participants",
       "primary": false,
       "categories": [
@@ -974,6 +980,7 @@
     "child": null,
     "packages": [
      {
+      "id": 11857,
       "name": "Private boat charter – up to 6 people",
       "primary": true,
       "categories": [
@@ -1178,6 +1185,7 @@
     },
     "packages": [
      {
+      "id": 10936,
       "name": "English, Spanish and German",
       "primary": true,
       "categories": [
@@ -1384,6 +1392,7 @@
     "child": null,
     "packages": [
      {
+      "id": 12024,
       "name": "Rental: 20 minutes",
       "primary": true,
       "categories": [
@@ -1641,6 +1650,7 @@
     },
     "packages": [
      {
+      "id": 10680,
       "name": "General",
       "primary": true,
       "categories": [
@@ -1661,6 +1671,7 @@
       ]
      },
      {
+      "id": 9693,
       "name": "General",
       "primary": false,
       "categories": [
@@ -1987,6 +1998,7 @@
     "child": null,
     "packages": [
      {
+      "id": 9735,
       "name": "3 Hours",
       "primary": true,
       "categories": [
@@ -2000,6 +2012,7 @@
       ]
      },
      {
+      "id": 10232,
       "name": "2 Hours",
       "primary": false,
       "categories": [
@@ -2352,6 +2365,7 @@
     },
     "packages": [
      {
+      "id": 7157,
       "name": "English – Spanish",
       "primary": true,
       "categories": [
@@ -2372,6 +2386,7 @@
       ]
      },
      {
+      "id": 7162,
       "name": "German – French",
       "primary": false,
       "categories": [
@@ -2623,6 +2638,7 @@
     "child": null,
     "packages": [
      {
+      "id": 7200,
       "name": "Bronze Pack",
       "primary": true,
       "categories": [
@@ -2657,6 +2673,7 @@
       ]
      },
      {
+      "id": 7202,
       "name": "Silver Pack",
       "primary": false,
       "categories": [
@@ -2691,6 +2708,7 @@
       ]
      },
      {
+      "id": 7203,
       "name": "Grand Prix",
       "primary": false,
       "categories": [
@@ -3052,6 +3070,7 @@
     },
     "packages": [
      {
+      "id": 6850,
       "name": "General",
       "primary": true,
       "categories": [
@@ -3376,6 +3395,7 @@
     },
     "packages": [
      {
+      "id": 6854,
       "name": "General",
       "primary": true,
       "categories": [
@@ -3737,6 +3757,7 @@
     },
     "packages": [
      {
+      "id": 7204,
       "name": "From Costa Teguise & Puerto del Carmen",
       "primary": true,
       "categories": [
@@ -4156,6 +4177,7 @@
     },
     "packages": [
      {
+      "id": 7207,
       "name": "General",
       "primary": true,
       "categories": [
@@ -4566,6 +4588,7 @@
     },
     "packages": [
      {
+      "id": 7208,
       "name": "Lanzarote Grand Tour Ticket",
       "primary": true,
       "categories": [
@@ -4942,6 +4965,7 @@
     },
     "packages": [
      {
+      "id": 4435,
       "name": "Spanish & English",
       "primary": true,
       "categories": [
@@ -4962,6 +4986,7 @@
       ]
      },
      {
+      "id": 4809,
       "name": "German",
       "primary": false,
       "categories": [
@@ -5357,6 +5382,7 @@
     },
     "packages": [
      {
+      "id": 4441,
       "name": "General",
       "primary": true,
       "categories": [
@@ -5773,6 +5799,7 @@
     },
     "packages": [
      {
+      "id": 4444,
       "name": "General",
       "primary": true,
       "categories": [
@@ -6167,6 +6194,7 @@
     },
     "packages": [
      {
+      "id": 4452,
       "name": "Spanish & English",
       "primary": true,
       "categories": [
@@ -6194,6 +6222,7 @@
       ]
      },
      {
+      "id": 4818,
       "name": "German & French",
       "primary": false,
       "categories": [
@@ -6568,6 +6597,7 @@
     },
     "packages": [
      {
+      "id": 4456,
       "name": "Fuerteventura tour",
       "primary": true,
       "categories": [
@@ -6943,6 +6973,7 @@
     },
     "packages": [
      {
+      "id": 4467,
       "name": "Spanish & English",
       "primary": true,
       "categories": [
@@ -6963,6 +6994,7 @@
       ]
      },
      {
+      "id": 4822,
       "name": "German",
       "primary": false,
       "categories": [
@@ -7330,6 +7362,7 @@
     },
     "packages": [
      {
+      "id": 4470,
       "name": "From Puerto del Carmen & Costa Teguise",
       "primary": true,
       "categories": [
@@ -7350,6 +7383,7 @@
       ]
      },
      {
+      "id": 10228,
       "name": "From Playa Blanca",
       "primary": false,
       "categories": [
@@ -7666,6 +7700,7 @@
     },
     "packages": [
      {
+      "id": 4382,
       "name": "General Prices",
       "primary": true,
       "categories": [
@@ -8089,6 +8124,7 @@
     },
     "packages": [
      {
+      "id": 12124,
       "name": "No transfer",
       "primary": true,
       "categories": [
@@ -8116,6 +8152,7 @@
       ]
      },
      {
+      "id": 4473,
       "name": "With transfer",
       "primary": false,
       "categories": [
@@ -8143,6 +8180,7 @@
       ]
      },
      {
+      "id": 12123,
       "name": "No transfer",
       "primary": false,
       "categories": [
@@ -8575,6 +8613,7 @@
     },
     "packages": [
      {
+      "id": 4487,
       "name": "General",
       "primary": true,
       "categories": [
@@ -9011,6 +9050,7 @@
     },
     "packages": [
      {
+      "id": 10250,
       "name": "No transfer",
       "primary": true,
       "categories": [
@@ -9038,6 +9078,7 @@
       ]
      },
      {
+      "id": 10256,
       "name": "With transfer",
       "primary": false,
       "categories": [
@@ -9456,6 +9497,7 @@
     },
     "packages": [
      {
+      "id": 4506,
       "name": "General",
       "primary": true,
       "categories": [
@@ -9864,6 +9906,7 @@
     },
     "packages": [
      {
+      "id": 4514,
       "name": "General",
       "primary": true,
       "categories": [
@@ -10238,6 +10281,7 @@
     },
     "packages": [
      {
+      "id": 4530,
       "name": "General",
       "primary": true,
       "categories": [
@@ -10645,6 +10689,7 @@
     },
     "packages": [
      {
+      "id": 4528,
       "name": "General",
       "primary": true,
       "categories": [
@@ -11345,6 +11390,7 @@
     "child": null,
     "packages": [
      {
+      "id": 4543,
       "name": "General",
       "primary": true,
       "categories": [
@@ -11750,6 +11796,7 @@
     },
     "packages": [
      {
+      "id": 12064,
       "name": "Boat Cruise & Watersports 4 hours",
       "primary": true,
       "categories": [
@@ -12093,6 +12140,7 @@
     },
     "packages": [
      {
+      "id": 4568,
       "name": "General",
       "primary": false,
       "categories": [
@@ -12840,6 +12888,7 @@
     },
     "packages": [
      {
+      "id": 4582,
       "name": "General",
       "primary": false,
       "categories": [
@@ -13257,6 +13306,7 @@
     },
     "packages": [
      {
+      "id": 4584,
       "name": "No transfer",
       "primary": true,
       "categories": [
@@ -13291,6 +13341,7 @@
       ]
      },
      {
+      "id": 10257,
       "name": "With transfer",
       "primary": false,
       "categories": [
@@ -13674,6 +13725,7 @@
     },
     "packages": [
      {
+      "id": 4586,
       "name": "General",
       "primary": true,
       "categories": [
@@ -14057,6 +14109,7 @@
     },
     "packages": [
      {
+      "id": 4588,
       "name": "Sunset Dolphin & Whale Watching Cruise",
       "primary": true,
       "categories": [
@@ -14466,6 +14519,7 @@
     "child": null,
     "packages": [
      {
+      "id": 12018,
       "name": "2-hour buggy tour",
       "primary": true,
       "categories": [
@@ -14858,6 +14912,7 @@
     "child": null,
     "packages": [
      {
+      "id": 12036,
       "name": "3-hour buggy tour",
       "primary": true,
       "categories": [
@@ -15254,6 +15309,7 @@
     "child": null,
     "packages": [
      {
+      "id": 4701,
       "name": "Family Buggy Tour + Volcano Trek",
       "primary": true,
       "categories": [
@@ -15656,6 +15712,7 @@
     "child": null,
     "packages": [
      {
+      "id": 11957,
       "name": "Vehicle for 1-2 persons",
       "primary": true,
       "categories": [
@@ -16037,6 +16094,7 @@
     "child": null,
     "packages": [
      {
+      "id": 12028,
       "name": "40-minute hire",
       "primary": true,
       "categories": [
@@ -16050,6 +16108,7 @@
       ]
      },
      {
+      "id": 12029,
       "name": "40-minute hire with transfer",
       "primary": false,
       "categories": [
@@ -16418,6 +16477,7 @@
     },
     "packages": [
      {
+      "id": 4628,
       "name": "General",
       "primary": false,
       "categories": [
@@ -16828,6 +16888,7 @@
     "child": null,
     "packages": [
      {
+      "id": 4645,
       "name": "Standard rate",
       "primary": true,
       "categories": [
@@ -17167,6 +17228,7 @@
     },
     "packages": [
      {
+      "id": 4652,
       "name": "General",
       "primary": true,
       "categories": [
@@ -17560,6 +17622,7 @@
     "child": null,
     "packages": [
      {
+      "id": 4658,
       "name": "General",
       "primary": true,
       "categories": [
@@ -17950,6 +18013,7 @@
     "child": null,
     "packages": [
      {
+      "id": 11636,
       "name": "Standard rate",
       "primary": true,
       "categories": [
@@ -18360,6 +18424,7 @@
     },
     "packages": [
      {
+      "id": 4672,
       "name": "General",
       "primary": true,
       "categories": [
@@ -18683,6 +18748,7 @@
     },
     "packages": [
      {
+      "id": 4687,
       "name": "Single Try Dive",
       "primary": true,
       "categories": [
@@ -18703,6 +18769,7 @@
       ]
      },
      {
+      "id": 4678,
       "name": "Double Try Dive",
       "primary": false,
       "categories": [
@@ -19044,6 +19111,7 @@
     },
     "packages": [
      {
+      "id": 4689,
       "name": "General",
       "primary": false,
       "categories": [
@@ -19381,6 +19449,7 @@
     },
     "packages": [
      {
+      "id": 4695,
       "name": "General",
       "primary": false,
       "categories": [
@@ -19628,6 +19697,7 @@
     "child": null,
     "packages": [
      {
+      "id": 4719,
       "name": "General",
       "primary": true,
       "categories": [
@@ -19994,6 +20064,7 @@
     },
     "packages": [
      {
+      "id": 4730,
       "name": "General",
       "primary": true,
       "categories": [
@@ -20367,6 +20438,7 @@
     },
     "packages": [
      {
+      "id": 4746,
       "name": "General",
       "primary": true,
       "categories": [
@@ -20732,6 +20804,7 @@
     },
     "packages": [
      {
+      "id": 4748,
       "name": "General",
       "primary": true,
       "categories": [
@@ -21037,6 +21110,7 @@
     },
     "packages": [
      {
+      "id": 4750,
       "name": "Ticket without transport",
       "primary": true,
       "categories": [
@@ -21057,6 +21131,7 @@
       ]
      },
      {
+      "id": 4751,
       "name": "Ticket including transport",
       "primary": false,
       "categories": [
@@ -21361,6 +21436,7 @@
     "child": null,
     "packages": [
      {
+      "id": 11256,
       "name": "May Offer 3×2",
       "primary": true,
       "categories": [
@@ -21374,6 +21450,7 @@
       ]
      },
      {
+      "id": 4757,
       "name": "General",
       "primary": false,
       "categories": [
@@ -21741,6 +21818,7 @@
     },
     "packages": [
      {
+      "id": 4768,
       "name": "General",
       "primary": true,
       "categories": [
@@ -22096,6 +22174,7 @@
     },
     "packages": [
      {
+      "id": 4788,
       "name": "General",
       "primary": true,
       "categories": [
@@ -22292,6 +22371,7 @@
     },
     "packages": [
      {
+      "id": 5224,
       "name": "General",
       "primary": true,
       "categories": [
@@ -22530,6 +22610,7 @@
     },
     "packages": [
      {
+      "id": 12153,
       "name": "General",
       "primary": true,
       "categories": [
@@ -22741,6 +22822,7 @@
     },
     "packages": [
      {
+      "id": 8194,
       "name": "General",
       "primary": true,
       "categories": [
@@ -22915,6 +22997,7 @@
     },
     "packages": [
      {
+      "id": 5950,
       "name": "General",
       "primary": true,
       "categories": [
@@ -23156,6 +23239,7 @@
     },
     "packages": [
      {
+      "id": 5278,
       "name": "General",
       "primary": true,
       "categories": [
@@ -23394,6 +23478,7 @@
     },
     "packages": [
      {
+      "id": 5774,
       "name": "General",
       "primary": true,
       "categories": [
@@ -23649,6 +23734,7 @@
     },
     "packages": [
      {
+      "id": 5775,
       "name": "General",
       "primary": true,
       "categories": [
@@ -23869,6 +23955,7 @@
     "child": null,
     "packages": [
      {
+      "id": 5776,
       "name": "General",
       "primary": true,
       "categories": [
@@ -24091,6 +24178,7 @@
     },
     "packages": [
      {
+      "id": 5777,
       "name": "General",
       "primary": true,
       "categories": [
@@ -24354,6 +24442,7 @@
     },
     "packages": [
      {
+      "id": 5778,
       "name": "General",
       "primary": true,
       "categories": [
@@ -24611,6 +24700,7 @@
     },
     "packages": [
      {
+      "id": 5781,
       "name": "General",
       "primary": true,
       "categories": [
@@ -24850,6 +24940,7 @@
     },
     "packages": [
      {
+      "id": 5794,
       "name": "General",
       "primary": true,
       "categories": [
@@ -25088,6 +25179,7 @@
     },
     "packages": [
      {
+      "id": 5790,
       "name": "General",
       "primary": true,
       "categories": [
@@ -25294,6 +25386,7 @@
     "child": null,
     "packages": [
      {
+      "id": 5868,
       "name": "General",
       "primary": true,
       "categories": [
@@ -25607,6 +25700,7 @@
     "child": null,
     "packages": [
      {
+      "id": 5912,
       "name": "General",
       "primary": true,
       "categories": [
@@ -25861,6 +25955,7 @@
     "child": null,
     "packages": [
      {
+      "id": 5884,
       "name": "General",
       "primary": true,
       "categories": [
@@ -26110,6 +26205,7 @@
     },
     "packages": [
      {
+      "id": 5877,
       "name": "General",
       "primary": true,
       "categories": [
@@ -26352,6 +26448,7 @@
     "child": null,
     "packages": [
      {
+      "id": 5936,
       "name": "General",
       "primary": true,
       "categories": [
@@ -26547,6 +26644,7 @@
     "child": null,
     "packages": [
      {
+      "id": 5981,
       "name": "General",
       "primary": true,
       "categories": [
@@ -26768,6 +26866,7 @@
     },
     "packages": [
      {
+      "id": 5974,
       "name": "General",
       "primary": true,
       "categories": [
@@ -27011,6 +27110,7 @@
     "child": null,
     "packages": [
      {
+      "id": 6024,
       "name": "General",
       "primary": true,
       "categories": [
@@ -27229,6 +27329,7 @@
     "child": null,
     "packages": [
      {
+      "id": 6036,
       "name": "General",
       "primary": true,
       "categories": [
@@ -27449,6 +27550,7 @@
     "child": null,
     "packages": [
      {
+      "id": 12120,
       "name": "Excursion price",
       "primary": true,
       "categories": [
@@ -27684,6 +27786,7 @@
     },
     "packages": [
      {
+      "id": 6042,
       "name": "General",
       "primary": true,
       "categories": [

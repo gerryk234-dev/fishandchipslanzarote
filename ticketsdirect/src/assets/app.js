@@ -96,6 +96,102 @@
     loadPicks().then(apply);
   }
 
+  // ---- booking panel: live dates, travellers, total and deposit ----
+  const bk = $(".bk");
+  if (bk) {
+    const t = JSON.parse(bk.dataset.i18n);
+    const pkgSel = $('select[name="pkg"]', bk);
+    const dateSel = $('select[name="date"]', bk);
+    const total = $(".bk-total", bk);
+    const wa = $("[data-wa]", bk);
+    const deposit = Number(bk.dataset.deposit) || 0;
+    const locale = ES ? "es-ES" : "en-GB";
+    const money = (n) => new Intl.NumberFormat(locale, { style: "currency", currency: "EUR", minimumFractionDigits: n % 1 ? 2 : 0 }).format(n);
+    const pkgIndex = () => (pkgSel ? Number(pkgSel.value) : 0);
+    const paxBox = () => $(`.bk-pax[data-pkg="${pkgIndex()}"]`, bk);
+    let avail = null;
+    bk.classList.add("ready");
+
+    const fillDates = () => {
+      if (!avail) return;
+      const pkgId = pkgSel ? pkgSel.selectedOptions[0].dataset.id : null;
+      const p = avail.packages.find((x) => String(x.id) === String(pkgId)) || avail.packages[0];
+      const dates = p ? p.dates : [];
+      dateSel.innerHTML = "";
+      const add = (value, text) => dateSel.add(new Option(text, value));
+      if (!dates.length) {
+        add("", t.noDates);
+        dateSel.disabled = true;
+        return;
+      }
+      dateSel.disabled = false;
+      add("", t.pickDate);
+      for (const d of dates) {
+        const label = new Date(`${d.date}T12:00:00`).toLocaleDateString(locale, { weekday: "short", day: "numeric", month: "short" });
+        add(d.date, d.times.length ? `${label} · ${d.times.join(", ")}` : label);
+      }
+    };
+
+    // Prices can vary by date: when one is chosen, use that date's prices for each traveller type.
+    const applyDatePrices = () => {
+      if (!avail || !dateSel.value) return;
+      const pkgId = pkgSel ? pkgSel.selectedOptions[0].dataset.id : null;
+      const p = avail.packages.find((x) => String(x.id) === String(pkgId)) || avail.packages[0];
+      const d = p?.dates.find((x) => x.date === dateSel.value);
+      if (!d) return;
+      $$(".bk-row", paxBox()).forEach((r) => {
+        const hit = d.prices.find((x) => x.label === r.dataset.label);
+        if (hit && hit.price > 0) {
+          r.dataset.price = hit.price;
+          $("b", r).textContent = money(hit.price);
+        }
+      });
+    };
+
+    const update = () => {
+      $$(".bk-pax", bk).forEach((b, i) => (b.hidden = i !== pkgIndex()));
+      applyDatePrices();
+      let sum = 0;
+      const parts = [];
+      $$(".bk-row", paxBox()).forEach((r) => {
+        const n = Number($("output", r).textContent) || 0;
+        sum += n * Number(r.dataset.price);
+        if (n) parts.push(`${n} × ${r.dataset.label}`);
+      });
+      total.textContent = sum ? `${t.total}: ${money(sum)}${deposit ? ` · ${t.depositToday}: ${money(Math.round(sum * deposit) / 100)} (${t.onDay})` : ""}` : "";
+      const date = dateSel.value ? dateSel.selectedOptions[0].textContent : "";
+      const opt = pkgSel ? pkgSel.selectedOptions[0].textContent : "";
+      const name = bk.dataset.name;
+      const msg = ES
+        ? `¡Hola! Quiero reservar "${name}"${date ? ` el ${date}` : ""}${opt ? ` (${opt})` : ""}: ${parts.join(", ")}. Total ${money(sum)}.`
+        : `Hi! I'd like to book "${name}"${date ? ` on ${date}` : ""}${opt ? ` (${opt})` : ""}: ${parts.join(", ")}. Total ${money(sum)}.`;
+      wa.href = `https://wa.me/${TD.wa}?text=${encodeURIComponent(msg)}`;
+    };
+
+    bk.addEventListener("click", (e) => {
+      const b = e.target.closest(".bk-step button");
+      if (!b) return;
+      const out = $("output", b.parentElement);
+      out.textContent = Math.max(0, Math.min(30, (Number(out.textContent) || 0) + Number(b.dataset.d)));
+      update();
+    });
+    pkgSel?.addEventListener("change", () => {
+      fillDates();
+      update();
+    });
+    dateSel.addEventListener("change", update);
+    fetch(`/api/availability?id=${bk.dataset.trip}`)
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+      .then((d) => {
+        avail = d;
+        fillDates();
+        update();
+      })
+      // Static preview or WordPress unreachable: the calculator still works, just without dates.
+      .catch(() => (dateSel.closest("label").hidden = true));
+    update();
+  }
+
   // ---- video: load YouTube only when asked (keeps pages fast) ----
   $$(".yt").forEach((b) =>
     b.addEventListener("click", () => {

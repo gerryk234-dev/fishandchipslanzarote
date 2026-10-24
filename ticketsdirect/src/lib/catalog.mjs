@@ -85,13 +85,24 @@ export function loadCatalog(dataDir) {
       };
     });
 
+  // Meeting / collection points (src/data/pickups.json), resolved per tour.
+  const pk = fs.existsSync(path.join(dataDir, "pickups.json")) ? read("pickups.json") : { points: [], assignments: [] };
+  const pointBy = Object.fromEntries((pk.points || []).map((p) => [p.id, p]));
+  for (const t of tours) {
+    const seen = new Set();
+    t.pickupPoints = (pk.assignments || [])
+      .filter((a) => (a.tours || []).includes(t.slug) || (a.categories || []).some((c) => t.cats.includes(c)))
+      .flatMap((a) => a.points || [])
+      .filter((x) => pointBy[x.point] && !seen.has(x.point) && seen.add(x.point))
+      .map((x) => ({ ...pointBy[x.point], time: x.time || null }));
+  }
   const tourBy = Object.fromEntries(tours.map((t) => [t.slug, t]));
   const catBy = Object.fromEntries(categories.map((c) => [c.slug, c]));
   const destinations = (terms.destination || [])
     .filter((d) => d.path?.en && tours.some((t) => t.destinations.includes(d.id)))
     .map((d) => ({ ...d, curated: placeByWp[d.id] || null }));
 
-  return { site, raw, categories, resorts, places, offices, profiles, tours, tourBy, catBy, destinations, destTerm, locTerm, placeByWp, importedAt: raw.importedAt };
+  return { site, raw, categories, resorts, places, offices, profiles, pickupPoints: pk.points || [], tours, tourBy, catBy, destinations, destTerm, locTerm, placeByWp, importedAt: raw.importedAt };
 }
 
 export const UNIT = {

@@ -7,7 +7,8 @@
     "import": "node scripts/import-wp.mjs",
     "build": "node build.mjs",
     "preview": "node build.mjs && python3 -m http.server 8080 -d dist",
-    "gbp": "node scripts/gbp-kit.mjs"
+    "gbp": "node scripts/gbp-kit.mjs",
+    "dev": "node build.mjs && node scripts/dev-server.mjs"
   },
   "engines": {
     "node": ">=20"

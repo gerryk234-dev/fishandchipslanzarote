@@ -25,7 +25,8 @@ editorial: src/data/{categories,resorts,places,offices,site}.json, src/content/g
 | `npm run import` | Pulls all trips, prices (adult/child, transfer options), itineraries, includes, FAQs, galleries, videos, pickup towns, categories and destinations, in **EN and ES**, from the WordPress REST API. Downloads the photos and optimises them to WebP. Results are cached in `.cache/`; use `-- --fresh` to refetch. |
 | `npm run build` | Generates the site into `dist/` |
 | `npm run gbp` | Regenerates `docs/google-business-profiles.md` (Google Business Profile kit) from the live catalogue |
-| `npm run preview` | Builds and serves the site on http://localhost:8080 |
+| `npm run dev` | Builds and serves the site **with the API functions** (assistant, live availability) on http://localhost:8080, the same way Vercel runs it |
+| `npm run preview` | Static-only preview (no API) |
 
 Edit tours in WordPress as usual, then run `npm run import && npm run build`, or let the Vercel build do it.
 
@@ -62,6 +63,39 @@ To also list it in app stores:
 - **Google Play and Microsoft Store:** package the live URL with [PWABuilder](https://www.pwabuilder.com). It generates the store packages from the manifest; no code changes are needed.
 - **Apple App Store:** needs a thin native wrapper (e.g. Capacitor) and an Apple developer account.
 
+## Booking panel (live availability)
+
+Every tour page has a booking panel. The customer:
+1. chooses the option, e.g. with or without transfer
+2. picks a date from **live WordPress availability** (`/api/availability`, cached for 5 minutes)
+3. sets the number of adults, children and seniors with +/− buttons
+
+The panel then shows the total and the deposit due today, using per-date prices when a date has its own.
+
+Two buttons follow:
+- **Book now:** hands over to the WordPress checkout (Stripe) for payment.
+- **WhatsApp:** opens a message pre-filled with the tour, date, option, travellers and total.
+
+If the API isn't reachable, the panel still works as a price calculator without dates.
+
+**Next step (in-app checkout):** create the booking and Stripe payment inside the app. This needs:
+- a WordPress Application Password, so the app can write to WP Travel Engine's bookings API
+- the Stripe keys, set as Vercel environment variables
+
+The panel is already built so only the "Book now" step changes.
+
+## Meeting & collection points
+
+Add them to `src/data/pickups.json`; it contains a commented example. Each point has:
+- a kind: pickup or meeting point
+- a resort, address and map coordinates
+- notes in EN and ES
+
+Assign points to individual tours or to whole categories, with a pickup time per point. They then appear automatically:
+- on tour pages, as a "Pickup & meeting points" table with Directions links
+- on resort pages, as "Collection points in …"
+- in the assistant's knowledge
+
 ## The booking assistant
 
 - **With `ANTHROPIC_API_KEY` set**, `/api/chat` uses Claude (`claude-opus-5-5` at low effort; change it with `CHAT_MODEL`). All 83 tours, prices, child prices, pickups and durations are in a cached system prompt.
@@ -89,5 +123,7 @@ To also list it in app stores:
 - [x] **Offices:** all 10 physical offices (09:30–18:00 every day) plus the Puerto Calero boat-charter profile (not a walk-in office, kept off the site's office list) are in `src/data/offices.json`.
 - [ ] **Google Business Profiles:** work through the per-profile audit in `docs/google-business-profiles.md` (section 7): categories, website links, names, the Costa Teguise Center address, and a possible duplicate in Puerto del Carmen.
 - [ ] **Two tours have no price in WordPress** and are hidden until priced: *Katfish Premium Cruises* and *Chillout Cruise Playa Blanca*.
+- [ ] **Duplicate package in WordPress:** *La Graciosa All-inclusive Catamaran Cruise* has two packages both called "No transfer" (ids 12124 and 12123), so customers see the option twice. Rename or remove one.
+- [ ] **Meeting & collection points:** send the list (place, resort, which tours, pickup time) or fill `src/data/pickups.json`.
 - [ ] **Reviews:** paste real reviews into `src/data/reviews.json`. Never invent them.
 - [ ] **Search Console and Bing Webmaster Tools:** submit `sitemap.xml` after launch.

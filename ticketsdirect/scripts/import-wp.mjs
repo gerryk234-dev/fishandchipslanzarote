@@ -214,6 +214,7 @@ function termOut(t, term) {
 
 function prices(pkgs) {
   const list = (Array.isArray(pkgs) ? pkgs : []).map((p) => ({
+    id: p.id,
     name: decode(p.name),
     primary: !!p.is_primary,
     categories: (p.traveler_categories || []).map((c) => ({
