@@ -57,7 +57,7 @@ endobj
 endobj
 9 0 obj
 <<
-/Author (Hippie Chippy) /CreationDate (D:20260802230328+00'00') /Creator (anonymous) /Keywords () /ModDate (D:20260802230328+00'00') /Producer (ReportLab PDF Library - \(opensource\)) 
+/Author (Hippie Chippy) /CreationDate (D:20261029204735+00'00') /Creator (anonymous) /Keywords () /ModDate (D:20261029204735+00'00') /Producer (ReportLab PDF Library - \(opensource\)) 
   /Subject (Menu) /Title (Hippie Chippy Menu) /Trapped /False
 >>
 endobj
@@ -540,7 +540,7 @@ endstream
 endobj
 13 0 obj
 <<
-/Length 10880
+/Length 11210
 >>
 stream
 1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
@@ -743,22 +743,28 @@ BT /F2 12 Tf 14.4 TL ET
 BT 1 0 0 1 56.69291 292.8189 Tm (GOOD TO KNOW) Tj T* ET
 .05098 .231373 .368627 rg
 BT /F2 9.5 Tf 11.4 TL ET
-BT 1 0 0 1 56.69291 275.811 Tm (Cooked to order) Tj T* ET
+BT 1 0 0 1 56.69291 275.811 Tm (Gluten-free batter) Tj T* ET
 .419608 .447059 .501961 rg
 BT /F1 8 Tf 9.6 TL ET
-BT 1 0 0 1 56.69291 263.9055 Tm (All our fish is cooked to order, and we appreciate your patience during busy periods.) Tj T* ET
+BT 1 0 0 1 56.69291 263.9055 Tm (Gluten-free batter is available on request, fried in a separate dedicated fryer \227 just let our staff know when you order.) Tj T* ET
 .05098 .231373 .368627 rg
 BT /F2 9.5 Tf 11.4 TL ET
-BT 1 0 0 1 56.69291 248.0315 Tm (Responsibly sourced) Tj T* ET
+BT 1 0 0 1 56.69291 248.0315 Tm (Cooked to order) Tj T* ET
 .419608 .447059 .501961 rg
 BT /F1 8 Tf 9.6 TL ET
-BT 1 0 0 1 56.69291 236.126 Tm (We only source cod & haddock fished in sustainable waters, and only fry in certified eco-sustainable oil.) Tj T* ET
+BT 1 0 0 1 56.69291 236.126 Tm (All our fish is cooked to order, and we appreciate your patience during busy periods.) Tj T* ET
 .05098 .231373 .368627 rg
 BT /F2 9.5 Tf 11.4 TL ET
-BT 1 0 0 1 56.69291 220.252 Tm (Local first) Tj T* ET
+BT 1 0 0 1 56.69291 220.252 Tm (Responsibly sourced) Tj T* ET
 .419608 .447059 .501961 rg
 BT /F1 8 Tf 9.6 TL ET
-BT 1 0 0 1 56.69291 208.3465 Tm (Where possible, we aim to source and support local quality produce and businesses.) Tj T* ET
+BT 1 0 0 1 56.69291 208.3465 Tm (We only source cod & haddock fished in sustainable waters, and only fry in certified eco-sustainable oil.) Tj T* ET
+.05098 .231373 .368627 rg
+BT /F2 9.5 Tf 11.4 TL ET
+BT 1 0 0 1 56.69291 192.4724 Tm (Local first) Tj T* ET
+.419608 .447059 .501961 rg
+BT /F1 8 Tf 9.6 TL ET
+BT 1 0 0 1 56.69291 180.5669 Tm (Where possible, we aim to source and support local quality produce and businesses.) Tj T* ET
 .956863 .65098 .137255 RG
 1.2 w
 n 56.69291 62.3622 m 538.5827 62.3622 l S
@@ -790,7 +796,7 @@ xref
 trailer
 <<
 /ID 
-[<c8347326eb00938912f866c8b38b4144><c8347326eb00938912f866c8b38b4144>]
+[<2be4d1b26818e32c5db60c132ceb322b><2be4d1b26818e32c5db60c132ceb322b>]
 % ReportLab generated PDF document -- digest (opensource)
 
 /Info 9 0 R
@@ -798,5 +804,5 @@ trailer
 /Size 14
 >>
 startxref
-34362
+34692
 %%EOF
