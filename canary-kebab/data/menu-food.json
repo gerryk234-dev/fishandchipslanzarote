@@ -1,0 +1,1420 @@
+[
+  {
+    "family": {
+      "EN": "KEBABS",
+      "ES": "KEBABS",
+      "DE": "KEBABS"
+    },
+    "image": "/images/food/food1.webp",
+    "header": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "footer": {
+      "EN": "Extra €1 for Cheese, €2.50 for Naan",
+      "ES": "€1 extra por queso, €2,50 por naan",
+      "DE": "€1 extra für Käse, €2,50 für Naan"
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "Chicken Wrap",
+          "ES": "Pollo Durum",
+          "DE": "Hähnchen-Wrap"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          7.0
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Chicken Pita",
+          "ES": "Pollo Pita",
+          "DE": "Hähnchen-Pita"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          7.0
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Doner Wrap",
+          "ES": "Döner Durum",
+          "DE": "Döner Wrap"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          7.0
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Doner Pita",
+          "ES": "Döner Pita",
+          "DE": "Döner Pita"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          7.0
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Mix Wrap",
+          "ES": "Mix Durum",
+          "DE": "Mix Wrap"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          7.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Mix Pita",
+          "ES": "Mix Pita",
+          "DE": "Mix Pita"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          7.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Falafel Wrap",
+          "ES": "Falafel Durum",
+          "DE": "Falafel Wrap"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          7.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Falafel Pita",
+          "ES": "Falafel Pita",
+          "DE": "Falafel Pita"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          7.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Meat Wrap / Pita Kebab without Salad",
+          "ES": "Durum / Pita Kebab solo carne (sin ensalada)",
+          "DE": "Fleisch-Wrap / Pita-Kebab ohne Salat"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          8.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Chicken Tikka Wrap",
+          "ES": "Pollo Tikka Wrap",
+          "DE": "Hähnchen-Tikka-Wrap"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          9.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  },
+  {
+    "family": {
+      "EN": "INDIAN TAPAS",
+      "ES": "TAPAS INDIAS",
+      "DE": "INDISCHE TAPAS"
+    },
+    "image": "/images/food/food2.webp",
+    "header": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "footer": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "Vegetable Samosa",
+          "ES": "Samosa de Verduras",
+          "DE": "Gemüse-Samosa"
+        },
+        "description": {
+          "EN": "Crispy pastry filled with Spiced mix of Potato, Peas & Herbs",
+          "ES": "Masa crujiente rellena de patata, guisantes y hierbas especiadas",
+          "DE": "Knuspriger Teig gefüllt mit gewürzter Kartoffel, Erbsen & Kräutern"
+        },
+        "prices": [
+          5.0
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Chicken Samosa",
+          "ES": "Samosa de Pollo",
+          "DE": "Hähnchen-Samosa"
+        },
+        "description": {
+          "EN": "Crispy pastry filled with seasoned minced Chicken, Onions & Aromatic spices",
+          "ES": "Masa crujiente rellena de pollo picado, cebolla y especias aromáticas",
+          "DE": "Knuspriger Teig gefüllt mit gewürztem Hackhähnchen, Zwiebeln & Gewürzen"
+        },
+        "prices": [
+          6.0
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Chicken Pakora",
+          "ES": "Pollo Pakora",
+          "DE": "Hähnchen-Pakora"
+        },
+        "description": {
+          "EN": "Fried Chicken Strips mixed with Chickpea Flour & Spices",
+          "ES": "Tiras de pollo fritas con harina de garbanzo y especias",
+          "DE": "Frittierte Hähnchenstreifen mit Kichererbsenmehl & Gewürzen"
+        },
+        "prices": [
+          5.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Onion Bhaji",
+          "ES": "Cebolla Bhaji",
+          "DE": "Zwiebel-Bhaji"
+        },
+        "description": {
+          "EN": "Deep fried Onion Cutlets with a Special mix of Spices",
+          "ES": "Buñuelos de cebolla fritos con una mezcla especial de especias",
+          "DE": "Frittierte Zwiebelbällchen mit einer besonderen Gewürzmischung"
+        },
+        "prices": [
+          5.0
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Chicken Tikka",
+          "ES": "Pollo Tikka",
+          "DE": "Hähnchen-Tikka"
+        },
+        "description": {
+          "EN": "Chicken Marinated with Tandoori Spices, Cooked in Oven",
+          "ES": "Pollo marinado con especias tandoori, hecho al horno",
+          "DE": "Mit Tandoori-Gewürzen mariniertes Hähnchen, im Ofen gegart"
+        },
+        "prices": [
+          7.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "King Prawn Pakora",
+          "ES": "Langostinos Pakora",
+          "DE": "Riesengarnelen-Pakora"
+        },
+        "description": {
+          "EN": "Deep Fried King Prawns coated in Bread Crumbs & Spices",
+          "ES": "Langostinos fritos rebozados en pan rallado y especias",
+          "DE": "Frittierte Riesengarnelen in Paniermehl & Gewürzen"
+        },
+        "prices": [
+          9.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Plain Naan",
+          "ES": "Naan Natural",
+          "DE": "Naan Natur"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          2.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Garlic Naan",
+          "ES": "Naan de Ajo",
+          "DE": "Knoblauch-Naan"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Cheese Naan",
+          "ES": "Naan de Queso",
+          "DE": "Käse-Naan"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          4.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Peshawari Naan",
+          "ES": "Naan Peshawari",
+          "DE": "Peshawari Naan"
+        },
+        "description": {
+          "EN": "Stuffed with Coconut Powder & topped with Raisins",
+          "ES": "Relleno de coco rallado y cubierto con pasas",
+          "DE": "Gefüllt mit Kokosraspeln und mit Rosinen bestreut"
+        },
+        "prices": [
+          5.0
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Punjabi Naan",
+          "ES": "Naan Punjabi",
+          "DE": "Punjabi Naan"
+        },
+        "description": {
+          "EN": "Stuffed with Minced Chicken Tikka, Onions, Cheese then topped with Garlic",
+          "ES": "Relleno de pollo tikka picado, cebolla y queso, cubierto con ajo",
+          "DE": "Gefüllt mit Hähnchen-Tikka, Zwiebeln und Käse, mit Knoblauch bestreut"
+        },
+        "prices": [
+          5.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Cheese & Garlic Naan",
+          "ES": "Naan de Queso y Ajo",
+          "DE": "Käse-Knoblauch-Naan"
+        },
+        "description": {
+          "EN": "Stuffed with Cheese then topped with Garlic",
+          "ES": "Relleno de queso y cubierto con ajo",
+          "DE": "Mit Käse gefüllt und mit Knoblauch bestreut"
+        },
+        "prices": [
+          4.7
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  },
+  {
+    "family": {
+      "EN": "KEBAB PLATES",
+      "ES": "PLATOS KEBAB",
+      "DE": "KEBAB-TELLER"
+    },
+    "image": "/images/food/food3.webp",
+    "header": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "footer": {
+      "EN": "Add Pita Bread or Wrap for €1.30",
+      "ES": "Añade pan de pita o durum por €1,30",
+      "DE": "Pita-Brot oder Wrap für €1,30 dazu"
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "Doner Box",
+          "ES": "Döner Box",
+          "DE": "Döner Box"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Chicken",
+          "ES": "Pollo",
+          "DE": "Hähnchen"
+        },
+        "description": {
+          "EN": "Served with Chips & Salad",
+          "ES": "Servido con patatas fritas y ensalada",
+          "DE": "Serviert mit Pommes und Salat"
+        },
+        "prices": [
+          9.8
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Doner",
+          "ES": "Döner",
+          "DE": "Döner"
+        },
+        "description": {
+          "EN": "Served with Chips & Salad",
+          "ES": "Servido con patatas fritas y ensalada",
+          "DE": "Serviert mit Pommes und Salat"
+        },
+        "prices": [
+          9.8
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Mix",
+          "ES": "Mix",
+          "DE": "Mix"
+        },
+        "description": {
+          "EN": "Served with Chips & Salad",
+          "ES": "Servido con patatas fritas y ensalada",
+          "DE": "Serviert mit Pommes und Salat"
+        },
+        "prices": [
+          9.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Doner Meat & Chips",
+          "ES": "Carne de döner con patatas fritas",
+          "DE": "Dönerfleisch mit Pommes"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          9.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Tandoori Chicken & Chips",
+          "ES": "Pollo Tandoori con patatas fritas",
+          "DE": "Tandoori-Hähnchen mit Pommes"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          10.0
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Falafel",
+          "ES": "Falafel",
+          "DE": "Falafel"
+        },
+        "description": {
+          "EN": "Served with Chips & Salad",
+          "ES": "Servido con patatas fritas y ensalada",
+          "DE": "Serviert mit Pommes und Salat"
+        },
+        "prices": [
+          9.8
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  },
+  {
+    "family": {
+      "EN": "SANDWICHES",
+      "ES": "SÁNDWICHES",
+      "DE": "SANDWICHES"
+    },
+    "image": "/images/food/food4.webp",
+    "header": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "footer": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "Ham & Cheese",
+          "ES": "Jamón y Queso",
+          "DE": "Schinken und Käse"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Tuna & Mayo",
+          "ES": "Atún y Mayonesa",
+          "DE": "Thunfisch und Mayonnaise"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  },
+  {
+    "family": {
+      "EN": "BURGERS",
+      "ES": "HAMBURGUESAS",
+      "DE": "BURGER"
+    },
+    "image": "/images/food/food5.webp",
+    "header": {
+      "EN": "Served with Chips",
+      "ES": "Servidas con patatas fritas",
+      "DE": "Serviert mit Pommes"
+    },
+    "footer": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "Plain Cheeseburger",
+          "ES": "Hamburguesa con Queso Simple",
+          "DE": "Cheeseburger Klassisch"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          7.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Cheeseburger",
+          "ES": "Hamburguesa con Queso",
+          "DE": "Cheeseburger"
+        },
+        "description": {
+          "EN": "Lettuce, Onion, Tomato, Bacon & Cheese",
+          "ES": "Lechuga, cebolla, tomate, bacon y queso",
+          "DE": "Salat, Zwiebel, Tomate, Bacon & Käse"
+        },
+        "prices": [
+          9.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Chicken Burger",
+          "ES": "Hamburguesa de Pollo",
+          "DE": "Hähnchenburger"
+        },
+        "description": {
+          "EN": "Lettuce, Onion, Tomato & Cheese",
+          "ES": "Lechuga, cebolla, tomate y queso",
+          "DE": "Salat, Zwiebel, Tomate & Käse"
+        },
+        "prices": [
+          8.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Chicken Zinger Burger",
+          "ES": "Hamburguesa Chicken Zinger",
+          "DE": "Chicken Zinger Burger"
+        },
+        "description": {
+          "EN": "Lettuce, Onion & Tomato",
+          "ES": "Lechuga, cebolla y tomate",
+          "DE": "Salat, Zwiebel & Tomate"
+        },
+        "prices": [
+          9.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  },
+  {
+    "family": {
+      "EN": "SNACKS & SIDES",
+      "ES": "SNACKS Y GUARNICIONES",
+      "DE": "SNACKS & BEILAGEN"
+    },
+    "image": "/images/food/food6.webp",
+    "header": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "footer": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "Chips",
+          "ES": "Patatas Fritas",
+          "DE": "Pommes"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Cheesy chips",
+          "ES": "Patatas fritas con queso",
+          "DE": "Käse-Pommes"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          4.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Loaded Cheese & Chilli chips",
+          "ES": "Patatas fritas con queso y chilli",
+          "DE": "Pommes mit Käse & Chilli"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          4.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Potato Dippers",
+          "ES": "Gajos de patata",
+          "DE": "Kartoffelecken"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          4.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Mozzarella Sticks",
+          "ES": "Palitos de Mozzarella",
+          "DE": "Mozzarella Sticks"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Camembert Bites",
+          "ES": "Bocaditos de Camembert",
+          "DE": "Camembert-Häppchen"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.0
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Chilli Cheese Nuggets",
+          "ES": "Nuggets de queso y chilli",
+          "DE": "Chilli-Käse-Nuggets"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.0
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Spicy Hot Pockets",
+          "ES": "Empanadillas picantes",
+          "DE": "Scharfe Hot Pockets"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Jalapeño Poppers",
+          "ES": "Jalapeños rellenos",
+          "DE": "Gefüllte Jalapeños"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Calamari Rings",
+          "ES": "Aros de calamar",
+          "DE": "Calamari-Ringe"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          7.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Chicken Wings",
+          "ES": "Alitas de pollo",
+          "DE": "Hähnchenflügel"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          7.0
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Onion Rings",
+          "ES": "Aros de Cebolla",
+          "DE": "Zwiebelringe"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          5.0
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Chicken Goujons",
+          "ES": "Goujons de Pollo",
+          "DE": "Hähnchen-Goujons"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          8.0
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Chicken Nuggets & Chips",
+          "ES": "Nuggets de Pollo y Patatas Fritas",
+          "DE": "Hähnchennuggets & Pommes"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Falafel",
+          "ES": "Falafel",
+          "DE": "Falafel"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.0
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Nachos",
+          "ES": "Nachos de Pollo",
+          "DE": "Hähnchen-Nachos"
+        },
+        "description": {
+          "EN": "Shredded Melting Cheese & Pickled Jalapeño Pepper slices",
+          "ES": "Queso fundido rallado y rodajas de jalapeño encurtido",
+          "DE": "Geschmolzener Käse & eingelegte Jalapeño-Scheiben"
+        },
+        "prices": [
+          4.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Canary Chips",
+          "ES": "Patatas Canary",
+          "DE": "Canary-Pommes"
+        },
+        "description": {
+          "EN": "Cheesy Chips Loaded with Doner Meat",
+          "ES": "Patatas con queso cubiertas de carne de döner",
+          "DE": "Käse-Pommes mit Dönerfleisch"
+        },
+        "prices": [
+          6.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  },
+  {
+    "family": {
+      "EN": "PIZZAS",
+      "ES": "PIZZAS",
+      "DE": "PIZZAS"
+    },
+    "image": "/images/food/food7.webp",
+    "header": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "footer": {
+      "EN": "€2 extra for Prawns, Chicken, Pepperoni & Bacon, €1 extra for another topping",
+      "ES": "€2 extra por gambas, pollo, pepperoni y bacon; €1 extra por otro ingrediente",
+      "DE": "€2 extra für Garnelen, Hähnchen, Pepperoni & Bacon, €1 extra für einen weiteren Belag"
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "Margherita",
+          "ES": "Margarita",
+          "DE": "Margherita"
+        },
+        "description": {
+          "EN": "Tomato & Mozzarella",
+          "ES": "Tomate y mozzarella",
+          "DE": "Tomate & Mozzarella"
+        },
+        "prices": [
+          8.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Cheese Garlic Bread/Pizza",
+          "ES": "Pan de ajo con queso / Pizza",
+          "DE": "Käse-Knoblauchbrot / Pizza"
+        },
+        "description": {
+          "EN": "Flat Bread topped with Cheese & Garlic",
+          "ES": "Pan plano cubierto de queso y ajo",
+          "DE": "Fladenbrot mit Käse und Knoblauch"
+        },
+        "prices": [
+          7.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Funghi",
+          "ES": "Funghi",
+          "DE": "Funghi"
+        },
+        "description": {
+          "EN": "Tomato, Mozzarella & Mushroom",
+          "ES": "Tomate, mozzarella y champiñones",
+          "DE": "Tomate, Mozzarella & Champignons"
+        },
+        "prices": [
+          9.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Hawaiian",
+          "ES": "Hawaiana",
+          "DE": "Hawaii"
+        },
+        "description": {
+          "EN": "Tomato, Mozzarella, Ham & Pineapple",
+          "ES": "Tomate, mozzarella, jamón y piña",
+          "DE": "Tomate, Mozzarella, Schinken & Ananas"
+        },
+        "prices": [
+          10.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "4 Cheese",
+          "ES": "4 Quesos",
+          "DE": "4 Käse"
+        },
+        "description": {
+          "EN": "Tomato, Mozzarella, Parmesan, Goat Cheese & Blue Cheese",
+          "ES": "Tomate, mozzarella, parmesano, queso de cabra y queso azul",
+          "DE": "Tomate, Mozzarella, Parmesan, Ziegenkäse & Blauschimmelkäse"
+        },
+        "prices": [
+          12.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Capricciosa",
+          "ES": "Capricciosa",
+          "DE": "Capricciosa"
+        },
+        "description": {
+          "EN": "Tomato, Mozzarella, Ham, Mushroom",
+          "ES": "Tomate, mozzarella, jamón y champiñones",
+          "DE": "Tomate, Mozzarella, Schinken, Champignons"
+        },
+        "prices": [
+          11.0
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Pepperoni",
+          "ES": "Pepperoni",
+          "DE": "Pepperoni"
+        },
+        "description": {
+          "EN": "Tomato, Mozzarella & Pepperoni",
+          "ES": "Tomate, mozzarella y pepperoni",
+          "DE": "Tomate, Mozzarella & Pepperoni"
+        },
+        "prices": [
+          11.0
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Tuna",
+          "ES": "Atún",
+          "DE": "Thunfisch"
+        },
+        "description": {
+          "EN": "Tomato, Mozzarella, Tuna & Red Onions",
+          "ES": "Tomate, mozzarella, atún y cebolla roja",
+          "DE": "Tomate, Mozzarella, Thunfisch & rote Zwiebeln"
+        },
+        "prices": [
+          11.0
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Vegetarian",
+          "ES": "Vegetariana",
+          "DE": "Vegetarisch"
+        },
+        "description": {
+          "EN": "Tomato, Mozzarella, Peppers, Onions, Mushrooms, Olives & Sweetcorn",
+          "ES": "Tomate, mozzarella, pimientos, cebolla, champiñones, aceitunas y maíz",
+          "DE": "Tomate, Mozzarella, Paprika, Zwiebeln, Champignons, Oliven & Mais"
+        },
+        "prices": [
+          12.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Canary",
+          "ES": "Canaria",
+          "DE": "Kanarisch"
+        },
+        "description": {
+          "EN": "Tomato, Mozzarella, Kebab Meat & Red Onion",
+          "ES": "Tomate, mozzarella, carne de kebab y cebolla roja",
+          "DE": "Tomate, Mozzarella, Kebabfleisch & rote Zwiebel"
+        },
+        "prices": [
+          11.0
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Prosciutto",
+          "ES": "Prosciutto",
+          "DE": "Prosciutto"
+        },
+        "description": {
+          "EN": "Tomato, Mozzarella & Ham",
+          "ES": "Tomate, mozzarella y jamón",
+          "DE": "Tomate, Mozzarella & Schinken"
+        },
+        "prices": [
+          9.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Punjabi",
+          "ES": "Punjabi",
+          "DE": "Punjabi"
+        },
+        "description": {
+          "EN": "Tomato, Peppers, Ginger, Garlic, Chicken Tikka & Chillies",
+          "ES": "Tomate, pimientos, jengibre, ajo, pollo tikka y guindillas",
+          "DE": "Tomate, Paprika, Ingwer, Knoblauch, Hähnchen-Tikka & Chilis"
+        },
+        "prices": [
+          13.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": "/images/allergens/pepper2.webp"
+      },
+      {
+        "name": {
+          "EN": "Lanzarote",
+          "ES": "Lanzarote",
+          "DE": "Lanzarote"
+        },
+        "description": {
+          "EN": "Tomato, Mozzarella, Bacon, Dates & Goat Cheese",
+          "ES": "Tomate, mozzarella, bacon, dátiles y queso de cabra",
+          "DE": "Tomate, Mozzarella, Bacon, Datteln & Ziegenkäse"
+        },
+        "prices": [
+          12.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Barbecue Chicken",
+          "ES": "Pollo Barbacoa",
+          "DE": "BBQ-Hähnchen"
+        },
+        "description": {
+          "EN": "Barbecue Sauce, Mozzarella, Chicken & Sweetcorn",
+          "ES": "Salsa barbacoa, mozzarella, pollo y maíz",
+          "DE": "Barbecuesauce, Mozzarella, Hähnchen & Mais"
+        },
+        "prices": [
+          11.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Surf & Slice",
+          "ES": "Surf & Slice",
+          "DE": "Surf & Slice"
+        },
+        "description": {
+          "EN": "Tomato, Mozzarella, Prawns, Tuna, Mussels & Crab",
+          "ES": "Tomate, mozzarella, gambas, atún, mejillones y cangrejo",
+          "DE": "Tomate, Mozzarella, Garnelen, Thunfisch, Muscheln & Krabbe"
+        },
+        "prices": [
+          14.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Danger Pie",
+          "ES": "Danger Pie",
+          "DE": "Danger Pie"
+        },
+        "description": {
+          "EN": "Tomato, Mozzarella & Jalapeños (Hot Peppers)",
+          "ES": "Tomate, mozzarella y jalapeños (guindillas picantes)",
+          "DE": "Tomate, Mozzarella & Jalapeños (scharfe Paprika)"
+        },
+        "prices": [
+          11.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Meat Feast",
+          "ES": "Festín de Carne",
+          "DE": "Fleischfest"
+        },
+        "description": {
+          "EN": "Tomato, Mozzarella, Pepperoni, Ham, Bacon & Doner Meat",
+          "ES": "Tomate, mozzarella, pepperoni, jamón, bacon y carne de döner",
+          "DE": "Tomate, Mozzarella, Pepperoni, Schinken, Bacon & Dönerfleisch"
+        },
+        "prices": [
+          13.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Calzone",
+          "ES": "Calzone",
+          "DE": "Calzone"
+        },
+        "description": {
+          "EN": "Tomato, Mozzarella, Mushroom, Ham & Pepperoni",
+          "ES": "Tomate, mozzarella, champiñones, jamón y pepperoni",
+          "DE": "Tomate, Mozzarella, Champignons, Schinken & Pepperoni"
+        },
+        "prices": [
+          12.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Chicken",
+          "ES": "Pollo",
+          "DE": "Hähnchen"
+        },
+        "description": {
+          "EN": "Tomato, Mozzarella, Chicken, Peppers & Onion",
+          "ES": "Tomate, mozzarella, pollo, pimientos y cebolla",
+          "DE": "Tomate, Mozzarella, Hähnchen, Paprika & Zwiebel"
+        },
+        "prices": [
+          11.9
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  }
+]

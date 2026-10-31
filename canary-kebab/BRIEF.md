@@ -1,132 +1,140 @@
 # Canary Kebab & Snack Bar — Website Build Brief
 
-Prepared 31 Oct 2026. The goal is a site for Canary Kebab & Snack Bar (Costa Teguise, Lanzarote) built the same way as the Hippie Chippy site in this repo.
+Updated 31 Oct 2026. The goal is a site for Canary Kebab & Snack Bar built the same way as the Hippie Chippy site in this repo.
 
-> **Read first: how this was gathered.** The three links supplied (two `share.google` Google Business links and the Facebook share link) **could not be opened**. This session's network blocks Google share links, Facebook, Instagram, TripAdvisor, RestaurantGuru, Wanderlog and the restaurant's own menu site. Everything below comes from search-engine summaries of those pages. **No photos or videos could be downloaded**, so they must come from the owner (see §6). Each fact is tagged:
-> - ✅ = seen in more than one source
-> - ⚠️ = one source only, or sources disagree. Confirm with the owner.
+**Sources read directly:**
+- the restaurant's current website, `canary-kebab.123restaurant.es` (your first share link goes there), including its menu data
+- the Google Maps listing (limited view)
+- Gastroranking
+- Wanderlog
+
+**Could not read:**
+- Facebook and Instagram: both need a login.
+- The Google Search share link: Google showed a robot check.
+- TripAdvisor: blocked (403).
+
+| File | What it is |
+|---|---|
+| `data/MENU.md` | **Full menu with prices, EN + ES**: 71 food items, 112 drinks |
+| `data/menu-food.json`, `data/menu-drinks.json` | Same menu as structured data (EN/ES/DE names, descriptions, prices), ready to turn into `.menu-card` markup |
+| `data/REVIEWS.md` | Review quotes + rating summary |
+| `images/` | Logo, photos and what each one is (see `images/README.md`) |
 
 ---
 
-## 1. Business facts
+## 1. Business facts (✅ = confirmed on their own website and/or Google Maps)
 
-| Field | Value | Status |
-|---|---|---|
-| Trading name | **Canary Kebab & Snack Bar** (Google title: "Canary Kebab \| Kebab, Pizza & Indian Food in Costa Teguise") | ✅ |
-| Location 1 (main) | Avenida Islas Canarias 3, C.C. Calypso, Local 12, 35508 Costa Teguise, Lanzarote | ✅ |
-| Location 2 ("Canary Kebab & Snack Bar 2") | Av. del Jablillo 47, C.C. Teguise Playa, 35508 Costa Teguise | ⚠️ Is it still open? Same owner? |
-| Phone | +34 928 33 35 30 | ✅ (TripAdvisor + Facebook) |
-| Alt. phone | +34 631 89 93 87 (one directory, for location 2) | ⚠️ Mobile/WhatsApp? Needed for `wa.me/` order links |
-| Email | canarykebab1@gmail.com | ⚠️ (Facebook) |
-| Facebook | https://www.facebook.com/canarykebab/ | ✅ |
-| Instagram | https://www.instagram.com/canarykebab/ (@canarykebab) | ✅ |
-| Existing menu site | https://canary-kebab.123restaurant.es/ (menu at `/carta.html`) | ✅ exists, content not fetched |
-| Services | Eat-in, takeaway, delivery | ✅ (Instagram bio) |
-| Hours | Open late: about 12:00–02:00 (one TripAdvisor listing); location 2 until about 03:30 | ⚠️ Full weekly hours needed |
-| Price level | € (budget). One review: kebab, chips, garlic bread and 2 drinks for just over €20 | ✅ |
-| Cuisine tags | Kebab/Turkish, Pizza, Indian, Burgers, Fast food, American | ✅ |
+| Field | Value |
+|---|---|
+| Name | **Canary Kebab & Snack Bar** ✅ |
+| Tagline / SEO title | "Kebab, Pizza & Indian Food in Costa Teguise" ✅ |
+| Address | Avda. de las Islas Canarias 3, C.C. Calypso, Local 12, 35508 Costa Teguise, Lanzarote ✅ |
+| Plus code / coords | XGX5+58 · 28.9979169, -13.4916666 ✅ |
+| Google place ID | `ChIJcQoTwl-dSAwRYCeP9WJATFY` ✅ |
+| Phone | **+34 928 33 35 30** ✅ |
+| WhatsApp | **not set on their site.** Ask the owner (a directory lists +34 631 89 93 87, unconfirmed) |
+| Email | not on their site. Facebook lists canarykebab1@gmail.com (unconfirmed) |
+| Hours | **Every day 13:00–02:00** ✅ (Google: "Closes 2 AM") |
+| Services | Eat in, take away, delivery ✅. Accessible entrance ✅ (Google) |
+| Price | € (budget). All prices include 7% IGIC ✅ |
+| Languages | Current site is EN + ES (DE translations exist but are switched off) |
+| Facebook | https://www.facebook.com/canarykebab/ |
+| Instagram | https://www.instagram.com/canarykebab/ (not linked from their current site) |
+| Google review link | https://search.google.com/local/writereview?placeid=ChIJcQoTwl-dSAwRYCeP9WJATFY |
+| Location | About 2 minutes from Playa de las Cucharas, opposite the bus stop on Av. Islas Canarias, near Pueblo Marinero |
 
-**Ratings (for the reviews section and JSON-LD `aggregateRating`, confirm before publishing):**
-- Google: **4.5 ★ from about 266 reviews** ⚠️
-- TripAdvisor (location 1): **4.6 ★ from 34 reviews** ✅
-- TripAdvisor (location 2): 4.7 ★ from 3 reviews ⚠️
+**Ratings:**
+- Google: **4.5 ★ from 297 reviews** ✅
+- TripAdvisor: 4.6 ★ from about 34 reviews (from search results)
 
-## 2. Menu: what we know
+**Second branch?** TripAdvisor has a "Canary Kebab & Snack Bar 2" at Av. del Jablillo 47 (C.C. Teguise Playa), but neither Google nor their own website mentions it. **Ask the owner whether it still exists.**
 
-The Instagram bio groups the menu as: **Kebab & Durum · Burger & Pizza · Snack & More**.
+## 2. Menu summary (full detail in `data/MENU.md`)
 
-Dishes mentioned in reviews and listings:
-- Doner kebab, chicken kebab wrap / durum, chicken shawarma
-- Pizzas, including veggie pizza
-- Indian: chicken tikka kebab, tandoori chicken, samosas
-- Burgers
-- Sides: chips, garlic bread
+Menu categories with item counts:
+- **Food:** Kebabs (10), Indian Tapas (12), Kebab Plates (7), Sandwiches (2), Burgers (4), Snacks & Sides (17), Pizzas (19)
+- **Drinks:** Soft drinks, Juices, Beers (23), Ciders, Vodka, Gin, Rum, Brandy, Whisky, Liqueurs (23), Wines, Sangría
 
-**No prices were found.** Aggregator prices that turn up in search belong to *Canaries Pizza & Kebab, Norwich (UK)*, a different business, so do not use them.
+Price highlights:
+- Wraps/pitas €7.00–9.90
+- Kebab plates €6.90–10.00
+- Pizzas €7.90–14.90
+- Burgers €7.90–9.90
+- Samosas €5–6
+- Naans €2.90–5.90
+- Beer from €1.75
 
-➡️ **Needed from the owner:** the full menu with prices, in EN and ES if they have both, as a PDF or a clear photo of the menu board. Also list allergens and say which dishes are vegetarian, halal or spicy.
+Signature items for the "favourites" section:
+- **Canary Chips** (cheesy chips loaded with doner, €6.50)
+- **Canary pizza** (kebab meat and red onion, €11)
+- **Lanzarote pizza** (bacon, dates and goat cheese, €12.50)
+- **Punjabi pizza** 🌶 (chicken tikka, ginger and chillies, €13.90)
+- **Punjabi naan**
+- **Chicken Tikka Wrap** (€9.90)
+- **Surf & Slice** pizza (€14.90)
 
-Suggested `data-cat` filter tabs to match the Hippie Chippy `filterMenu()` pattern:
-`kebab` (doner, durum, shawarma, kebab plates) · `pizza` · `indian` (tikka, tandoori, samosa, curries) · `burgers` · `sides` (chips, garlic bread, snacks, drinks).
+Suggested `data-cat` tabs, replacing Hippie Chippy's fish/burgers/breakfast/sides/extras: `kebab` (kebabs + plates) · `indian` · `pizza` · `burgers` (burgers + sandwiches) · `sides` · `drinks`.
 
-## 3. Review highlights (paraphrased; get the exact text from Google or TripAdvisor before quoting)
+## 3. What customers say (detail in `data/REVIEWS.md`)
 
-- Kebab wraps, tandoori chicken and samosas get frequent praise. Prices are called "reasonable" or "very reasonable".
-- It is a go-to late-night spot for a kebab or pizza after a night out.
-- One reviewer singled out the late-night pizza, another the chicken shawarma.
-- Criticism: it can be slow when only one staff member is on (about 30 minutes at a busy time). The site should push **ordering ahead by phone/WhatsApp**.
+- Fresh, fully loaded kebabs, good portions, **great prices**
+- **Authentic Indian** samosas and pakoras ("not British-style")
+- Chilli sauce and garlic mayo are mentioned a lot
+- Friendly staff and spotlessly clean. Good for eating in or taking away, with a beer or cocktail while you wait
+- "Best kebab on the island", from several holidaymakers
+- Weak point: a few say service is slow or "not very welcoming" when it's busy. The site should push **phone-ahead ordering**.
 
-## 4. Positioning / copy angles
+## 4. Brand
 
-- **"Kebab, Pizza & Indian, open late in Costa Teguise."** It is unusual to get all three under one roof.
-- Open until 2am or later. Make **late-night** the hero message, since Hippie Chippy's daytime hours are its main contrast.
-- Location 1 is in the C.C. Calypso. Location 2 (if still open) is near the Teguise Playa / Jablillo strip, the tourist beachfront.
-- Takeaway, delivery and eat-in. Order ahead by phone or WhatsApp.
-- Blog / SEO topic ideas (the `const blogs = [...]` array): "Best late-night food in Costa Teguise", "Doner vs durum vs shawarma: what's the difference?", "Tandoori and tikka: Indian food at Canary Kebab", "Where to eat after a night out in Costa Teguise", "Veggie options in Costa Teguise".
-- SEO keywords: kebab Costa Teguise, pizza Costa Teguise, Indian takeaway Costa Teguise, late night food Lanzarote, durum Lanzarote, comida a domicilio Costa Teguise, kebab abierto tarde Lanzarote.
+- **Logo:** `images/from-website/logo.webp`. The wordmark is "CANARY KEBAB & SNACK BAR" next to a flaming doner spit. There is also a faint watermark version, `logo_fondo.webp`.
+- **Colours sampled from the logo** (proposed tokens replacing Hippie Chippy's):
+  - `--ink` / primary burgundy **#4F1C23**
+  - `--gold` / flame **#DF9E2F**
+  - muted mauve **#906F6E**
+  - `--cream` / stone **#C0B3A5** · light **#DAD4D1**
+  - The shop sign is red and yellow neon, which could serve as an accent.
+- **Fonts:** Hippie Chippy uses Fraunces + DM Sans. Something bolder suits a kebab shop better, e.g. *Bebas Neue / Oswald* for headings and *DM Sans* for body text.
 
 ## 5. Site structure (mirrors Hippie Chippy)
 
-The Hippie Chippy site is six self-contained HTML pages with inline CSS/JS, bilingual EN/ES (`data-lang` + `setLang()` + `localStorage`), and Restaurant JSON-LD in every `<head>`. Plan:
+| Page | Content |
+|---|---|
+| `index.html` | Hero (shopfront at dusk / food video) · "Kebab, Pizza & Indian, open till 2am" · favourites · menu with tabs · reviews (4.5★ / 297) · gallery · order (call / WhatsApp) · find us (map embed + directions link) |
+| `menu.html` | Full food + drinks menu from `data/`, filter tabs, allergen note, "7% IGIC included" |
+| `about.html` | Story: kebab + pizza + authentic Indian under one roof, near Playa de las Cucharas |
+| `blog.html` | Ideas: "Best late-night food in Costa Teguise", "Doner vs durum vs pita", "What are pakoras & bhajis?", "Pizza with a Lanzarote twist: dates & goat cheese", "Where to eat near Playa de las Cucharas" |
+| `contact.html` | Address, phone, hours, Google Maps embed (URL in §7), review links |
+| `reels.html` | Instagram reels, once the owner supplies them |
 
-| Page | Hippie Chippy equivalent | Canary Kebab content |
-|---|---|---|
-| `index.html` | hero video slideshow, about, menu, gallery, reviews, reels, blog, order, find-us | Hero: grill / pizza oven / late-night videos. Sections: about, menu with tabs, gallery, reviews, Instagram, blog, order (phone/WhatsApp/delivery), find us (both locations + map) |
-| `menu.html` | full menu + PDF download | Full menu with filters + `CanaryKebab-Menu.pdf` |
-| `about.html` | story | Owner story, the kebab + pizza + Indian mix, team |
-| `blog.html` | articles | Blog topics from §4 |
-| `contact.html` | contact, hours, map | Both addresses, phone, WhatsApp, email, hours, Google Maps embeds |
-| `reels.html` | videos | Instagram / TikTok reels |
+JSON-LD:
+- `@type: "Restaurant"`
+- `servesCuisine: ["Kebab","Turkish","Pizza","Indian","Fast Food"]`
+- `priceRange: "€"`
+- `openingHoursSpecification`: Mo–Su 13:00–02:00
+- `geo`: the coordinates in §1
+- `aggregateRating`: 4.5 / 297
+- `hasMenu`: the menu page
 
-New brand tokens needed (replace `--cream/--sea/--gold…`). Suggested starting point until a logo is supplied: deep charcoal `--ink`, flame red/orange `--rust`, turmeric `--gold`, Canary yellow/blue accents. **Final colours should be taken from the logo.**
+Keywords from their current site: kebab Costa Teguise, pizza Costa Teguise, comida india Lanzarote, kebab a domicilio Lanzarote, snack bar Costa Teguise.
 
-JSON-LD: use `@type: ["Restaurant","FastFoodRestaurant"]`, `servesCuisine: ["Turkish","Kebab","Pizza","Indian"]`, `priceRange: "€"`, and one `location` / `department` per branch if both are open.
+## 6. Still needed from the owner
 
-## 6. Assets: owner checklist (none could be downloaded)
+- [ ] **Videos.** None were available anywhere public without logging in. Needed: 3–4 clips of 5–15s, landscape (doner carving, pizza oven, tandoor/naan, neon shopfront at night), plus Instagram reels.
+- [ ] **Real food photos.** The 7 food photos on their current site are generic stock-style images at 800px. Real photos of their own dishes would be much better (≥1600px).
+- [ ] Interior / counter / staff photos
+- [ ] Logo as a high-res PNG or SVG (the current one is 800×293 webp)
+- [ ] WhatsApp number for orders, and email
+- [ ] Delivery: own drivers or Just Eat / Glovo / Uber Eats? Links, delivery area, minimum order
+- [ ] Does the second branch exist?
+- [ ] Allergens per dish. Their current menu data has the fields but they're empty, and Spanish law requires this information.
+- [ ] Is the meat halal? Vegan options (falafel)?
+- [ ] Owner story / years open
+- [ ] Domain (canarykebab.com / .es?), and permission to quote Google reviews
 
-Photos and videos on Google Maps, Facebook and Instagram are owned by the business or by the customers who posted them. Customer photos on Google/TripAdvisor **should not be reused** without permission. Ask the owner for originals (WhatsApp or Google Drive is fine):
+## 7. Useful URLs
 
-**Branding**
-- [ ] Logo (PNG/SVG, high-res, transparent if possible)
-- [ ] Brand colours / existing signage photo
-
-**Photos → `canary-kebab/images/`** (minimum about 20; landscape, ≥1600px wide)
-- [ ] Shopfront / signage, day and night (both locations)
-- [ ] Interior / counter / seating
-- [ ] Doner on the spit; durum / wrap close-up; kebab plate
-- [ ] 3–4 pizzas, including veggie
-- [ ] Tandoori chicken, chicken tikka, samosas, any curries
-- [ ] Burgers, chips, garlic bread
-- [ ] Staff / owner portrait (for About)
-- [ ] Menu board
-
-**Videos → `canary-kebab/videos/`** (4 clips of 5–15s for the hero slideshow, landscape 1080p, no audio needed)
-- [ ] Doner being carved
-- [ ] Pizza going into / coming out of the oven
-- [ ] Tandoori / grill flames
-- [ ] Night-time shopfront with lights / customers
-- [ ] Any existing Instagram reels (originals, for `reels.html`)
-
-**Info to confirm**
-- [ ] Full menu + prices (EN/ES)
-- [ ] Opening hours per day, per location
-- [ ] Is location 2 (Av. del Jablillo 47) open? Same phone?
-- [ ] WhatsApp number for orders
-- [ ] Delivery: own drivers or Just Eat / Glovo / Uber Eats? Links? Delivery area and minimum order?
-- [ ] Domain name wanted (e.g. canarykebab.com / canarykebab.es)
-- [ ] Halal? Vegetarian/vegan options? Allergen info
-- [ ] Short owner story (how long open, where the recipes come from)
-- [ ] Permission to quote Google reviews by first name
-
-## 7. Sources
-
-- Facebook: https://www.facebook.com/canarykebab/
-- Instagram: https://www.instagram.com/canarykebab/
-- Menu site: https://canary-kebab.123restaurant.es/
-- TripAdvisor (loc. 1): https://www.tripadvisor.com/Restaurant_Review-g659633-d26366078-Reviews-Canary_Kebab_Snack_Bar_Costa_Teguise-Costa_Teguise_Lanzarote_Canary_Islands.html
-- TripAdvisor (loc. 2): https://www.tripadvisor.com/Restaurant_Review-g659633-d27496543-Reviews-Canary_Kebab_Snack_Bar-Costa_Teguise_Lanzarote_Canary_Islands.html
-- RestaurantGuru menu: https://restaurantguru.com/Canary-Kebab-and-Snack-Bar-Costa-Teguise/menu
+- Google Maps embed: `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3644.1335042141764!2d-13.491666599999999!3d28.9979169!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xc489d5fc2130a71%3A0x564c4062f58f2760!2sCanary%20Kebab%20%26%20Snack%20Bar!5e1!3m2!1ses!2ses!4v1786360397884!5m2!1ses!2ses`
+- Directions: `https://www.google.com/maps/dir/?api=1&destination=Canary+Kebab+%26+Snack+Bar%2C+Avda.+de+las+Islas+Canarias+3%2C+Costa+Teguise&destination_place_id=ChIJcQoTwl-dSAwRYCeP9WJATFY`
+- TripAdvisor: https://www.tripadvisor.com/Restaurant_Review-g659633-d26366078-Reviews-Canary_Kebab_Snack_Bar_Costa_Teguise-Costa_Teguise_Lanzarote_Canary_Islands.html
+- Current website: https://canary-kebab.123restaurant.es/
 - Gastroranking: https://gastroranking.es/r/canary-kebab-snack-bar_230574/
-- Wanderlog: https://wanderlog.com/place/details/9657159/canary-kebab--snack-bar
-- Taste the Canaries: https://tastethecanaries.com/restaurants/spain/lanzarote-1/costa-teguise/canary-kebab-snack-bar-2/
-- top-rated.online: https://www.top-rated.online/cities/Costa+Teguise/place/p/12750528/Canary+Kebab+&+Snack+Bar

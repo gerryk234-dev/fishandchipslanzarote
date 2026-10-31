@@ -1,0 +1,2328 @@
+[
+  {
+    "family": {
+      "EN": "SOFT DRINKS",
+      "ES": "REFRESCOS",
+      "DE": "SOFT DRINKS"
+    },
+    "image": "",
+    "header": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "footer": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "Still Water / Sparkling Water",
+          "ES": "Agua Natural / Agua con Gas",
+          "DE": "Stilles Wasser / Sprudelwasser"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          2.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Soda",
+          "ES": "Soda",
+          "DE": "Soda"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          2.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Tonic / Zero",
+          "ES": "Tónica / Zero",
+          "DE": "Tonic / Zero"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          2.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Coke / Light / Zero",
+          "ES": "Coca-Cola / Light / Zero",
+          "DE": "Coke / Light / Zero"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Fanta Lemon / Orange",
+          "ES": "Fanta Limón / Naranja",
+          "DE": "Fanta Zitrone / Orange"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Sprite",
+          "ES": "Sprite",
+          "DE": "Sprite"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Nestea Mango / Lemon",
+          "ES": "Nestea Mango / Limón",
+          "DE": "Nestea Mango / Zitrone"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Appletiser",
+          "ES": "Appletiser",
+          "DE": "Appletiser"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Aquarius Lemon / Orange",
+          "ES": "Aquarius Limón / Naranja",
+          "DE": "Aquarius Zitrone / Orange"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  },
+  {
+    "family": {
+      "EN": "JUICES",
+      "ES": "ZUMOS",
+      "DE": "SÄFTE"
+    },
+    "image": "",
+    "header": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "footer": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "Orange Juice",
+          "ES": "Zumo de Naranja",
+          "DE": "Orangensaft"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          2.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Pineapple Juice",
+          "ES": "Zumo de Piña",
+          "DE": "Ananassaft"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          2.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Apple Juice",
+          "ES": "Zumo de Manzana",
+          "DE": "Apfelsaft"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          2.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  },
+  {
+    "family": {
+      "EN": "BEERS",
+      "ES": "CERVEZAS",
+      "DE": "BIER"
+    },
+    "image": "",
+    "header": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "footer": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "Large Beer",
+          "ES": "Cerveza Grande",
+          "DE": "Großes Bier"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Small Beer",
+          "ES": "Cerveza Pequeña",
+          "DE": "Kleines Bier"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          1.75
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Dorada",
+          "ES": "Dorada",
+          "DE": "Dorada"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          2.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Dorada Especial",
+          "ES": "Dorada Especial",
+          "DE": "Dorada Especial"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Tropical",
+          "ES": "Tropical",
+          "DE": "Tropical"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          2.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Tropical Lemon",
+          "ES": "Tropical Limón",
+          "DE": "Tropical Lemon"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          2.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Budweiser",
+          "ES": "Budweiser",
+          "DE": "Budweiser"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          2.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Heineken",
+          "ES": "Heineken",
+          "DE": "Heineken"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Corona",
+          "ES": "Corona",
+          "DE": "Corona"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Coors Light",
+          "ES": "Coors Light",
+          "DE": "Coors Light"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Non-Alcoholic Beer",
+          "ES": "Sin Alcohol",
+          "DE": "Alkoholfreies Bier"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          2.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Gluten-Free Beer",
+          "ES": "Sin Gluten",
+          "DE": "Glutenfreies Bier"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Peroni",
+          "ES": "Peroni",
+          "DE": "Peroni"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Cobra",
+          "ES": "Cobra",
+          "DE": "Cobra"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Smirnoff Ice",
+          "ES": "Smirnoff Ice",
+          "DE": "Smirnoff Ice"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "WKD Blue",
+          "ES": "WKD Blue",
+          "DE": "WKD Blue"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Bacardi Breezer (Orange, Watermelon)",
+          "ES": "Bacardi Breezer (Naranja, Sandía)",
+          "DE": "Bacardi Breezer (Orange, Wassermelone)"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Desperados",
+          "ES": "Desperados",
+          "DE": "Desperados"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Estrella Galicia",
+          "ES": "Estrella Galicia",
+          "DE": "Estrella Galicia"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "1906",
+          "ES": "1906",
+          "DE": "1906"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Alhambra",
+          "ES": "Alhambra",
+          "DE": "Alhambra"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "John Smith's",
+          "ES": "John Smith's",
+          "DE": "John Smith's"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Guinness",
+          "ES": "Guinness",
+          "DE": "Guinness"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          4.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  },
+  {
+    "family": {
+      "EN": "CIDERS",
+      "ES": "SIDRAS",
+      "DE": "CIDER"
+    },
+    "image": "",
+    "header": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "footer": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "Kopparberg Lime",
+          "ES": "Kopparberg Lime",
+          "DE": "Kopparberg Lime"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          4.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Magners",
+          "ES": "Magners",
+          "DE": "Magners"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          4.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Strongbow",
+          "ES": "Strongbow",
+          "DE": "Strongbow"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  },
+  {
+    "family": {
+      "EN": "VODKA",
+      "ES": "VODKA",
+      "DE": "VODKA"
+    },
+    "image": "",
+    "header": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "footer": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "Smirnoff",
+          "ES": "Smirnoff",
+          "DE": "Smirnoff"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Absolut",
+          "ES": "Absolut",
+          "DE": "Absolut"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Moskovskaya",
+          "ES": "Moskovskaya",
+          "DE": "Moskovskaya"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Ketel One",
+          "ES": "Ketel One",
+          "DE": "Ketel One"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          7.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Grey Goose",
+          "ES": "Grey Goose",
+          "DE": "Grey Goose"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          9.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Belvedere",
+          "ES": "Belvedere",
+          "DE": "Belvedere"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          9.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Cîroc",
+          "ES": "Cîroc",
+          "DE": "Cîroc"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          9.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Vodka Caramel",
+          "ES": "Vodka Caramel",
+          "DE": "Vodka Caramel"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          4.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  },
+  {
+    "family": {
+      "EN": "GIN",
+      "ES": "GIN",
+      "DE": "GIN"
+    },
+    "image": "",
+    "header": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "footer": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "Gordon's",
+          "ES": "Gordon's",
+          "DE": "Gordon's"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Gordon's Pink",
+          "ES": "Gordon's Pink",
+          "DE": "Gordon's Pink"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Bombay Sapphire",
+          "ES": "Bombay Sapphire",
+          "DE": "Bombay Sapphire"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          7.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Tanqueray",
+          "ES": "Tanqueray",
+          "DE": "Tanqueray"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Hendrick's",
+          "ES": "Hendrick's",
+          "DE": "Hendrick's"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          7.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Puerto de Indias Pink",
+          "ES": "Puerto de Indias Pink",
+          "DE": "Puerto de Indias Pink"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          7.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  },
+  {
+    "family": {
+      "EN": "RUM",
+      "ES": "RON",
+      "DE": "RUM"
+    },
+    "image": "",
+    "header": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "footer": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "Bacardi",
+          "ES": "Bacardi",
+          "DE": "Bacardi"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Arehucas Oro / Blanco",
+          "ES": "Arehucas Oro / Blanco",
+          "DE": "Arehucas Oro / Blanco"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Havana Club 3 años",
+          "ES": "Havana Club 3 años",
+          "DE": "Havana Club 3 años"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Havana Club 7 años",
+          "ES": "Havana Club 7 años",
+          "DE": "Havana Club 7 años"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          7.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Captain Morgan Spice / Black",
+          "ES": "Captain Morgan Spice / Black",
+          "DE": "Captain Morgan Spice / Black"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Malibu",
+          "ES": "Malibu",
+          "DE": "Malibu"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Barceló Oro / Blanco",
+          "ES": "Barceló Oro / Blanco",
+          "DE": "Barceló Oro / Blanco"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Honey Rum",
+          "ES": "Ron Miel",
+          "DE": "Honig-Rum"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          4.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  },
+  {
+    "family": {
+      "EN": "BRANDY & COGNAC",
+      "ES": "BRANDY & COGNAC",
+      "DE": "BRANDY & COGNAC"
+    },
+    "image": "",
+    "header": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "footer": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "Hennessy",
+          "ES": "Hennessy",
+          "DE": "Hennessy"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          10.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Courvoisier",
+          "ES": "Courvoisier",
+          "DE": "Courvoisier"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          9.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Carlos I",
+          "ES": "Carlos I",
+          "DE": "Carlos I"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          8.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Martell",
+          "ES": "Martell",
+          "DE": "Martell"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          7.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Rémy Martin",
+          "ES": "Rémy Martin",
+          "DE": "Rémy Martin"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          10.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Veterano",
+          "ES": "Veterano",
+          "DE": "Veterano"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          5.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Magno",
+          "ES": "Magno",
+          "DE": "Magno"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          5.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "103",
+          "ES": "103",
+          "DE": "103"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          5.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  },
+  {
+    "family": {
+      "EN": "WHISKY",
+      "ES": "WHISKY",
+      "DE": "WHISKY"
+    },
+    "image": "",
+    "header": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "footer": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "Johnnie Walker Red Label",
+          "ES": "Johnnie Walker Red Label",
+          "DE": "Johnnie Walker Red Label"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Johnnie Walker Black Label",
+          "ES": "Johnnie Walker Black Label",
+          "DE": "Johnnie Walker Black Label"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          8.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "J&B",
+          "ES": "J&B",
+          "DE": "J&B"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Jack Daniel's",
+          "ES": "Jack Daniel's",
+          "DE": "Jack Daniel's"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Jameson",
+          "ES": "Jameson",
+          "DE": "Jameson"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Southern Comfort",
+          "ES": "Southern Comfort",
+          "DE": "Southern Comfort"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Four Roses",
+          "ES": "Four Roses",
+          "DE": "Four Roses"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Glenfiddich",
+          "ES": "Glenfiddich",
+          "DE": "Glenfiddich"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          8.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Macallan",
+          "ES": "Macallan",
+          "DE": "Macallan"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          11.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Famous Grouse",
+          "ES": "Famous Grouse",
+          "DE": "Famous Grouse"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          5.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Ballantine's",
+          "ES": "Ballantine's",
+          "DE": "Ballantine's"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          6.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Glenlivet",
+          "ES": "Glenlivet",
+          "DE": "Glenlivet"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          8.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  },
+  {
+    "family": {
+      "EN": "LIQUEURS",
+      "ES": "LICORES",
+      "DE": "LIKÖRE"
+    },
+    "image": "",
+    "header": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "footer": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "Campari",
+          "ES": "Campari",
+          "DE": "Campari"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          5.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Aperol",
+          "ES": "Aperol",
+          "DE": "Aperol"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          4.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Licor 43",
+          "ES": "Licor 43",
+          "DE": "Licor 43"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          5.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Jägermeister",
+          "ES": "Jägermeister",
+          "DE": "Jägermeister"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          4.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Sambuca",
+          "ES": "Sambuca",
+          "DE": "Sambuca"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Hierbas",
+          "ES": "Hierbas",
+          "DE": "Hierbas"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Disaronno",
+          "ES": "Disaronno",
+          "DE": "Disaronno"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          5.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Cointreau",
+          "ES": "Cointreau",
+          "DE": "Cointreau"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          5.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Baileys",
+          "ES": "Baileys",
+          "DE": "Baileys"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          5.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Tia Maria",
+          "ES": "Tia Maria",
+          "DE": "Tia Maria"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          5.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Tequila Oro / Blanco / Rose",
+          "ES": "Tequila Oro / Blanco / Rose",
+          "DE": "Tequila Oro / Blanco / Rose"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Pacharán",
+          "ES": "Pacharán",
+          "DE": "Pacharán"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          4.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Pernod",
+          "ES": "Pernod",
+          "DE": "Pernod"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          4.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Drambuie",
+          "ES": "Drambuie",
+          "DE": "Drambuie"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          5.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Frangelico",
+          "ES": "Frangelico",
+          "DE": "Frangelico"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          4.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Grappa",
+          "ES": "Grappa",
+          "DE": "Grappa"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          4.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Ramazzotti",
+          "ES": "Ramazzotti",
+          "DE": "Ramazzotti"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          4.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Limoncello",
+          "ES": "Limoncello",
+          "DE": "Limoncello"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Grand Marnier",
+          "ES": "Grand Marnier",
+          "DE": "Grand Marnier"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          5.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Pimm's",
+          "ES": "Pimm's",
+          "DE": "Pimm's"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          4.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Passoa",
+          "ES": "Passoa",
+          "DE": "Passoa"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          4.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Harveys Sherry",
+          "ES": "Harveys Sherry",
+          "DE": "Harveys Sherry"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          4.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Fernet Branca / Menthe",
+          "ES": "Fernet Branca / Menthe",
+          "DE": "Fernet Branca / Menthe"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          4.5
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  },
+  {
+    "family": {
+      "EN": "RED WINES",
+      "ES": "VINOS TINTOS",
+      "DE": "ROTWEINE"
+    },
+    "image": "",
+    "header": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "footer": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "House Wine Glass / Bottle",
+          "ES": "Vino de la Casa Copa / Botella",
+          "DE": "Hauswein Glas / Flasche"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5,
+          12.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Sangre de Toro 1/2 / Bottle",
+          "ES": "Sangre de Toro 1/2 / Botella",
+          "DE": "Sangre de Toro 1/2 / Flasche"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          7.95,
+          15.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  },
+  {
+    "family": {
+      "EN": "WHITE WINES",
+      "ES": "VINOS BLANCOS",
+      "DE": "WEISSWEINE"
+    },
+    "image": "",
+    "header": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "footer": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "House Wine Glass / Bottle",
+          "ES": "Vino de la Casa Copa / Botella",
+          "DE": "Hauswein Glas / Flasche"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5,
+          12.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Viña Sol 1/2 / Bottle",
+          "ES": "Viña Sol 1/2 / Botella",
+          "DE": "Viña Sol 1/2 / Flasche"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          7.95,
+          15.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  },
+  {
+    "family": {
+      "EN": "MEDIUM WINES",
+      "ES": "VINOS SEMIDULCES",
+      "DE": "LIEBLICHE WEINE"
+    },
+    "image": "",
+    "header": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "footer": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "House Wine Glass / Bottle",
+          "ES": "Vino de la Casa Copa / Botella",
+          "DE": "Hauswein Glas / Flasche"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5,
+          12.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "San Valentín 1/2 / Bottle",
+          "ES": "San Valentín 1/2 / Botella",
+          "DE": "San Valentín 1/2 / Flasche"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          7.95,
+          15.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  },
+  {
+    "family": {
+      "EN": "ROSÉ WINES",
+      "ES": "VINOS ROSADOS",
+      "DE": "ROSÉWEINE"
+    },
+    "image": "",
+    "header": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "footer": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "House Wine Glass / Bottle",
+          "ES": "Vino de la Casa Copa / Botella",
+          "DE": "Hauswein Glas / Flasche"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          3.5,
+          12.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      },
+      {
+        "name": {
+          "EN": "Mateus Rosé 1/2 / Bottle",
+          "ES": "Mateus Rosé 1/2 / Botella",
+          "DE": "Mateus Rosé 1/2 / Flasche"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          7.95,
+          15.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  },
+  {
+    "family": {
+      "EN": "SANGRÍA",
+      "ES": "SANGRÍA",
+      "DE": "SANGRÍA"
+    },
+    "image": "",
+    "header": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "footer": {
+      "EN": "",
+      "ES": "",
+      "DE": ""
+    },
+    "products": [
+      {
+        "name": {
+          "EN": "Sangría Glass / 1/2 / 1ltr",
+          "ES": "Sangría Copa / 1/2 / 1ltr",
+          "DE": "Sangría Glas / 1/2 / 1ltr"
+        },
+        "description": {
+          "EN": "",
+          "ES": "",
+          "DE": ""
+        },
+        "prices": [
+          4.5,
+          6.95,
+          12.95
+        ],
+        "sizes": [],
+        "allergens": [],
+        "hot": ""
+      }
+    ]
+  }
+]
