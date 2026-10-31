@@ -32,7 +32,7 @@ Updated 31 Oct 2026. The goal is a site for Canary Kebab & Snack Bar built the s
 | Plus code / coords | XGX5+58 · 28.9979169, -13.4916666 ✅ |
 | Google place ID | `ChIJcQoTwl-dSAwRYCeP9WJATFY` ✅ |
 | Phone | **+34 928 33 35 30** ✅ |
-| WhatsApp | **not set on their site.** Ask the owner (a directory lists +34 631 89 93 87, unconfirmed) |
+| WhatsApp (orders) | **+34 612 22 58 43** → `https://wa.me/34612225843`. Temporary: the same number as Hippie Chippy for now. When it changes, grep the site for `612225843` |
 | Email | not on their site. Facebook lists canarykebab1@gmail.com (unconfirmed) |
 | Hours | **Every day 13:00–02:00** ✅ (Google: "Closes 2 AM") |
 | Services | Eat in, take away, delivery ✅. Accessible entrance ✅ (Google) |
@@ -47,7 +47,7 @@ Updated 31 Oct 2026. The goal is a site for Canary Kebab & Snack Bar built the s
 - Google: **4.5 ★ from 297 reviews** ✅
 - TripAdvisor: 4.6 ★ from about 34 reviews (from search results)
 
-**Second branch?** TripAdvisor has a "Canary Kebab & Snack Bar 2" at Av. del Jablillo 47 (C.C. Teguise Playa), but neither Google nor their own website mentions it. **Ask the owner whether it still exists.**
+**Second branch ✅ (confirmed by owner side):** also in Costa Teguise, at a different location. Listed as "Canary Kebab & Snack Bar 2", **Av. del Jablillo 47, C.C. Teguise Playa, 35508 Costa Teguise** (TripAdvisor: 4.7★, open until about 03:30). Still to confirm: its exact hours and phone, and whether the menu is the same. The site should have a **"Two locations in Costa Teguise"** block (home + contact pages), and the JSON-LD should list both as separate `Restaurant` entries.
 
 ## 2. Menu summary (full detail in `data/MENU.md`)
 
@@ -86,7 +86,14 @@ Suggested `data-cat` tabs, replacing Hippie Chippy's fish/burgers/breakfast/side
 
 ## 4. Brand
 
-- **Logo:** `images/from-website/logo.webp`. The wordmark is "CANARY KEBAB & SNACK BAR" next to a flaming doner spit. There is also a faint watermark version, `logo_fondo.webp`.
+- **Logo, cleaned up and vectorised: `images/logo/`** (preview: `images/logo/preview.png`):
+  - `logo.svg`: full colour, transparent background, with a subtle gradient on the spit. Use it in the nav on light backgrounds.
+  - `logo-on-dark.svg`: cream + gold, for dark headers and footers.
+  - `logo-mono-white.svg`: all white, for use over photos and video.
+  - `logo-flat.svg`: two flat colours, for print or embroidery.
+  - `icon.svg` / `icon-on-dark.svg`: the flaming doner on its own.
+  - PNG exports: `logo-2400.png`, `logo-on-dark-2400.png`, `logo-mono-white-2400.png`, `icon-1024.png`, `icon-512.png`, `apple-touch-icon.png` (180), `favicon-32.png`, `favicon.ico`.
+  - The original is `images/from-website/logo.webp`, plus the faint watermark `logo_fondo.webp`.
 - **Colours sampled from the logo** (proposed tokens replacing Hippie Chippy's):
   - `--ink` / primary burgundy **#4F1C23**
   - `--gold` / flame **#DF9E2F**
@@ -119,13 +126,12 @@ Keywords from their current site: kebab Costa Teguise, pizza Costa Teguise, comi
 
 ## 6. Still needed from the owner
 
-- [ ] **Videos.** None were available anywhere public without logging in. Needed: 3–4 clips of 5–15s, landscape (doner carving, pizza oven, tandoor/naan, neon shopfront at night), plus Instagram reels.
+- [ ] **Videos from the Facebook page.** Facebook needs a login, so they can't be fetched automatically. Either upload them to Google Drive (downloaded from the page, or via Meta Business Suite → Content → Download), or send the direct links to individual videos/reels. Needed: 3–4 landscape clips of 5–15s for the hero, plus reels.
 - [ ] **Real food photos.** The 7 food photos on their current site are generic stock-style images at 800px. Real photos of their own dishes would be much better (≥1600px).
 - [ ] Interior / counter / staff photos
-- [ ] Logo as a high-res PNG or SVG (the current one is 800×293 webp)
-- [ ] WhatsApp number for orders, and email
+- [ ] Real WhatsApp number for Canary Kebab (Hippie Chippy's is used for now), and email
 - [ ] Delivery: own drivers or Just Eat / Glovo / Uber Eats? Links, delivery area, minimum order
-- [ ] Does the second branch exist?
+- [ ] Second branch (Av. del Jablillo 47): hours, phone, same menu?
 - [ ] Allergens per dish. Their current menu data has the fields but they're empty, and Spanish law requires this information.
 - [ ] Is the meat halal? Vegan options (falafel)?
 - [ ] Owner story / years open
