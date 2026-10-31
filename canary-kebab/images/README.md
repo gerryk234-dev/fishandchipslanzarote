@@ -27,3 +27,22 @@ The food photos look like stock or AI images rather than their own food. Fine as
 
 ## videos/
 Empty. No videos could be fetched (Facebook and Instagram need a login). Request from the owner.
+
+## from-videos/ (real photos: stills from the owner's promo videos, 1080×1920 portrait)
+These are **the shop's own food and people**. Prefer them over the stock-style `from-website/` images.
+
+| File | What it is |
+|---|---|
+| neon-sign.jpg | Red/yellow neon "CANARY KEBAB SNACK BAR" sign at night |
+| chef-doner-spit.jpg | Chef in red apron carving at the doner spit |
+| chef-plating.jpg | Second chef plating up in the kitchen |
+| doner-wrap-filling.jpg | Gloved hands filling a wrap with doner meat |
+| wrap-salad.jpg | Open wrap with salad and sauces |
+| chicken-wrap-cut.jpg | Chicken wrap cut in half in foil, close-up (very good menu/hero shot) |
+| kebab-plate.jpg / kebab-plate-sauce.jpg | Overhead: kebab meat, chips and salad plate (sharpest stills) |
+| pizza-burger-spread.jpg | Veggie pizza, burger and chips, doner box |
+| pizza-oven.jpg | Pizza coming out of the oven |
+| pizza-slice.jpg | Slice being pulled from a pizza |
+| customer-eating-wrap.jpg / customer-wrap-smile.jpg / customer-wrap.jpg / customer-pizza.jpg / customer-pizza-2.jpg | Customers eating at the tables |
+
+Some stills have slight motion blur because they come from fast cuts (`doner-wrap-filling`, `pizza-oven`). Fine for small cards, but don't use them full-screen. People appear in the videos the owner published, but get the owner's OK before using faces in large hero images.

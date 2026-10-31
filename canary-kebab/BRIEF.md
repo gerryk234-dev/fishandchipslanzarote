@@ -126,8 +126,8 @@ Keywords from their current site: kebab Costa Teguise, pizza Costa Teguise, comi
 
 ## 6. Still needed from the owner
 
-- [ ] **Videos from the Facebook page.** Facebook needs a login, so they can't be fetched automatically. Either upload them to Google Drive (downloaded from the page, or via Meta Business Suite → Content → Download), or send the direct links to individual videos/reels. Needed: 3–4 landscape clips of 5–15s for the hero, plus reels.
-- [ ] **Real food photos.** The 7 food photos on their current site are generic stock-style images at 800px. Real photos of their own dishes would be much better (≥1600px).
+- [x] ~~Videos~~ ✅ 2 promo videos received → `videos/` (hero + reels versions) and 16 real stills → `images/from-videos/`. Nice to have: more clips, ideally landscape.
+- [ ] More real food photos. There are now 16 stills from the videos; extra shots of the Indian dishes (samosas, pakoras, naans, tikka) would fill gaps.
 - [ ] Interior / counter / staff photos
 - [ ] Real WhatsApp number for Canary Kebab (Hippie Chippy's is used for now), and email
 - [ ] Delivery: own drivers or Just Eat / Glovo / Uber Eats? Links, delivery area, minimum order
