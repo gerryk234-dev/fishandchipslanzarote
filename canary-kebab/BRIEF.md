@@ -32,7 +32,7 @@ Updated 31 Oct 2026. The goal is a site for Canary Kebab & Snack Bar built the s
 | Plus code / coords | XGX5+58 · 28.9979169, -13.4916666 ✅ |
 | Google place ID | `ChIJcQoTwl-dSAwRYCeP9WJATFY` ✅ |
 | Phone | **+34 928 33 35 30** ✅ |
-| WhatsApp (orders) | **+34 612 22 58 43** → `https://wa.me/34612225843`. Temporary: the same number as Hippie Chippy for now. When it changes, grep the site for `612225843` |
+| WhatsApp (orders) | **+34 695 07 17 65** → `https://wa.me/34695071765`. Temporary: the same number as Hippie Chippy for now. When it changes, grep the site for `695071765` |
 | Email | not on their site. Facebook lists canarykebab1@gmail.com (unconfirmed) |
 | Hours | **Every day 13:00–02:00** ✅ (Google: "Closes 2 AM") |
 | Services | Eat in, take away, delivery ✅. Accessible entrance ✅ (Google) |

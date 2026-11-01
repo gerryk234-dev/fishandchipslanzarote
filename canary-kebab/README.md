@@ -25,7 +25,7 @@ cd canary-kebab && python3 -m http.server 8000   # open http://localhost:8000
 ## Keep in sync when things change
 | What | Where it appears |
 |---|---|
-| **WhatsApp number**: currently **+34 612 22 58 43** (Hippie Chippy's, temporary) | Every page: footer, floating button, `WA_NUMBER` in the order script, contact cards. Change all with `sed -i 's/34612225843/34NEWNUMBER/g; s/+34 612 22 58 43/+34 NEW NUMBER/g' *.html` |
+| **WhatsApp number**: currently **+34 695 07 17 65** (Hippie Chippy's, temporary) | Every page: footer, floating button, `WA_NUMBER` in the order script, contact cards. Change all with `sed -i 's/34695071765/34NEWNUMBER/g; s/+34 695 07 17 65/+34 NEW NUMBER/g' *.html` |
 | Phone +34 928 33 35 30, hours 13:00–02:00, addresses | Visible text + the JSON-LD block in every `<head>` |
 | **Menu prices** | `menu.html` cards, the `MENU_ITEMS` order list in **every page**, the favourites on `index.html`, prices quoted in blog articles, and `data/MENU.md` / `data/*.json` |
 | Blog articles | `const blogs` in `index.html` **and** `blog.html` |
