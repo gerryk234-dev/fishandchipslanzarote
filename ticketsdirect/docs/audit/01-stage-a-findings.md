@@ -68,7 +68,7 @@ EN and ES pages exist for almost everything, but they are not linked with `hrefl
 - **Missing business details:** there is no address, phone number, `TravelAgency` or LocalBusiness type, and no link between the website and the 10 offices.
 - **Broken YouTube link:** `sameAs` points to `youtube.com/@ExcursionsTicketsDirect`, which **returns 404**. The real channel is `@experiencelanzarote`.
 - **Placeholder description:** every tour's Product/Trip `description` is the same placeholder text, "Looking for another experience? Explore all our excursions.", repeated on 170 pages.
-- **Self-serving review stars:** 4 tour pages carry `AggregateRating` built from on-site reviews, for example `/trip/sea-trekkin/` with ratingValue 5.0 and reviewCount 1. Google treats ratings a business publishes about itself as ineligible for review stars, and a single review is weak evidence anyway.
+- **Thin review stars:** 4 tour pages carry `AggregateRating` built from on-site reviews, for example `/trip/sea-trekkin/` with ratingValue 5.0 and reviewCount 1. A single review is weak evidence, and the other 81 tours show none. Tour (Product) reviews collected after each trip can be marked up; ratings for the business itself on its own site cannot.
 
 ### 4.3 Duplicate and overlapping archives (medium-high)
 Destinations exist three times: as `destination`, as `location` and as blog `category`. These copies share identical titles, for example:

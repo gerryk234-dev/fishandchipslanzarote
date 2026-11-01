@@ -10,9 +10,9 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 | A3 | Technical/on-page audit | implemented | Findings §4 |
 | A4 | Crawler access (Googlebot, Bingbot, OAI-SearchBot, GPTBot, ChatGPT-User, PerplexityBot, ClaudeBot) | in progress | User-agent test passes. Real-IP confirmation **blocked**: needs server logs |
 | A5 | Performance baseline | in progress | Lab done. Field data (CrUX/PSI) **blocked**: API quota |
-| A6 | Traffic / ranking baseline | blocked | Needs Search Console and GA4 access |
-| B1 | Competitor matrix (direct, local, OTAs, Maps) | not started | GYG and Viator block crawling, so public snippets only |
-| B2 | 20+ buying questions, classified | not started | |
+| A6 | Traffic / ranking baseline | blocked | Search Console: owner verification pending (paused by owner). GA4 access not yet given. Service account `seo-reader` created |
+| B1 | Competitor matrix (direct, local, OTAs, Maps) | implemented | `audit/02-stage-b-competitors-and-questions.md` §1–4. GYG/Viator **blocked** (403); lanzarote.com, Lanzarote Information, Tripadvisor not allowed by network |
+| B2 | 20+ buying questions, classified | implemented | 27 questions, §5. Search volumes **blocked**: need Search Console or paid tool |
 | C1 | AI-search tests (5 prompts × ChatGPT, Perplexity, Google AI) | blocked | Agent has no access. Owner runs the protocol |
 | C2 | Local pack / GBP audit (11 profiles) | implemented | `google-business-profiles.md` §7 (public data) |
 | C3 | Citations & backlink audit | blocked | Needs a paid tool for backlinks |
@@ -39,3 +39,7 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 | Remove `/formulario-e-ticket/` & utility pages from sitemap | Yoast → page settings → noindex | not started |
 | Noindex `location`, `tour_language`, `tour_duration`, `difficulty` archives | Yoast → Taxonomies | not started |
 | Price missing on 2 trips; duplicate La Graciosa package; jet ski €60/€70 | WP Travel Engine | not started |
+| Rename 20 tour FAQs titled "faq" / "general faq" | WP Travel Engine | not started |
+| Check Highlights child price (€63 vs €59 at OK Lanzarote) | WP Travel Engine | not started |
+| Confirm Google profile "Tickets Direct Excursions Lanzarote Puerto del Carmen", C. Bajamar 26 | Google Business Profile | not started |
+| Rename "Excursions Tickets Direct Puerto del Carmen Beach" to brand-first | Google Business Profile | not started |
