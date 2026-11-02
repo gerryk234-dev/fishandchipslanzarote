@@ -1,5 +1,5 @@
 {
-  "_note": "From the owner's Google Business Profiles (read 2026-10-24). All physical offices open daily 09:30–18:00 (owner, 2026-10-24). puerto-calero-charters is a Google profile for boat trips and charters, not a walk-in office (physical:false): it is kept out of office lists and LocalBusiness data. 'gbp' records what each profile showed, used by the audit in npm run gbp.",
+  "_note": "From the owner's Google Business Profiles (read 2026-10-24). All physical offices open daily 09:30–18:00 (owner, 2026-10-24). C. Bajamar office confirmed by the owner 2026-11-02. puerto-calero-charters is a Google profile for boat trips and charters, not a walk-in office (physical:false): it is kept out of office lists and LocalBusiness data. 'gbp' records what each profile showed, used by the audit in npm run gbp.",
   "offices": [
     {
       "id": "playa-blanca-playa-dorada",
@@ -194,6 +194,34 @@
         "rating": "4.2",
         "website": "http://excursionsticketsdirect.com/",
         "hoursShown": "9:00–18:00"
+      },
+      "physical": true
+    },
+    {
+      "id": "puerto-del-carmen-bajamar",
+      "resort": "puerto-del-carmen",
+      "name": "Tickets Direct Excursions Lanzarote Puerto del Carmen",
+      "streetAddress": "C. Bajamar, 26",
+      "postalCode": "35510",
+      "locality": "Puerto del Carmen",
+      "phone": "+34 633 22 92 44",
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
+      "geo": [
+        28.9212018,
+        -13.6703048
+      ],
+      "mapsUrl": "https://www.google.com/maps?cid=5071691303768189437",
+      "mapsQuery": "Tickets Direct Excursions Lanzarote Puerto del Carmen",
+      "verified": true,
+      "gbp": {
+        "category": "Boat tour agency",
+        "rating": "4.9",
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": "9:30–18:00"
       },
       "physical": true
     },

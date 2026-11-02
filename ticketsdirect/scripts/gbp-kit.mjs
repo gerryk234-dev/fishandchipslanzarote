@@ -146,7 +146,8 @@ for (const o of profiles) {
     fixes.push(`website: keep the boat trips page, with tracking → \`${utm("/trip-types/lanzarote-boat-trips/", o.id)}\``);
     if (g.formerName) fixes.push(`renamed from "${g.formerName}": done ✔. Make sure the new name matches your signage/branding, and don't add more keywords`);
   }
-  if (!charter && g.category && g.category !== "Tour agency") fixes.push(`primary category → **Tour agency** (keep "${g.category}" as secondary${/ATV|information/i.test(g.category) ? " only if it's really what customers find there" : ""})`);
+  if (!charter && g.category === "Boat tour agency") fixes.push(`keep **Boat tour agency** as primary (it is what ranks this profile for boat-trip searches); add *Tour agency* as secondary`);
+  else if (!charter && g.category && g.category !== "Tour agency") fixes.push(`primary category → **Tour agency** (keep "${g.category}" as secondary${/ATV|information/i.test(g.category) ? " only if it's really what customers find there" : ""})`);
   if (!charter && (/^http:/.test(g.website || "") || /\.com\/?$/.test(g.website || ""))) fixes.push(`website → \`${utm(`/excursions-from/${o.resort}/`, o.id)}\``);
   if (!/^Tickets Direct Excursions/.test(o.name)) fixes.push(`name doesn't start with "Tickets Direct Excursions": use the brand first, exactly as on the shopfront${/^Buggy/.test(o.name) ? '; keyword-first names ("Buggy Tours Lanzarote…") risk suspension' : ""}`);
   if (/Tahíche|Apartamento/i.test(o.streetAddress)) fixes.push(`address shows "Apartamento Tahiche 122 … 35508 Lanzarote": put the street first and set the town to **Costa Teguise**`);
@@ -161,8 +162,9 @@ for (const o of profiles) {
 w();
 w(`**Across all profiles:**`);
 w();
-w(`- **Website links:** all 10 point to \`http://excursionsticketsdirect.com/\` (the homepage, without https). Point each one to its resort page with the tracking link above, so Google ties each office to its own area and you can see which office brings bookings (Google Analytics → Acquisition → \`utm_content\`).`);
-w(`- **Categories:** you currently use 7 different primary categories. Use **Tour agency** as primary on every office, plus secondaries that are true for that office.`);
+const homepageLinks = offices.filter((o) => /^https?:\/\/[^/]+\/?$/.test(o.gbp?.website || "")).length;
+w(`- **Website links:** ${homepageLinks} of ${offices.length} point to \`http://excursionsticketsdirect.com/\` (the homepage, without https). Point each one to its resort page with the tracking link above, so Google ties each office to its own area and you can see which office brings bookings (Google Analytics → Acquisition → \`utm_content\`).`);
+w(`- **Categories:** you currently use ${new Set(offices.map((o) => o.gbp?.category)).size} different primary categories. Use **Tour agency** as primary, except on profiles already listed as **Boat tour agency**: those rank for boat-trip searches, so keep them and add Tour agency as secondary.`);
 w(`- **Phones:** 5 different numbers are in use (${[...new Set(offices.map((o) => o.phone))].join(", ")}). That's fine if each one is answered, but the website now shows each office's own number, so update \`offices.json\` if any change.`);
 w(`- **Duplicates:** Puerto del Carmen has two profiles on Av. de las Playas (*Buggy Tours…* and *…Puerto del Carmen Beach*, about 300 m apart). If they're the same shop, merge them in Business Profile Manager; duplicates split reviews and can get both suspended.`);
 w();

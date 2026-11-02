@@ -23,7 +23,7 @@ Checked on 1 November 2026. Every figure below was read from the competitor's ow
 | Payment | 35% deposit online, balance later | Not checked | Deposit (stated non-refundable) | Not checked |
 | Price promise | None | "Best price guarantee, no hidden fees, extra gift upon booking" | "Price Match Promise – find it cheaper, we'll match" | — |
 | App | No (the rebuild adds an installable app) | No | Yes: Google Play + App Store | Yes |
-| Physical offices | **10 across 3 resorts** + charter profile | None mentioned in page text | 1 seen in Maps (Puerto del Carmen) | None |
+| Physical offices | **11 across 3 resorts** + charter profile | None mentioned in page text | 1 Maps profile in Puerto del Carmen, still shown as open, but the owner reports it has shut | None |
 | Titles | Long (median 75 characters) and generic suffix | Short, with the year: "Top Timanfaya National Park Tours in 2026" | Short: "Lanzarote buggy tour \| Excursions Lanzarote" | Short |
 
 Review counts are what each competitor publishes about itself. Where those reviews come from was not verified.
@@ -65,7 +65,8 @@ Method: one run per search on 1 November 2026, with the browser location set to 
 
 Findings for the Google profiles:
 
-1. **Unknown profile.** "Tickets Direct Excursions Lanzarote Puerto del Carmen", at C. Bajamar 26 and rated 4.9, is **not one of the 11 profiles you gave me**. Is it yours: a 12th office, an old location or a duplicate? If it's a duplicate, Google may be splitting your reviews.
+1. **C. Bajamar 26 profile: confirmed yours** (owner, 2 November 2026). Added to the site as the 11th office. It is a *Boat tour agency* profile rated 4.9.
+1. **Excursions Lanzarote's Puerto del Carmen office** ranks #1 for "excursions Puerto del Carmen" and still shows as open ("Open 24 hours", UK phone number). The owner reports it has shut down. If that's right, anyone can report it on Maps: *Suggest an edit → Close or remove → Permanently closed*. Google checks before changing it, and the report should only be made if it's true. Your Puerto del Carmen Beach office is next door.
 2. **Name inconsistent.** "**Excursions Tickets** Direct Puerto del Carmen Beach" is the only profile that doesn't start "Tickets Direct Excursions…".
 3. **Puerto del Carmen is the weakest resort.** You have 4 offices there, but they rank below 1–3 single-office competitors, and none appears for "boat trips". Primary categories there are mixed (Travel agency, Tourist information center, Tour agency). A "Boat tour agency" category plus boat-trip posts and photos is the clearest lever.
 4. **Playa Blanca is your strongest resort.** Use it as the template: consistent name, boat-tour category, high rating.
@@ -128,7 +129,6 @@ Stage: **D** = discover, **C** = compare, **B** = decide/book, **L** = logistics
 
 - **Placeholder FAQ questions.** 20 of your tour FAQs are titled just "faq" or "general faq". Rename them in WP Travel Engine to the real question.
 - **Highlights child price.** €63 here vs €59 at OK Lanzarote (see section 2).
-- **Unknown Google profile** at C. Bajamar 26 (see section 3).
 
 ## 7. What still needs access to complete Stage B
 

@@ -20,6 +20,8 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 | E1 | Architecture, content and technical plan | in progress | Rebuild already structured; plan doc pending |
 | E2 | Analytics plan (incl. chatgpt.com referral segment) | not started | |
 | E3 | Booking architecture evaluation (WTE vs FareHarbor vs multi-supplier) | not started | |
+| E4 | Add German, Italian, French (owner request 2026-11-02) | not started | Needs reviewers per language and a decision on checkout language |
+| B3 | GetYourGuide / Viator analysis | blocked | Needs Viator Partner API key and/or owner's supplier accounts, or a browser on the owner's computer |
 | F1 | Rebuild in dev (static EN/ES, schema, hreflang, PWA, agent) | implemented | `ticketsdirect/`, preview artifact |
 | F2 | Booking/payment integration | blocked | Needs WP Application Password and Stripe keys in Vercel env |
 | F3 | Meeting / collection points | blocked | Waiting for points data (`src/data/pickups.json`) |
@@ -41,5 +43,6 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 | Price missing on 2 trips; duplicate La Graciosa package; jet ski €60/€70 | WP Travel Engine | not started |
 | Rename 20 tour FAQs titled "faq" / "general faq" | WP Travel Engine | not started |
 | Check Highlights child price (€63 vs €59 at OK Lanzarote) | WP Travel Engine | not started |
-| Confirm Google profile "Tickets Direct Excursions Lanzarote Puerto del Carmen", C. Bajamar 26 | Google Business Profile | not started |
+| C. Bajamar 26 profile confirmed as ours; added as office 11 | Website data | implemented |
+| Report Excursions Lanzarote PdC listing as permanently closed (only if verified) | Google Maps → Suggest an edit | not started |
 | Rename "Excursions Tickets Direct Puerto del Carmen Beach" to brand-first | Google Business Profile | not started |
