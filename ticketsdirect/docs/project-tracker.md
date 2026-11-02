@@ -10,7 +10,7 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 | A3 | Technical/on-page audit | implemented | Findings §4 |
 | A4 | Crawler access (Googlebot, Bingbot, OAI-SearchBot, GPTBot, ChatGPT-User, PerplexityBot, ClaudeBot) | in progress | User-agent test passes. Real-IP confirmation **blocked**: needs server logs |
 | A5 | Performance baseline | in progress | Lab done. Field data (CrUX/PSI) **blocked**: API quota |
-| A6 | Traffic / ranking baseline | blocked | Search Console: owner verification pending (paused by owner). GA4 access not yet given. Service account `seo-reader` created |
+| A6 | Traffic / ranking baseline | blocked | `seo-reader` added to Search Console (`sc-domain:excursionsticketsdirect.com`). Export script ready (`npm run google`, output git-ignored). Waiting for the key in the environment (`GOOGLE_SERVICE_ACCOUNT_JSON` or `GOOGLE_SA_PRIVATE_KEY`) and GA4 Viewer access (property 380597293) |
 | B1 | Competitor matrix (direct, local, OTAs, Maps) | implemented | `audit/02-stage-b-competitors-and-questions.md` §1–4. GYG/Viator **blocked** (403); lanzarote.com, Lanzarote Information, Tripadvisor not allowed by network |
 | B2 | 20+ buying questions, classified | implemented | 27 questions, §5. Search volumes **blocked**: need Search Console or paid tool |
 | C1 | AI-search tests (5 prompts × ChatGPT, Perplexity, Google AI) | blocked | Agent has no access. Owner runs the protocol |
@@ -29,6 +29,7 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 | G1 | Migration redirect map (435 URLs) | not started | Crawl CSV is the source list |
 | G2 | Launch checklist & rollback plan | not started | |
 | G3 | Production approval | not started | |
+| S1 | Repository is public: move `ticketsdirect/` to a private repo before any private data or booking code lands | not started | Owner decision |
 | H1 | Monthly monitoring workflow | not started | |
 
 ## Live-site fixes the owner can make now in WordPress (no rebuild needed)
