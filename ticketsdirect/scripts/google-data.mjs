@@ -19,9 +19,14 @@ function credentials() {
     return { email: j.client_email, key: j.private_key };
   }
   if (process.env.GOOGLE_SA_PRIVATE_KEY) {
+    // Accept the value however it was pasted: bare, quoted, or the whole "private_key": "..." line.
+    const raw = process.env.GOOGLE_SA_PRIVATE_KEY.replace(/\\n/g, "\n");
+    const pem = raw.match(/-----BEGIN PRIVATE KEY-----[\s\S]*?-----END PRIVATE KEY-----/);
+    if (!pem) throw new Error("GOOGLE_SA_PRIVATE_KEY does not contain a BEGIN/END PRIVATE KEY block.");
+    const body = pem[0].replace(/-----(BEGIN|END) PRIVATE KEY-----|\s/g, "");
     return {
       email: process.env.GOOGLE_SA_EMAIL || "seo-reader@sunny-idiom-407419.iam.gserviceaccount.com",
-      key: process.env.GOOGLE_SA_PRIVATE_KEY.replace(/\\n/g, "\n"),
+      key: `-----BEGIN PRIVATE KEY-----\n${body.match(/.{1,64}/g).join("\n")}\n-----END PRIVATE KEY-----\n`,
     };
   }
   throw new Error("Set GOOGLE_SERVICE_ACCOUNT_JSON or GOOGLE_SA_PRIVATE_KEY in the environment.");
