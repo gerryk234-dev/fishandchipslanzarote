@@ -9,7 +9,7 @@ import { loadCatalog, UNIT, formatPrice as price, formatDuration } from "./src/l
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const C = loadCatalog(path.join(here, "src/data"));
-const { site, tours, tourBy, categories, catBy, resorts, places, offices, destinations } = C;
+const { site, tours, enquiryTours, tourBy, categories, catBy, resorts, places, offices, destinations } = C;
 const reviews = JSON.parse(fs.readFileSync(path.join(here, "src/data/reviews.json"), "utf8"));
 const reels = JSON.parse(fs.readFileSync(path.join(here, "src/data/reels.json"), "utf8")).items;
 
@@ -38,6 +38,7 @@ const T = {
     nav: { tours: "All excursions", activities: "Activities", resorts: "Where you stay", islands: "Destinations", guides: "Guides", offices: "Our offices", about: "About us" },
     from: "From", book: "Book now", ask: "Ask on WhatsApp", child: "Child", adult: "Adult",
     freeCancel: "Free cancellation up to 24h", duration: "Duration",
+    onRequest: "Price on request", onRequestLead: "Prices for this trip depend on the date and group. Ask us on WhatsApp or by phone for today's price and availability.",
     home: "Home", faqTitle: "Frequently asked questions", related: "You may also like", popular: "Most popular excursions",
     overview: "Overview", itinerary: "Itinerary", includes: "What's included", excludes: "Not included", pickupsTitle: "Pickup available from", placesTitle: "Places you'll visit", video: "Watch the video", options: "Prices & options", goodToKnow: "Good to know",
     seeAll: "See all", allTours: "All excursions",
@@ -96,6 +97,7 @@ const T = {
     nav: { tours: "Todas las excursiones", activities: "Actividades", resorts: "Dónde te alojas", islands: "Destinos", guides: "Guías", offices: "Oficinas", about: "Quiénes somos" },
     from: "Desde", book: "Reservar", ask: "Preguntar por WhatsApp", child: "Niño", adult: "Adulto",
     freeCancel: "Cancelación gratuita hasta 24 h", duration: "Duración",
+    onRequest: "Precio a consultar", onRequestLead: "El precio de esta excursión depende de la fecha y del grupo. Pregúntanos por WhatsApp o por teléfono el precio y la disponibilidad de hoy.",
     home: "Inicio", faqTitle: "Preguntas frecuentes", related: "También te puede gustar", popular: "Excursiones más populares",
     overview: "Descripción", itinerary: "Itinerario", includes: "Qué incluye", excludes: "No incluye", pickupsTitle: "Recogida disponible en", placesTitle: "Lugares que visitarás", video: "Ver el vídeo", options: "Precios y opciones", goodToKnow: "Información útil",
     seeAll: "Ver todas", allTours: "Todas las excursiones",
@@ -365,12 +367,12 @@ function officeLd(o) {
 function tourLd(lang, t) {
   const page = abs(url(lang, "tour", t.slug));
   const primary = (t.packages.find((p) => p.primary) || t.packages[0])?.categories || [];
-  const offers = (primary.length ? primary : [{ label: T[lang].adult, price: t.price }])
+  const offers = (primary.length ? primary : t.price ? [{ label: T[lang].adult, price: t.price }] : [])
     .filter((c) => c.price > 0)
     .map((c) => ({ "@type": "Offer", name: c.label, price: c.price.toFixed(2), priceCurrency: "EUR", availability: "https://schema.org/InStock", url: page, seller: { "@id": ORG_ID } }));
   return {
     "@context": "https://schema.org",
-    "@type": ["Product", "TouristTrip"],
+    "@type": offers.length ? ["Product", "TouristTrip"] : "TouristTrip",
     "@id": `${page}#trip`,
     name: t.name[lang],
     description: summary(lang, t),
@@ -382,7 +384,7 @@ function tourLd(lang, t) {
     provider: { "@id": ORG_ID },
     ...(t.itinerary[lang].length ? { itinerary: { "@type": "ItemList", itemListElement: t.itinerary[lang].map((s, i) => ({ "@type": "ListItem", position: i + 1, name: s.title })) } } : {}),
     ...(t.destinations.length ? { touristType: t.tags.includes("family") ? "Families" : undefined } : {}),
-    offers: offers.length > 1 ? offers : offers[0],
+    ...(offers.length ? { offers: offers.length > 1 ? offers : offers[0] } : {}),
   };
 }
 const faqLd = (faqs) => (faqs?.length ? { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faqs.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) } : null);
@@ -590,11 +592,11 @@ function tourPage(lang, t) {
   const fill = related.length < 3 ? [...tours].sort(byPopularity).filter((x) => x.cat !== t.cat).slice(0, 3 - related.length) : [];
   const d = dur(lang, t);
   const ownFaqs = t.faqs[lang];
-  const genericFaqs = lang === "en"
+  const genericFaqs = t.price == null ? [] : lang === "en"
     ? [[`How much does the ${t.name.en} cost?`, `From ${price("en", t.price)}${unitLabel("en", t) ? ` ${unitLabel("en", t)}` : " per adult"}${t.child ? `, children (${t.child.ages}) ${price("en", t.child.price)}` : ""}. ${L.deposit(t.deposit)}.`], ["Can I cancel?", "Yes, cancellation is free up to 24 hours before the activity."]]
     : [[`¿Cuánto cuesta ${t.name.es}?`, `Desde ${price("es", t.price)}${unitLabel("es", t) ? ` ${unitLabel("es", t)}` : " por adulto"}${t.child ? `, niños (${t.child.ages}) ${price("es", t.child.price)}` : ""}. ${L.deposit(t.deposit)}.`], ["¿Puedo cancelar?", "Sí, la cancelación es gratuita hasta 24 horas antes de la actividad."]];
   const faqs = [...ownFaqs, ...genericFaqs.filter(([q]) => !ownFaqs.some(([oq]) => oq.toLowerCase() === q.toLowerCase()))];
-  const gtk = [...L.gtk];
+  const gtk = t.price == null ? L.gtk.filter((g) => !/cancel/i.test(g)) : [...L.gtk];
   if (t.tags.includes("wildlife") || /dolphin|delf/i.test(t.name.en)) gtk.splice(1, 0, L.wildlife);
   const dests = t.destinations.map((id) => destinations.find((x) => x.id === id)).filter(Boolean);
   const pickupNames = t.pickups.map((id) => C.locTerm[id]).filter((x) => x && x.slug !== "lanzarote");
@@ -609,7 +611,7 @@ function tourPage(lang, t) {
     ${gallery.length ? `<div class="g-strip">${gallery.map((g) => `<a href="${g.src}" target="_blank" rel="noopener"><img src="${g.thumb}" alt="${esc(g.alt || t.name[lang])}" loading="lazy" width="560" height="350"></a>`).join("")}</div>` : ""}</div>
     <p class="eyebrow"><a href="${url(lang, "cat", c.slug)}">${esc(catName(lang, c))}</a></p>
     <h1>${esc(t.name[lang])}</h1>
-    <ul class="facts"><li>${icon("clock")}${esc(d)}</li><li>${icon("check")}${L.freeCancel}</li>${t.languages.length ? `<li>${icon("globe")}${esc(t.languages.join(", "))}</li>` : ""}${t.minAge ? `<li>${icon("shield")}${esc(L.minAge(t.minAge))}</li>` : ""}</ul>
+    <ul class="facts"><li>${icon("clock")}${esc(d)}</li>${t.price == null ? "" : `<li>${icon("check")}${L.freeCancel}</li>`}${t.languages.length ? `<li>${icon("globe")}${esc(t.languages.join(", "))}</li>` : ""}${t.minAge ? `<li>${icon("shield")}${esc(L.minAge(t.minAge))}</li>` : ""}</ul>
     ${t.overview[lang] ? `<h2>${L.overview}</h2><div class="prose">${t.overview[lang]}</div>` : ""}
     ${t.itinerary[lang].length ? `<h2>${L.itinerary}</h2><ol class="steps">${t.itinerary[lang].map((s) => `<li><strong>${esc(s.title)}</strong>${s.text ? `<p>${esc(s.text)}</p>` : ""}</li>`).join("")}</ol>` : ""}
     ${t.includes[lang].length || t.excludes[lang].length ? `<div class="incl">${t.includes[lang].length ? `<div><h2>${L.includes}</h2><ul class="ticks">${t.includes[lang].map((x) => `<li>${icon("check")}${esc(x)}</li>`).join("")}</ul></div>` : ""}${t.excludes[lang].length ? `<div><h2>${L.excludes}</h2><ul class="ticks no">${t.excludes[lang].map((x) => `<li>${icon("x")}${esc(x)}</li>`).join("")}</ul></div>` : ""}</div>` : ""}
@@ -622,7 +624,14 @@ function tourPage(lang, t) {
     <ul class="ticks muted">${gtk.map((g) => `<li>${icon("check")}${esc(g)}</li>`).join("")}${t.info[lang].filter(([k]) => !/cancel/i.test(k)).map(([k, v]) => `<li>${icon("check")}<span><strong>${esc(k)}:</strong> ${esc(v)}</span></li>`).join("")}</ul>
     ${faqBlock(lang, faqs)}
   </div>
-  <aside class="book-box" aria-label="${L.book}">
+  ${t.price == null ? `<aside class="book-box" aria-label="${L.book}">
+    <p class="bb-price"><strong>${L.onRequest}</strong></p>
+    <p class="bb-meta">${icon("clock")}${esc(d)}</p>
+    <p>${esc(L.onRequestLead)}</p>
+    <a class="btn wa block" id="book" href="${waTour(lang, t)}" rel="noopener" target="_blank">${icon("wa")}${L.ask}</a>
+    <a class="btn ghost block" href="tel:${site.phoneHref}">${icon("phone")}${site.phone}</a>
+    <ul class="bb-trust"><li>${icon("pin")}${lang === "en" ? `${site.officeCount} offices across Lanzarote` : `${site.officeCount} oficinas en Lanzarote`}</li><li>${icon("shield")}${lang === "en" ? `Local agency since ${site.foundingYear}` : `Agencia local desde ${site.foundingYear}`}</li></ul>
+  </aside>` : `<aside class="book-box" aria-label="${L.book}">
     <p class="bb-price"><span>${L.from}</span> <strong>${price(lang, t.price)}</strong> <small>${esc(unitLabel(lang, t) || UNIT[lang]["per-person"])}</small></p>
     <p class="bb-meta">${icon("clock")}${esc(d)}</p>
     <form class="bk" id="book" data-trip="${t.id}" data-deposit="${t.deposit || ""}" data-name="${esc(t.name[lang])}" data-i18n="${esc(JSON.stringify(L.bk))}">
@@ -634,14 +643,14 @@ function tourPage(lang, t) {
       <a class="btn wa block" data-wa href="${waTour(lang, t)}" rel="noopener" target="_blank">${icon("wa")}${L.ask}</a>
     </form>
     <ul class="bb-trust"><li>${icon("check")}${L.freeCancel}</li><li>${icon("check")}${esc(L.deposit(t.deposit))}</li><li>${icon("pin")}${lang === "en" ? `${site.officeCount} offices across Lanzarote` : `${site.officeCount} oficinas en Lanzarote`}</li><li>${icon("shield")}${lang === "en" ? `Local agency since ${site.foundingYear}` : `Agencia local desde ${site.foundingYear}`}</li></ul>
-  </aside>
+  </aside>`}
 </article>
-<div class="mobile-book"><span><small>${L.from}</small> <strong>${price(lang, t.price)}</strong></span><a class="btn" href="#book">${L.book}</a></div>
+${t.price == null ? `<div class="mobile-book"><span><strong>${L.onRequest}</strong></span><a class="btn" href="#book">${L.ask}</a></div>` : `<div class="mobile-book"><span><small>${L.from}</small> <strong>${price(lang, t.price)}</strong></span><a class="btn" href="#book">${L.book}</a></div>`}
 <section class="wrap section"><h2>${L.related}</h2>${cardGrid(lang, [...related, ...fill])}</section>`;
   page({
     lang, path: url(lang, "tour", t.slug), alt, ogType: "product", ogImage: hero?.src,
-    title: `${t.name[lang]} | ${L.from} ${price(lang, t.price)} | Tickets Direct Lanzarote`,
-    description: clip(`${summary(lang, t)} ${d}, ${L.from.toLowerCase()} ${price(lang, t.price)}. ${L.freeCancel}.`, 300),
+    title: t.price == null ? `${t.name[lang]} | Tickets Direct Lanzarote` : `${t.name[lang]} | ${L.from} ${price(lang, t.price)} | Tickets Direct Lanzarote`,
+    description: t.price == null ? clip(`${summary(lang, t)} ${d}. ${L.onRequest}.`, 300) : clip(`${summary(lang, t)} ${d}, ${L.from.toLowerCase()} ${price(lang, t.price)}. ${L.freeCancel}.`, 300),
     body,
     ld: [tourLd(lang, t), bc.ld, faqLd(faqs)],
   });
@@ -1044,7 +1053,7 @@ assets();
 for (const lang of LANGS) {
   homePage(lang);
   toursIndex(lang);
-  tours.filter((t) => lang === "en" || t.hasEs).forEach((t) => tourPage(lang, t));
+  [...tours, ...enquiryTours].filter((t) => lang === "en" || t.hasEs).forEach((t) => tourPage(lang, t));
   categories.forEach((c) => (lang === "en" || c.path.es) && categoryPage(lang, c));
   resorts.forEach((r) => resortPage(lang, r));
   combos.forEach((x) => comboPage(lang, x));

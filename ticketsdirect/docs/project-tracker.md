@@ -10,7 +10,7 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 | A3 | Technical/on-page audit | implemented | Findings §4 |
 | A4 | Crawler access (Googlebot, Bingbot, OAI-SearchBot, GPTBot, ChatGPT-User, PerplexityBot, ClaudeBot) | in progress | User-agent test passes. Real-IP confirmation **blocked**: needs server logs |
 | A5 | Performance baseline | in progress | Lab done. Field data (CrUX/PSI) **blocked**: API quota |
-| A6 | Traffic / ranking baseline | blocked | `seo-reader` added to Search Console (`sc-domain:excursionsticketsdirect.com`). Export script ready (`npm run google`, output git-ignored). Waiting for the key in the environment (`GOOGLE_SERVICE_ACCOUNT_JSON` or `GOOGLE_SA_PRIVATE_KEY`) and GA4 Viewer access (property 380597293) |
+| A6 | Traffic / ranking baseline | in progress | Search Console exported (16 months, git-ignored, summary given to owner in chat). GA4 **blocked**: enable *Google Analytics Data API* in Cloud project sunny-idiom-407419 |
 | B1 | Competitor matrix (direct, local, OTAs, Maps) | implemented | `audit/02-stage-b-competitors-and-questions.md` §1–4. GYG/Viator **blocked** (403); lanzarote.com, Lanzarote Information, Tripadvisor not allowed by network |
 | B2 | 20+ buying questions, classified | implemented | 27 questions, §5. Search volumes **blocked**: need Search Console or paid tool |
 | C1 | AI-search tests (5 prompts × ChatGPT, Perplexity, Google AI) | blocked | Agent has no access. Owner runs the protocol |
@@ -26,7 +26,7 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 | F2 | Booking/payment integration | blocked | Needs WP Application Password and Stripe keys in Vercel env |
 | F3 | Meeting / collection points | blocked | Waiting for points data (`src/data/pickups.json`) |
 | F4 | Blog posts imported (13 EN + ES) | not started | Required before launch, or old URLs 404 |
-| G1 | Migration redirect map (435 URLs) | not started | Crawl CSV is the source list |
+| G1 | Migration redirect map | in progress | Search Console lists 719 URLs with impressions; 405 are not in the rebuild and need a 301 or a page. Also carry over the live site's existing 301s (e.g. `/trip/jetski-safari/`). Unpriced tours (Katfish, Chillout) now kept as price-on-request pages |
 | G2 | Launch checklist & rollback plan | not started | |
 | G3 | Production approval | not started | |
 | S1 | Repository is public: move `ticketsdirect/` to a private repo before any private data or booking code lands | not started | Owner decision |
@@ -40,7 +40,7 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 | Organization name → "Excursions Tickets Direct" | Yoast → Site representation | not started |
 | Shorten title template (drop "– Excursions in Lanzarote") | Yoast → Content types / Taxonomies | not started |
 | Remove `/formulario-e-ticket/` & utility pages from sitemap | Yoast → page settings → noindex | not started |
-| Noindex `location`, `tour_language`, `tour_duration`, `difficulty` archives | Yoast → Taxonomies | not started |
+| Noindex `tour_language`, `tour_duration`, `difficulty` archives. **Not `location`**: Search Console shows those pages earn clicks, so they get 301 redirects to the resort pages at migration instead | Yoast → Taxonomies | not started |
 | Price missing on 2 trips; duplicate La Graciosa package; jet ski €60/€70 | WP Travel Engine | not started |
 | Rename 20 tour FAQs titled "faq" / "general faq" | WP Travel Engine | not started |
 | Check Highlights child price (€63 vs €59 at OK Lanzarote) | WP Travel Engine | not started |

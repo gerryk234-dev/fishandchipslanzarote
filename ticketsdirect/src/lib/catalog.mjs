@@ -37,9 +37,9 @@ export function loadCatalog(dataDir) {
     c.path = term?.path || { en: null, es: null };
   }
 
-  const tours = raw.trips
-    .filter((t) => t.price?.from && t.path?.en)
-    .map((t) => {
+  // Tours with a price are bookable. Tours without one (no package in WP Travel Engine) still keep
+  // their page and URL, sold on request, so their search traffic isn't lost.
+  const normalise = (t) => {
       const cats = t.types.map((id) => catByWp[id]).filter(Boolean);
       const primary = cats.find((c) => !c.secondary && c.slug !== "special-packs") || cats.find((c) => !c.secondary) || cats[0] || categories[0];
       const tags = Object.entries(ACT).filter(([, ids]) => ids.some((id) => t.activities.includes(id))).map(([k]) => k);
@@ -83,12 +83,14 @@ export function loadCatalog(dataDir) {
         popularity: t.popularity || 0,
         modified: t.modified,
       };
-    });
+    };
+  const tours = raw.trips.filter((t) => t.price?.from && t.path?.en).map(normalise);
+  const enquiryTours = raw.trips.filter((t) => !t.price?.from && t.path?.en).map(normalise);
 
   // Meeting / collection points (src/data/pickups.json), resolved per tour.
   const pk = fs.existsSync(path.join(dataDir, "pickups.json")) ? read("pickups.json") : { points: [], assignments: [] };
   const pointBy = Object.fromEntries((pk.points || []).map((p) => [p.id, p]));
-  for (const t of tours) {
+  for (const t of [...tours, ...enquiryTours]) {
     const seen = new Set();
     t.pickupPoints = (pk.assignments || [])
       .filter((a) => (a.tours || []).includes(t.slug) || (a.categories || []).some((c) => t.cats.includes(c)))
@@ -96,13 +98,13 @@ export function loadCatalog(dataDir) {
       .filter((x) => pointBy[x.point] && !seen.has(x.point) && seen.add(x.point))
       .map((x) => ({ ...pointBy[x.point], time: x.time || null }));
   }
-  const tourBy = Object.fromEntries(tours.map((t) => [t.slug, t]));
+  const tourBy = Object.fromEntries([...tours, ...enquiryTours].map((t) => [t.slug, t]));
   const catBy = Object.fromEntries(categories.map((c) => [c.slug, c]));
   const destinations = (terms.destination || [])
     .filter((d) => d.path?.en && tours.some((t) => t.destinations.includes(d.id)))
     .map((d) => ({ ...d, curated: placeByWp[d.id] || null }));
 
-  return { site, raw, categories, resorts, places, offices, profiles, pickupPoints: pk.points || [], tours, tourBy, catBy, destinations, destTerm, locTerm, placeByWp, importedAt: raw.importedAt };
+  return { site, raw, categories, resorts, places, offices, profiles, pickupPoints: pk.points || [], tours, enquiryTours, tourBy, catBy, destinations, destTerm, locTerm, placeByWp, importedAt: raw.importedAt };
 }
 
 export const UNIT = {
