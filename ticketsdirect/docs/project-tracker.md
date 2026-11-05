@@ -47,3 +47,19 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 | C. Bajamar 26 profile confirmed as ours; added as office 11 | Website data | implemented |
 | Report Excursions Lanzarote PdC listing as permanently closed (only if verified) | Google Maps → Suggest an edit | not started |
 | Rename "Excursions Tickets Direct Puerto del Carmen Beach" to brand-first | Google Business Profile | not started |
+
+## Handover (2026-11-05)
+
+Where the project stands, for the next session:
+
+1. **Run first:** `cd ticketsdirect && NODE_USE_ENV_PROXY=1 npm run google`. The owner added `GOOGLE_SA_PRIVATE_KEY` to the Default environment (key rotated after the old one, `7ea64e33…`, was exposed in a screenshot). Output goes to the git-ignored `.cache/google/`. **Never commit it: the repository is public.** Summarise the results in chat, then write only non-sensitive conclusions to `audit/`.
+   - If GA4 reports fail with a permission error, the owner still has to add `seo-reader@sunny-idiom-407419.iam.gserviceaccount.com` as Viewer on property 380597293.
+2. **Then:** Stage C (search, local and AI visibility; give the owner the 5-prompt AI test), then D (prioritised actions).
+3. **Access in the environment:** `WP_URL`, `WP_USER`, `WP_APP_PASSWORD` (WordPress administrator). Read-only use only; production changes need the owner's approval each time.
+4. **Waiting on the owner:**
+   - translation reviewers for DE/IT/FR, and whether DE/IT/FR visitors may use the English checkout at first
+   - yes/no on a price-match promise (the rebuild currently says "Lowest price guarantee": remove it if no)
+   - group/family discounts
+   - pickup points
+   - whether they already sell on GetYourGuide/Viator/Civitatis
+   - a private repository to move `ticketsdirect/` into
