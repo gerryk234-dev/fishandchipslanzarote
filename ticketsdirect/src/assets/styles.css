@@ -617,3 +617,13 @@ a:hover { color: var(--navy); }
   .splash { display: none; }
   .hero-badge, .hero-wave .w2 { animation: none; }
 }
+
+/* Imported blog posts */
+.post-hero { display: block; width: 100%; height: auto; border-radius: var(--radius, 16px); margin: 0 0 1.5rem; }
+.prose img { max-width: 100%; height: auto; border-radius: 12px; }
+.prose table { display: block; overflow-x: auto; border-collapse: collapse; margin: 1rem 0; }
+.prose th, .prose td { border: 1px solid #dfe3ee; padding: .5rem .75rem; text-align: left; vertical-align: top; }
+.post-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: .75rem; margin: 1.25rem 0; }
+.post-gallery img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.post-cta { margin: 1.25rem 0; }
+.prose .grid.cards { margin: 1.25rem 0; }

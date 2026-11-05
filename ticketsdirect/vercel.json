@@ -45,11 +45,6 @@
       "permanent": true
     },
     {
-      "source": "/25-best-things-to-do-in-lanzarote-2026-guide/",
-      "destination": "/guides/best-excursions-in-lanzarote/",
-      "permanent": true
-    },
-    {
       "source": "/activities/",
       "destination": "/trip/",
       "permanent": true
@@ -160,23 +155,8 @@
       "permanent": true
     },
     {
-      "source": "/best-boat-trips-in-lanzarote-catamaran-cruises-dolphin-tours-sunset-sailings/",
-      "destination": "/trip-types/lanzarote-boat-trips/",
-      "permanent": true
-    },
-    {
-      "source": "/best-excursions-in-lanzarote-top-15-tours-you-must-book/",
-      "destination": "/guides/best-excursions-in-lanzarote/",
-      "permanent": true
-    },
-    {
       "source": "/blog/",
       "destination": "/guides/",
-      "permanent": true
-    },
-    {
-      "source": "/buggy-excursions-in-lanzarote-the-most-exciting-way-to-explore-the-island/",
-      "destination": "/trip-types/buggies-lanzarote/",
       "permanent": true
     },
     {
@@ -485,11 +465,6 @@
       "permanent": true
     },
     {
-      "source": "/es/como-explorar-la-graciosa-en-lanzarote-las-mejores-excursiones-y-cruceros-en-catamaran/",
-      "destination": "/es/destinations/la-graciosa-es/",
-      "permanent": true
-    },
-    {
       "source": "/es/condiciones-generales/",
       "destination": "https://book.excursionsticketsdirect.com/es/condiciones-generales/",
       "permanent": true
@@ -535,38 +510,8 @@
       "permanent": true
     },
     {
-      "source": "/es/excursion-al-parque-nacional-de-timanfaya-las-mejores-formas-de-visitar-los-volcanes-de-lanzarote/",
-      "destination": "/es/destinations/lanzarote-es/volcan-timanfaya-parque-nacional/",
-      "permanent": true
-    },
-    {
-      "source": "/es/excursion-de-un-dia-a-la-graciosa-desde-lanzarote-guia-de-ferry-y-catamaran/",
-      "destination": "/es/destinations/la-graciosa-es/",
-      "permanent": true
-    },
-    {
-      "source": "/es/excursion-de-un-dia-a-la-graciosa-desde-lanzarote-merece-la-pena/",
-      "destination": "/es/destinations/la-graciosa-es/",
-      "permanent": true
-    },
-    {
       "source": "/es/excursion-de-un-dia-a-la-lanzarote-merece-la-pena/",
-      "destination": "/es/destinations/la-graciosa-es/",
-      "permanent": true
-    },
-    {
-      "source": "/es/excursion-en-buggy-por-los-volcanes-de-lanzarote-la-aventura-todoterreno-definitiva-por-los-paisajes-de-timanfaya/",
-      "destination": "/es/trip-types/aventuras-y-safaris/",
-      "permanent": true
-    },
-    {
-      "source": "/es/excursiones-en-buggy-en-lanzarote-la-forma-mas-emocionante-de-explorar-la-isla/",
-      "destination": "/es/trip-types/aventuras-y-safaris/",
-      "permanent": true
-    },
-    {
-      "source": "/es/excursiones-en-buggy-lanzarote-la-mejor-aventura-off-road-en-la-isla/",
-      "destination": "/es/trip-types/aventuras-y-safaris/",
+      "destination": "/es/excursion-de-un-dia-a-la-graciosa-desde-lanzarote-merece-la-pena/",
       "permanent": true
     },
     {
@@ -587,31 +532,6 @@
     {
       "source": "/es/formulario-e-ticket/",
       "destination": "https://book.excursionsticketsdirect.com/es/formulario-e-ticket/",
-      "permanent": true
-    },
-    {
-      "source": "/es/jet-ski-lanzarote-las-mejores-excursiones-precios-rutas-y-todo-lo-que-necesitas-saber-guia-2026/",
-      "destination": "/es/trip-types/deportes-y-actividades-acuaticas/",
-      "permanent": true
-    },
-    {
-      "source": "/es/jet-ski-lanzarote-mejores-alquileres-precios-y-donde-reservar/",
-      "destination": "/es/trip-types/deportes-y-actividades-acuaticas/",
-      "permanent": true
-    },
-    {
-      "source": "/es/las-25-mejores-cosas-que-hacer-en-lanzarote-guia-2026/",
-      "destination": "/es/guias/best-excursions-in-lanzarote/",
-      "permanent": true
-    },
-    {
-      "source": "/es/las-mejores-excursiones-en-barco-en-lanzarote-cruceros-en-catamaran-paseos-con-delfines-y-puestas-de-sol/",
-      "destination": "/es/trip-types/excursiones-en-barco-por-lanzarote/",
-      "permanent": true
-    },
-    {
-      "source": "/es/las-mejores-excursiones-en-lanzarote-las-15-mejores-visitas-guiadas-que-no-te-puedes-perder/",
-      "destination": "/es/guias/best-excursions-in-lanzarote/",
       "permanent": true
     },
     {
@@ -732,11 +652,6 @@
     {
       "source": "/es/pedido/",
       "destination": "https://book.excursionsticketsdirect.com/es/pedido/",
-      "permanent": true
-    },
-    {
-      "source": "/es/playas-de-papagayo-lanzarote-como-visitarlas-mejores-excursiones-y-paseos-en-barco/",
-      "destination": "/es/destinations/lanzarote-es/papagayo-playa/",
       "permanent": true
     },
     {
@@ -920,43 +835,13 @@
       "permanent": true
     },
     {
-      "source": "/how-to-explore-la-graciosa-in-lanzarote-best-excursions-catamaran-cruises/",
-      "destination": "/destinations/la-graciosa/",
-      "permanent": true
-    },
-    {
       "source": "/jet-ski-lanzarote-best-prices-routes-everything-you-need-to-know-2026-guide/",
-      "destination": "/trip-types/water-sports-activities/",
-      "permanent": true
-    },
-    {
-      "source": "/jet-ski-lanzarote-best-rentals-prices-where-to-book/",
-      "destination": "/trip-types/water-sports-activities/",
-      "permanent": true
-    },
-    {
-      "source": "/jet-ski-lanzarote-best-tours-prices-routes-everything-you-need-to-know-2026-guide/",
-      "destination": "/trip-types/water-sports-activities/",
+      "destination": "/jet-ski-lanzarote-best-tours-prices-routes-everything-you-need-to-know-2026-guide/",
       "permanent": true
     },
     {
       "source": "/la-graciosa-day-trip-an-is-it-worth-it/",
-      "destination": "/destinations/la-graciosa/",
-      "permanent": true
-    },
-    {
-      "source": "/la-graciosa-day-trip-from-lanzarote-ferry-catamaran-guide/",
-      "destination": "/destinations/la-graciosa/",
-      "permanent": true
-    },
-    {
-      "source": "/la-graciosa-day-trip-from-lanzarote-is-it-worth-it/",
-      "destination": "/destinations/la-graciosa/",
-      "permanent": true
-    },
-    {
-      "source": "/lanzarote-buggy-tour-the-ultimate-off-road-adventure/",
-      "destination": "/trip-types/buggies-lanzarote/",
+      "destination": "/la-graciosa-day-trip-from-lanzarote-is-it-worth-it/",
       "permanent": true
     },
     {
@@ -967,11 +852,6 @@
     {
       "source": "/lanzarote-guide/",
       "destination": "/guides/best-excursions-in-lanzarote/",
-      "permanent": true
-    },
-    {
-      "source": "/lanzarote-volcano-buggy-tour-the-ultimate-off-road-adventure-across-timanfaya-landscapes/",
-      "destination": "/trip-types/buggies-lanzarote/",
       "permanent": true
     },
     {
@@ -1081,42 +961,37 @@
     },
     {
       "source": "/papagayo-beaches-how-to-visit-best-tours-boat-trips/",
-      "destination": "/destinations/lanzarote/papagayo-beaches-2/",
+      "destination": "/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/",
       "permanent": true
     },
     {
       "source": "/papagayo-beaches-lanzarote-how-to-Visit-best-tours-boat-trips/",
-      "destination": "/destinations/lanzarote/papagayo-beaches-2/",
+      "destination": "/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/",
       "permanent": true
     },
     {
       "source": "/papagayo-beaches-lanzarote-how-to-visit-best-top-boat-trips/",
-      "destination": "/destinations/lanzarote/papagayo-beaches-2/",
+      "destination": "/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/",
       "permanent": true
     },
     {
       "source": "/papagayo-beaches-lanzarote-how-to-visit-best-tour-boat-trips/",
-      "destination": "/destinations/lanzarote/papagayo-beaches-2/",
-      "permanent": true
-    },
-    {
-      "source": "/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/",
-      "destination": "/destinations/lanzarote/papagayo-beaches-2/",
+      "destination": "/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/",
       "permanent": true
     },
     {
       "source": "/papagayo-beaches-lanzarote/",
-      "destination": "/destinations/lanzarote/papagayo-beaches-2/",
+      "destination": "/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/",
       "permanent": true
     },
     {
       "source": "/papagayo-beaches-lanzarote/how-to-visit-best-tours-boat-trips/",
-      "destination": "/destinations/lanzarote/papagayo-beaches-2/",
+      "destination": "/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/",
       "permanent": true
     },
     {
       "source": "/papagayo-beaches-lanzarote/papagayo-beaches-lanzarote.d6067495.Attraction/",
-      "destination": "/destinations/lanzarote/papagayo-beaches-2/",
+      "destination": "/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/",
       "permanent": true
     },
     {
@@ -1147,11 +1022,6 @@
     {
       "source": "/thank-you/",
       "destination": "https://book.excursionsticketsdirect.com/thank-you/",
-      "permanent": true
-    },
-    {
-      "source": "/timanfaya-national-park-tour-best-ways-to-visit-the-volcanoes-in-lanzarote/",
-      "destination": "/destinations/lanzarote/timanfaya-volcano-national-park/",
       "permanent": true
     },
     {

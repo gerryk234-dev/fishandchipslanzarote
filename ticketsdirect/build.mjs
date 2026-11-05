@@ -12,6 +12,9 @@ const C = loadCatalog(path.join(here, "src/data"));
 const { site, tours, enquiryTours, tourBy, categories, catBy, resorts, places, offices, destinations } = C;
 const reviews = JSON.parse(fs.readFileSync(path.join(here, "src/data/reviews.json"), "utf8"));
 const reels = JSON.parse(fs.readFileSync(path.join(here, "src/data/reels.json"), "utf8")).items;
+const posts = fs.existsSync(path.join(here, "src/data/posts.json")) ? JSON.parse(fs.readFileSync(path.join(here, "src/data/posts.json"), "utf8")).posts : [];
+// Old trip URLs that the live site already redirected, so blog links to them still find their tour.
+const oldTripTo = Object.fromEntries(JSON.parse(fs.readFileSync(path.join(here, "src/data/migration/old-urls.json"), "utf8")).paths.filter((x) => x.liveTo).map((x) => [x.path, x.liveTo]));
 
 const SITE = (process.env.SITE_URL || site.url).replace(/\/$/, "");
 const BOOK = (process.env.BOOKING_ORIGIN || site.bookingOrigin).replace(/\/$/, "");
@@ -45,7 +48,7 @@ const T = {
     deposit: (p) => (p ? `Pay ${p}% deposit online, the rest on the day` : "Small deposit online, the rest on the day"),
     gtk: ["Pickup point and time are confirmed when you book (e-ticket sent straight away).", "Free cancellation up to 24 hours before the activity.", "Questions? Real local people answer 24h on WhatsApp."],
     wildlife: "Dolphins and other wildlife live in the wild: sightings are likely but never guaranteed.",
-    updated: "Updated", by: "By the Tickets Direct team, Lanzarote",
+    updated: "Updated", by: "By the Tickets Direct team, Lanzarote", blog: "From our blog", published: "Published",
     stay: "Where are you staying?", stayLead: "We have offices in the three main resorts. Pick yours for the excursions that collect from your area, travel times and your nearest office.",
     distances: "Approximate travel times", officeHere: "Our offices here", ourOffices: "Our offices in Lanzarote",
     finderTitle: "Find your excursion", resortAny: "Any resort", catAny: "Any activity", find: "Show excursions",
@@ -104,7 +107,7 @@ const T = {
     deposit: (p) => (p ? `Paga un ${p}% de depósito online y el resto el día de la excursión` : "Pequeño depósito online y el resto el día de la excursión"),
     gtk: ["El punto y la hora de recogida se confirman al reservar (recibes el e-ticket al momento).", "Cancelación gratuita hasta 24 horas antes de la actividad.", "¿Dudas? Personas reales te responden 24 h por WhatsApp."],
     wildlife: "Los delfines y demás fauna viven en libertad: es probable verlos, pero nunca está garantizado.",
-    updated: "Actualizado", by: "Por el equipo de Tickets Direct, Lanzarote",
+    updated: "Actualizado", by: "Por el equipo de Tickets Direct, Lanzarote", blog: "Del blog", published: "Publicado",
     stay: "¿Dónde te alojas?", stayLead: "Tenemos oficinas en los tres grandes centros turísticos. Elige el tuyo para ver las excursiones con recogida en tu zona, los tiempos de viaje y tu oficina más cercana.",
     distances: "Tiempos de viaje aproximados", officeHere: "Nuestras oficinas aquí", ourOffices: "Nuestras oficinas en Lanzarote",
     finderTitle: "Encuentra tu excursión", resortAny: "Cualquier zona", catAny: "Cualquier actividad", find: "Ver excursiones",
@@ -785,8 +788,40 @@ function guidesIndex(lang) {
   const alt = altOf("guide");
   const bc = breadcrumbs(lang, [[L.nav.guides, alt[lang]]]);
   const body = `<div class="wrap">${bc.html}</div><section class="wrap section page-head"><h1>${L.guidesTitle}</h1><p class="lead">${lang === "en" ? "Honest, practical advice from the people who sell Lanzarote's excursions every day." : "Consejos honestos y prácticos de quienes venden excursiones en Lanzarote cada día."}</p></section>
-<section class="wrap"><div class="grid guides">${guides.map((g) => `<a class="guide" href="${url(lang, "guide", g.slug)}"><strong>${esc(g[lang].title)}</strong><span>${esc(g[lang].meta)}</span></a>`).join("")}</div></section>`;
+<section class="wrap"><div class="grid guides">${guides.map((g) => `<a class="guide" href="${url(lang, "guide", g.slug)}"><strong>${esc(g[lang].title)}</strong><span>${esc(g[lang].meta)}</span></a>`).join("")}</div></section>
+${posts.some((x) => x.path[lang]) ? `<section class="wrap section"><h2>${L.blog}</h2><div class="grid guides">${posts.filter((x) => x.path[lang]).map((x) => `<a class="guide" href="${x.path[lang]}"><strong>${esc(x.title[lang])}</strong><span>${esc(clip(x.description[lang] || "", 140))}</span></a>`).join("")}</div></section>` : ""}`;
   page({ lang, path: alt[lang], alt, title: `${L.guidesTitle} | Tickets Direct`, description: lang === "en" ? "Local guides to Lanzarote excursions: prices, cruise stops, windy days, families, winter and booking tips." : "Guías locales de excursiones en Lanzarote: precios, cruceros, días de viento, familias, invierno y consejos de reserva.", body, ld: [bc.ld] });
+}
+
+// Imported WordPress blog posts (src/data/posts.json), kept at their original URLs.
+const tourAt = (p) => [...tours, ...enquiryTours].find((t) => t.path.en === (oldTripTo[p] || p) || t.path.es === (oldTripTo[p] || p));
+const wpMedia = (html) => html.replace(/https?:\/\/(www\.)?excursionsticketsdirect\.com\/wp-content\//g, `${BOOK}/wp-content/`);
+function postBlock(lang, b) {
+  if (b.t === "html") return /^<a /.test(b.html) ? `<p class="post-cta">${b.html.replace("<a ", '<a class="btn" ')}</p>` : wpMedia(b.html);
+  if (b.t === "gallery") return `<div class="post-gallery">${b.images.map((im) => `<img src="${esc(wpMedia(im.src))}" alt="${esc(im.alt)}" loading="lazy">`).join("")}</div>`;
+  if (b.t === "tours") { const list = b.paths.map(tourAt).filter(Boolean); return list.length ? cardGrid(lang, list) : ""; }
+  return "";
+}
+function postPage(lang, p) {
+  const L = T[lang];
+  const alt = { en: p.path.en, es: p.path.es };
+  const title = p.title[lang];
+  const seoTitle = posts.some((x) => x !== p && x.seoTitle[lang] === p.seoTitle[lang]) ? title : p.seoTitle[lang];
+  const faqs = p.blocks[lang].filter((b) => b.t === "faq").flatMap((b) => b.items.map(([q, a]) => [q, plain(a)]));
+  const bc = breadcrumbs(lang, [[L.nav.guides, url(lang, "guide")], [title, alt[lang]]]);
+  const others = posts.filter((x) => x !== p && x.path[lang]).slice(0, 4);
+  const body = `<div class="wrap">${bc.html}</div>
+<article class="wrap prose-wrap"><header class="page-head"><p class="eyebrow">${L.blog}</p><h1>${esc(title)}</h1><p class="byline">${L.by} · ${L.published} <time datetime="${p.date}">${p.date}</time>${p.modified > p.date ? ` · ${L.updated} <time datetime="${p.modified}">${p.modified}</time>` : ""}</p></header>
+${p.image ? `<img class="post-hero" src="${p.image.src}" alt="${esc(p.image.alt || title)}" width="${p.image.w}" height="${p.image.h}" fetchpriority="high">` : ""}
+<div class="prose">${p.blocks[lang].map((b) => postBlock(lang, b)).join("\n")}</div>
+${faqBlock(lang, faqs)}
+<aside class="cta-box"><h2>${lang === "en" ? "Need help choosing?" : "¿Te ayudamos a elegir?"}</h2><p>${esc(L.whyLead)}</p><p><a class="btn" href="${url(lang, "tours")}">${L.allTours}</a> <a class="btn wa" href="https://wa.me/${site.whatsapp}" rel="noopener" target="_blank">${icon("wa")}WhatsApp</a></p></aside>
+</article>
+${others.length ? `<section class="wrap section"><h2>${L.blog}</h2><div class="grid guides">${others.map((x) => `<a class="guide" href="${x.path[lang]}"><strong>${esc(x.title[lang])}</strong></a>`).join("")}</div></section>` : ""}`;
+  page({
+    lang, path: alt[lang], alt, ogType: "article", ogImage: p.image?.src, title: clip(`${seoTitle} | Tickets Direct`, 70), description: clip(p.description[lang] || title, 158), body,
+    ld: [{ "@context": "https://schema.org", "@type": "BlogPosting", headline: title, description: p.description[lang], inLanguage: lang, datePublished: p.date, dateModified: p.modified, author: { "@id": ORG_ID }, publisher: { "@id": ORG_ID }, mainEntityOfPage: abs(alt[lang]), image: p.image ? abs(p.image.src) : `${SITE}/assets/og-default.png` }, bc.ld, faqLd(faqs)],
+  });
 }
 
 function toursIndex(lang) {
@@ -1062,6 +1097,7 @@ for (const lang of LANGS) {
   destinations.forEach((d) => (lang === "en" || d.path.es) && destinationPage(lang, d));
   guidesIndex(lang);
   guides.forEach((g) => guidePage(lang, g));
+  posts.filter((p) => p.path[lang]).forEach((p) => postPage(lang, p));
   officesPage(lang);
   aboutPage(lang);
   faqPage(lang);

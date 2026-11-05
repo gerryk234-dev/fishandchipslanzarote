@@ -1,5 +1,4 @@
 from,to,rule
-/25-best-things-to-do-in-lanzarote-2026-guide/,/guides/best-excursions-in-lanzarote/,blog (until posts are copied)
 /activities/,/trip/,archive
 /activities/art-culture/,/trip/,archive
 /activities/buggies-lanzarote-lanzabuggy-adventures/,/trip-types/buggies-lanzarote/,archive
@@ -22,10 +21,7 @@ from,to,rule
 /affiliate-reset-password/,https://book.excursionsticketsdirect.com/affiliate-reset-password/,wordpress
 /all-tours/,/trip/,archive
 /author/difundete/,/guides/,blog
-/best-boat-trips-in-lanzarote-catamaran-cruises-dolphin-tours-sunset-sailings/,/trip-types/lanzarote-boat-trips/,blog (until posts are copied)
-/best-excursions-in-lanzarote-top-15-tours-you-must-book/,/guides/best-excursions-in-lanzarote/,blog (until posts are copied)
 /blog/,/guides/,blog
-/buggy-excursions-in-lanzarote-the-most-exciting-way-to-explore-the-island/,/trip-types/buggies-lanzarote/,blog (until posts are copied)
 /category/canary-islands-guide/,/guides/,archive
 /category/la-graciosa/,/destinations/la-graciosa/,archive
 /category/what-to-do-in-lanzarote/,/guides/,archive
@@ -87,7 +83,6 @@ from,to,rule
 /es/category/recorridos-en-autobus/,/es/trip-types/lanzarote-bus-tours-es/,archive
 /es/category/visitas-guiadas/,/es/trip-types/lanzarote-bus-tours-es/,archive
 /es/clientes-de-gsim-europa/,https://book.excursionsticketsdirect.com/es/clientes-de-gsim-europa/,wordpress
-/es/como-explorar-la-graciosa-en-lanzarote-las-mejores-excursiones-y-cruceros-en-catamaran/,/es/destinations/la-graciosa-es/,blog (until posts are copied)
 /es/condiciones-generales/,https://book.excursionsticketsdirect.com/es/condiciones-generales/,legal (on WordPress until copied)
 /es/destinations/costa-teguise/,/es/destinations/lanzarote-es/costa-teguise/,place
 /es/destinations/fuerteventura-es/dunas-corralejo/,/es/destinations/fuerteventura-es/dunas-de-corralejo/,place
@@ -97,22 +92,11 @@ from,to,rule
 /es/destinations/los-hervideros-hotsprings-es/,/es/destinations/lanzarote-es/los-hervideros-hotsprings-es/,place
 /es/destinations/papagayo-playa/,/es/destinations/lanzarote-es/papagayo-playa/,place
 /es/destino/,/es/destinations/,archive
-/es/excursion-al-parque-nacional-de-timanfaya-las-mejores-formas-de-visitar-los-volcanes-de-lanzarote/,/es/destinations/lanzarote-es/volcan-timanfaya-parque-nacional/,blog (until posts are copied)
-/es/excursion-de-un-dia-a-la-graciosa-desde-lanzarote-guia-de-ferry-y-catamaran/,/es/destinations/la-graciosa-es/,blog (until posts are copied)
-/es/excursion-de-un-dia-a-la-graciosa-desde-lanzarote-merece-la-pena/,/es/destinations/la-graciosa-es/,blog (until posts are copied)
-/es/excursion-de-un-dia-a-la-lanzarote-merece-la-pena/,/es/destinations/la-graciosa-es/,blog (until posts are copied)
-/es/excursion-en-buggy-por-los-volcanes-de-lanzarote-la-aventura-todoterreno-definitiva-por-los-paisajes-de-timanfaya/,/es/trip-types/aventuras-y-safaris/,blog (until posts are copied)
-/es/excursiones-en-buggy-en-lanzarote-la-forma-mas-emocionante-de-explorar-la-isla/,/es/trip-types/aventuras-y-safaris/,blog (until posts are copied)
-/es/excursiones-en-buggy-lanzarote-la-mejor-aventura-off-road-en-la-isla/,/es/trip-types/aventuras-y-safaris/,blog (until posts are copied)
+/es/excursion-de-un-dia-a-la-lanzarote-merece-la-pena/,/es/excursion-de-un-dia-a-la-graciosa-desde-lanzarote-merece-la-pena/,blog variant
 /es/excursiones-entradas-direct-cart/,https://book.excursionsticketsdirect.com/es/excursiones-entradas-direct-cart/,wordpress
 /es/excursiones-tickets-direct-mapa-del-sitio/,/es/,page
 /es/excursiones-tickets-direct-mapa-del-sitio/page/2/,/es/,page
 /es/formulario-e-ticket/,https://book.excursionsticketsdirect.com/es/formulario-e-ticket/,wordpress
-/es/jet-ski-lanzarote-las-mejores-excursiones-precios-rutas-y-todo-lo-que-necesitas-saber-guia-2026/,/es/trip-types/deportes-y-actividades-acuaticas/,blog (until posts are copied)
-/es/jet-ski-lanzarote-mejores-alquileres-precios-y-donde-reservar/,/es/trip-types/deportes-y-actividades-acuaticas/,blog (until posts are copied)
-/es/las-25-mejores-cosas-que-hacer-en-lanzarote-guia-2026/,/es/guias/best-excursions-in-lanzarote/,blog (until posts are copied)
-/es/las-mejores-excursiones-en-barco-en-lanzarote-cruceros-en-catamaran-paseos-con-delfines-y-puestas-de-sol/,/es/trip-types/excursiones-en-barco-por-lanzarote/,blog (until posts are copied)
-/es/las-mejores-excursiones-en-lanzarote-las-15-mejores-visitas-guiadas-que-no-te-puedes-perder/,/es/guias/best-excursions-in-lanzarote/,blog (until posts are copied)
 /es/lista-de-deseos/,https://book.excursionsticketsdirect.com/es/lista-de-deseos/,wordpress
 /es/lista-de-visitas/,/es/trip/,archive
 /es/location/costa-teguise-es/page/2/,/es/excursiones-desde/costa-teguise/,resort
@@ -137,7 +121,6 @@ from,to,rule
 /es/mi-cuenta-afiliados/,https://book.excursionsticketsdirect.com/es/mi-cuenta-afiliados/,wordpress
 /es/mi-cuenta/,https://book.excursionsticketsdirect.com/es/mi-cuenta/,wordpress
 /es/pedido/,https://book.excursionsticketsdirect.com/es/pedido/,wordpress
-/es/playas-de-papagayo-lanzarote-como-visitarlas-mejores-excursiones-y-paseos-en-barco/,/es/destinations/lanzarote-es/papagayo-playa/,blog (until posts are copied)
 /es/politica-de-cookies/,https://book.excursionsticketsdirect.com/es/politica-de-cookies/,legal (on WordPress until copied)
 /es/politica-de-privacidad/,https://book.excursionsticketsdirect.com/es/politica-de-privacidad/,legal (on WordPress until copied)
 /es/pongase-en-contacto-con/,/es/contacto/,page
@@ -174,17 +157,10 @@ from,to,rule
 /excursions-tickets-direct-sitemap/,/,page
 /formulario-e-ticket/,https://book.excursionsticketsdirect.com/formulario-e-ticket/,wordpress
 /gsim-europe-clients/,https://book.excursionsticketsdirect.com/gsim-europe-clients/,wordpress
-/how-to-explore-la-graciosa-in-lanzarote-best-excursions-catamaran-cruises/,/destinations/la-graciosa/,blog (until posts are copied)
-/jet-ski-lanzarote-best-prices-routes-everything-you-need-to-know-2026-guide/,/trip-types/water-sports-activities/,blog (until posts are copied)
-/jet-ski-lanzarote-best-rentals-prices-where-to-book/,/trip-types/water-sports-activities/,blog (until posts are copied)
-/jet-ski-lanzarote-best-tours-prices-routes-everything-you-need-to-know-2026-guide/,/trip-types/water-sports-activities/,blog (until posts are copied)
-/la-graciosa-day-trip-an-is-it-worth-it/,/destinations/la-graciosa/,blog (until posts are copied)
-/la-graciosa-day-trip-from-lanzarote-ferry-catamaran-guide/,/destinations/la-graciosa/,blog (until posts are copied)
-/la-graciosa-day-trip-from-lanzarote-is-it-worth-it/,/destinations/la-graciosa/,blog (until posts are copied)
-/lanzarote-buggy-tour-the-ultimate-off-road-adventure/,/trip-types/buggies-lanzarote/,blog (until posts are copied)
+/jet-ski-lanzarote-best-prices-routes-everything-you-need-to-know-2026-guide/,/jet-ski-lanzarote-best-tours-prices-routes-everything-you-need-to-know-2026-guide/,blog variant
+/la-graciosa-day-trip-an-is-it-worth-it/,/la-graciosa-day-trip-from-lanzarote-is-it-worth-it/,blog variant
 /lanzarote-excursions/fuerteventura-delights-day-trip/,/trip/fuerteventura-delight/,old trip
-/lanzarote-guide/,/guides/best-excursions-in-lanzarote/,blog (until posts are copied)
-/lanzarote-volcano-buggy-tour-the-ultimate-off-road-adventure-across-timanfaya-landscapes/,/trip-types/buggies-lanzarote/,blog (until posts are copied)
+/lanzarote-guide/,/guides/best-excursions-in-lanzarote/,blog topic
 /legal-notice/,https://book.excursionsticketsdirect.com/legal-notice/,legal (on WordPress until copied)
 /location/lanzarote/,/trip/,archive
 /location/lanzarote/arrecife/,/trip/,archive
@@ -206,21 +182,19 @@ from,to,rule
 /lost-password/,https://book.excursionsticketsdirect.com/lost-password/,wordpress
 /my-account-2/,https://book.excursionsticketsdirect.com/my-account-2/,wordpress
 /my-account/,https://book.excursionsticketsdirect.com/my-account/,wordpress
-/papagayo-beaches-how-to-visit-best-tours-boat-trips/,/destinations/lanzarote/papagayo-beaches-2/,blog (until posts are copied)
-/papagayo-beaches-lanzarote-how-to-Visit-best-tours-boat-trips/,/destinations/lanzarote/papagayo-beaches-2/,blog (until posts are copied)
-/papagayo-beaches-lanzarote-how-to-visit-best-top-boat-trips/,/destinations/lanzarote/papagayo-beaches-2/,blog (until posts are copied)
-/papagayo-beaches-lanzarote-how-to-visit-best-tour-boat-trips/,/destinations/lanzarote/papagayo-beaches-2/,blog (until posts are copied)
-/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/,/destinations/lanzarote/papagayo-beaches-2/,blog (until posts are copied)
-/papagayo-beaches-lanzarote/,/destinations/lanzarote/papagayo-beaches-2/,blog (until posts are copied)
-/papagayo-beaches-lanzarote/how-to-visit-best-tours-boat-trips/,/destinations/lanzarote/papagayo-beaches-2/,blog (until posts are copied)
-/papagayo-beaches-lanzarote/papagayo-beaches-lanzarote.d6067495.Attraction/,/destinations/lanzarote/papagayo-beaches-2/,blog (until posts are copied)
+/papagayo-beaches-how-to-visit-best-tours-boat-trips/,/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/,blog variant
+/papagayo-beaches-lanzarote-how-to-Visit-best-tours-boat-trips/,/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/,blog variant
+/papagayo-beaches-lanzarote-how-to-visit-best-top-boat-trips/,/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/,blog variant
+/papagayo-beaches-lanzarote-how-to-visit-best-tour-boat-trips/,/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/,blog variant
+/papagayo-beaches-lanzarote/,/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/,live redirect kept
+/papagayo-beaches-lanzarote/how-to-visit-best-tours-boat-trips/,/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/,blog variant
+/papagayo-beaches-lanzarote/papagayo-beaches-lanzarote.d6067495.Attraction/,/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/,blog variant
 /post/,/guides/,blog
 /privacy-policy/,https://book.excursionsticketsdirect.com/privacy-policy/,legal (on WordPress until copied)
 /private-tours-and-events/,/trip-types/private-tours-boat-hires/,page
 /selection-of-the-departure-date-of-the-second-tour/,https://book.excursionsticketsdirect.com/selection-of-the-departure-date-of-the-second-tour/,wordpress
 /terms-and-conditions/,https://book.excursionsticketsdirect.com/terms-and-conditions/,legal (on WordPress until copied)
 /thank-you/,https://book.excursionsticketsdirect.com/thank-you/,wordpress
-/timanfaya-national-park-tour-best-ways-to-visit-the-volcanoes-in-lanzarote/,/destinations/lanzarote/timanfaya-volcano-national-park/,blog (until posts are copied)
 /tour-listing/,/trip/,archive
 /tour_duration/1-to-4-hours-tour/,/trip/,archive
 /tour_duration/4-hours-to-full-day-tour/,/trip/,archive
