@@ -25,8 +25,8 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 | F1 | Rebuild in dev (static EN/ES, schema, hreflang, PWA, agent) | implemented | `ticketsdirect/`, preview artifact |
 | F2 | Booking/payment integration | blocked | Needs WP Application Password and Stripe keys in Vercel env |
 | F3 | Meeting / collection points | blocked | Waiting for points data (`src/data/pickups.json`) |
-| F4 | Blog posts imported (13 EN + ES) | not started | Until then their URLs 301 to the page on the same topic (37 redirects); importing keeps their own rankings |
-| F5 | Legal pages (privacy, cookies, terms, legal notice; EN/ES) | not started | **Required before launch.** Until copied, they redirect to the WordPress booking subdomain. The new site's footer needs links to them |
+| F4 | Blog posts imported (13 EN + ES) | implemented | `npm run import:posts` → `src/data/posts.json`, built at their original URLs with BlogPosting + FAQ data; old misspelt variants 301 to the posts. Embedded WP tour cards replaced by live tour cards. Merging the overlapping posts (jet ski ×2, La Graciosa ×3, buggies ×3) is a later content decision for the owner |
+| F5 | Legal pages (privacy, cookies, terms, legal notice, cancellation; EN/ES) | implemented (interim) | They stay on WordPress at the booking subdomain, where checkout also runs; the new footer and the redirects point there. Copy them over only if the owner wants them on the main domain. If tracking is added to the new site, it needs a cookie banner |
 | G1 | Migration redirect map | implemented | `npm run build && npm run redirects`: all 682 old paths covered (276 exist, 246 exact 301s in `vercel.json`, `/wp-content/*` wildcard to the booking subdomain). Review list: `docs/migration/redirect-map.csv`. Re-run after importing blog/legal pages, so their temporary redirects drop out |
 | G2 | Launch checklist & rollback plan | not started | |
 | G3 | Production approval | not started | |

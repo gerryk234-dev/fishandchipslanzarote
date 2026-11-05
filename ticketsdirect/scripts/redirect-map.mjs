@@ -69,15 +69,20 @@ const RULES = [
   [/^\/destinations\/(lanzarote(-es)?\/)?(lagomar-museum)(-es)?\//, "place", (p, es) => dest(es, "lanzarote/lagomar-museum", "lanzarote-es/lagomar-museum-es")],
   [/^\/destinations\/(lanzarote(-es)?\/)?la-geria(-es)?\//, "place", (p, es) => dest(es, "la-geria-2", "la-geria-es")],
   [/^\/destinations\/(lanzarote(-es)?\/)?los-hervideros-hotsprings(-es)?\//, "place", (p, es) => dest(es, "lanzarote/los-hervideros-hotsprings", "lanzarote-es/los-hervideros-hotsprings-es")],
-  // Blog posts: until they are copied to the new site, send each one to the page on the same topic.
+  // Blog posts live at their own URLs (npm run import:posts). Old misspelt variants go to the post itself.
   [/^\/(blog|author|post)\//, "blog", (p, es) => guides(es)],
-  [/graciosa|un-dia-a-la-lanzarote/, "blog (until posts are copied)", (p, es) => dest(es, "la-graciosa", "la-graciosa-es")],
-  [/buggy/, "blog (until posts are copied)", (p, es) => cat("buggy-tours", es)],
-  [/timanfaya|volcan/, "blog (until posts are copied)", (p, es) => dest(es, "lanzarote/timanfaya-volcano-national-park", "lanzarote-es/volcan-timanfaya-parque-nacional")],
-  [/jet-ski/, "blog (until posts are copied)", (p, es) => cat("water-sports", es)],
-  [/papagayo/, "blog (until posts are copied)", (p, es) => dest(es, "lanzarote/papagayo-beaches-2", "lanzarote-es/papagayo-playa")],
-  [/barco|boat-trips/, "blog (until posts are copied)", (p, es) => cat("boat-trips", es)],
-  [/things-to-do|cosas-que-hacer|best-excursions|mejores-excursiones|lanzarote-guide/, "blog (until posts are copied)", (p, es) => `${guides(es)}best-excursions-in-lanzarote/`],
+  [/^\/papagayo-beaches.*(visit|attraction)/i, "blog variant", () => "/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/"],
+  [/^\/jet-ski-lanzarote-best-prices-routes/, "blog variant", () => "/jet-ski-lanzarote-best-tours-prices-routes-everything-you-need-to-know-2026-guide/"],
+  [/^\/la-graciosa-day-trip-an-is-it-worth-it\//, "blog variant", () => "/la-graciosa-day-trip-from-lanzarote-is-it-worth-it/"],
+  [/^\/excursion-de-un-dia-a-la-lanzarote-merece-la-pena\//, "blog variant", () => "/es/excursion-de-un-dia-a-la-graciosa-desde-lanzarote-merece-la-pena/"],
+  // Anything else blog-like that isn't on the new site: the page on the same topic.
+  [/graciosa|un-dia-a-la-lanzarote/, "blog topic", (p, es) => dest(es, "la-graciosa", "la-graciosa-es")],
+  [/buggy/, "blog topic", (p, es) => cat("buggy-tours", es)],
+  [/timanfaya|volcan/, "blog topic", (p, es) => dest(es, "lanzarote/timanfaya-volcano-national-park", "lanzarote-es/volcan-timanfaya-parque-nacional")],
+  [/jet-ski/, "blog topic", (p, es) => cat("water-sports", es)],
+  [/papagayo/, "blog topic", (p, es) => dest(es, "lanzarote/papagayo-beaches-2", "lanzarote-es/papagayo-playa")],
+  [/barco|boat-trips/, "blog topic", (p, es) => cat("boat-trips", es)],
+  [/things-to-do|cosas-que-hacer|best-excursions|mejores-excursiones|lanzarote-guide/, "blog topic", (p, es) => `${guides(es)}best-excursions-in-lanzarote/`],
 ];
 
 const rows = [];
