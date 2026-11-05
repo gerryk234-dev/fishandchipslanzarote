@@ -25,8 +25,9 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 | F1 | Rebuild in dev (static EN/ES, schema, hreflang, PWA, agent) | implemented | `ticketsdirect/`, preview artifact |
 | F2 | Booking/payment integration | blocked | Needs WP Application Password and Stripe keys in Vercel env |
 | F3 | Meeting / collection points | blocked | Waiting for points data (`src/data/pickups.json`) |
-| F4 | Blog posts imported (13 EN + ES) | not started | Required before launch, or old URLs 404 |
-| G1 | Migration redirect map | in progress | Search Console lists 719 URLs with impressions; 405 are not in the rebuild and need a 301 or a page. Also carry over the live site's existing 301s (e.g. `/trip/jetski-safari/`). Unpriced tours (Katfish, Chillout) now kept as price-on-request pages |
+| F4 | Blog posts imported (13 EN + ES) | not started | Until then their URLs 301 to the page on the same topic (37 redirects); importing keeps their own rankings |
+| F5 | Legal pages (privacy, cookies, terms, legal notice; EN/ES) | not started | **Required before launch.** Until copied, they redirect to the WordPress booking subdomain. The new site's footer needs links to them |
+| G1 | Migration redirect map | implemented | `npm run build && npm run redirects`: all 682 old paths covered (276 exist, 246 exact 301s in `vercel.json`, `/wp-content/*` wildcard to the booking subdomain). Review list: `docs/migration/redirect-map.csv`. Re-run after importing blog/legal pages, so their temporary redirects drop out |
 | G2 | Launch checklist & rollback plan | not started | |
 | G3 | Production approval | not started | |
 | S1 | Repository is public: move `ticketsdirect/` to a private repo before any private data or booking code lands | not started | Owner decision |

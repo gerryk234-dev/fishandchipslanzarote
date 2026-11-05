@@ -4,13 +4,1275 @@
   "outputDirectory": "dist",
   "trailingSlash": true,
   "functions": {
-    "api/chat.js": { "includeFiles": "src/data/**", "maxDuration": 60 }
+    "api/chat.js": {
+      "includeFiles": "src/data/**",
+      "maxDuration": 60
+    }
   },
   "headers": [
-    { "source": "/assets/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
-    { "source": "/(.*)", "headers": [
-      { "key": "X-Content-Type-Options", "value": "nosniff" },
-      { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
-    ] }
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/wp-content/:path*",
+      "destination": "https://book.excursionsticketsdirect.com/wp-content/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/es/wp-content/:path*",
+      "destination": "https://book.excursionsticketsdirect.com/wp-content/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/25-best-things-to-do-in-lanzarote-2026-guide/",
+      "destination": "/guides/best-excursions-in-lanzarote/",
+      "permanent": true
+    },
+    {
+      "source": "/activities/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/activities/art-culture/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/activities/buggies-lanzarote-lanzabuggy-adventures/",
+      "destination": "/trip-types/buggies-lanzarote/",
+      "permanent": true
+    },
+    {
+      "source": "/activities/couples-tours/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/activities/discover-fuerteventura/",
+      "destination": "/destinations/fuerteventura/",
+      "permanent": true
+    },
+    {
+      "source": "/activities/discover-la-graciosa/",
+      "destination": "/destinations/la-graciosa/",
+      "permanent": true
+    },
+    {
+      "source": "/activities/family-friendly/",
+      "destination": "/guides/lanzarote-excursions-with-kids/",
+      "permanent": true
+    },
+    {
+      "source": "/activities/full-day-tours/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/activities/half-day-tours/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/activities/most-popular/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/activities/nightlife-events-actvities/",
+      "destination": "/trip-types/nightlife-events-activities/",
+      "permanent": true
+    },
+    {
+      "source": "/activities/offers/",
+      "destination": "/trip-types/special-packs-discounts/",
+      "permanent": true
+    },
+    {
+      "source": "/activities/private-tours-boat-hires/",
+      "destination": "/trip-types/private-tours-boat-hires/",
+      "permanent": true
+    },
+    {
+      "source": "/activities/sightseing-bus-tour/",
+      "destination": "/trip-types/lanzarote-bus-tours/",
+      "permanent": true
+    },
+    {
+      "source": "/activities/travellers-recommend/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/activities/watersports-activities/",
+      "destination": "/trip-types/water-sports-activities/",
+      "permanent": true
+    },
+    {
+      "source": "/activities/wildlife-nature/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/affiliate-account/",
+      "destination": "https://book.excursionsticketsdirect.com/affiliate-account/",
+      "permanent": true
+    },
+    {
+      "source": "/affiliate-registration/",
+      "destination": "https://book.excursionsticketsdirect.com/affiliate-registration/",
+      "permanent": true
+    },
+    {
+      "source": "/affiliate-reset-password/",
+      "destination": "https://book.excursionsticketsdirect.com/affiliate-reset-password/",
+      "permanent": true
+    },
+    {
+      "source": "/all-tours/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/author/difundete/",
+      "destination": "/guides/",
+      "permanent": true
+    },
+    {
+      "source": "/best-boat-trips-in-lanzarote-catamaran-cruises-dolphin-tours-sunset-sailings/",
+      "destination": "/trip-types/lanzarote-boat-trips/",
+      "permanent": true
+    },
+    {
+      "source": "/best-excursions-in-lanzarote-top-15-tours-you-must-book/",
+      "destination": "/guides/best-excursions-in-lanzarote/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/",
+      "destination": "/guides/",
+      "permanent": true
+    },
+    {
+      "source": "/buggy-excursions-in-lanzarote-the-most-exciting-way-to-explore-the-island/",
+      "destination": "/trip-types/buggies-lanzarote/",
+      "permanent": true
+    },
+    {
+      "source": "/category/canary-islands-guide/",
+      "destination": "/guides/",
+      "permanent": true
+    },
+    {
+      "source": "/category/la-graciosa/",
+      "destination": "/destinations/la-graciosa/",
+      "permanent": true
+    },
+    {
+      "source": "/category/what-to-do-in-lanzarote/",
+      "destination": "/guides/",
+      "permanent": true
+    },
+    {
+      "source": "/category/what-to-do-in-lanzarote/adventure-tours-in-lanzarote/",
+      "destination": "/trip-types/buggies-lanzarote/",
+      "permanent": true
+    },
+    {
+      "source": "/category/what-to-do-in-lanzarote/adventure-tours-in-lanzarote/buggies-in-lanzarote/",
+      "destination": "/trip-types/buggies-lanzarote/",
+      "permanent": true
+    },
+    {
+      "source": "/category/what-to-do-in-lanzarote/adventure-tours-in-lanzarote/jet-ski/",
+      "destination": "/trip-types/buggies-lanzarote/",
+      "permanent": true
+    },
+    {
+      "source": "/category/what-to-do-in-lanzarote/boat-trips/",
+      "destination": "/trip-types/lanzarote-boat-trips/",
+      "permanent": true
+    },
+    {
+      "source": "/category/what-to-do-in-lanzarote/bus-tours/",
+      "destination": "/trip-types/lanzarote-bus-tours/",
+      "permanent": true
+    },
+    {
+      "source": "/category/what-to-do-in-lanzarote/ferries-and-boats-to-explore-the-canary-islands/",
+      "destination": "/trip-types/express-ferries/",
+      "permanent": true
+    },
+    {
+      "source": "/category/what-to-do-in-lanzarote/ferries-and-boats-to-explore-the-canary-islands/boat-trips-to-la-graciosa/",
+      "destination": "/trip-types/express-ferries/",
+      "permanent": true
+    },
+    {
+      "source": "/category/what-to-do-in-lanzarote/guided-tours/",
+      "destination": "/trip-types/lanzarote-bus-tours/",
+      "permanent": true
+    },
+    {
+      "source": "/category/what-to-do-in-lanzarote/papagayo-beaches/",
+      "destination": "/destinations/lanzarote/papagayo-beaches-2/",
+      "permanent": true
+    },
+    {
+      "source": "/checkout/",
+      "destination": "https://book.excursionsticketsdirect.com/checkout/",
+      "permanent": true
+    },
+    {
+      "source": "/contact-us/",
+      "destination": "/contact/",
+      "permanent": true
+    },
+    {
+      "source": "/cookie-policy/",
+      "destination": "https://book.excursionsticketsdirect.com/cookie-policy/",
+      "permanent": true
+    },
+    {
+      "source": "/destination/",
+      "destination": "/destinations/",
+      "permanent": true
+    },
+    {
+      "source": "/destinations/lanzarote-es/haria-1000-palm-trees-lanzarote-es/",
+      "destination": "/destinations/lanzarote/haria-1000-palm-trees-lanzarote-es/",
+      "permanent": true
+    },
+    {
+      "source": "/destinations/papagayo-beaches-2/",
+      "destination": "/destinations/lanzarote/papagayo-beaches-2/",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry-thank-you-page/",
+      "destination": "https://book.excursionsticketsdirect.com/enquiry-thank-you-page/",
+      "permanent": true
+    },
+    {
+      "source": "/es/acceso-de-afiliados/",
+      "destination": "https://book.excursionsticketsdirect.com/es/acceso-de-afiliados/",
+      "permanent": true
+    },
+    {
+      "source": "/es/actividades/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/activities/arte-y-cultura/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/activities/aventura-y-safaris-en-4x4/",
+      "destination": "/es/trip-types/aventuras-y-safaris/",
+      "permanent": true
+    },
+    {
+      "source": "/es/activities/deportes-y-actividades-acuaticas/",
+      "destination": "/es/trip-types/deportes-y-actividades-acuaticas/",
+      "permanent": true
+    },
+    {
+      "source": "/es/activities/descubre-fuerteventura/",
+      "destination": "/es/destinations/fuerteventura-es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/activities/descubre-la-graciosa/",
+      "destination": "/es/destinations/la-graciosa-es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/activities/eventos-y-actividades-nocturnas/",
+      "destination": "/es/trip-types/eventos-y-actividades-nocturnas/",
+      "permanent": true
+    },
+    {
+      "source": "/es/activities/excursiones-privadas-y-alquiler-de-barcos/",
+      "destination": "/es/trip-types/tours-privados-y-alquiler-de-barcos/",
+      "permanent": true
+    },
+    {
+      "source": "/es/activities/fauna-y-naturaleza/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/activities/los-mas-populares/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/activities/ofertas/",
+      "destination": "/es/trip-types/packs-especiales-y-descuentos/",
+      "permanent": true
+    },
+    {
+      "source": "/es/activities/para-toda-la-familia/",
+      "destination": "/es/guias/lanzarote-excursions-with-kids/",
+      "permanent": true
+    },
+    {
+      "source": "/es/activities/recomendado-por-los-viajeros/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/activities/tours-dia-completo/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/activities/tours-en-pareja/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/activities/tours-medio-dia/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/activities/visita-turistica-y-excursiones-en-autobus/",
+      "destination": "/es/trip-types/lanzarote-bus-tours-es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/afiliarse/",
+      "destination": "https://book.excursionsticketsdirect.com/es/afiliarse/",
+      "permanent": true
+    },
+    {
+      "source": "/es/all-tours/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/author/difundete/",
+      "destination": "/es/guias/",
+      "permanent": true
+    },
+    {
+      "source": "/es/aviso-legal/",
+      "destination": "https://book.excursionsticketsdirect.com/es/aviso-legal/",
+      "permanent": true
+    },
+    {
+      "source": "/es/blog/",
+      "destination": "/es/guias/",
+      "permanent": true
+    },
+    {
+      "source": "/es/category/buggies-en-lanzarote/",
+      "destination": "/es/trip-types/aventuras-y-safaris/",
+      "permanent": true
+    },
+    {
+      "source": "/es/category/excursiones-de-aventura-en-lanzarote/",
+      "destination": "/es/trip-types/aventuras-y-safaris/",
+      "permanent": true
+    },
+    {
+      "source": "/es/category/guia-de-las-islas-canarias/",
+      "destination": "/es/guias/",
+      "permanent": true
+    },
+    {
+      "source": "/es/category/la-graciosa/",
+      "destination": "/es/destinations/la-graciosa-es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/category/moto-acuatica/",
+      "destination": "/es/trip-types/deportes-y-actividades-acuaticas/",
+      "permanent": true
+    },
+    {
+      "source": "/es/category/playas-de-papagayo/",
+      "destination": "/es/destinations/lanzarote-es/papagayo-playa/",
+      "permanent": true
+    },
+    {
+      "source": "/es/category/que-hacer-en-lanzarote/",
+      "destination": "/es/guias/",
+      "permanent": true
+    },
+    {
+      "source": "/es/category/que-hacer-en-lanzarote/excursiones-de-aventura-en-lanzarote/",
+      "destination": "/es/trip-types/aventuras-y-safaris/",
+      "permanent": true
+    },
+    {
+      "source": "/es/category/que-hacer-en-lanzarote/excursiones-de-aventura-en-lanzarote/buggies-en-lanzarote/",
+      "destination": "/es/trip-types/aventuras-y-safaris/",
+      "permanent": true
+    },
+    {
+      "source": "/es/category/que-hacer-en-lanzarote/excursiones-de-aventura-en-lanzarote/moto-acuatica/",
+      "destination": "/es/trip-types/aventuras-y-safaris/",
+      "permanent": true
+    },
+    {
+      "source": "/es/category/que-hacer-en-lanzarote/ferries-y-barcos-para-explorar-las-islas-canarias/",
+      "destination": "/es/trip-types/ferrys-expres/",
+      "permanent": true
+    },
+    {
+      "source": "/es/category/que-hacer-en-lanzarote/ferries-y-barcos-para-explorar-las-islas-canarias/excursiones-en-barco-a-la-graciosa/",
+      "destination": "/es/trip-types/ferrys-expres/",
+      "permanent": true
+    },
+    {
+      "source": "/es/category/que-hacer-en-lanzarote/playas-de-papagayo/",
+      "destination": "/es/destinations/lanzarote-es/papagayo-playa/",
+      "permanent": true
+    },
+    {
+      "source": "/es/category/que-hacer-en-lanzarote/recorridos-en-autobus/",
+      "destination": "/es/trip-types/lanzarote-bus-tours-es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/category/que-hacer-en-lanzarote/viajes-en-barco/",
+      "destination": "/es/trip-types/excursiones-en-barco-por-lanzarote/",
+      "permanent": true
+    },
+    {
+      "source": "/es/category/que-hacer-en-lanzarote/visitas-guiadas/",
+      "destination": "/es/trip-types/lanzarote-bus-tours-es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/category/recorridos-en-autobus/",
+      "destination": "/es/trip-types/lanzarote-bus-tours-es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/category/visitas-guiadas/",
+      "destination": "/es/trip-types/lanzarote-bus-tours-es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/clientes-de-gsim-europa/",
+      "destination": "https://book.excursionsticketsdirect.com/es/clientes-de-gsim-europa/",
+      "permanent": true
+    },
+    {
+      "source": "/es/como-explorar-la-graciosa-en-lanzarote-las-mejores-excursiones-y-cruceros-en-catamaran/",
+      "destination": "/es/destinations/la-graciosa-es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/condiciones-generales/",
+      "destination": "https://book.excursionsticketsdirect.com/es/condiciones-generales/",
+      "permanent": true
+    },
+    {
+      "source": "/es/destinations/costa-teguise/",
+      "destination": "/es/destinations/lanzarote-es/costa-teguise/",
+      "permanent": true
+    },
+    {
+      "source": "/es/destinations/fuerteventura-es/dunas-corralejo/",
+      "destination": "/es/destinations/fuerteventura-es/dunas-de-corralejo/",
+      "permanent": true
+    },
+    {
+      "source": "/es/destinations/lagomar-museum-es/",
+      "destination": "/es/destinations/lanzarote-es/lagomar-museum-es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/destinations/lanzarote-es/la-geria-es/",
+      "destination": "/es/destinations/la-geria-es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/destinations/lanzarote-es/page/2/",
+      "destination": "/es/destinations/lanzarote-es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/destinations/los-hervideros-hotsprings-es/",
+      "destination": "/es/destinations/lanzarote-es/los-hervideros-hotsprings-es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/destinations/papagayo-playa/",
+      "destination": "/es/destinations/lanzarote-es/papagayo-playa/",
+      "permanent": true
+    },
+    {
+      "source": "/es/destino/",
+      "destination": "/es/destinations/",
+      "permanent": true
+    },
+    {
+      "source": "/es/excursion-al-parque-nacional-de-timanfaya-las-mejores-formas-de-visitar-los-volcanes-de-lanzarote/",
+      "destination": "/es/destinations/lanzarote-es/volcan-timanfaya-parque-nacional/",
+      "permanent": true
+    },
+    {
+      "source": "/es/excursion-de-un-dia-a-la-graciosa-desde-lanzarote-guia-de-ferry-y-catamaran/",
+      "destination": "/es/destinations/la-graciosa-es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/excursion-de-un-dia-a-la-graciosa-desde-lanzarote-merece-la-pena/",
+      "destination": "/es/destinations/la-graciosa-es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/excursion-de-un-dia-a-la-lanzarote-merece-la-pena/",
+      "destination": "/es/destinations/la-graciosa-es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/excursion-en-buggy-por-los-volcanes-de-lanzarote-la-aventura-todoterreno-definitiva-por-los-paisajes-de-timanfaya/",
+      "destination": "/es/trip-types/aventuras-y-safaris/",
+      "permanent": true
+    },
+    {
+      "source": "/es/excursiones-en-buggy-en-lanzarote-la-forma-mas-emocionante-de-explorar-la-isla/",
+      "destination": "/es/trip-types/aventuras-y-safaris/",
+      "permanent": true
+    },
+    {
+      "source": "/es/excursiones-en-buggy-lanzarote-la-mejor-aventura-off-road-en-la-isla/",
+      "destination": "/es/trip-types/aventuras-y-safaris/",
+      "permanent": true
+    },
+    {
+      "source": "/es/excursiones-entradas-direct-cart/",
+      "destination": "https://book.excursionsticketsdirect.com/es/excursiones-entradas-direct-cart/",
+      "permanent": true
+    },
+    {
+      "source": "/es/excursiones-tickets-direct-mapa-del-sitio/",
+      "destination": "/es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/excursiones-tickets-direct-mapa-del-sitio/page/2/",
+      "destination": "/es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/formulario-e-ticket/",
+      "destination": "https://book.excursionsticketsdirect.com/es/formulario-e-ticket/",
+      "permanent": true
+    },
+    {
+      "source": "/es/jet-ski-lanzarote-las-mejores-excursiones-precios-rutas-y-todo-lo-que-necesitas-saber-guia-2026/",
+      "destination": "/es/trip-types/deportes-y-actividades-acuaticas/",
+      "permanent": true
+    },
+    {
+      "source": "/es/jet-ski-lanzarote-mejores-alquileres-precios-y-donde-reservar/",
+      "destination": "/es/trip-types/deportes-y-actividades-acuaticas/",
+      "permanent": true
+    },
+    {
+      "source": "/es/las-25-mejores-cosas-que-hacer-en-lanzarote-guia-2026/",
+      "destination": "/es/guias/best-excursions-in-lanzarote/",
+      "permanent": true
+    },
+    {
+      "source": "/es/las-mejores-excursiones-en-barco-en-lanzarote-cruceros-en-catamaran-paseos-con-delfines-y-puestas-de-sol/",
+      "destination": "/es/trip-types/excursiones-en-barco-por-lanzarote/",
+      "permanent": true
+    },
+    {
+      "source": "/es/las-mejores-excursiones-en-lanzarote-las-15-mejores-visitas-guiadas-que-no-te-puedes-perder/",
+      "destination": "/es/guias/best-excursions-in-lanzarote/",
+      "permanent": true
+    },
+    {
+      "source": "/es/lista-de-deseos/",
+      "destination": "https://book.excursionsticketsdirect.com/es/lista-de-deseos/",
+      "permanent": true
+    },
+    {
+      "source": "/es/lista-de-visitas/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/location/costa-teguise-es/page/2/",
+      "destination": "/es/excursiones-desde/costa-teguise/",
+      "permanent": true
+    },
+    {
+      "source": "/es/location/lanzarote-es/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/location/lanzarote-es/arrecife-es/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/location/lanzarote-es/caleta-de-famara-es/",
+      "destination": "/es/destinations/lanzarote-es/caleta-de-famara-es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/location/lanzarote-es/costa-teguise-es/",
+      "destination": "/es/excursiones-desde/costa-teguise/",
+      "permanent": true
+    },
+    {
+      "source": "/es/location/lanzarote-es/costa-teguise-es/page/2/",
+      "destination": "/es/excursiones-desde/costa-teguise/",
+      "permanent": true
+    },
+    {
+      "source": "/es/location/lanzarote-es/orzola-es/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/location/lanzarote-es/playa-blanca-es/",
+      "destination": "/es/excursiones-desde/playa-blanca/",
+      "permanent": true
+    },
+    {
+      "source": "/es/location/lanzarote-es/playa-honda-es/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/location/lanzarote-es/playa-honda-es/page/2/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/location/lanzarote-es/puerto-calero-es/",
+      "destination": "/es/destinations/lanzarote-es/puerto-calero-es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/location/lanzarote-es/puerto-del-carmen-es/",
+      "destination": "/es/excursiones-desde/puerto-del-carmen/",
+      "permanent": true
+    },
+    {
+      "source": "/es/location/lanzarote-es/puerto-del-carmen-es/page/2/",
+      "destination": "/es/excursiones-desde/puerto-del-carmen/",
+      "permanent": true
+    },
+    {
+      "source": "/es/location/lanzarote-es/uga-es/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/location/lanzarote-es/yaiza-es/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/location/lanzarote/arrecife/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/location/lanzarote/puerto-calero/",
+      "destination": "/es/destinations/lanzarote-es/puerto-calero-es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/location/lanzarote/yaiza/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/location/playa-blanca-es/page/2/",
+      "destination": "/es/excursiones-desde/playa-blanca/",
+      "permanent": true
+    },
+    {
+      "source": "/es/mi-cuenta-afiliados/",
+      "destination": "https://book.excursionsticketsdirect.com/es/mi-cuenta-afiliados/",
+      "permanent": true
+    },
+    {
+      "source": "/es/mi-cuenta/",
+      "destination": "https://book.excursionsticketsdirect.com/es/mi-cuenta/",
+      "permanent": true
+    },
+    {
+      "source": "/es/pedido/",
+      "destination": "https://book.excursionsticketsdirect.com/es/pedido/",
+      "permanent": true
+    },
+    {
+      "source": "/es/playas-de-papagayo-lanzarote-como-visitarlas-mejores-excursiones-y-paseos-en-barco/",
+      "destination": "/es/destinations/lanzarote-es/papagayo-playa/",
+      "permanent": true
+    },
+    {
+      "source": "/es/politica-de-cookies/",
+      "destination": "https://book.excursionsticketsdirect.com/es/politica-de-cookies/",
+      "permanent": true
+    },
+    {
+      "source": "/es/politica-de-privacidad/",
+      "destination": "https://book.excursionsticketsdirect.com/es/politica-de-privacidad/",
+      "permanent": true
+    },
+    {
+      "source": "/es/pongase-en-contacto-con/",
+      "destination": "/es/contacto/",
+      "permanent": true
+    },
+    {
+      "source": "/es/quienes-somos/",
+      "destination": "/es/sobre-nosotros/",
+      "permanent": true
+    },
+    {
+      "source": "/es/resultado-de-la-busqueda/",
+      "destination": "https://book.excursionsticketsdirect.com/es/resultado-de-la-busqueda/",
+      "permanent": true
+    },
+    {
+      "source": "/es/seleccion-de-la-fecha-de-salida-del-segundo-viaje/",
+      "destination": "https://book.excursionsticketsdirect.com/es/seleccion-de-la-fecha-de-salida-del-segundo-viaje/",
+      "permanent": true
+    },
+    {
+      "source": "/es/tipos-de-viaje/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/tour_duration/1-4-horas/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/tour_duration/4-horas-a-dia-completo/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/tour_duration/hasta-1-hora/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/tour_language/aleman/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/tour_language/espanol/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/tour_language/frances/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/tour_language/ingles/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/trip-difficulty/facil-adrenalina/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/trip-difficulty/facil/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/trip-difficulty/media/",
+      "destination": "/es/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/es/trip/4-seater-buggy-tour-50-off-road/",
+      "destination": "/es/trip/excursion-en-buggy-de-4-plazas-50-fuera-de-carretera/",
+      "permanent": true
+    },
+    {
+      "source": "/es/trip/descubrir-lanzarote-y-la-isla-de-lobos/",
+      "destination": "/es/trip/excursion-isla-de-lobos-y-lanzarote/",
+      "permanent": true
+    },
+    {
+      "source": "/es/trip/excursion-buggy-todoterreno-3-horas-lanzarote/",
+      "destination": "/es/trip/excursion-en-buggy-desde-costa-teguise-lanzarote-3-horas/",
+      "permanent": true
+    },
+    {
+      "source": "/es/trip/excursion-en-buggy-costa-teguise/",
+      "destination": "/es/trip/excursion-en-buggy-desde-costa-teguise-lanzarote-3-horas/",
+      "permanent": true
+    },
+    {
+      "source": "/es/trip/excursion-en-buggy-todoterreno-por-los-volcanes-con-recogida-incluida-2-horas/",
+      "destination": "/es/trip/excursion-en-buggy-costa-teguise-2-horas/",
+      "permanent": true
+    },
+    {
+      "source": "/es/trip/la-graciosa-all-inclusive-catamaran-cruise/",
+      "destination": "/es/trip/i-love-la-graciosa-crucero-en-catamaran/",
+      "permanent": true
+    },
+    {
+      "source": "/es/trip/lanzarote-al-completo/",
+      "destination": "/es/trip/experiencia-completa-en-lanzarote/",
+      "permanent": true
+    },
+    {
+      "source": "/es/trip/lanzarote-volcanoes-dolphins/",
+      "destination": "/es/trip/excursion-volcanes-y-delfines-al-atardecer/",
+      "permanent": true
+    },
+    {
+      "source": "/es/trip/mini-crucero-de-catamaran-de-playa-blanca-a-playa-papagayo/",
+      "destination": "/es/trip/mini-crucero-en-catamaran-de-playa-blanca-a-playa-papagayo/",
+      "permanent": true
+    },
+    {
+      "source": "/es/trip/pruebe-buceo-moto-acuatica/",
+      "destination": "/es/trip/bautismo-de-buceo-y-alquiler-de-moto-de-agua-en-lanzarote/",
+      "permanent": true
+    },
+    {
+      "source": "/es/trip/safari-en-moto-acuatica/",
+      "destination": "/es/trip/excursion-en-moto-acuatica-de-40-minutos-una-aventura-inolvidable-en-lanzarote/",
+      "permanent": true
+    },
+    {
+      "source": "/es/trip/tour-volcan-timanfaya/",
+      "destination": "/es/trip/excursion-al-volcan-timanfaya/",
+      "permanent": true
+    },
+    {
+      "source": "/es/trip/tour-volcanes-medio-dia/",
+      "destination": "/es/trip/excursion-corta-volcanes-sur-lanzarote/",
+      "permanent": true
+    },
+    {
+      "source": "/es/trip/visita-de-medio-dia-a-los-volcanes/",
+      "destination": "/es/trip/excursion-de-medio-dia-a-los-volcanes/",
+      "permanent": true
+    },
+    {
+      "source": "/es/visitas-y-eventos-privados/",
+      "destination": "/es/trip-types/tours-privados-y-alquiler-de-barcos/",
+      "permanent": true
+    },
+    {
+      "source": "/excursions-tickets-direct-cart/",
+      "destination": "https://book.excursionsticketsdirect.com/excursions-tickets-direct-cart/",
+      "permanent": true
+    },
+    {
+      "source": "/excursions-tickets-direct-sitemap/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/formulario-e-ticket/",
+      "destination": "https://book.excursionsticketsdirect.com/formulario-e-ticket/",
+      "permanent": true
+    },
+    {
+      "source": "/gsim-europe-clients/",
+      "destination": "https://book.excursionsticketsdirect.com/gsim-europe-clients/",
+      "permanent": true
+    },
+    {
+      "source": "/how-to-explore-la-graciosa-in-lanzarote-best-excursions-catamaran-cruises/",
+      "destination": "/destinations/la-graciosa/",
+      "permanent": true
+    },
+    {
+      "source": "/jet-ski-lanzarote-best-prices-routes-everything-you-need-to-know-2026-guide/",
+      "destination": "/trip-types/water-sports-activities/",
+      "permanent": true
+    },
+    {
+      "source": "/jet-ski-lanzarote-best-rentals-prices-where-to-book/",
+      "destination": "/trip-types/water-sports-activities/",
+      "permanent": true
+    },
+    {
+      "source": "/jet-ski-lanzarote-best-tours-prices-routes-everything-you-need-to-know-2026-guide/",
+      "destination": "/trip-types/water-sports-activities/",
+      "permanent": true
+    },
+    {
+      "source": "/la-graciosa-day-trip-an-is-it-worth-it/",
+      "destination": "/destinations/la-graciosa/",
+      "permanent": true
+    },
+    {
+      "source": "/la-graciosa-day-trip-from-lanzarote-ferry-catamaran-guide/",
+      "destination": "/destinations/la-graciosa/",
+      "permanent": true
+    },
+    {
+      "source": "/la-graciosa-day-trip-from-lanzarote-is-it-worth-it/",
+      "destination": "/destinations/la-graciosa/",
+      "permanent": true
+    },
+    {
+      "source": "/lanzarote-buggy-tour-the-ultimate-off-road-adventure/",
+      "destination": "/trip-types/buggies-lanzarote/",
+      "permanent": true
+    },
+    {
+      "source": "/lanzarote-excursions/fuerteventura-delights-day-trip/",
+      "destination": "/trip/fuerteventura-delight/",
+      "permanent": true
+    },
+    {
+      "source": "/lanzarote-guide/",
+      "destination": "/guides/best-excursions-in-lanzarote/",
+      "permanent": true
+    },
+    {
+      "source": "/lanzarote-volcano-buggy-tour-the-ultimate-off-road-adventure-across-timanfaya-landscapes/",
+      "destination": "/trip-types/buggies-lanzarote/",
+      "permanent": true
+    },
+    {
+      "source": "/legal-notice/",
+      "destination": "https://book.excursionsticketsdirect.com/legal-notice/",
+      "permanent": true
+    },
+    {
+      "source": "/location/lanzarote/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/location/lanzarote/arrecife/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/location/lanzarote/caleta-de-famara/",
+      "destination": "/destinations/lanzarote/caleta-de-famara/",
+      "permanent": true
+    },
+    {
+      "source": "/location/lanzarote/costa-teguise/",
+      "destination": "/excursions-from/costa-teguise/",
+      "permanent": true
+    },
+    {
+      "source": "/location/lanzarote/costa-teguise/page/2/",
+      "destination": "/excursions-from/costa-teguise/",
+      "permanent": true
+    },
+    {
+      "source": "/location/lanzarote/orzola/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/location/lanzarote/playa-blanca/",
+      "destination": "/excursions-from/playa-blanca/",
+      "permanent": true
+    },
+    {
+      "source": "/location/lanzarote/playa-blanca/page/2/",
+      "destination": "/excursions-from/playa-blanca/",
+      "permanent": true
+    },
+    {
+      "source": "/location/lanzarote/playa-honda/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/location/lanzarote/playa-honda/page/2/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/location/lanzarote/puerto-calero/",
+      "destination": "/destinations/lanzarote/puerto-calero/",
+      "permanent": true
+    },
+    {
+      "source": "/location/lanzarote/puerto-del-carmen/",
+      "destination": "/excursions-from/puerto-del-carmen/",
+      "permanent": true
+    },
+    {
+      "source": "/location/lanzarote/puerto-del-carmen/page/2/",
+      "destination": "/excursions-from/puerto-del-carmen/",
+      "permanent": true
+    },
+    {
+      "source": "/location/lanzarote/uga/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/location/lanzarote/yaiza/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/location/playa-blanca/page/2/",
+      "destination": "/excursions-from/playa-blanca/",
+      "permanent": true
+    },
+    {
+      "source": "/lost-password-affiliates/",
+      "destination": "https://book.excursionsticketsdirect.com/lost-password-affiliates/",
+      "permanent": true
+    },
+    {
+      "source": "/lost-password/",
+      "destination": "https://book.excursionsticketsdirect.com/lost-password/",
+      "permanent": true
+    },
+    {
+      "source": "/my-account-2/",
+      "destination": "https://book.excursionsticketsdirect.com/my-account-2/",
+      "permanent": true
+    },
+    {
+      "source": "/my-account/",
+      "destination": "https://book.excursionsticketsdirect.com/my-account/",
+      "permanent": true
+    },
+    {
+      "source": "/papagayo-beaches-how-to-visit-best-tours-boat-trips/",
+      "destination": "/destinations/lanzarote/papagayo-beaches-2/",
+      "permanent": true
+    },
+    {
+      "source": "/papagayo-beaches-lanzarote-how-to-Visit-best-tours-boat-trips/",
+      "destination": "/destinations/lanzarote/papagayo-beaches-2/",
+      "permanent": true
+    },
+    {
+      "source": "/papagayo-beaches-lanzarote-how-to-visit-best-top-boat-trips/",
+      "destination": "/destinations/lanzarote/papagayo-beaches-2/",
+      "permanent": true
+    },
+    {
+      "source": "/papagayo-beaches-lanzarote-how-to-visit-best-tour-boat-trips/",
+      "destination": "/destinations/lanzarote/papagayo-beaches-2/",
+      "permanent": true
+    },
+    {
+      "source": "/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/",
+      "destination": "/destinations/lanzarote/papagayo-beaches-2/",
+      "permanent": true
+    },
+    {
+      "source": "/papagayo-beaches-lanzarote/",
+      "destination": "/destinations/lanzarote/papagayo-beaches-2/",
+      "permanent": true
+    },
+    {
+      "source": "/papagayo-beaches-lanzarote/how-to-visit-best-tours-boat-trips/",
+      "destination": "/destinations/lanzarote/papagayo-beaches-2/",
+      "permanent": true
+    },
+    {
+      "source": "/papagayo-beaches-lanzarote/papagayo-beaches-lanzarote.d6067495.Attraction/",
+      "destination": "/destinations/lanzarote/papagayo-beaches-2/",
+      "permanent": true
+    },
+    {
+      "source": "/post/",
+      "destination": "/guides/",
+      "permanent": true
+    },
+    {
+      "source": "/privacy-policy/",
+      "destination": "https://book.excursionsticketsdirect.com/privacy-policy/",
+      "permanent": true
+    },
+    {
+      "source": "/private-tours-and-events/",
+      "destination": "/trip-types/private-tours-boat-hires/",
+      "permanent": true
+    },
+    {
+      "source": "/selection-of-the-departure-date-of-the-second-tour/",
+      "destination": "https://book.excursionsticketsdirect.com/selection-of-the-departure-date-of-the-second-tour/",
+      "permanent": true
+    },
+    {
+      "source": "/terms-and-conditions/",
+      "destination": "https://book.excursionsticketsdirect.com/terms-and-conditions/",
+      "permanent": true
+    },
+    {
+      "source": "/thank-you/",
+      "destination": "https://book.excursionsticketsdirect.com/thank-you/",
+      "permanent": true
+    },
+    {
+      "source": "/timanfaya-national-park-tour-best-ways-to-visit-the-volcanoes-in-lanzarote/",
+      "destination": "/destinations/lanzarote/timanfaya-volcano-national-park/",
+      "permanent": true
+    },
+    {
+      "source": "/tour-listing/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/tour_duration/1-to-4-hours-tour/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/tour_duration/4-hours-to-full-day-tour/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/tour_duration/up-to-1-hour/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/tour_language/english/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/tour_language/french/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/tour_language/german/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/tour_language/german/page/2/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/tour_language/spanish/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/travellers-information/",
+      "destination": "/faq/",
+      "permanent": true
+    },
+    {
+      "source": "/trip-difficulty/easy-adrenalin/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/trip-difficulty/easy/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/trip-difficulty/medium/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/trip-types/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/trip/buggy-tour-costa-teguise/",
+      "destination": "/trip/costa-teguise-buggy-tour-3-hours/",
+      "permanent": true
+    },
+    {
+      "source": "/trip/discover-lanzarote-lobos-island/",
+      "destination": "/trip/lobos-island-tour-from-lanzarote-lanzarote-and-lobos-island-excursion/",
+      "permanent": true
+    },
+    {
+      "source": "/trip/jetski-safari/",
+      "destination": "/trip/40-minute-jet-ski-tour-an-unforgettable-lanzarote-adventure/",
+      "permanent": true
+    },
+    {
+      "source": "/trip/lanzarote-volcanoes-amp-dolphins/",
+      "destination": "/trip/lanzarote-volcanoes-and-dolphins/",
+      "permanent": true
+    },
+    {
+      "source": "/trip/lazarote-grand-tour/",
+      "destination": "/trip/lanzarote-grand-tour/",
+      "permanent": true
+    },
+    {
+      "source": "/trip/off-road-buggy-tour-of-the-volcanoes-with-pick-up-2-hours/",
+      "destination": "/trip/costa-teguise-buggy-tour-2-hours/",
+      "permanent": true
+    },
+    {
+      "source": "/trip/off-road-buggy-tour-of-the-volcanoes-with-pick-up-3-hours/",
+      "destination": "/trip/costa-teguise-buggy-tour-3-hours/",
+      "permanent": true
+    },
+    {
+      "source": "/trip/page/2/",
+      "destination": "/trip/",
+      "permanent": true
+    },
+    {
+      "source": "/trip/private-boat-trip-papagayo-beaches-from-puerto-del-carmen/",
+      "destination": "/trip-types/private-tours-boat-hires/",
+      "permanent": true
+    },
+    {
+      "source": "/trip/super-buggy-tour-maverick-turbo-x3/",
+      "destination": "/trip/super-buggy-tour-lanzabuggy/",
+      "permanent": true
+    }
   ]
 }

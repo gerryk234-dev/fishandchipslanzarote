@@ -8,6 +8,7 @@
     "build": "node build.mjs",
     "preview": "node build.mjs && python3 -m http.server 8080 -d dist",
     "gbp": "node scripts/gbp-kit.mjs",
+    "redirects": "node scripts/redirect-map.mjs",
     "google": "node scripts/google-data.mjs",
     "dev": "node build.mjs && node scripts/dev-server.mjs"
   },
