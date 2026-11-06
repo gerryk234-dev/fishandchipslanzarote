@@ -49,14 +49,18 @@ export function loadCatalog(dataDir) {
       if (t.types.includes(272)) tags.push("pack");
       if (t.types.includes(269)) tags.push("nightlife");
       const es = !!t.path.es;
-      const both = (field) => ({ en: field.en, es: es && field.es != null && (Array.isArray(field.es) ? field.es.length : field.es) ? field.es : field.en });
+      // de/it/fr have no source content yet, so they fall back to English (staff translate later).
+      const EXTRA = ["de", "it", "fr"];
+      const has = (v) => v != null && (Array.isArray(v) ? v.length : v);
+      const both = (field) => { const o = { en: field.en, es: es && has(field.es) ? field.es : field.en }; for (const l of EXTRA) o[l] = has(field[l]) ? field[l] : field.en; return o; };
+      const oneline = (field) => { const o = { en: field.en, es: es && field.es ? field.es : field.en }; for (const l of EXTRA) o[l] = field[l] || field.en; return o; };
       return {
         id: t.id,
         slug: t.slug,
         path: t.path,
         hasEs: es,
-        name: { en: t.name.en, es: es && t.name.es ? t.name.es : t.name.en },
-        seo: { en: t.seo.en, es: es && t.seo.es ? t.seo.es : t.seo.en },
+        name: oneline(t.name),
+        seo: both(t.seo),
         overview: both(t.overview),
         includes: both(t.includes),
         excludes: both(t.excludes),
