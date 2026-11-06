@@ -230,11 +230,6 @@
       "permanent": true
     },
     {
-      "source": "/cookie-policy/",
-      "destination": "https://book.excursionsticketsdirect.com/cookie-policy/",
-      "permanent": true
-    },
-    {
       "source": "/destination/",
       "destination": "/destinations/",
       "permanent": true
@@ -360,11 +355,6 @@
       "permanent": true
     },
     {
-      "source": "/es/aviso-legal/",
-      "destination": "https://book.excursionsticketsdirect.com/es/aviso-legal/",
-      "permanent": true
-    },
-    {
       "source": "/es/blog/",
       "destination": "/es/guias/",
       "permanent": true
@@ -462,11 +452,6 @@
     {
       "source": "/es/clientes-de-gsim-europa/",
       "destination": "https://book.excursionsticketsdirect.com/es/clientes-de-gsim-europa/",
-      "permanent": true
-    },
-    {
-      "source": "/es/condiciones-generales/",
-      "destination": "https://book.excursionsticketsdirect.com/es/condiciones-generales/",
       "permanent": true
     },
     {
@@ -652,16 +637,6 @@
     {
       "source": "/es/pedido/",
       "destination": "https://book.excursionsticketsdirect.com/es/pedido/",
-      "permanent": true
-    },
-    {
-      "source": "/es/politica-de-cookies/",
-      "destination": "https://book.excursionsticketsdirect.com/es/politica-de-cookies/",
-      "permanent": true
-    },
-    {
-      "source": "/es/politica-de-privacidad/",
-      "destination": "https://book.excursionsticketsdirect.com/es/politica-de-privacidad/",
       "permanent": true
     },
     {
@@ -855,11 +830,6 @@
       "permanent": true
     },
     {
-      "source": "/legal-notice/",
-      "destination": "https://book.excursionsticketsdirect.com/legal-notice/",
-      "permanent": true
-    },
-    {
       "source": "/location/lanzarote/",
       "destination": "/trip/",
       "permanent": true
@@ -1000,11 +970,6 @@
       "permanent": true
     },
     {
-      "source": "/privacy-policy/",
-      "destination": "https://book.excursionsticketsdirect.com/privacy-policy/",
-      "permanent": true
-    },
-    {
       "source": "/private-tours-and-events/",
       "destination": "/trip-types/private-tours-boat-hires/",
       "permanent": true
@@ -1012,11 +977,6 @@
     {
       "source": "/selection-of-the-departure-date-of-the-second-tour/",
       "destination": "https://book.excursionsticketsdirect.com/selection-of-the-departure-date-of-the-second-tour/",
-      "permanent": true
-    },
-    {
-      "source": "/terms-and-conditions/",
-      "destination": "https://book.excursionsticketsdirect.com/terms-and-conditions/",
       "permanent": true
     },
     {

@@ -27,7 +27,7 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 | F2 | Booking/payment integration | not started | Owner chose checkout in the new site (all 5 languages). Blocked on: which system holds the booking of record (WP Travel Engine and/or BookingMyTour), Stripe keys, and a test plan before production |
 | F3 | Meeting / collection points | blocked | Data is in BookingMyTour behind a login; waiting for an export (Excel/CSV/PDF) or screenshots |
 | F4 | Blog posts imported (13 EN + ES) | implemented | `npm run import:posts` → `src/data/posts.json`, built at their original URLs with BlogPosting + FAQ data; old misspelt variants 301 to the posts. Embedded WP tour cards replaced by live tour cards. Merging the overlapping posts (jet ski ×2, La Graciosa ×3, buggies ×3) is a later content decision for the owner |
-| F5 | Legal pages (privacy, cookies, terms, legal notice, cancellation; EN/ES) | not started | **Required**: WordPress will be removed, so these must live on the new site |
+| F5 | Legal pages (privacy, cookies, terms, legal notice; EN/ES) | implemented | `npm run import:legal` → `src/data/legal.json`, built at their original URLs, footer links on-site. No cancellation-policy page existed; free-cancellation terms live in the FAQ and terms |
 | G1 | Migration redirect map | implemented | `npm run build && npm run redirects`: all 682 old paths covered (276 exist, 246 exact 301s in `vercel.json`, `/wp-content/*` wildcard to the booking subdomain). Review list: `docs/migration/redirect-map.csv`. Re-run after importing blog/legal pages, so their temporary redirects drop out |
 | G2 | Launch checklist & rollback plan | not started | |
 | G3 | Production approval | not started | |
@@ -74,7 +74,7 @@ Everything that currently relies on WordPress needs a replacement before WordPre
 | Checkout + Stripe (wte-stripe), e-tickets, booking emails | New checkout in the site (decided), Stripe direct |
 | ETD admin app (staff manage, email, cancel bookings) | Staff tool in the booking system of record |
 | Affiliates (affiliate accounts, registration pages) | Decide: keep, replace or end |
-| Legal pages (privacy, cookies, terms, legal notice, cancellation) | Copy to the new site (F5 becomes required) |
+| Legal pages (privacy, cookies, terms, legal notice) | **Done**: imported to the new site (`import:legal`) |
 | Images under `/wp-content/` (blog images, ~160 URLs in Google) | Download into the site; the redirect map stops pointing at the booking subdomain |
 
 The **booking system of record** is the open decision: BookingMyTour (owner to confirm what it does; no public API found), a platform such as Bókun or FareHarbor, or a custom build (database + admin + Stripe).

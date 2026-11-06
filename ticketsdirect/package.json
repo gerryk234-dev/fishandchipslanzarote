@@ -6,6 +6,7 @@
   "scripts": {
     "import": "node scripts/import-wp.mjs",
     "import:posts": "node scripts/import-posts.mjs",
+    "import:legal": "node scripts/import-legal.mjs",
     "build": "node build.mjs",
     "preview": "node build.mjs && python3 -m http.server 8080 -d dist",
     "gbp": "node scripts/gbp-kit.mjs",

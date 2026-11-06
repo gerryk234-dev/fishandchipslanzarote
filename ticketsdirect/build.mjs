@@ -14,6 +14,13 @@ const reviews = JSON.parse(fs.readFileSync(path.join(here, "src/data/reviews.jso
 const reels = JSON.parse(fs.readFileSync(path.join(here, "src/data/reels.json"), "utf8")).items;
 const posts = fs.existsSync(path.join(here, "src/data/posts.json")) ? JSON.parse(fs.readFileSync(path.join(here, "src/data/posts.json"), "utf8")).posts : [];
 const promo = JSON.parse(fs.readFileSync(path.join(here, "src/data/promo.json"), "utf8"));
+const legalPages = fs.existsSync(path.join(here, "src/data/legal.json")) ? JSON.parse(fs.readFileSync(path.join(here, "src/data/legal.json"), "utf8")).pages : [];
+const legalBy = Object.fromEntries(legalPages.map((pg) => [pg.slug.en, pg]));
+function legalUrl(lang, enSlug) {
+  const pg = legalBy[enSlug];
+  if (!pg) return `${BOOK}/${enSlug}/`;
+  return lang === "es" && pg.slug.es ? `/es/${pg.slug.es}/` : `/${pg.slug.en}/`;
+}
 const promoLive = () => promo.active && promo.code && (!promo.expires || promo.expires >= new Date().toISOString().slice(0, 10));
 // Old trip URLs that the live site already redirected, so blog links to them still find their tour.
 const oldTripTo = Object.fromEntries(JSON.parse(fs.readFileSync(path.join(here, "src/data/migration/old-urls.json"), "utf8")).paths.filter((x) => x.liveTo).map((x) => [x.path, x.liveTo]));
@@ -428,7 +435,6 @@ function header(lang, alt) {
 
 function footer(lang) {
   const L = T[lang];
-  const legal = (p) => `${BOOK}/${p}/`;
   return `<footer class="site-foot"><div class="wrap foot-grid">
   <div><p class="foot-logo"><img src="/assets/brand/logo-round-96.webp" alt="Excursions Tickets Direct" width="72" height="72" loading="lazy"><img src="/assets/brand/logo-header.png" alt="" width="167" height="44" loading="lazy"></p>
     <p>${esc(L.heritage)}</p>
@@ -439,7 +445,7 @@ function footer(lang) {
   <div><h2>Tickets Direct</h2><ul><li><a href="${url(lang, "about")}">${L.nav.about}</a></li><li><a href="${url(lang, "offices")}">${L.nav.offices}</a></li><li><a href="${url(lang, "faq")}">${L.faqTitle}</a></li><li><a href="${url(lang, "contact")}">${L.contact}</a></li><li><a href="${url(lang, "guide")}">${L.nav.guides}</a></li><li><a href="${url(lang, "reels")}">${L.reelsNav}</a></li><li><a href="${url(lang, "app")}">${L.app.nav}</a></li></ul>
     <h2>${L.followUs}</h2><ul class="social">${Object.entries(site.social).filter(([, v]) => v).map(([k, v]) => `<li><a href="${v}" rel="noopener" target="_blank">${k[0].toUpperCase() + k.slice(1)}</a></li>`).join("")}</ul></div>
 </div>
-<div class="wrap foot-legal"><p>© ${new Date().getFullYear()} ${esc(site.name)} · <a href="${legal("cancellation-policy")}">${L.cancellation}</a> · <a href="${legal("terms-and-conditions")}">${L.terms}</a> · <a href="${legal("privacy-policy")}">${L.privacy}</a> · <a href="${legal("cookie-policy")}">${L.cookies}</a> · <a href="${legal("legal-notice")}">${L.legal}</a></p></div>
+<div class="wrap foot-legal"><p>© ${new Date().getFullYear()} ${esc(site.name)} · <a href="${legalUrl(lang, "terms-and-conditions")}">${L.terms}</a> · <a href="${legalUrl(lang, "privacy-policy")}">${L.privacy}</a> · <a href="${legalUrl(lang, "cookie-policy")}">${L.cookies}</a> · <a href="${legalUrl(lang, "legal-notice")}">${L.legal}</a></p></div>
 </footer>`;
 }
 
@@ -833,6 +839,19 @@ ${others.length ? `<section class="wrap section"><h2>${L.blog}</h2><div class="g
   });
 }
 
+function legalPage(lang, pg) {
+  const L = T[lang];
+  const slug = lang === "es" && pg.slug.es ? pg.slug.es : pg.slug.en;
+  const pth = lang === "es" ? `/es/${slug}/` : `/${slug}/`;
+  const alt = { en: `/${pg.slug.en}/`, es: pg.slug.es ? `/es/${pg.slug.es}/` : null };
+  const title = pg.title[lang] || pg.title.en;
+  const bc = breadcrumbs(lang, [[title, pth]]);
+  const body = `<div class="wrap">${bc.html}</div>
+<article class="wrap prose-wrap"><header class="page-head"><h1>${esc(title)}</h1><p class="byline">${L.updated} <time datetime="${pg.modified}">${pg.modified}</time></p></header>
+<div class="prose">${pg.html[lang] || pg.html.en}</div></article>`;
+  page({ lang, path: pth, alt, title: `${title} | ${site.name}`, description: `${title} — ${site.name}, Lanzarote.`, body, ld: [bc.ld] });
+}
+
 function toursIndex(lang) {
   const L = T[lang];
   const alt = altOf("tours");
@@ -1114,6 +1133,7 @@ for (const lang of LANGS) {
   aboutPage(lang);
   faqPage(lang);
   contactPage(lang);
+  legalPages.forEach((pg) => (lang === "en" || pg.slug.es) && legalPage(lang, pg));
   appPage(lang);
 }
 notFound();

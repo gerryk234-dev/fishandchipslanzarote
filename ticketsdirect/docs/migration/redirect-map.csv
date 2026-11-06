@@ -36,7 +36,6 @@ from,to,rule
 /category/what-to-do-in-lanzarote/papagayo-beaches/,/destinations/lanzarote/papagayo-beaches-2/,archive
 /checkout/,https://book.excursionsticketsdirect.com/checkout/,wordpress
 /contact-us/,/contact/,page
-/cookie-policy/,https://book.excursionsticketsdirect.com/cookie-policy/,legal (on WordPress until copied)
 /destination/,/destinations/,archive
 /destinations/lanzarote-es/haria-1000-palm-trees-lanzarote-es/,/destinations/lanzarote/haria-1000-palm-trees-lanzarote-es/,place
 /destinations/papagayo-beaches-2/,/destinations/lanzarote/papagayo-beaches-2/,place
@@ -62,7 +61,6 @@ from,to,rule
 /es/afiliarse/,https://book.excursionsticketsdirect.com/es/afiliarse/,wordpress
 /es/all-tours/,/es/trip/,archive
 /es/author/difundete/,/es/guias/,blog
-/es/aviso-legal/,https://book.excursionsticketsdirect.com/es/aviso-legal/,legal (on WordPress until copied)
 /es/blog/,/es/guias/,blog
 /es/category/buggies-en-lanzarote/,/es/trip-types/aventuras-y-safaris/,archive
 /es/category/excursiones-de-aventura-en-lanzarote/,/es/trip-types/aventuras-y-safaris/,archive
@@ -83,7 +81,6 @@ from,to,rule
 /es/category/recorridos-en-autobus/,/es/trip-types/lanzarote-bus-tours-es/,archive
 /es/category/visitas-guiadas/,/es/trip-types/lanzarote-bus-tours-es/,archive
 /es/clientes-de-gsim-europa/,https://book.excursionsticketsdirect.com/es/clientes-de-gsim-europa/,wordpress
-/es/condiciones-generales/,https://book.excursionsticketsdirect.com/es/condiciones-generales/,legal (on WordPress until copied)
 /es/destinations/costa-teguise/,/es/destinations/lanzarote-es/costa-teguise/,place
 /es/destinations/fuerteventura-es/dunas-corralejo/,/es/destinations/fuerteventura-es/dunas-de-corralejo/,place
 /es/destinations/lagomar-museum-es/,/es/destinations/lanzarote-es/lagomar-museum-es/,place
@@ -121,8 +118,6 @@ from,to,rule
 /es/mi-cuenta-afiliados/,https://book.excursionsticketsdirect.com/es/mi-cuenta-afiliados/,wordpress
 /es/mi-cuenta/,https://book.excursionsticketsdirect.com/es/mi-cuenta/,wordpress
 /es/pedido/,https://book.excursionsticketsdirect.com/es/pedido/,wordpress
-/es/politica-de-cookies/,https://book.excursionsticketsdirect.com/es/politica-de-cookies/,legal (on WordPress until copied)
-/es/politica-de-privacidad/,https://book.excursionsticketsdirect.com/es/politica-de-privacidad/,legal (on WordPress until copied)
 /es/pongase-en-contacto-con/,/es/contacto/,page
 /es/quienes-somos/,/es/sobre-nosotros/,page
 /es/resultado-de-la-busqueda/,https://book.excursionsticketsdirect.com/es/resultado-de-la-busqueda/,wordpress
@@ -161,7 +156,6 @@ from,to,rule
 /la-graciosa-day-trip-an-is-it-worth-it/,/la-graciosa-day-trip-from-lanzarote-is-it-worth-it/,blog variant
 /lanzarote-excursions/fuerteventura-delights-day-trip/,/trip/fuerteventura-delight/,old trip
 /lanzarote-guide/,/guides/best-excursions-in-lanzarote/,blog topic
-/legal-notice/,https://book.excursionsticketsdirect.com/legal-notice/,legal (on WordPress until copied)
 /location/lanzarote/,/trip/,archive
 /location/lanzarote/arrecife/,/trip/,archive
 /location/lanzarote/caleta-de-famara/,/destinations/lanzarote/caleta-de-famara/,place
@@ -190,10 +184,8 @@ from,to,rule
 /papagayo-beaches-lanzarote/how-to-visit-best-tours-boat-trips/,/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/,blog variant
 /papagayo-beaches-lanzarote/papagayo-beaches-lanzarote.d6067495.Attraction/,/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/,blog variant
 /post/,/guides/,blog
-/privacy-policy/,https://book.excursionsticketsdirect.com/privacy-policy/,legal (on WordPress until copied)
 /private-tours-and-events/,/trip-types/private-tours-boat-hires/,page
 /selection-of-the-departure-date-of-the-second-tour/,https://book.excursionsticketsdirect.com/selection-of-the-departure-date-of-the-second-tour/,wordpress
-/terms-and-conditions/,https://book.excursionsticketsdirect.com/terms-and-conditions/,legal (on WordPress until copied)
 /thank-you/,https://book.excursionsticketsdirect.com/thank-you/,wordpress
 /tour-listing/,/trip/,archive
 /tour_duration/1-to-4-hours-tour/,/trip/,archive
