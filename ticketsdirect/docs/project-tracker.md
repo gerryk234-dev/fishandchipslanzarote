@@ -19,7 +19,7 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 | D1 | Prioritised action list | not started | After B/C |
 | E1 | Architecture, content and technical plan | in progress | Rebuild already structured; plan doc pending |
 | E2 | Analytics plan (incl. chatgpt.com referral segment) | not started | |
-| E3 | Booking architecture evaluation | in progress | **Critical** now that WordPress goes: choose the booking system of record (BookingMyTour vs Bókun/FareHarbor vs custom) |
+| E3 | Booking architecture evaluation | implemented | `audit/04-booking-architecture.md`. Recommends launch with request-and-confirm (Stripe deposit, no faked availability), settle supplier API question with First Minute/Lineas Romero, own-brand tours on Rezdy/Bokun with Viator+GYG channel manager |
 | E4 | Add German, Italian, French (owner request 2026-11-02) | not started | Owner (2026-11-06): staff speak DE/IT/FR and will review; **checkout must be in the customer's language** |
 | B3 | GetYourGuide / Viator analysis | blocked | Needs Viator Partner API key and/or owner's supplier accounts, or a browser on the owner's computer |
 | F1 | Rebuild in dev (static EN/ES, schema, hreflang, PWA, agent) | implemented | `ticketsdirect/`, preview artifact |
