@@ -19,14 +19,14 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 | D1 | Prioritised action list | not started | After B/C |
 | E1 | Architecture, content and technical plan | in progress | Rebuild already structured; plan doc pending |
 | E2 | Analytics plan (incl. chatgpt.com referral segment) | not started | |
-| E3 | Booking architecture evaluation (WTE vs FareHarbor vs multi-supplier) | not started | |
+| E3 | Booking architecture evaluation | in progress | **Critical** now that WordPress goes: choose the booking system of record (BookingMyTour vs Bókun/FareHarbor vs custom) |
 | E4 | Add German, Italian, French (owner request 2026-11-02) | not started | Owner (2026-11-06): staff speak DE/IT/FR and will review; **checkout must be in the customer's language** |
 | B3 | GetYourGuide / Viator analysis | blocked | Needs Viator Partner API key and/or owner's supplier accounts, or a browser on the owner's computer |
 | F1 | Rebuild in dev (static EN/ES, schema, hreflang, PWA, agent) | implemented | `ticketsdirect/`, preview artifact |
 | F2 | Booking/payment integration | not started | Owner chose checkout in the new site (all 5 languages). Blocked on: which system holds the booking of record (WP Travel Engine and/or BookingMyTour), Stripe keys, and a test plan before production |
 | F3 | Meeting / collection points | blocked | Data is in BookingMyTour behind a login; waiting for an export (Excel/CSV/PDF) or screenshots |
 | F4 | Blog posts imported (13 EN + ES) | implemented | `npm run import:posts` → `src/data/posts.json`, built at their original URLs with BlogPosting + FAQ data; old misspelt variants 301 to the posts. Embedded WP tour cards replaced by live tour cards. Merging the overlapping posts (jet ski ×2, La Graciosa ×3, buggies ×3) is a later content decision for the owner |
-| F5 | Legal pages (privacy, cookies, terms, legal notice, cancellation; EN/ES) | implemented (interim) | They stay on WordPress at the booking subdomain, where checkout also runs; the new footer and the redirects point there. Copy them over only if the owner wants them on the main domain. If tracking is added to the new site, it needs a cookie banner |
+| F5 | Legal pages (privacy, cookies, terms, legal notice, cancellation; EN/ES) | not started | **Required**: WordPress will be removed, so these must live on the new site |
 | G1 | Migration redirect map | implemented | `npm run build && npm run redirects`: all 682 old paths covered (276 exist, 246 exact 301s in `vercel.json`, `/wp-content/*` wildcard to the booking subdomain). Review list: `docs/migration/redirect-map.csv`. Re-run after importing blog/legal pages, so their temporary redirects drop out |
 | G2 | Launch checklist & rollback plan | not started | |
 | G3 | Production approval | not started | |
@@ -61,6 +61,22 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 - The 5% discount code is shown on the site **only while it is active**.
 - Tickets Direct is connected to **First Minute** and **Líneas Romero**: ask both for a link or mention.
 - Pickup points and times are kept in **BookingMyTour** (bookingmytour.net, allowed in the environment 2026-11-07). The data sits behind a login with reCAPTCHA, so it needs an export from the owner or a decision on API access.
+
+## Owner decision (2026-11-07): WordPress is removed after launch
+
+Everything that currently relies on WordPress needs a replacement before WordPress is switched off:
+
+| Today in WordPress | Needed instead |
+|---|---|
+| Tour content, prices, packages (WP Travel Engine) → `npm run import` | A new source of truth for tours, editable by staff (booking platform's product data, or content files / a small admin) |
+| Availability and booked seats (`/api/availability` reads WP) | Availability from the booking system of record |
+| Checkout + Stripe (wte-stripe), e-tickets, booking emails | New checkout in the site (decided), Stripe direct |
+| ETD admin app (staff manage, email, cancel bookings) | Staff tool in the booking system of record |
+| Affiliates (affiliate accounts, registration pages) | Decide: keep, replace or end |
+| Legal pages (privacy, cookies, terms, legal notice, cancellation) | Copy to the new site (F5 becomes required) |
+| Images under `/wp-content/` (blog images, ~160 URLs in Google) | Download into the site; the redirect map stops pointing at the booking subdomain |
+
+The **booking system of record** is the open decision: BookingMyTour (owner to confirm what it does; no public API found), a platform such as Bókun or FareHarbor, or a custom build (database + admin + Stripe).
 
 ## Handover (2026-11-05)
 
