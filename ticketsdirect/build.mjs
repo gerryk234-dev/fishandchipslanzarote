@@ -876,7 +876,10 @@ function faqPage(lang) {
   const L = T[lang];
   const alt = altOf("faq");
   const bc = breadcrumbs(lang, [[L.faqTitle, alt[lang]]]);
-  const all = [...categories.flatMap((c) => c.faqs?.[lang] || []), ...guides.flatMap((g) => g[lang].faqs)];
+  const offers = lang === "en"
+    ? [["Do you offer group discounts?", "Yes. We offer group discounts, and private charters for events and large groups, on request. Message us on WhatsApp or visit any of our offices with your group size and dates."], ["Are there any special offers?", "Often, but they change. Examples: on some boat trips one adult pays the child price for every 4 people, and water park offers such as 2 adults + 1 child free or free drinks with entry. Ask in any office or on WhatsApp for this week's offers."], ["Do you match other sellers' prices?", "No. Our prices are set with the operators, and we put our savings into the offers above instead."]]
+    : [["¿Hacéis descuentos para grupos?", "Sí. Hacemos descuentos para grupos y chárteres privados para eventos y grupos grandes, bajo petición. Escríbenos por WhatsApp o visita cualquiera de nuestras oficinas con el tamaño del grupo y las fechas."], ["¿Tenéis ofertas especiales?", "A menudo, pero cambian. Por ejemplo: en algunas excursiones en barco, por cada 4 personas un adulto paga precio de niño, y en los parques acuáticos ofertas como 2 adultos + 1 niño gratis o bebidas gratis con la entrada. Pregunta en cualquier oficina o por WhatsApp por las ofertas de esta semana."], ["¿Igualáis los precios de otros vendedores?", "No. Nuestros precios se fijan con los operadores y ponemos el ahorro en las ofertas de arriba."]];
+  const all = [...offers, ...categories.flatMap((c) => c.faqs?.[lang] || []), ...guides.flatMap((g) => g[lang].faqs)];
   const seen = new Set();
   const uniq = all.filter(([q]) => (seen.has(q) ? false : seen.add(q)));
   const body = `<div class="wrap">${bc.html}</div><section class="wrap section page-head"><h1>${L.faqTitle}</h1><p class="lead">${esc(L.contactLead)}</p></section><div class="wrap">${faqBlock(lang, uniq, false)}</div>`;

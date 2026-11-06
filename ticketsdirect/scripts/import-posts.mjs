@@ -86,6 +86,8 @@ function cleanArticle(html) {
     if (allow[tag]) out += `<${close}${allow[tag]}>`;
   }
   out = out.replace(/<a>([\s\S]*?)<\/a>/g, "$1").replace(/\s+/g, " ");
+  // The offices don't match other sellers' prices (owner, 2026-11-06), so drop that old claim.
+  out = out.replace(/(<br>)?\s*\S{0,3}\s*(Best price guarantee|Mejor precio garantizado)\s*/gi, "");
   for (let i = 0; i < 3; i++) out = out.replace(/<(p|h2|h3|li|strong|em|a[^>]*)>\s*<\/(p|h2|h3|li|strong|em|a)>/g, "");
   return out.replace(/\s*(<\/?(?:p|h2|h3|ul|ol|li|table|thead|tbody|tr|blockquote)>)\s*/g, "$1").trim();
 }
@@ -93,7 +95,13 @@ function cleanArticle(html) {
 // Split Elementor markup into its widgets and keep the article parts as blocks.
 function blocks(html) {
   const starts = [...html.matchAll(/<div[^>]*data-widget_type="([^"]+)"[^>]*>/g)];
-  if (!starts.length) return [{ t: "html", html: cleanArticle(html) }];
+  if (!starts.length) {
+    // Older posts use the Gutenberg trips block instead of the Elementor widget.
+    const i = html.search(/<div class="wp-block-wptravelengine-trips/);
+    if (i < 0) return [{ t: "html", html: cleanArticle(html) }];
+    const paths = [...new Set([...html.slice(i).matchAll(/href=["']([^"']*\/trip\/[^"']+)["']/g)].map((x) => pathOf(x[1])))];
+    return [{ t: "html", html: cleanArticle(html.slice(0, i)) }, ...(paths.length ? [{ t: "tours", paths }] : [])];
+  }
   const out = [];
   starts.forEach((m, i) => {
     const type = m[1].split(".")[0];

@@ -313,7 +313,7 @@ export const guides = [
 <p>Tickets Direct has been selling excursions in Lanzarote since 2000 and grew out of Lineas Marítimas Romero, one of the island's best-known boat companies. We only work in Lanzarote, so every recommendation comes from people who live here.</p>`,
       faqs: [
         ["Is it safe to book Lanzarote excursions online?", "Yes, if the seller has a clear cancellation policy, a real address and a way to contact a person on the day. Tickets Direct has offices on the island and 24h WhatsApp support."],
-        ["Is it cheaper to book directly with a local agency?", "Often, because there is no international platform taking a commission. We also offer a lowest price guarantee."]
+        ["Is it cheaper to book directly with a local agency?", "Often, because there is no international platform taking a commission. Ask about our current offers and group discounts."]
       ]
     },
     es: {
@@ -341,7 +341,7 @@ export const guides = [
 <p>Tickets Direct vende excursiones en Lanzarote desde 2000 y nació de Líneas Marítimas Romero, una de las navieras más conocidas de la isla. Solo trabajamos en Lanzarote, así que cada recomendación viene de gente que vive aquí.</p>`,
       faqs: [
         ["¿Es seguro reservar excursiones en Lanzarote online?", "Sí, si el vendedor tiene una política de cancelación clara, una dirección real y una forma de contactar con una persona ese día. Tickets Direct tiene oficinas en la isla y atención 24 h por WhatsApp."],
-        ["¿Es más barato reservar directamente con una agencia local?", "Muchas veces sí, porque no hay una plataforma internacional cobrando comisión. Además ofrecemos garantía de mejor precio."]
+        ["¿Es más barato reservar directamente con una agencia local?", "Muchas veces sí, porque no hay una plataforma internacional cobrando comisión. Pregunta por nuestras ofertas actuales y descuentos para grupos."]
       ]
     }
   },

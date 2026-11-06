@@ -20,7 +20,7 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 | E1 | Architecture, content and technical plan | in progress | Rebuild already structured; plan doc pending |
 | E2 | Analytics plan (incl. chatgpt.com referral segment) | not started | |
 | E3 | Booking architecture evaluation (WTE vs FareHarbor vs multi-supplier) | not started | |
-| E4 | Add German, Italian, French (owner request 2026-11-02) | not started | Needs reviewers per language and a decision on checkout language |
+| E4 | Add German, Italian, French (owner request 2026-11-02) | not started | Owner (2026-11-06): staff speak DE/IT/FR and will review; **checkout must be in the customer's language** |
 | B3 | GetYourGuide / Viator analysis | blocked | Needs Viator Partner API key and/or owner's supplier accounts, or a browser on the owner's computer |
 | F1 | Rebuild in dev (static EN/ES, schema, hreflang, PWA, agent) | implemented | `ticketsdirect/`, preview artifact |
 | F2 | Booking/payment integration | blocked | Needs WP Application Password and Stripe keys in Vercel env |
@@ -48,6 +48,12 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 | C. Bajamar 26 profile confirmed as ours; added as office 11 | Website data | implemented |
 | Report Excursions Lanzarote PdC listing as permanently closed (only if verified) | Google Maps → Suggest an edit | not started |
 | Rename "Excursions Tickets Direct Puerto del Carmen Beach" to brand-first | Google Business Profile | not started |
+
+## Owner decisions (2026-11-06)
+
+- No price matching. "Lowest price guarantee" removed from the site, the assistant and imported posts.
+- Offers vary: some boat trips sometimes give 1 adult the child price per 4 people; water parks sometimes 2 adults + 1 child free or free drinks with entry. Group discounts and private charters for events on request. A 5% discount code exists (the code itself is not published).
+- Katfish Premium and Chillout Cruise stay "price on request". Highlights tour keeps its current price.
 
 ## Handover (2026-11-05)
 
