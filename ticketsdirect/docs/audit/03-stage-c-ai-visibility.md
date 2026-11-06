@@ -2,7 +2,7 @@
 
 **Test run:** by the owner in ChatGPT, answers pasted on 6 November 2026. These are single answers: ChatGPT varies with time, location and history, so this is a snapshot, not a ranking.
 
-**Not tested yet:** Perplexity, Google AI Overviews, and prompt 1 ("best excursions in Lanzarote and where to book").
+**Not tested yet:** Perplexity; prompt 1 in ChatGPT; prompt 4 (Timanfaya) in Google.
 
 ## Results
 
@@ -12,6 +12,19 @@
 | 3 | Staying in Playa Blanca — where to book in person and online? | **Yes: listed 1st, 2nd and 3rd for in-person booking** (Playa Blanca Port, Playa Dorada, Flamingo, with addresses and phones) | Online: Líneas Romero, lanzarote.com, GetYourGuide, Civitatis. **Your website is not listed** | Google Business Profiles (details match the profiles exactly) |
 | 4 | Timanfaya tour with pickup from Puerto del Carmen — price, who? | **No** (none of the 5 Puerto del Carmen offices) | Lanzarote Exklusiv South Tour €65/€49, Haqqi Tours ~€110, Trip Canarias Gran Tour €87/€55 | — |
 | 5 | (ES) Where to book with pickup in Costa Teguise? | **Yes**: Las Cucharas office listed 1st (4.4, 25 reviews), and excursionsticketsdirect.com/es/ 3rd online | Feeling Lanzarote Tours, Lonten Tours; online OKLanzarote, Civitatis. Price table taken **from OKLanzarote** | Google Business Profile + website |
+
+## Google (AI Overview), screenshots from the owner, 7 November 2026
+
+The AI Overviews were collapsed ("Show more" not opened), so only their first lines and the result blocks below them are recorded.
+
+| # | Prompt | Tickets Direct shown? | What Google showed |
+|---|---|---|---|
+| 1 | Best excursions in Lanzarote, where to book? | **Not in the visible part** | AI Overview cites Tripadvisor (+1 source). First results: **excursionslanzarote.com**, then lowcosttourslanzarote.com |
+| 2 | Best way to visit La Graciosa? | **Not in the visible part** | AI Overview: the 25–30 min ferry from Órzola. Next: a Reddit r/lanzarote thread on ferry companies |
+| 3 | Staying in Playa Blanca, where to book? | **Yes, first** | AI Overview's "where to book in person" starts with Tickets Direct; the Businesses block leads with **Tickets Direct Excursions Playa Blanca Port, 4.8 (84 reviews)** |
+| 5 | (ES) Where to book with pickup in Costa Teguise? | **Yes, first** | Places block leads with **Tickets Direct Excursions Costa Teguise Center, 4.7 (48 reviews)** |
+
+Google shows the same pattern as ChatGPT: you win the "book in person in my resort" questions through your Google profiles, and you're missing from the general "best excursions" and "La Graciosa" answers, where it cites excursionslanzarote.com, Tripadvisor and Reddit.
 
 ## What this shows
 

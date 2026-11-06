@@ -13,7 +13,7 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 | A6 | Traffic / ranking baseline | in progress | Search Console exported (16 months, git-ignored, summary given to owner in chat). GA4 **blocked**: enable *Google Analytics Data API* in Cloud project sunny-idiom-407419 |
 | B1 | Competitor matrix (direct, local, OTAs, Maps) | implemented | `audit/02-stage-b-competitors-and-questions.md` §1–4. GYG/Viator **blocked** (403); lanzarote.com, Lanzarote Information, Tripadvisor not allowed by network |
 | B2 | 20+ buying questions, classified | implemented | 27 questions, §5. Search volumes **blocked**: need Search Console or paid tool |
-| C1 | AI-search tests (5 prompts × ChatGPT, Perplexity, Google AI) | in progress | ChatGPT done for prompts 2–5 (`audit/03-stage-c-ai-visibility.md`). Perplexity, Google AI and prompt 1 still to run by the owner |
+| C1 | AI-search tests (5 prompts × ChatGPT, Perplexity, Google AI) | in progress | ChatGPT prompts 2–5 and Google prompts 1, 2, 3, 5 recorded (`audit/03-stage-c-ai-visibility.md`). Perplexity, ChatGPT prompt 1 and Google prompt 4 still to run |
 | C2 | Local pack / GBP audit (11 profiles) | implemented | `google-business-profiles.md` §7 (public data) |
 | C3 | Citations & backlink audit | blocked | Needs a paid tool for backlinks |
 | D1 | Prioritised action list | not started | After B/C |
