@@ -20,7 +20,7 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 | E1 | Architecture, content and technical plan | in progress | Rebuild already structured; plan doc pending |
 | E2 | Analytics plan (incl. chatgpt.com referral segment) | not started | |
 | E3 | Booking architecture evaluation | implemented | `audit/04-booking-architecture.md`. Tickets Direct is a pure intermediary (no own tours), so: launch with request-and-confirm + Stripe deposit (no faked availability), pursue supplier API/feed from BookingMyTour / First Minute / Lineas Romero, reseller platform (TourCMS/Rezdy) only if suppliers are on it |
-| E4 | Add German, Italian, French (owner request 2026-11-02) | not started | Owner (2026-11-06): staff speak DE/IT/FR and will review; **checkout must be in the customer's language** |
+| E4 | Add German, Italian, French | in progress | Research done (`audit/06-language-research.md`): in-market keywords + top questions per language. Generator is 2-language today; being refactored to be language-generic, German first, then IT/FR. Tour long-tail falls back to English pending staff review |
 | B3 | GetYourGuide / Viator analysis | blocked | Needs Viator Partner API key and/or owner's supplier accounts, or a browser on the owner's computer |
 | F1 | Rebuild in dev (static EN/ES, schema, hreflang, PWA, agent) | implemented | `ticketsdirect/`, preview artifact |
 | F6 | Discount-code banner (show only when active) | implemented | `src/data/promo.json`: set `active:true` + `code`, redeploy to show it on every page and in the assistant; `active:false` hides it. Code value not set (owner provides when running an offer) |
@@ -55,6 +55,10 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 - No price matching. "Lowest price guarantee" removed from the site, the assistant and imported posts.
 - Offers vary: some boat trips sometimes give 1 adult the child price per 4 people; water parks sometimes 2 adults + 1 child free or free drinks with entry. Group discounts and private charters for events on request. A 5% discount code exists (the code itself is not published).
 - Katfish Premium and Chillout Cruise stay "price on request". Highlights tour keeps its current price.
+
+## Booking flow (owner, 2026-11-07)
+
+Request-and-confirm, confirmed by the model: customer books + pays on the site → Tickets Direct receives a **booking number** → staff use an app to generate an **e-ticket** → e-ticket sent to the customer by **email and WhatsApp**. So the site must: take the booking + deposit/payment, create the booking record, show "confirmed within X hours / e-ticket to follow" (never "confirmed" instantly), and pass the booking to staff. E-ticket generation stays in the existing app for now.
 
 ## Owner decisions (2026-11-07)
 
