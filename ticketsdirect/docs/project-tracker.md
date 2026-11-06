@@ -16,7 +16,7 @@ Nothing below is live on excursionsticketsdirect.com yet. All rebuild work runs 
 | C1 | AI-search tests (5 prompts × ChatGPT, Perplexity, Google AI) | in progress | ChatGPT prompts 2–5 and Google prompts 1, 2, 3, 5 recorded (`audit/03-stage-c-ai-visibility.md`). Perplexity, ChatGPT prompt 1 and Google prompt 4 still to run |
 | C2 | Local pack / GBP audit (11 profiles) | implemented | `google-business-profiles.md` §7 (public data) |
 | C3 | Citations & backlink audit | blocked | Needs a paid tool for backlinks |
-| D1 | Prioritised action list | not started | After B/C |
+| D1 | Prioritised action list | implemented | `audit/05-stage-d-priorities.md`: A = live-site/profile wins now, B = launch blockers, C = post-launch growth |
 | E1 | Architecture, content and technical plan | in progress | Rebuild already structured; plan doc pending |
 | E2 | Analytics plan (incl. chatgpt.com referral segment) | not started | |
 | E3 | Booking architecture evaluation | implemented | `audit/04-booking-architecture.md`. Tickets Direct is a pure intermediary (no own tours), so: launch with request-and-confirm + Stripe deposit (no faked availability), pursue supplier API/feed from BookingMyTour / First Minute / Lineas Romero, reseller platform (TourCMS/Rezdy) only if suppliers are on it |
