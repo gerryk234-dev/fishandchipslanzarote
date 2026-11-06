@@ -6,7 +6,9 @@ Written 7 November 2026. This is the decision that unblocks taking bookings on t
 
 ## 1. The real situation
 
-Tickets Direct is mainly a **reseller / agent**: it sells excursions run by other operators (First Minute, Líneas Romero and others), and manages those bookings through **BookingMyTour**, which is **not Tickets Direct's system** and has **no API Tickets Direct controls**. It also has some own-brand tours.
+Tickets Direct is a **pure intermediary** — like GetYourGuide or Viator, but local with physical offices (owner, 7 Nov 2026). **It operates no tours of its own.** Every excursion is run by another operator (First Minute, Líneas Romero and others), and the bookings are managed through **BookingMyTour**, which is **not Tickets Direct's system**, is accessed only through a booking login, and has **no API Tickets Direct controls**.
+
+Because there is no own inventory, the usual "put your tours on a booking platform" path does not apply: there are no tours to load. The site's job is to **capture a sale and route it to the operator**, which the operator's system then fulfils.
 
 This matters because almost every tour-booking platform (FareHarbor, Bókun, Rezdy, TrekkSoft…) is built **operator-first**: it assumes *you own the inventory and set the availability*. A reseller's availability lives in the supplier's system. So the first decision is not "which platform" — it is **where the real-time availability and the confirmed booking live**.
 
@@ -27,7 +29,9 @@ Today both happen in the supplier's system (via BookingMyTour / WP Travel Engine
 
 **Key point:** you cannot show live availability for a tour whose seats you don't control, and you must never mark a booking "confirmed" before the operator's system actually holds it. (This is also a firm project rule.)
 
-## 3. Platform comparison (for Model B, and for selling on Viator/GetYourGuide)
+Because Tickets Direct holds no inventory, **Model B (own booking platform) does not apply** — there are no own tours to host. The realistic choices are **Model A now**, moving to **Model C** per supplier as access is granted. The platforms below matter only as a possible **agent/reseller layer** (Model C at scale) or if a supplier is already on one of these networks.
+
+## 3. Platform comparison (agent/reseller layer, or selling on Viator/GetYourGuide)
 
 All figures **verify with the vendor**. Owned-by-an-OTA matters: it buys cheaper distribution to that OTA but is lock-in.
 
@@ -49,9 +53,9 @@ Sources (third-party, treat as estimates): FareHarbor pricing [basecampadvertisi
 ## 4. Recommendation (phased, reversible)
 
 1. **Launch with Model A (request & confirm).** The new site already has the pieces: tour pages, a deposit model, WhatsApp. Add a Stripe deposit step and a clear "we confirm your booking within X hours" message. This lets the site take money and launch without any supplier API, and without ever faking availability. Build the booking record in a small database the site owns (so it survives WordPress being switched off).
-2. **In parallel, settle the supplier question.** Ask First Minute / Líneas Romero (you're connected to both) the one question that decides everything: *will they give availability + booking access (API or a feed) for the tours we resell?* If yes → Model C for those tours, live availability. If no → those tours stay request-and-confirm or move to a platform you control.
-3. **Put own-brand tours on a platform you own** (Rezdy or Bókun, leaning Rezdy for neutrality + agent model, or Bókun if Viator becomes your main extra channel). Use its channel manager to also sell on Viator and GetYourGuide — new bookings at no SEO cost while the new site's rankings grow.
-4. **Keep WordPress's job list covered** (see the tracker's "WordPress is removed" table): tour data source, availability, checkout, staff admin, legal pages, `/wp-content/` images. Model A + a small owned database + a platform for own tours covers these without WordPress.
+2. **In parallel, settle the supplier question.** Ask the people who run BookingMyTour, and First Minute / Líneas Romero (you're connected to both), the one question that decides everything: *will they give availability + booking access (API or a feed) for the tours we resell?* If yes → Model C, live availability, per supplier. If no → those tours stay request-and-confirm.
+3. **A reseller platform is a later option, not a launch need.** TourCMS (built for agents) or Rezdy's marketplace can pull supplier inventory *if the suppliers are on those networks* — worth raising with the suppliers, but it depends entirely on them, so it is not something to build the launch around.
+4. **Keep WordPress's job list covered** (see the tracker's "WordPress is removed" table): tour data source, availability, checkout, staff admin, legal pages, `/wp-content/` images. Model A + a small owned database covers checkout and the booking record without WordPress; tour content is kept in the site's own data files (already imported), refreshed when prices change.
 
 This avoids the two big risks: spending weeks building a custom booking engine before the model is settled, and launching something that shows fake availability.
 
@@ -59,8 +63,8 @@ This avoids the two big risks: spending weeks building a custom booking engine b
 
 | Needed | From whom | Why |
 |---|---|---|
-| Does First Minute / Líneas Romero offer availability + booking API/feed? | The suppliers (you're connected) | Decides Model A vs C for resold tours |
-| Which tours are own-brand vs resold, and who the operator is for each | Owner | Decides what can go on a platform you own |
+| Does BookingMyTour / First Minute / Líneas Romero offer availability + booking API/feed? | The suppliers (you're connected) | Decides Model A vs C for resold tours |
+| Who the operator is for each tour | Owner | Needed to route each booking to the right supplier |
 | Stripe account + keys | Owner (into a secure form, never chat) | To take the deposit/payment |
 | Confirmation rule per tour (how fast staff confirm; cut-offs) | Owner | For honest "confirmed within X hours" copy |
 | Pickup points & times | Owner (screenshots from BookingMyTour) | Needed on tour pages regardless of model |

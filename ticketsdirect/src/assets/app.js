@@ -466,3 +466,13 @@
   });
   $$(".chat-chips button", chat).forEach((b) => b.addEventListener("click", () => send(b.textContent)));
 })();
+
+// Discount banner: remember dismissal per code, so a new code shows again.
+(function () {
+  var bar = document.querySelector(".promo-bar");
+  if (!bar) return;
+  var key = "td_promo_" + (bar.getAttribute("data-promo") || "");
+  try { if (localStorage.getItem(key)) bar.hidden = true; } catch (e) {}
+  var x = bar.querySelector("[data-promo-x]");
+  if (x) x.addEventListener("click", function () { bar.hidden = true; try { localStorage.setItem(key, "1"); } catch (e) {} });
+})();

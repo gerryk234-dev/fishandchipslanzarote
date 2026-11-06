@@ -13,6 +13,8 @@ const { site, tours, enquiryTours, tourBy, categories, catBy, resorts, places, o
 const reviews = JSON.parse(fs.readFileSync(path.join(here, "src/data/reviews.json"), "utf8"));
 const reels = JSON.parse(fs.readFileSync(path.join(here, "src/data/reels.json"), "utf8")).items;
 const posts = fs.existsSync(path.join(here, "src/data/posts.json")) ? JSON.parse(fs.readFileSync(path.join(here, "src/data/posts.json"), "utf8")).posts : [];
+const promo = JSON.parse(fs.readFileSync(path.join(here, "src/data/promo.json"), "utf8"));
+const promoLive = () => promo.active && promo.code && (!promo.expires || promo.expires >= new Date().toISOString().slice(0, 10));
 // Old trip URLs that the live site already redirected, so blog links to them still find their tour.
 const oldTripTo = Object.fromEntries(JSON.parse(fs.readFileSync(path.join(here, "src/data/migration/old-urls.json"), "utf8")).paths.filter((x) => x.liveTo).map((x) => [x.path, x.liveTo]));
 
@@ -77,7 +79,7 @@ const T = {
     langs: "Languages", minAge: (n) => `Minimum age ${n}`, installApp: "Install app",
     bk: { option: "Option", date: "Date", checking: "Checking availability…", pickDate: "Choose a date", noDates: "No online dates right now: ask us on WhatsApp", total: "Total", depositToday: "Deposit today", onDay: "rest on the day", travellers: "Travellers", waBook: "Book on WhatsApp" },
     badges: { best: "Bestseller", family: "Family favourite" },
-    reelsTitle: "Watch before you book", reelsLead: "Real clips from our boats, buggies and tours.", reelsNav: "Reels", watchOn: "Watch on", bookThis: "Book this tour", subscribe: "Subscribe on YouTube", tourShorts: "Watch this tour",
+    reelsTitle: "Watch before you book", reelsLead: "Real clips from the excursions we sell.", reelsNav: "Reels", watchOn: "Watch on", bookThis: "Book this tour", subscribe: "Subscribe on YouTube", tourShorts: "Watch this tour",
     counters: { tours: "excursions", since: "selling since", offices: "walk-in offices", rating: "avg. Google rating of our offices" },
     byActivity: "By activity", fromResort: "From your resort",
     comboH1: (c, r, n) => `${c} from ${r} 2026: ${n} tours with pickup`,
@@ -136,7 +138,7 @@ const T = {
     langs: "Idiomas", minAge: (n) => `Edad mínima ${n}`, installApp: "Instalar app",
     bk: { option: "Opción", date: "Fecha", checking: "Consultando disponibilidad…", pickDate: "Elige una fecha", noDates: "Ahora no hay fechas online: pregúntanos por WhatsApp", total: "Total", depositToday: "Depósito hoy", onDay: "resto el día de la excursión", travellers: "Viajeros", waBook: "Reservar por WhatsApp" },
     badges: { best: "Más vendida", family: "Favorita en familia" },
-    reelsTitle: "Míralo antes de reservar", reelsLead: "Vídeos reales de nuestros barcos, buggies y excursiones.", reelsNav: "Vídeos", watchOn: "Ver en", bookThis: "Reservar esta excursión", subscribe: "Suscríbete en YouTube", tourShorts: "Mira esta excursión",
+    reelsTitle: "Míralo antes de reservar", reelsLead: "Vídeos reales de las excursiones que vendemos.", reelsNav: "Vídeos", watchOn: "Ver en", bookThis: "Reservar esta excursión", subscribe: "Suscríbete en YouTube", tourShorts: "Mira esta excursión",
     counters: { tours: "excursiones", since: "vendiendo desde", offices: "oficinas", rating: "valoración media en Google de nuestras oficinas" },
     byActivity: "Por actividad", fromResort: "Desde tu zona",
     comboH1: (c, r, n) => `${c} desde ${r} 2026: ${n} excursiones con recogida`,
@@ -394,6 +396,12 @@ const faqLd = (faqs) => (faqs?.length ? { "@context": "https://schema.org", "@ty
 const itemListLd = (lang, list) => ({ "@context": "https://schema.org", "@type": "ItemList", itemListElement: list.map((t, i) => ({ "@type": "ListItem", position: i + 1, url: abs(url(lang, "tour", t.slug)), name: t.name[lang] })) });
 
 // ---------- layout ----------
+function promoBar(lang) {
+  if (!promoLive()) return "";
+  const t = esc(promo.text[lang] || promo.text.en).replace("{percent}", promo.percent).replace("{code}", `__CODE__`);
+  return `<div class="promo-bar" data-promo="${esc(promo.code)}" role="region" aria-label="offer"><span>${t.replace("__CODE__", `<b>${esc(promo.code)}</b>`)}</span><button type="button" class="promo-x" data-promo-x aria-label="${lang === "en" ? "Dismiss" : "Cerrar"}">\u00d7</button></div>`;
+}
+
 function header(lang, alt) {
   const L = T[lang];
   const other = lang === "en" ? "es" : "en";
@@ -485,6 +493,7 @@ ${p === "/" || p === "/es/" ? `<script>try{sessionStorage.getItem("td_intro")?do
 ${ldAll.map((o) => `<script type="application/ld+json">${JSON.stringify(o).replace(/</g, "\\u003c")}</script>`).join("\n")}
 </head>
 <body>
+${promoBar(lang)}
 ${header(lang, alt)}
 <main id="main">
 ${body}
