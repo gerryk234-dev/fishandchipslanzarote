@@ -162,6 +162,44 @@ async function featured(p, slug) {
   return { src: `/assets/img/posts/${slug}.webp`, w: meta.width, h: meta.height, alt: text(media.alt_text || media.title?.rendered || "") };
 }
 
+// Download the images a post references so it no longer depends on WordPress, converting to webp.
+// Returns a local /assets path, or null when the image is a broken wp-content link (drop it),
+// or the original url for an external image to leave untouched.
+async function localImage(url) {
+  if (!/^https?:\/\/(www\.)?excursionsticketsdirect\.com\/wp-content\//i.test(url)) return url;
+  const key = crypto.createHash("sha1").update(url).digest("hex").slice(0, 16);
+  const file = path.join(IMG_DIR, `in-${key}.webp`);
+  if (FRESH || !fs.existsSync(file)) {
+    try {
+      const buf = await fetchCached(encodeURI(url), { as: "bin" });
+      await sharp(buf).rotate().resize({ width: 1200, withoutEnlargement: true }).webp({ quality: 62 }).toFile(file);
+    } catch {
+      console.error(`    broken image dropped: ${url.slice(0, 70)}`);
+      return null;
+    }
+  }
+  return `/assets/img/posts/in-${key}.webp`;
+}
+async function localiseBlocks(blocks) {
+  if (!blocks) return blocks;
+  for (const b of blocks) {
+    if (b.t === "html") {
+      for (const u of [...new Set([...b.html.matchAll(/<img src="([^"]+)"[^>]*>/g)].map((m) => m[1]))]) {
+        const local = await localImage(u);
+        if (local === u) continue;
+        b.html = local
+          ? b.html.split(`"${u}"`).join(`"${local}"`)
+          : b.html.replace(new RegExp(`<img src="${u.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"[^>]*>`, "g"), "");
+      }
+    } else if (b.t === "gallery") {
+      const kept = [];
+      for (const im of b.images) { im.src = await localImage(im.src); if (im.src) kept.push(im); }
+      b.images = kept;
+    }
+  }
+  return blocks.filter((b) => b.t !== "gallery" || b.images.length);
+}
+
 const en = await fetchCached(`${API}/posts?per_page=100`);
 const posts = [];
 for (const p of en) {
@@ -169,6 +207,8 @@ for (const p of en) {
   const esSlug = esLink && decodeURI(new URL(esLink).pathname).split("/").filter(Boolean).pop();
   const es = esSlug ? (await fetchCached(`${API}/posts?slug=${encodeURIComponent(esSlug)}&lang=es`))[0] : null;
   const [enOut, esOut] = [await postOut(p), es ? await postOut(es) : null];
+  enOut.blocks = await localiseBlocks(enOut.blocks);
+  if (esOut) esOut.blocks = await localiseBlocks(esOut.blocks);
   posts.push({
     id: p.id,
     slug: p.slug,

@@ -75,7 +75,7 @@ Everything that currently relies on WordPress needs a replacement before WordPre
 | ETD admin app (staff manage, email, cancel bookings) | Staff tool in the booking system of record |
 | Affiliates (affiliate accounts, registration pages) | Decide: keep, replace or end |
 | Legal pages (privacy, cookies, terms, legal notice) | **Done**: imported to the new site (`import:legal`) |
-| Images under `/wp-content/` (blog images, ~160 URLs in Google) | Download into the site; the redirect map stops pointing at the booking subdomain |
+| Images under `/wp-content/` (blog images) | **Blog images done**: downloaded to `/assets/img/posts/`, zero wp-content refs left in posts. Any other `/wp-content/*` still 301s to the booking host until WordPress is off |
 
 The **booking system of record** is the open decision: BookingMyTour (owner to confirm what it does; no public API found), a platform such as Bókun or FareHarbor, or a custom build (database + admin + Stripe).
 
