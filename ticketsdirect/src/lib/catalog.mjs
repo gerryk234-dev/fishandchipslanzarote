@@ -113,7 +113,8 @@ export function loadCatalog(dataDir) {
     if (!o || typeof o !== "object" || seen.has(o)) return;
     seen.add(o);
     if ("en" in o && "es" in o) for (const l of ["de", "it", "fr"]) if (!(l in o)) o[l] = o.en;
-    for (const v of Object.values(o)) fillLang(v, seen);
+    // Never fill `path`: URLs are language-prefixed by the generator, not copied from English.
+    for (const [k, v] of Object.entries(o)) if (k !== "path") fillLang(v, seen);
   };
   [site, categories, resorts, places, destinations].forEach((x) => fillLang(x));
 
