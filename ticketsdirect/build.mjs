@@ -349,7 +349,7 @@ function trustStrip(lang) {
   return `<ul class="trust">${site.promises[lang].map(([h, p], i) => `<li>${icon(icons[i])}<div><strong>${esc(h)}</strong><span>${esc(p)}</span></div></li>`).join("")}</ul>`;
 }
 
-const hoursText = (lang, h) => (h.days === "daily" ? (lang !== "es" ? `Open every day ${h.opens}–${h.closes}` : `Abierto todos los días ${h.opens}–${h.closes}`) : "");
+const hoursText = (lang, h) => (h.days === "daily" ? (lang === "es" ? `Abierto todos los días ${h.opens}–${h.closes}` : lang === "de" ? `Täglich geöffnet ${h.opens}–${h.closes}` : `Open every day ${h.opens}–${h.closes}`) : "");
 
 // WordPress stores traveller types in English only; translate the common ones for display.
 const PAX_ES = { adult: "Adulto", adults: "Adultos", child: "Niño", children: "Niños", kid: "Niño", infant: "Bebé", baby: "Bebé", pensioner: "Pensionista", senior: "Mayor", student: "Estudiante", person: "Persona", group: "Grupo", vehicle: "Vehículo" };
@@ -598,7 +598,14 @@ function homePage(lang) {
   const topDest = destinations.filter((d) => d.curated).concat(destinations.filter((d) => !d.curated).sort((a, b) => b.count - a.count)).slice(0, 8);
   const slides = popular.filter((t) => t.images.length).slice(0, 4).map((t) => t.images[0]);
   const hero = slides[0];
-  const homeFaqs = lang !== "es"
+  const homeFaqs = lang === "de"
+    ? [
+        ["Was sind die besten Ausflüge auf Lanzarote?", `Unsere meistgebuchten Ausflüge sind ${popular.slice(0, 3).map((t) => `${t.name.en} (ab ${price("de", t.price)})`).join(", ")}.`],
+        ["Wo sind die Büros von Tickets Direct?", `Wir haben ${site.officeCount} Büros in den wichtigsten Urlaubsorten Lanzarotes: Costa Teguise, Puerto del Carmen und Playa Blanca.`],
+        ["Wie bezahle ich?", "Du reservierst online mit einer Anzahlung und zahlst den Rest am Tag der Aktivität. Die Stornierung ist bis 24 Stunden vorher kostenlos."],
+        ["Ist Tickets Direct ein lokales Unternehmen?", `Ja. Wir verkaufen seit ${site.foundingYear} Ausflüge auf Lanzarote und sind aus Líneas Marítimas Romero hervorgegangen, einer der bekanntesten Reedereien der Insel.`],
+      ]
+    : lang !== "es"
     ? [
         ["What are the best excursions in Lanzarote?", `Our most booked excursions are ${popular.slice(0, 3).map((t) => `${t.name.en} (from ${price("en", t.price)})`).join(", ")}.`],
         ["Where are Tickets Direct's offices?", `We have ${site.officeCount} offices in Lanzarote's main resorts: Costa Teguise, Puerto del Carmen and Playa Blanca.`],
@@ -679,7 +686,9 @@ function tourPage(lang, t) {
   const fill = related.length < 3 ? [...tours].sort(byPopularity).filter((x) => x.cat !== t.cat).slice(0, 3 - related.length) : [];
   const d = dur(lang, t);
   const ownFaqs = t.faqs[lang];
-  const genericFaqs = t.price == null ? [] : lang !== "es"
+  const genericFaqs = t.price == null ? [] : lang === "de"
+    ? [[`Wie viel kostet dieser Ausflug?`, `Ab ${price("de", t.price)}${unitLabel("de", t) ? ` ${unitLabel("de", t)}` : " pro Erwachsenem"}${t.child ? `, Kinder (${t.child.ages}) ${price("de", t.child.price)}` : ""}. ${L.deposit(t.deposit)}.`], ["Kann ich stornieren?", "Ja, die Stornierung ist bis 24 Stunden vor der Aktivität kostenlos."]]
+    : lang !== "es"
     ? [[`How much does the ${t.name.en} cost?`, `From ${price("en", t.price)}${unitLabel("en", t) ? ` ${unitLabel("en", t)}` : " per adult"}${t.child ? `, children (${t.child.ages}) ${price("en", t.child.price)}` : ""}. ${L.deposit(t.deposit)}.`], ["Can I cancel?", "Yes, cancellation is free up to 24 hours before the activity."]]
     : [[`¿Cuánto cuesta ${t.name.es}?`, `Desde ${price("es", t.price)}${unitLabel("es", t) ? ` ${unitLabel("es", t)}` : " por adulto"}${t.child ? `, niños (${t.child.ages}) ${price("es", t.child.price)}` : ""}. ${L.deposit(t.deposit)}.`], ["¿Puedo cancelar?", "Sí, la cancelación es gratuita hasta 24 horas antes de la actividad."]];
   const faqs = [...ownFaqs, ...genericFaqs.filter(([q]) => !ownFaqs.some(([oq]) => oq.toLowerCase() === q.toLowerCase()))];
@@ -717,7 +726,7 @@ function tourPage(lang, t) {
     <p>${esc(L.onRequestLead)}</p>
     <a class="btn wa block" id="book" href="${waTour(lang, t)}" rel="noopener" target="_blank">${icon("wa")}${L.ask}</a>
     <a class="btn ghost block" href="tel:${site.phoneHref}">${icon("phone")}${site.phone}</a>
-    <ul class="bb-trust"><li>${icon("pin")}${lang !== "es" ? `${site.officeCount} offices across Lanzarote` : `${site.officeCount} oficinas en Lanzarote`}</li><li>${icon("shield")}${lang !== "es" ? `Local agency since ${site.foundingYear}` : `Agencia local desde ${site.foundingYear}`}</li></ul>
+    <ul class="bb-trust"><li>${icon("pin")}${lang !== "es" ? `${site.officeCount} offices across Lanzarote` : lang === "de" ? `${site.officeCount} Büros auf Lanzarote` : `${site.officeCount} oficinas en Lanzarote`}</li><li>${icon("shield")}${lang !== "es" ? `Local agency since ${site.foundingYear}` : lang === "de" ? `Lokale Agentur seit ${site.foundingYear}` : `Agencia local desde ${site.foundingYear}`}</li></ul>
   </aside>` : `<aside class="book-box" aria-label="${L.book}">
     <p class="bb-price"><span>${L.from}</span> <strong>${price(lang, t.price)}</strong> <small>${esc(unitLabel(lang, t) || UNIT[lang]["per-person"])}</small></p>
     <p class="bb-meta">${icon("clock")}${esc(d)}</p>
@@ -729,7 +738,7 @@ function tourPage(lang, t) {
       <a class="btn block" data-book href="${bookingUrl(lang, t)}" rel="noopener">${L.book}</a>
       <a class="btn wa block" data-wa href="${waTour(lang, t)}" rel="noopener" target="_blank">${icon("wa")}${L.ask}</a>
     </form>
-    <ul class="bb-trust"><li>${icon("check")}${L.freeCancel}</li><li>${icon("check")}${esc(L.deposit(t.deposit))}</li><li>${icon("pin")}${lang !== "es" ? `${site.officeCount} offices across Lanzarote` : `${site.officeCount} oficinas en Lanzarote`}</li><li>${icon("shield")}${lang !== "es" ? `Local agency since ${site.foundingYear}` : `Agencia local desde ${site.foundingYear}`}</li></ul>
+    <ul class="bb-trust"><li>${icon("check")}${L.freeCancel}</li><li>${icon("check")}${esc(L.deposit(t.deposit))}</li><li>${icon("pin")}${lang !== "es" ? `${site.officeCount} offices across Lanzarote` : lang === "de" ? `${site.officeCount} Büros auf Lanzarote` : `${site.officeCount} oficinas en Lanzarote`}</li><li>${icon("shield")}${lang !== "es" ? `Local agency since ${site.foundingYear}` : lang === "de" ? `Lokale Agentur seit ${site.foundingYear}` : `Agencia local desde ${site.foundingYear}`}</li></ul>
   </aside>`}
 </article>
 ${t.price == null ? `<div class="mobile-book"><span><strong>${L.onRequest}</strong></span><a class="btn" href="#book">${L.ask}</a></div>` : `<div class="mobile-book"><span><small>${L.from}</small> <strong>${price(lang, t.price)}</strong></span><a class="btn" href="#book">${L.book}</a></div>`}
@@ -752,7 +761,7 @@ function categoryPage(lang, c) {
   const h1 = c.h1?.[lang] || `${catName(lang, c)} ${lang === "es" ? "en Lanzarote 2026" : lang === "de" ? "auf Lanzarote 2026" : "in Lanzarote 2026"}`;
   const intro = c.intro?.[lang];
   const wpText = c.term?.description?.[lang];
-  const meta = c.meta?.[lang] || clip(`${catName(lang, c)}: ${list.length} ${T[lang].results} ${lang !== "es" ? "in Lanzarote from" : "en Lanzarote desde"} ${price(lang, Math.min(...list.map((t) => t.price)))}. ${T[lang].freeCancel}.`, 160);
+  const meta = c.meta?.[lang] || clip(`${catName(lang, c)}: ${list.length} ${T[lang].results} ${lang === "es" ? "en Lanzarote desde" : lang === "de" ? "auf Lanzarote ab" : "in Lanzarote from"} ${price(lang, Math.min(...list.map((t) => t.price)))}. ${T[lang].freeCancel}.`, 160);
   const body = `<div class="wrap">${bc.html}</div>
 <section class="wrap section page-head"><p class="eyebrow">${icon(c.icon)}${esc(catName(lang, c))}</p><h1>${esc(h1)}</h1>${intro ? `<p class="lead">${esc(intro)}</p>` : ""}</section>
 ${combos.some((x) => x.c === c) ? `<section class="wrap"><p class="pills"><strong>${T[lang].fromResort}:</strong> ${combos.filter((x) => x.c === c).map((x) => `<a href="${comboUrl(lang, x.r, c)}">${esc(x.r.name)} (${x.list.length})</a>`).join("")}</p></section>` : ""}
@@ -770,18 +779,23 @@ function resortPage(lang, r) {
   const picks = r.picks.map((s) => tourBy[s]).filter(Boolean);
   const fromHere = toursIn((t) => t.resorts.includes(r.slug) && !picks.includes(t));
   const local = offices.filter((o) => o.resort === r.slug);
+  const allHere = [...picks, ...fromHere];
+  const minHere = allHere.length ? Math.min(...allHere.map((t) => t.price).filter(Boolean)) : minPrice;
+  // de/it/fr have no translated h1/meta yet: build a localised one from the resort name.
+  const h1 = r.h1[lang] || (lang === "de" ? `Ausflüge ab ${r.name} 2026 – mit Hotelabholung` : lang === "it" ? `Escursioni da ${r.name} 2026 – con transfer` : lang === "fr" ? `Excursions depuis ${r.name} 2026 – avec prise en charge` : `Excursions from ${r.name} 2026`);
+  const metaDesc = r.meta[lang] || (lang === "de" ? `Ausflüge ab ${r.name}, Lanzarote: ${allHere.length} Touren mit Abholung, ab ${price(lang, minHere)}. Kostenlose Stornierung bis 24 Std., direkt bei der lokalen Agentur.` : lang === "it" ? `Escursioni da ${r.name}, Lanzarote: ${allHere.length} tour con transfer, da ${price(lang, minHere)}. Cancellazione gratuita fino a 24 h.` : lang === "fr" ? `Excursions depuis ${r.name}, Lanzarote : ${allHere.length} activités avec prise en charge, dès ${price(lang, minHere)}. Annulation gratuite jusqu'à 24 h.` : `Excursions from ${r.name}, Lanzarote: ${allHere.length} tours with pickup, from ${price(lang, minHere)}.`);
   const body = `<div class="wrap">${bc.html}</div>
-<section class="wrap section page-head"><p class="eyebrow">${icon("pin")}${esc(r.name)}, Lanzarote</p><h1>${esc(r.h1[lang])}</h1><p class="lead">${esc(r.intro[lang])}</p></section>
+<section class="wrap section page-head"><p class="eyebrow">${icon("pin")}${esc(r.name)}, Lanzarote</p><h1>${esc(h1)}</h1><p class="lead">${esc(r.intro[lang])}</p></section>
 <section class="wrap split">
   <div><h2>${lang !== "es" ? `Our top picks from ${r.name}` : lang === "de" ? `Unsere Empfehlungen ab ${r.name}` : `Nuestras recomendaciones desde ${r.name}`}</h2>${cardGrid(lang, picks)}</div>
   <aside class="side"><h2>${L.distances}</h2><table class="dist"><tbody>${r.distances[lang].map(([a, b]) => `<tr><th scope="row">${esc(a)}</th><td>${esc(b)}</td></tr>`).join("")}</tbody></table>
   <h2>${L.officeHere}</h2>${officeList(lang, local)}</aside>
 </section>
 ${combos.some((x) => x.r === r) ? `<section class="wrap section"><h2>${L.byActivity}</h2><p class="pills">${combos.filter((x) => x.r === r).map((x) => `<a href="${comboUrl(lang, r, x.c)}">${esc(catName(lang, x.c))} (${x.list.length})</a>`).join("")}</p></section>` : ""}
-<section class="wrap section"><h2>${lang !== "es" ? `All ${fromHere.length + picks.length} excursions with pickup in ${r.name}` : `Las ${fromHere.length + picks.length} excursiones con recogida en ${r.name}`}</h2>${cardGrid(lang, fromHere)}</section>
+<section class="wrap section"><h2>${lang === "es" ? `Las ${fromHere.length + picks.length} excursiones con recogida en ${r.name}` : lang === "de" ? `Alle ${fromHere.length + picks.length} Ausflüge mit Abholung in ${r.name}` : `All ${fromHere.length + picks.length} excursions with pickup in ${r.name}`}</h2>${cardGrid(lang, fromHere)}</section>
 ${C.pickupPoints.some((p) => p.resort === r.slug) ? `<section class="wrap section"><h2>${esc(L.collectionIn(r.name))}</h2>${pointsTable(lang, C.pickupPoints.filter((p) => p.resort === r.slug))}</section>` : ""}
 <section class="wrap section">${faqBlock(lang, r.faqs[lang])}</section>`;
-  page({ lang, path: alt[lang], alt, title: clip(r.h1[lang], 70), description: r.meta[lang], body, ld: [itemListLd(lang, [...picks, ...fromHere]), bc.ld, faqLd(r.faqs[lang]), ...local.filter((o) => o.streetAddress).map((o) => ({ "@context": "https://schema.org", ...officeLd(o) }))], ogImage: picks.find((t) => t.images.length)?.images[0].src });
+  page({ lang, path: alt[lang], alt, title: clip(h1, 70), description: metaDesc, body, ld: [itemListLd(lang, [...picks, ...fromHere]), bc.ld, faqLd(r.faqs[lang]), ...local.filter((o) => o.streetAddress).map((o) => ({ "@context": "https://schema.org", ...officeLd(o) }))], ogImage: picks.find((t) => t.images.length)?.images[0].src });
 }
 
 function comboPage(lang, { r, c, list }) {
@@ -796,7 +810,9 @@ function comboPage(lang, { r, c, list }) {
   const cheapest = [...list].sort((a, b) => a.price - b.price)[0];
   const fam = list.filter((t) => t.tags.includes("family"));
   const local = offices.filter((o) => o.resort === r.slug);
-  const faqs = lang !== "es"
+  const faqs = lang === "de"
+    ? [[`Was ist die günstigste Option für ${cn} ab ${r.name}?`, `${cheapest.name.en}, ab ${price("de", cheapest.price)}${unitLabel("de", cheapest) ? ` ${unitLabel("de", cheapest)}` : ""}.`], [`Gibt es Abholung in ${r.name}?`, `Ja. Alle ${list.length} Ausflüge auf dieser Seite bieten Abholung in ${r.name}; der genaue Ort und die Uhrzeit stehen auf deinem E-Ticket.`], ...(fam.length ? [[`Welche eignen sich am besten für Familien?`, fam.slice(0, 3).map((t) => t.name.en).join(", ") + "."]] : [])]
+    : lang !== "es"
     ? [[`What is the cheapest ${cn.toLowerCase()} option from ${r.name}?`, `${cheapest.name.en}, from ${price("en", cheapest.price)}${unitLabel("en", cheapest) ? ` ${unitLabel("en", cheapest)}` : ""}.`], [`Do these tours pick up in ${r.name}?`, `Yes. All ${list.length} tours on this page offer pickup in ${r.name}; the exact point and time are on your e-ticket.`], ...(fam.length ? [[`Which are best for families?`, fam.slice(0, 3).map((t) => t.name.en).join(", ") + "."]] : [])]
     : [[`¿Cuál es la opción más barata de ${cn.toLowerCase()} desde ${r.name}?`, `${cheapest.name.es}, desde ${price("es", cheapest.price)}${unitLabel("es", cheapest) ? ` ${unitLabel("es", cheapest)}` : ""}.`], [`¿Estas excursiones recogen en ${r.name}?`, `Sí. Las ${list.length} excursiones de esta página tienen recogida en ${r.name}; el punto y la hora exactos van en tu e-ticket.`], ...(fam.length ? [[`¿Cuáles son mejores para familias?`, fam.slice(0, 3).map((t) => t.name.es).join(", ") + "."]] : [])];
   const body = `<div class="wrap">${bc.html}</div>
@@ -824,14 +840,14 @@ function destinationPage(lang, d) {
   const cur = d.curated;
   const list = toursIn((t) => t.destinations.includes(d.id));
   const bc = breadcrumbs(lang, [[L.nav.islands, url(lang, "destinations")], [d.name[lang], p]]);
-  const h1 = cur?.h1[lang] || (lang !== "es" ? `${d.name.en}, Lanzarote: Tours & Excursions 2026` : `${d.name.es}, Lanzarote: excursiones 2026`);
+  const h1 = cur?.h1[lang] || (lang === "es" ? `${d.name.es}, Lanzarote: excursiones 2026` : lang === "de" ? `${d.name.en}, Lanzarote: Touren & Ausflüge 2026` : `${d.name.en}, Lanzarote: Tours & Excursions 2026`);
   const desc = d.description[lang] || d.description.en;
   const body = `<div class="wrap">${bc.html}</div>
 <section class="wrap section page-head"><p class="eyebrow">${icon("pin")}${esc(d.name[lang])}</p><h1>${esc(h1)}</h1></section>
 ${cur ? `<section class="wrap split"><div><p class="lead">${esc(cur.intro[lang])}</p></div><aside class="side"><h2>${L.quickFacts}</h2><table class="dist"><tbody>${cur.facts[lang].map(([a, b]) => `<tr><th scope="row">${esc(a)}</th><td>${esc(b)}</td></tr>`).join("")}</tbody></table></aside></section>` : ""}
 <section class="wrap section"><h2>${esc(L.toursTo(d.name[lang]))}</h2>${cardGrid(lang, list)}</section>
 ${desc && plain(desc).length > 120 ? `<section class="wrap section"><h2>${esc(L.aboutPlace(d.name[lang]))}</h2><div class="prose prose-wrap">${desc}</div></section>` : ""}`;
-  const metaDesc = cur?.meta[lang] || clip(`${d.name[lang]}: ${list.length} ${L.results} ${lang !== "es" ? "from" : "desde"} ${price(lang, Math.min(...list.map((t) => t.price)))}. ${plain(desc)}`, 158);
+  const metaDesc = cur?.meta[lang] || clip(`${d.name[lang]}: ${list.length} ${L.results} ${lang === "es" ? "desde" : lang === "de" ? "ab" : "from"} ${price(lang, Math.min(...list.map((t) => t.price)))}. ${plain(desc)}`, 158);
   page({
     lang, path: p, alt, title: clip(h1, 70), description: metaDesc, body, ogImage: list.find((t) => t.images.length)?.images[0].src,
     ld: [{ "@context": "https://schema.org", "@type": "TouristDestination", name: d.name[lang], description: clip(cur?.intro[lang] || plain(desc), 300), url: abs(p), containedInPlace: { "@type": "Place", name: "Lanzarote, Canary Islands, Spain" } }, itemListLd(lang, list), bc.ld],
@@ -928,7 +944,7 @@ function toursIndex(lang) {
   const bc = breadcrumbs(lang, [[L.allTours, alt[lang]]]);
   const sorted = [...tours].sort(byPopularity);
   const body = `<div class="wrap">${bc.html}</div>
-<section class="wrap section page-head"><h1>${lang !== "es" ? `All ${tours.length} Lanzarote Excursions 2026` : `Las ${tours.length} excursiones en Lanzarote 2026`}</h1><p class="lead">${lang !== "es" ? `From ${price(lang, minPrice)}. Filter by activity, where you're staying, who you're travelling with or budget.` : `Desde ${price(lang, minPrice)}. Filtra por actividad, dónde te alojas, con quién viajas o presupuesto.`}</p></section>
+<section class="wrap section page-head"><h1>${lang === "es" ? `Las ${tours.length} excursiones en Lanzarote 2026` : lang === "de" ? `Alle ${tours.length} Lanzarote-Ausflüge 2026` : `All ${tours.length} Lanzarote Excursions 2026`}</h1><p class="lead">${lang !== "es" ? `From ${price(lang, minPrice)}. Filter by activity, where you're staying, who you're travelling with or budget.` : `Desde ${price(lang, minPrice)}. Filtra por actividad, dónde te alojas, con quién viajas o presupuesto.`}</p></section>
 <section class="wrap filters" id="filters" aria-label="Filters">
   <div class="chips" data-filter="tag">${Object.entries(L.filters).map(([k, v]) => `<button type="button" data-value="${k === "all" ? "" : k}"${k === "all" ? ' aria-pressed="true"' : ""}>${esc(v)}</button>`).join("")}</div>
   <div class="filter-row">
@@ -939,8 +955,8 @@ function toursIndex(lang) {
   <p class="count" aria-live="polite"><span>${tours.length}</span> ${L.results}</p>
 </section>
 <section class="wrap" id="results">${cardGrid(lang, sorted)}<p class="empty" hidden>${L.noResults}</p></section>
-<section class="wrap section"><h2>${lang !== "es" ? "Prices at a glance" : "Precios de un vistazo"}</h2>${priceTable(lang)}</section>`;
-  page({ lang, path: alt[lang], alt, title: lang !== "es" ? `All ${tours.length} Lanzarote Excursions & Prices 2026 | Tickets Direct` : `Las ${tours.length} excursiones en Lanzarote y precios 2026 | Tickets Direct`, description: lang !== "es" ? `Compare all ${tours.length} Lanzarote excursions: boat trips, Timanfaya, buggies, water sports, parks and island trips, with prices from ${price(lang, minPrice)}.` : `Compara las ${tours.length} excursiones en Lanzarote: barcos, Timanfaya, buggies, deportes acuáticos, parques y otras islas, desde ${price(lang, minPrice)}.`, body, ld: [itemListLd(lang, sorted), bc.ld] });
+<section class="wrap section"><h2>${lang === "es" ? "Precios de un vistazo" : lang === "de" ? "Preise auf einen Blick" : "Prices at a glance"}</h2>${priceTable(lang)}</section>`;
+  page({ lang, path: alt[lang], alt, title: lang === "de" ? `Alle ${tours.length} Lanzarote-Ausflüge & Preise 2026 | Tickets Direct` : lang !== "es" ? `All ${tours.length} Lanzarote Excursions & Prices 2026 | Tickets Direct` : `Las ${tours.length} excursiones en Lanzarote y precios 2026 | Tickets Direct`, description: lang !== "es" ? `Compare all ${tours.length} Lanzarote excursions: boat trips, Timanfaya, buggies, water sports, parks and island trips, with prices from ${price(lang, minPrice)}.` : `Compara las ${tours.length} excursiones en Lanzarote: barcos, Timanfaya, buggies, deportes acuáticos, parques y otras islas, desde ${price(lang, minPrice)}.`, body, ld: [itemListLd(lang, sorted), bc.ld] });
 }
 
 function officesPage(lang) {
@@ -950,7 +966,7 @@ function officesPage(lang) {
   const body = `<div class="wrap">${bc.html}</div>
 <section class="wrap section page-head"><h1>${L.ourOffices}</h1><p class="lead">${esc(L.officesLead)}</p></section>
 ${resorts.map((r) => `<section class="wrap section"><h2><a href="${url(lang, "resort", r.slug)}">${esc(r.name)}</a></h2>${officeList(lang, offices.filter((o) => o.resort === r.slug))}</section>`).join("")}
-${offices.some((o) => !resorts.find((r) => r.slug === o.resort)) ? `<section class="wrap section"><h2>${lang !== "es" ? "Other offices" : "Otras oficinas"}</h2>${officeList(lang, offices.filter((o) => !resorts.find((r) => r.slug === o.resort)))}</section>` : ""}
+${offices.some((o) => !resorts.find((r) => r.slug === o.resort)) ? `<section class="wrap section"><h2>${lang === "es" ? "Otras oficinas" : lang === "de" ? "Weitere Büros" : "Other offices"}</h2>${officeList(lang, offices.filter((o) => !resorts.find((r) => r.slug === o.resort)))}</section>` : ""}
 <section class="wrap section">${trustStrip(lang)}</section>`;
   page({ lang, path: alt[lang], alt, title: `${L.ourOffices} | Costa Teguise, Puerto del Carmen, Playa Blanca`, description: L.officesLead, body, ld: [bc.ld, ...offices.filter((o) => o.streetAddress).map((o) => ({ "@context": "https://schema.org", ...officeLd(o) }))] });
 }
@@ -967,14 +983,16 @@ function aboutPage(lang) {
 <p>Solo trabajamos en Lanzarote. Somos la única empresa de excursiones que vende online y además tiene oficinas en los tres grandes centros turísticos (Costa Teguise, Puerto del Carmen y Playa Blanca), con ${site.officeCount} oficinas en total. Puedes reservar en la web por la noche y hablar con nosotros en persona a la mañana siguiente.</p>
 <h2>Nuestros compromisos</h2>`;
   const body = `<div class="wrap">${bc.html}</div><article class="wrap prose-wrap"><header class="page-head"><h1>${L.aboutTitle}</h1><p class="lead">${esc(L.whyLead)}</p></header><div class="prose">${text}</div>${trustStrip(lang)}<div class="prose"><h2>${L.ourOffices}</h2></div>${officeList(lang, offices)}</article>${reviewsBlock(lang)}`;
-  page({ lang, path: alt[lang], alt, title: `${L.aboutTitle} | ${lang !== "es" ? "Since" : "Desde"} ${site.foundingYear}`, description: clip(L.heritage, 160), body, ld: [bc.ld, { "@context": "https://schema.org", "@type": "AboutPage", url: abs(alt[lang]), about: { "@id": ORG_ID } }] });
+  page({ lang, path: alt[lang], alt, title: `${L.aboutTitle} | ${lang === "es" ? "Desde" : lang === "de" ? "Seit" : "Since"} ${site.foundingYear}`, description: clip(L.heritage, 160), body, ld: [bc.ld, { "@context": "https://schema.org", "@type": "AboutPage", url: abs(alt[lang]), about: { "@id": ORG_ID } }] });
 }
 
 function faqPage(lang) {
   const L = T[lang];
   const alt = altOf("faq");
   const bc = breadcrumbs(lang, [[L.faqTitle, alt[lang]]]);
-  const offers = lang !== "es"
+  const offers = lang === "de"
+    ? [["Bietet ihr Gruppenrabatte an?", "Ja. Wir bieten Gruppenrabatte und private Charter für Events und große Gruppen auf Anfrage. Schreib uns auf WhatsApp oder komm in eines unserer Büros mit Gruppengröße und Datum."], ["Gibt es Sonderangebote?", "Oft, aber sie ändern sich. Beispiele: Bei manchen Bootstouren zahlt pro 4 Personen ein Erwachsener den Kinderpreis, und in Wasserparks Angebote wie 2 Erwachsene + 1 Kind gratis oder Freigetränke bei Eintritt. Frag in jedem Büro oder auf WhatsApp nach den Angeboten dieser Woche."], ["Passt ihr die Preise anderer Anbieter an?", "Nein. Unsere Preise werden mit den Veranstaltern festgelegt, und wir stecken unsere Ersparnis stattdessen in die obigen Angebote."]]
+    : lang !== "es"
     ? [["Do you offer group discounts?", "Yes. We offer group discounts, and private charters for events and large groups, on request. Message us on WhatsApp or visit any of our offices with your group size and dates."], ["Are there any special offers?", "Often, but they change. Examples: on some boat trips one adult pays the child price for every 4 people, and water park offers such as 2 adults + 1 child free or free drinks with entry. Ask in any office or on WhatsApp for this week's offers."], ["Do you match other sellers' prices?", "No. Our prices are set with the operators, and we put our savings into the offers above instead."]]
     : [["¿Hacéis descuentos para grupos?", "Sí. Hacemos descuentos para grupos y chárteres privados para eventos y grupos grandes, bajo petición. Escríbenos por WhatsApp o visita cualquiera de nuestras oficinas con el tamaño del grupo y las fechas."], ["¿Tenéis ofertas especiales?", "A menudo, pero cambian. Por ejemplo: en algunas excursiones en barco, por cada 4 personas un adulto paga precio de niño, y en los parques acuáticos ofertas como 2 adultos + 1 niño gratis o bebidas gratis con la entrada. Pregunta en cualquier oficina o por WhatsApp por las ofertas de esta semana."], ["¿Igualáis los precios de otros vendedores?", "No. Nuestros precios se fijan con los operadores y ponemos el ahorro en las ofertas de arriba."]];
   const all = [...offers, ...categories.flatMap((c) => c.faqs?.[lang] || []), ...guides.flatMap((g) => g[lang].faqs)];
