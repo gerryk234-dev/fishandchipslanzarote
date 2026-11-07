@@ -5,7 +5,10 @@
     "color": "sea",
     "name": {
       "en": "Boat Trips",
-      "es": "Excursiones en barco"
+      "es": "Excursiones en barco",
+      "de": "Bootstouren",
+      "it": "Gite in barca",
+      "fr": "Excursions en bateau"
     },
     "h1": {
       "en": "Lanzarote Boat Trips 2026: Catamarans, Dolphins, La Graciosa & Lobos",
@@ -65,7 +68,10 @@
     "color": "rust",
     "name": {
       "en": "Buggy & Adventure Tours",
-      "es": "Buggies y aventura"
+      "es": "Buggies y aventura",
+      "de": "Buggy- & Abenteuertouren",
+      "it": "Tour in buggy e avventura",
+      "fr": "Excursions en buggy et aventure"
     },
     "h1": {
       "en": "Lanzarote Buggy Tours 2026: Can-Am, Polaris & Family Buggies",
@@ -117,7 +123,10 @@
     "color": "sage",
     "name": {
       "en": "Island Bus Tours",
-      "es": "Excursiones en autobús"
+      "es": "Excursiones en autobús",
+      "de": "Inselrundfahrten mit dem Bus",
+      "it": "Tour dell isola in bus",
+      "fr": "Excursions en bus sur l île"
     },
     "h1": {
       "en": "Lanzarote Bus Tours 2026: Timanfaya Volcanoes, Caves & Grand Tour",
@@ -169,7 +178,10 @@
     "color": "gold",
     "name": {
       "en": "Water Sports",
-      "es": "Deportes acuáticos"
+      "es": "Deportes acuáticos",
+      "de": "Wassersport",
+      "it": "Sport acquatici",
+      "fr": "Sports nautiques"
     },
     "h1": {
       "en": "Lanzarote Water Sports 2026: Jet Ski, Parascending & Fun Packs",
@@ -213,7 +225,10 @@
     "color": "sea",
     "name": {
       "en": "Underwater Experiences",
-      "es": "Experiencias submarinas"
+      "es": "Experiencias submarinas",
+      "de": "Unterwasser-Erlebnisse",
+      "it": "Esperienze subacquee",
+      "fr": "Expériences sous-marines"
     },
     "h1": {
       "en": "Submarine Safari Lanzarote: See the Atlantic Without Getting Wet",
@@ -249,7 +264,10 @@
     "color": "sea",
     "name": {
       "en": "Ferries & Island Trips",
-      "es": "Ferris y otras islas"
+      "es": "Ferris y otras islas",
+      "de": "Fähren & Inseltrips",
+      "it": "Traghetti e altre isole",
+      "fr": "Ferries et autres îles"
     },
     "h1": {
       "en": "Day Trips from Lanzarote to Fuerteventura, La Graciosa & Lobos",
@@ -293,7 +311,10 @@
     "color": "gold",
     "name": {
       "en": "Packs & Discounts",
-      "es": "Packs y descuentos"
+      "es": "Packs y descuentos",
+      "de": "Pakete & Rabatte",
+      "it": "Pacchetti e sconti",
+      "fr": "Packs et réductions"
     },
     "h1": {
       "en": "Lanzarote Excursion Packs: Save by Booking Several Tours Together",
@@ -330,7 +351,10 @@
     "color": "gold",
     "name": {
       "en": "Rancho Texas & Water Parks",
-      "es": "Rancho Texas y parques acuáticos"
+      "es": "Rancho Texas y parques acuáticos",
+      "de": "Rancho Texas & Wasserparks",
+      "it": "Rancho Texas e parchi acquatici",
+      "fr": "Rancho Texas et parcs aquatiques"
     }
   },
   {
@@ -340,7 +364,10 @@
     "color": "rust",
     "name": {
       "en": "Nightlife & Events",
-      "es": "Noche y eventos"
+      "es": "Noche y eventos",
+      "de": "Nachtleben & Events",
+      "it": "Vita notturna ed eventi",
+      "fr": "Vie nocturne et événements"
     }
   },
   {
@@ -350,7 +377,10 @@
     "color": "sea",
     "name": {
       "en": "Private Tours & Boat Hire",
-      "es": "Tours privados y alquiler de barcos"
+      "es": "Tours privados y alquiler de barcos",
+      "de": "Private Touren & Bootsverleih",
+      "it": "Tour privati e noleggio barche",
+      "fr": "Excursions privées et location de bateaux"
     }
   },
   {
@@ -360,7 +390,10 @@
     "color": "rust",
     "name": {
       "en": "Buggy Tours in Lanzarote",
-      "es": "Buggies en Lanzarote"
+      "es": "Buggies en Lanzarote",
+      "de": "Buggy-Touren auf Lanzarote",
+      "it": "Tour in buggy a Lanzarote",
+      "fr": "Excursions en buggy à Lanzarote"
     },
     "secondary": true
   }

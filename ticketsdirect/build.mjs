@@ -173,6 +173,65 @@ const cloneT = (o) => Array.isArray(o) ? o.map(cloneT) : (o && typeof o === "obj
 for (const L2 of ["de", "it", "fr"]) { T[L2] = cloneT(T.en); T[L2].htmlLang = L2; }
 T.de.locale = "de_DE"; T.it.locale = "it_IT"; T.fr.locale = "fr_FR";
 
+Object.assign(T.de, {
+  nav: { tours: "Alle Ausflüge", activities: "Aktivitäten", resorts: "Dein Urlaubsort", islands: "Reiseziele", guides: "Reiseführer", offices: "Unsere Büros", about: "Über uns" },
+  from: "Ab", book: "Jetzt buchen", ask: "Auf WhatsApp fragen", child: "Kind", adult: "Erwachsener",
+  freeCancel: "Kostenlose Stornierung bis 24 Std.", duration: "Dauer",
+  onRequest: "Preis auf Anfrage", onRequestLead: "Die Preise für diesen Ausflug hängen vom Datum und der Gruppe ab. Frag uns per WhatsApp oder telefonisch nach dem heutigen Preis und der Verfügbarkeit.",
+  home: "Startseite", faqTitle: "Häufig gestellte Fragen", related: "Das könnte dir auch gefallen", popular: "Beliebteste Ausflüge",
+  overview: "Überblick", itinerary: "Ablauf", includes: "Inklusive", excludes: "Nicht inklusive", pickupsTitle: "Abholung möglich ab", placesTitle: "Diese Orte besuchst du", video: "Video ansehen", options: "Preise & Optionen", goodToKnow: "Gut zu wissen",
+  seeAll: "Alle ansehen", allTours: "Alle Ausflüge",
+  deposit: (p) => (p ? `${p}% Anzahlung online, den Rest am Tag` : "Kleine Anzahlung online, den Rest am Tag"),
+  gtk: ["Abholort und -zeit werden bei der Buchung bestätigt (E-Ticket sofort per E-Mail).", "Kostenlose Stornierung bis 24 Stunden vor der Aktivität.", "Fragen? Echte Einheimische antworten rund um die Uhr auf WhatsApp."],
+  wildlife: "Delfine und andere Wildtiere leben in freier Natur: Sichtungen sind wahrscheinlich, aber nie garantiert.",
+  updated: "Aktualisiert", by: "Vom Tickets-Direct-Team, Lanzarote", blog: "Aus unserem Blog", published: "Veröffentlicht",
+  stay: "Wo wohnst du?", stayLead: "Wir haben Büros in den drei wichtigsten Urlaubsorten. Wähle deinen für die Ausflüge mit Abholung in deiner Nähe, Fahrzeiten und dein nächstes Büro.",
+  distances: "Ungefähre Fahrzeiten", officeHere: "Unsere Büros hier", ourOffices: "Unsere Büros auf Lanzarote",
+  finderTitle: "Finde deinen Ausflug", resortAny: "Beliebiger Ort", catAny: "Beliebige Aktivität", find: "Ausflüge anzeigen",
+  filters: { all: "Alle", family: "Familie", couples: "Paare", adventure: "Abenteuer", "half-day": "Halbtags", "full-day": "Ganztags", "island-hop": "Andere Inseln", wildlife: "Tierwelt", "rainy-day": "Windiger / Regentag", nightlife: "Nachtleben", pack: "Pakete" },
+  maxPrice: "Höchstpreis", results: "Ausflüge", noResults: "Keine Ausflüge passen zu diesen Filtern.",
+  contact: "Kontakt", call: "Anrufen", email: "E-Mail", followUs: "Folge uns",
+  reviewsTitle: "Das sagen unsere Gäste", readReviews: "Lies unsere Bewertungen auf Tripadvisor", googleReviews: (r, n) => `Durchschnittlich mit ${r}★ bewertet in unseren ${n} Büros auf Google. Lies die Bewertungen des Büros in deiner Nähe:`,
+  heroTitle: "Lanzarote-Ausflüge, direkt bei den Einheimischen gebucht",
+  tagline: "Lanzarotes zentrale Anlaufstelle",
+  heroLead: (n) => `${n} Bootstouren, Vulkanausflüge, Buggys, Wassersport und Inseltrips, verkauft von einer Agentur auf Lanzarote seit ${site.foundingYear}, mit ${site.officeCount} Büros in Costa Teguise, Puerto del Carmen und Playa Blanca.`,
+  whyTitle: "Warum bei Tickets Direct buchen?",
+  whyLead: "Wir sind die einzige Ausflugsagentur, die online verkauft und zugleich Büros zum Hereinkommen in allen drei großen Urlaubsorten Lanzarotes hat. Buche im Netz und sprich dann persönlich mit uns.",
+  heritageTitle: "Ein Unternehmen aus Lanzarote seit 2000",
+  heritage: "Tickets Direct ist aus Líneas Marítimas Romero hervorgegangen, einer der bekanntesten Reedereien der Insel. Wir arbeiten nur auf Lanzarote, und jede Empfehlung kommt von Menschen, die hier leben.",
+  islandsTitle: "Reiseziele & Sehenswürdigkeiten", guidesTitle: "Plane deine Reise: lokale Reiseführer",
+  chat: { open: "Hilfe bei der Auswahl?", title: "Tickets-Direct-Assistent", hello: "Hallo! Ich helfe dir, den richtigen Ausflug zu finden. Wo wohnst du, und worauf hast du Lust?", placeholder: "z. B. Bootstour mit Kindern unter 60 €", send: "Senden", human: "Mit einer Person auf WhatsApp sprechen", chips: ["Bootstouren", "Mit Kindern", "Unter 70 €", "Plan für windige Tage", "Kreuzfahrtgast"] },
+  notFound: "Seite nicht gefunden", notFoundLead: "Diese Seite gibt es nicht, unsere Ausflüge schon.",
+  legal: "Impressum", privacy: "Datenschutz", cookies: "Cookies", terms: "AGB", cancellation: "Stornobedingungen",
+  officesLead: `Buche online oder besuche uns persönlich. Wir haben ${site.officeCount} Büros in den wichtigsten Urlaubsorten Lanzarotes.`,
+  addressTbc: "Frag uns per WhatsApp nach dem Weg zu diesem Büro.", directions: "Route",
+  aboutTitle: "Über Tickets Direct Excursions Lanzarote",
+  priceTable: ["Ausflug", "Art", "Dauer", "Ab"],
+  contactTitle: "Tickets Direct kontaktieren", contactLead: "Echte Einheimische, rund um die Uhr, auf Englisch und Spanisch.",
+  destTitle: "Reiseziele auf Lanzarote", destLead: "Jeder Ort, den unsere Ausflüge besuchen, mit den Touren, die dich hinbringen.",
+  quickFacts: "Auf einen Blick", toursTo: (n) => `Ausflüge nach ${n}`, aboutPlace: (n) => `Über ${n}`,
+  langs: "Sprachen", minAge: (n) => `Mindestalter ${n}`, installApp: "App installieren",
+  bk: { option: "Option", date: "Datum", checking: "Verfügbarkeit wird geprüft…", pickDate: "Datum wählen", noDates: "Gerade keine Online-Termine: frag uns auf WhatsApp", total: "Gesamt", depositToday: "Anzahlung heute", onDay: "Rest am Tag", travellers: "Reisende", waBook: "Auf WhatsApp buchen" },
+  badges: { best: "Bestseller", family: "Familienliebling" },
+  reelsTitle: "Ansehen vor dem Buchen", reelsLead: "Echte Clips von den Ausflügen, die wir verkaufen.", reelsNav: "Reels", watchOn: "Ansehen auf", bookThis: "Diesen Ausflug buchen", subscribe: "Auf YouTube abonnieren", tourShorts: "Diesen Ausflug ansehen",
+  counters: { tours: "Ausflüge", since: "verkaufen seit", offices: "Büros vor Ort", rating: "⌀ Google-Bewertung unserer Büros" },
+  byActivity: "Nach Aktivität", fromResort: "Ab deinem Urlaubsort",
+  comboH1: (c, r, n) => `${c} ab ${r} 2026: ${n} Touren mit Abholung`,
+  comboLead: (c, r, n, min, d) => `${n} ${c} holen Gäste in ${r} ab, ab ${min}. Die Dauer reicht von ${d}. Buche online mit Anzahlung oder komm in eines unserer Büros in ${r}.`,
+  pickupPointsTitle: "Abhol- & Treffpunkte", kind: { pickup: "Abholung", meeting: "Treffpunkt" }, time: "Uhrzeit", timeOnTicket: "auf deinem E-Ticket", collectionIn: (n) => `Abholpunkte in ${n}`,
+  app: {
+    title: "Hol dir die Tickets-Direct-App", install: "App installieren", nav: "App holen",
+    lead: "Installiere Tickets Direct auf Handy, Tablet oder Computer: mit einem Tipp zu allen Lanzarote-Ausflügen, Preisen und unserem Assistenten, auch bei schwacher Verbindung.",
+    steps: [
+      ["Android-Handy oder -Tablet", ["Öffne diese Seite in Chrome.", "Tippe auf „App installieren“ oder öffne das ⋮-Menü und wähle „App installieren“.", "Finde Tickets Direct auf deinem Startbildschirm."]],
+      ["iPhone oder iPad", ["Öffne diese Seite in Safari.", "Tippe auf Teilen (Quadrat mit Pfeil).", "Wähle „Zum Home-Bildschirm“ und tippe auf Hinzufügen."]],
+      ["Windows, Mac oder Chromebook", ["Öffne diese Seite in Chrome oder Edge.", "Klicke auf das Installationssymbol in der Adressleiste oder auf „App installieren“.", "Tickets Direct öffnet sich in einem eigenen Fenster und erscheint in deinen Apps."]],
+    ],
+    whyTitle: "Warum installieren?",
+    why: ["Öffnet sofort vom Startbildschirm, wie jede App", "Besuchte Seiten funktionieren auch bei schwacher oder ohne Verbindung", "Assistent, WhatsApp und Buchung immer einen Tipp entfernt", "Kein App-Store und kein Konto nötig"],
+  },
+});
+
 // ---------- routes ----------
 // Tours, categories and destinations keep the exact URLs of the WordPress site (from catalog.json),
 // so existing Google rankings and backlinks carry over. Our own pages use the segments below.
@@ -423,10 +482,10 @@ function header(lang, alt) {
   const other = lang !== "es" ? "es" : "en";
   const otherHref = alt?.[other] || url(other, "home");
   const topDest = destinations.filter((d) => d.curated).concat(destinations.filter((d) => !d.curated).sort((a, b) => b.count - a.count)).slice(0, 8);
-  return `<a class="skip" href="#main">${lang !== "es" ? "Skip to content" : "Saltar al contenido"}</a>
+  return `<a class="skip" href="#main">${lang === "es" ? "Saltar al contenido" : lang === "de" ? "Zum Inhalt springen" : "Skip to content"}</a>
 <header class="site-head"><div class="wrap head-row">
   <a class="logo" href="${url(lang, "home")}" aria-label="${esc(site.name)}"><img src="/assets/brand/logo-header.png" alt="Excursions Tickets Direct" width="167" height="44"></a>
-  <button class="menu-btn" aria-expanded="false" aria-controls="nav">${lang !== "es" ? "Menu" : "Menú"}</button>
+  <button class="menu-btn" aria-expanded="false" aria-controls="nav">${lang === "es" ? "Menú" : lang === "de" ? "Menü" : "Menu"}</button>
   <nav id="nav" class="nav" aria-label="Main">
     <a href="${url(lang, "tours")}">${L.nav.tours}</a>
     <div class="dd"><button aria-expanded="false">${L.nav.activities}</button><div class="dd-menu">${mainCats.map((c) => `<a href="${url(lang, "cat", c.slug)}">${esc(catName(lang, c))}</a>`).join("")}</div></div>
@@ -557,7 +616,7 @@ function homePage(lang) {
 <section class="hero2">
   <div class="hero-slides" aria-hidden="true">${slides.map((im, i) => `<img src="${im.src}" alt="" width="${im.w}" height="${im.h}"${i ? ' loading="lazy"' : ' fetchpriority="high"'} style="--i:${i}">`).join("")}</div>
   <div class="wrap hero2-inner">
-    <p class="eyebrow">${esc(L.tagline)} · ${lang !== "es" ? `since ${site.foundingYear}` : `desde ${site.foundingYear}`}</p>
+    <p class="eyebrow">${esc(L.tagline)} · ${lang !== "es" ? `since ${site.foundingYear}` : lang === "de" ? `seit ${site.foundingYear}` : `desde ${site.foundingYear}`}</p>
     <h1>${esc(L.heroTitle)}</h1>
     <p class="lead">${esc(L.heroLead(tours.length))}</p>
     <form class="finder" action="${url(lang, "tours")}" method="get">
@@ -592,7 +651,7 @@ ${reviewsBlock(lang)}
 <div class="wrap section">${faqBlock(lang, homeFaqs)}</div>`;
   page({
     lang, path: alt[lang], alt, ogImage: hero?.src,
-    title: lang !== "es" ? "Lanzarote Excursions & Tours 2026 | Book Direct with Tickets Direct" : "Excursiones en Lanzarote 2026 | Reserva directo con Tickets Direct",
+    title: lang === "es" ? "Excursiones en Lanzarote 2026 | Reserva directo con Tickets Direct" : lang === "de" ? "Lanzarote-Ausflüge & Touren 2026 | Direkt buchen bei Tickets Direct" : "Lanzarote Excursions & Tours 2026 | Book Direct with Tickets Direct",
     description: lang !== "es"
       ? `Book ${tours.length} Lanzarote excursions direct with the local agency: boat trips, Timanfaya, La Graciosa, buggies and more from ${price("en", minPrice)}. ${site.officeCount} offices, free cancellation up to 24h.`
       : `Reserva ${tours.length} excursiones en Lanzarote directo con la agencia local: barcos, Timanfaya, La Graciosa, buggies y más desde ${price("es", minPrice)}. ${site.officeCount} oficinas, cancelación gratuita 24 h.`,
@@ -690,7 +749,7 @@ function categoryPage(lang, c) {
   const p = url(lang, "cat", c.slug);
   const alt = { en: c.path.en, es: c.path.es };
   const bc = breadcrumbs(lang, [[T[lang].allTours, url(lang, "tours")], [catName(lang, c), p]]);
-  const h1 = c.h1?.[lang] || `${catName(lang, c)} ${lang !== "es" ? "in Lanzarote 2026" : "en Lanzarote 2026"}`;
+  const h1 = c.h1?.[lang] || `${catName(lang, c)} ${lang === "es" ? "en Lanzarote 2026" : lang === "de" ? "auf Lanzarote 2026" : "in Lanzarote 2026"}`;
   const intro = c.intro?.[lang];
   const wpText = c.term?.description?.[lang];
   const meta = c.meta?.[lang] || clip(`${catName(lang, c)}: ${list.length} ${T[lang].results} ${lang !== "es" ? "in Lanzarote from" : "en Lanzarote desde"} ${price(lang, Math.min(...list.map((t) => t.price)))}. ${T[lang].freeCancel}.`, 160);
@@ -714,7 +773,7 @@ function resortPage(lang, r) {
   const body = `<div class="wrap">${bc.html}</div>
 <section class="wrap section page-head"><p class="eyebrow">${icon("pin")}${esc(r.name)}, Lanzarote</p><h1>${esc(r.h1[lang])}</h1><p class="lead">${esc(r.intro[lang])}</p></section>
 <section class="wrap split">
-  <div><h2>${lang !== "es" ? `Our top picks from ${r.name}` : `Nuestras recomendaciones desde ${r.name}`}</h2>${cardGrid(lang, picks)}</div>
+  <div><h2>${lang !== "es" ? `Our top picks from ${r.name}` : lang === "de" ? `Unsere Empfehlungen ab ${r.name}` : `Nuestras recomendaciones desde ${r.name}`}</h2>${cardGrid(lang, picks)}</div>
   <aside class="side"><h2>${L.distances}</h2><table class="dist"><tbody>${r.distances[lang].map(([a, b]) => `<tr><th scope="row">${esc(a)}</th><td>${esc(b)}</td></tr>`).join("")}</tbody></table>
   <h2>${L.officeHere}</h2>${officeList(lang, local)}</aside>
 </section>
@@ -799,7 +858,7 @@ function guidePage(lang, g) {
 <article class="wrap prose-wrap"><header class="page-head"><p class="eyebrow">${L.nav.guides}</p><h1>${esc(G.h1)}</h1><p class="byline">${L.by} · ${L.updated} <time datetime="${UPDATED}">${UPDATED}</time></p><p class="lead">${esc(G.lead)}</p></header>
 <div class="prose">${expandShortcodes(lang, G.body)}</div>
 ${faqBlock(lang, G.faqs)}
-<aside class="cta-box"><h2>${lang !== "es" ? "Need help choosing?" : "¿Te ayudamos a elegir?"}</h2><p>${esc(L.whyLead)}</p><p><a class="btn" href="${url(lang, "tours")}">${L.allTours}</a> <a class="btn wa" href="https://wa.me/${site.whatsapp}" rel="noopener" target="_blank">${icon("wa")}WhatsApp</a></p></aside>
+<aside class="cta-box"><h2>${lang === "es" ? "¿Te ayudamos a elegir?" : lang === "de" ? "Hilfe bei der Auswahl?" : "Need help choosing?"}</h2><p>${esc(L.whyLead)}</p><p><a class="btn" href="${url(lang, "tours")}">${L.allTours}</a> <a class="btn wa" href="https://wa.me/${site.whatsapp}" rel="noopener" target="_blank">${icon("wa")}WhatsApp</a></p></aside>
 </article>
 <section class="wrap section"><h2>${L.guidesTitle}</h2><div class="grid guides">${others.map((x) => `<a class="guide" href="${url(lang, "guide", x.slug)}"><strong>${esc(x[lang].title)}</strong></a>`).join("")}</div></section>`;
   page({
@@ -841,7 +900,7 @@ function postPage(lang, p) {
 ${p.image ? `<img class="post-hero" src="${p.image.src}" alt="${esc(p.image.alt || title)}" width="${p.image.w}" height="${p.image.h}" fetchpriority="high">` : ""}
 <div class="prose">${p.blocks[lang].map((b) => postBlock(lang, b)).join("\n")}</div>
 ${faqBlock(lang, faqs)}
-<aside class="cta-box"><h2>${lang !== "es" ? "Need help choosing?" : "¿Te ayudamos a elegir?"}</h2><p>${esc(L.whyLead)}</p><p><a class="btn" href="${url(lang, "tours")}">${L.allTours}</a> <a class="btn wa" href="https://wa.me/${site.whatsapp}" rel="noopener" target="_blank">${icon("wa")}WhatsApp</a></p></aside>
+<aside class="cta-box"><h2>${lang === "es" ? "¿Te ayudamos a elegir?" : lang === "de" ? "Hilfe bei der Auswahl?" : "Need help choosing?"}</h2><p>${esc(L.whyLead)}</p><p><a class="btn" href="${url(lang, "tours")}">${L.allTours}</a> <a class="btn wa" href="https://wa.me/${site.whatsapp}" rel="noopener" target="_blank">${icon("wa")}WhatsApp</a></p></aside>
 </article>
 ${others.length ? `<section class="wrap section"><h2>${L.blog}</h2><div class="grid guides">${others.map((x) => `<a class="guide" href="${x.path[lang]}"><strong>${esc(x.title[lang])}</strong></a>`).join("")}</div></section>` : ""}`;
   page({
