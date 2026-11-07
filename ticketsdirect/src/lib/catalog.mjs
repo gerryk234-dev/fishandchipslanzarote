@@ -108,12 +108,24 @@ export function loadCatalog(dataDir) {
     .filter((d) => d.path?.en && tours.some((t) => t.destinations.includes(d.id)))
     .map((d) => ({ ...d, curated: placeByWp[d.id] || null }));
 
+  // Any {en, es, …} language map gets de/it/fr filled from English until it is translated.
+  const fillLang = (o, seen = new Set()) => {
+    if (!o || typeof o !== "object" || seen.has(o)) return;
+    seen.add(o);
+    if ("en" in o && "es" in o) for (const l of ["de", "it", "fr"]) if (!(l in o)) o[l] = o.en;
+    for (const v of Object.values(o)) fillLang(v, seen);
+  };
+  [site, categories, resorts, places, destinations].forEach((x) => fillLang(x));
+
   return { site, raw, categories, resorts, places, offices, profiles, pickupPoints: pk.points || [], tours, enquiryTours, tourBy, catBy, destinations, destTerm, locTerm, placeByWp, importedAt: raw.importedAt };
 }
 
 export const UNIT = {
   en: { "per-person": "per person", "per-group": "per group", "per-vehicle": "per vehicle", "per-2-person": "for 2 people", "per-ship": "per boat" },
   es: { "per-person": "por persona", "per-group": "por grupo", "per-vehicle": "por vehículo", "per-2-person": "para 2 personas", "per-ship": "por barco" },
+  de: { "per-person": "pro Person", "per-group": "pro Gruppe", "per-vehicle": "pro Fahrzeug", "per-2-person": "für 2 Personen", "per-ship": "pro Boot" },
+  it: { "per-person": "a persona", "per-group": "a gruppo", "per-vehicle": "a veicolo", "per-2-person": "per 2 persone", "per-ship": "a barca" },
+  fr: { "per-person": "par personne", "per-group": "par groupe", "per-vehicle": "par véhicule", "per-2-person": "pour 2 personnes", "per-ship": "par bateau" },
 };
 
 export function formatPrice(lang, n) {
@@ -123,15 +135,18 @@ export function formatPrice(lang, n) {
 
 export function formatDuration(lang, t) {
   const d = t.duration;
-  if (!d || !d.period) return lang === "en" ? "Flexible" : "Flexible";
+  if (!d || !d.period) return "Flexible";
   const n = d.period;
   const u = String(d.unit || "hours").toLowerCase();
   const words = {
     en: { hour: ["hour", "hours"], day: ["day", "days"], minute: ["min", "min"] },
     es: { hour: ["hora", "horas"], day: ["día", "días"], minute: ["min", "min"] },
-  }[lang];
+    de: { hour: ["Stunde", "Stunden"], day: ["Tag", "Tage"], minute: ["Min.", "Min."] },
+    it: { hour: ["ora", "ore"], day: ["giorno", "giorni"], minute: ["min", "min"] },
+    fr: { hour: ["heure", "heures"], day: ["jour", "jours"], minute: ["min", "min"] },
+  }[lang] || { hour: ["hour", "hours"], day: ["day", "days"], minute: ["min", "min"] };
   const key = u.startsWith("day") ? "day" : u.startsWith("min") ? "minute" : "hour";
-  let s = `${String(n).replace(".", lang === "es" ? "," : ".")} ${words[key][n === 1 ? 0 : 1]}`;
+  let s = `${String(n).replace(".", lang === "en" ? "." : ",")} ${words[key][n === 1 ? 0 : 1]}`;
   if (key === "hour" && d.minutes) s += ` ${d.minutes} min`;
   return s;
 }
