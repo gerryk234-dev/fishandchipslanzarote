@@ -1,0 +1,22 @@
+{
+  "bookingNumber": "10001",
+  "date": "2026-11-05",
+  "locator": "SAMPLE",
+  "seller": "VENTA ONLINE",
+  "tour": "Caves Express",
+  "departure": "2026-11-09",
+  "language": "EN",
+  "package": "From Costa Teguise & Puerto del Carmen",
+  "customerName": "Sample Customer",
+  "country": "United Kingdom (UK)",
+  "phone": "+44 7000 000000",
+  "email": "sample@example.com",
+  "hotelRoom": "Sample Hotel, room 000",
+  "pickupPoint": "Las Vistas Bus Stop",
+  "pickupTime": "08:00",
+  "rates": [{ "label": "Adult", "units": 2, "price": 69.0 }, { "label": "Child", "units": 0, "price": 45.0 }],
+  "total": 138.0,
+  "depositPaid": 34.5,
+  "pending": 103.5,
+  "notes": "Pickup point link goes here\nPick up Point"
+}

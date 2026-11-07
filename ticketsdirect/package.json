@@ -13,13 +13,15 @@
     "redirects": "node scripts/redirect-map.mjs",
     "lang-qa": "node scripts/lang-qa.mjs",
     "google": "node scripts/google-data.mjs",
+    "eticket": "node scripts/make-eticket.mjs",
     "dev": "node build.mjs && node scripts/dev-server.mjs"
   },
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^1.1.0"
+    "@anthropic-ai/sdk": "^1.1.0",
+    "qrcode": "^1.5.4"
   },
   "devDependencies": {
     "sharp": "^0.35.5"
