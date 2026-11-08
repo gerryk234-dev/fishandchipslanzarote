@@ -635,3 +635,19 @@ a:hover { color: var(--navy); }
 .promo-x:hover{opacity:1}
 .promo-bar[hidden]{display:none}
 
+
+/* Tour page: briefing lead + collapsible sections (SEO-safe accordions) */
+.tour-lead { font-size: 1.12rem; line-height: 1.6; margin: 2px 0 16px; font-weight: 500; }
+.incl-top { margin: 0 0 18px; }
+.incl-top h2 { margin-top: 0; }
+.tour-acc { margin-top: 10px; }
+.acc { border-top: 1px solid #e4e8f2; }
+.acc:last-child { border-bottom: 1px solid #e4e8f2; }
+.acc > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 15px 2px; font-weight: 700; font-size: 1.15rem; color: var(--navy, #2f2483); }
+.acc > summary::-webkit-details-marker { display: none; }
+.acc > summary::after { content: ""; width: 10px; height: 10px; border-right: 2.5px solid currentColor; border-bottom: 2.5px solid currentColor; transform: rotate(45deg); transition: transform .2s ease; margin-right: 6px; flex: none; opacity: .7; }
+.acc[open] > summary::after { transform: rotate(-135deg); }
+.acc-body { padding: 0 2px 16px; animation: accOpen .24s ease; }
+@keyframes accOpen { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+.acc .prose, .acc .faq, .acc .steps, .acc .pills { margin: 0; }
+.acc .faq { border: 0; }

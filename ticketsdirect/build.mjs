@@ -677,6 +677,9 @@ function destTile(lang, d) {
   return `<a class="place" href="${destUrl(lang, d)}">${img ? `<img src="${img.thumb}" alt="${esc(d.name[lang])}" loading="lazy" width="560" height="350">` : ""}<strong>${esc(d.name[lang])}</strong><span>${tours.filter((x) => x.destinations.includes(d.id)).length} ${T[lang].results}</span></a>`;
 }
 
+// Collapsible section (SEO-safe: content is in the HTML, native <details> toggles visibility).
+const acc = (title, inner, open = false) => inner ? `<details class="acc"${open ? " open" : ""}><summary><span>${esc(title)}</span></summary><div class="acc-body">${inner}</div></details>` : "";
+
 function tourPage(lang, t) {
   const L = T[lang];
   const c = catBy[t.cat];
@@ -708,17 +711,19 @@ function tourPage(lang, t) {
     <p class="eyebrow"><a href="${url(lang, "cat", c.slug)}">${esc(catName(lang, c))}</a></p>
     <h1>${esc(t.name[lang])}</h1>
     <ul class="facts"><li>${icon("clock")}${esc(d)}</li>${t.price == null ? "" : `<li>${icon("check")}${L.freeCancel}</li>`}${t.languages.length ? `<li>${icon("globe")}${esc(t.languages.join(", "))}</li>` : ""}${t.minAge ? `<li>${icon("shield")}${esc(L.minAge(t.minAge))}</li>` : ""}</ul>
-    ${t.overview[lang] ? `<h2>${L.overview}</h2><div class="prose">${t.overview[lang]}</div>` : ""}
-    ${t.itinerary[lang].length ? `<h2>${L.itinerary}</h2><ol class="steps">${t.itinerary[lang].map((s) => `<li><strong>${esc(s.title)}</strong>${s.text ? `<p>${esc(s.text)}</p>` : ""}</li>`).join("")}</ol>` : ""}
-    ${t.includes[lang].length || t.excludes[lang].length ? `<div class="incl">${t.includes[lang].length ? `<div><h2>${L.includes}</h2><ul class="ticks">${t.includes[lang].map((x) => `<li>${icon("check")}${esc(x)}</li>`).join("")}</ul></div>` : ""}${t.excludes[lang].length ? `<div><h2>${L.excludes}</h2><ul class="ticks no">${t.excludes[lang].map((x) => `<li>${icon("x")}${esc(x)}</li>`).join("")}</ul></div>` : ""}</div>` : ""}
+    <p class="tour-lead">${esc(summary(lang, t))}</p>
+    ${t.includes[lang].length ? `<div class="incl-top"><h2>${L.includes}</h2><ul class="ticks">${t.includes[lang].map((x) => `<li>${icon("check")}${esc(x)}</li>`).join("")}</ul></div>` : ""}
     ${reels.some((r) => r.tour === t.slug) ? `<h2>${L.tourShorts}</h2><div class="tour-shorts">${reels.filter((r) => r.tour === t.slug).slice(0, 4).map((r) => reelCard(lang, r)).join("")}</div>` : ""}
     ${yt && !reels.some((r) => r.tour === t.slug && r.id === yt) ? `<h2>${L.video}</h2><button class="yt" data-yt="${yt}" aria-label="${esc(L.video)}: ${esc(t.name[lang])}"><img src="https://i.ytimg.com/vi/${yt}/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">${icon("play", "yt-play")}</button>` : ""}
-    ${pickupNames.length ? `<h2>${L.pickupsTitle}</h2><p class="pills">${pickupNames.map((p) => { const r = resorts.find((x) => x.wp === p.id); return r ? `<a href="${url(lang, "resort", r.slug)}">${esc(p.name[lang])}</a>` : `<span>${esc(p.name[lang])}</span>`; }).join("")}</p>` : ""}
-    ${t.pickupPoints.length ? `<h2>${L.pickupPointsTitle}</h2>${pointsTable(lang, t.pickupPoints)}` : ""}
-    ${dests.length ? `<h2>${L.placesTitle}</h2><p class="pills">${dests.map((x) => `<a href="${destUrl(lang, x)}">${esc(x.name[lang])}</a>`).join("")}</p>` : ""}
-    <h2>${L.goodToKnow}</h2>
-    <ul class="ticks muted">${gtk.map((g) => `<li>${icon("check")}${esc(g)}</li>`).join("")}${t.info[lang].filter(([k]) => !/cancel/i.test(k)).map(([k, v]) => `<li>${icon("check")}<span><strong>${esc(k)}:</strong> ${esc(v)}</span></li>`).join("")}</ul>
-    ${faqBlock(lang, faqs)}
+    <div class="tour-acc">
+    ${acc(L.overview, t.overview[lang] ? `<div class="prose">${t.overview[lang]}</div>` : "")}
+    ${acc(L.itinerary, t.itinerary[lang].length ? `<ol class="steps">${t.itinerary[lang].map((s) => `<li><strong>${esc(s.title)}</strong>${s.text ? `<p>${esc(s.text)}</p>` : ""}</li>`).join("")}</ol>` : "")}
+    ${t.excludes[lang].length ? acc(L.excludes, `<ul class="ticks no">${t.excludes[lang].map((x) => `<li>${icon("x")}${esc(x)}</li>`).join("")}</ul>`) : ""}
+    ${acc(L.pickupsTitle, [pickupNames.length ? `<p class="pills">${pickupNames.map((p) => { const r = resorts.find((x) => x.wp === p.id); return r ? `<a href="${url(lang, "resort", r.slug)}">${esc(p.name[lang])}</a>` : `<span>${esc(p.name[lang])}</span>`; }).join("")}</p>` : "", t.pickupPoints.length ? pointsTable(lang, t.pickupPoints) : ""].join(""))}
+    ${acc(L.placesTitle, dests.length ? `<p class="pills">${dests.map((x) => `<a href="${destUrl(lang, x)}">${esc(x.name[lang])}</a>`).join("")}</p>` : "")}
+    ${acc(L.goodToKnow, `<ul class="ticks muted">${gtk.map((g) => `<li>${icon("check")}${esc(g)}</li>`).join("")}${t.info[lang].filter(([k]) => !/cancel/i.test(k)).map(([k, v]) => `<li>${icon("check")}<span><strong>${esc(k)}:</strong> ${esc(v)}</span></li>`).join("")}</ul>`)}
+    ${acc(L.faqTitle, faqBlock(lang, faqs, false))}
+    </div>
   </div>
   ${t.price == null ? `<aside class="book-box" aria-label="${L.book}">
     <p class="bb-price"><strong>${L.onRequest}</strong></p>
