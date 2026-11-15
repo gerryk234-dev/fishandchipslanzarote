@@ -51,6 +51,12 @@ function createAuth(store, L, mailer, config) {
       mailer.email({ to: email, toName: u.name, subject: 'Your DELTA sign-in link', text: `Hello ${u.name},\n\nUse this link to sign in to DELTA. It works once and expires in ${config.loginTokenMinutes} minutes:\n\n${config.baseUrl}/auth/verify?token=${token}\n\nIf you didn't ask for this, you can ignore this email.` });
       L.audit(u.name, 'Sign-in link sent', email);
     },
+    /* Confirms a new email address — the same single-use link, which also signs them in. */
+    sendVerification(u) {
+      const token = crypto.randomBytes(32).toString('base64url');
+      store.db.prepare('INSERT INTO login_tokens (hash, email, expires_at) VALUES (?, ?, ?)').run(sha(token), u.email, Date.now() + 24 * 3600e3);
+      mailer.email({ to: u.email, toName: u.name, subject: 'Confirm your DELTA email address', text: `Hello ${u.name},\n\nWelcome to DELTA. Please confirm your email address with this link (valid for 24 hours):\n\n${config.baseUrl}/auth/verify?token=${token}\n\nIf you didn't create an account, you can ignore this email.` });
+    },
     verify(token) {
       const row = store.db.prepare('SELECT * FROM login_tokens WHERE hash = ?').get(sha(String(token || '')));
       if (!row || row.used_at || row.expires_at < Date.now()) return null;

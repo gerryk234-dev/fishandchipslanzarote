@@ -79,7 +79,7 @@ test('payments: fulfilment is idempotent and test payments need the order owner'
   const app = await boot();
   try {
     const a = client(app.url);
-    const r = await a.act('checkout', { name: 'Kim', email: 'kim@example.com', terms: true });
+    const r = await a.act('checkout', { name: 'Kim', email: 'kim@example.com', phone: '+44 7700 900123', nationality: 'British', dob: '1985-04-02', terms: true });
     assert.match(r.redirect, /^#\/pay\/ord_/);
     const orderId = r.redirect.split('/').pop();
     const other = client(app.url); await persona(other, 'Alex Morgan');
@@ -135,4 +135,126 @@ test('production safety: demo-only actions are unavailable when demo mode is off
     assert.equal((await c.get('/dev/mailbox')).status, 404);
     assert.equal((await c.state()).personas.length, 0);
   } finally { app.done(); }
+});
+
+test('registration: email + phone + nationality + date of birth, with validation', async () => {
+  const app = await boot();
+  try {
+    const c = client(app.url);
+    const good = { name: 'Ana López', email: 'ana@example.com', phone: '+34 612 22 58 43', nationality: 'Spanish', dob: '1990-06-01', terms: true };
+    assert.match((await c.act('register', { ...good, phone: 'call me' })).error, /phone number/);
+    assert.match((await c.act('register', { ...good, nationality: 'Martian' })).error, /nationality/);
+    assert.match((await c.act('register', { ...good, dob: '2015-01-01' })).error, /aged 18 and over/);
+    assert.match((await c.act('register', { ...good, terms: false })).error, /terms/);
+    const r = await c.act('register', good);
+    assert.equal(r.ok, true); assert.equal(r.go, '/join');
+    const me = (await c.state()).users[0];
+    assert.equal(me.phone, '+34612225843'); assert.equal(me.nationality, 'Spanish'); assert.equal(me.dob, '1990-06-01'); assert.equal(me.emailVerified, false);
+    assert.equal((await client(app.url).act('register', good)).status, 409);
+    const mail = app.store.db.prepare("SELECT subject FROM outbox WHERE to_email = 'ana@example.com'").get();
+    assert.match(mail.subject, /Confirm your DELTA email/);
+  } finally { app.done(); }
+});
+
+test('Google / Apple sign-in: verified ID token creates or links the account; forged tokens are refused', async () => {
+  const crypto = require('node:crypto'), http = require('node:http');
+  const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', { modulusLength: 2048 });
+  const { privateKey: wrongKey } = crypto.generateKeyPairSync('rsa', { modulusLength: 2048 });
+  const jwk = { ...publicKey.export({ format: 'jwk' }), kid: 'k1', alg: 'RS256', use: 'sig' };
+  const b64 = o => Buffer.from(JSON.stringify(o)).toString('base64url');
+  let claims = {}, signWith = privateKey, lastNonce = '';
+  const idp = http.createServer((req, res) => {
+    let body = ''; req.on('data', d => body += d); req.on('end', () => {
+      if (req.url === '/jwks') return res.end(JSON.stringify({ keys: [jwk] }));
+      if (req.url === '/token') {
+        const p = new URLSearchParams(body);
+        assert.equal(p.get('client_id'), 'gid'); assert.ok(p.get('code_verifier'), 'PKCE verifier sent');
+        const h = b64({ alg: 'RS256', kid: 'k1' }), pl = b64({ iss: 'https://idp.test', aud: 'gid', exp: Math.floor(Date.now() / 1000) + 600, nonce: lastNonce, email_verified: true, ...claims });
+        const sig = crypto.sign('RSA-SHA256', Buffer.from(`${h}.${pl}`), signWith).toString('base64url');
+        return res.end(JSON.stringify({ id_token: `${h}.${pl}.${sig}` }));
+      }
+      res.statusCode = 404; res.end();
+    });
+  });
+  await new Promise(r => idp.listen(0, r));
+  const idpUrl = `http://127.0.0.1:${idp.address().port}`;
+  const app = await boot({ google: { clientId: 'gid', clientSecret: 'gsecret' }, oauthOverrides: { google: { tokenUrl: idpUrl + '/token', jwksUrl: idpUrl + '/jwks', issuers: ['https://idp.test'] } } });
+  const signIn = async c => {
+    const start = await c.get('/auth/google/start');
+    const loc = new URL(start.headers.get('location'));
+    assert.equal(loc.origin + loc.pathname, 'https://accounts.google.com/o/oauth2/v2/auth');
+    assert.equal(loc.searchParams.get('code_challenge_method'), 'S256');
+    lastNonce = loc.searchParams.get('nonce');
+    return c.get(`/auth/google/callback?code=abc&state=${loc.searchParams.get('state')}`);
+  };
+  try {
+    assert.deepEqual((await client(app.url).state()).oauth, { google: true, apple: false });
+    // new person → account created, sent to /join
+    const c = client(app.url); claims = { sub: 'g-1', email: 'New.Person@gmail.com', name: 'New Person' };
+    assert.equal((await signIn(c)).headers.get('location'), '/#/join');
+    const s = await c.state(); assert.equal(s.users[0].name, 'New Person'); assert.deepEqual(s.users[0].signIn, ['email', 'google']);
+    // existing email → linked to the existing account
+    const d = client(app.url); claims = { sub: 'g-2', email: 'alex@example.com', name: 'Alex' };
+    assert.equal((await signIn(d)).headers.get('location'), '/#/portal');
+    assert.equal((await d.state()).users[0].name, 'Alex Morgan');
+    // forged signature, unverified email, replayed state → refused
+    const e = client(app.url); signWith = wrongKey; claims = { sub: 'g-3', email: 'x@gmail.com' };
+    assert.match((await signIn(e)).headers.get('location'), /error=failed/);
+    assert.equal((await e.state()).session, null);
+    signWith = privateKey; claims = { sub: 'g-4', email: 'y@gmail.com', email_verified: false };
+    assert.match((await signIn(client(app.url))).headers.get('location'), /error=failed/);
+    assert.match((await client(app.url).get('/auth/google/callback?code=abc&state=nope')).headers.get('location'), /error=expired/);
+    // not configured → friendly message
+    assert.match((await client(app.url).get('/auth/apple/start')).headers.get('location'), /notconfigured/);
+  } finally { app.done(); idp.close(); }
+});
+
+test('social sign-ups give phone, nationality and date of birth at intake; DOB decides the under-18 flag', async () => {
+  const app = await boot();
+  try {
+    const u = app.L.createUser({ name: 'Social', email: 'social@example.com' });
+    const c = client(app.url);
+    await c.act('login-request', { email: 'social@example.com' });
+    const token = app.store.db.prepare("SELECT body FROM outbox WHERE to_email = 'social@example.com' ORDER BY id DESC").get().body.match(/token=([\w-]+)/)[1];
+    await c.get('/auth/verify?token=' + token);
+    const base = { pregnant: 'no', under18: 'no', medications: '', conditions: '', edu: true, consent: true };
+    assert.match((await c.act('intake', base)).error, /phone number/);
+    assert.equal((await c.act('intake', { ...base, phone: '+353 87 123 4567', nationality: 'Irish', dob: '1979-02-03' })).ok, true);
+    const me = (await c.state()).users[0];
+    assert.equal(me.nationality, 'Irish'); assert.equal(me.intake.under18, 'no'); assert.equal(me.intake.review_status, 'cleared');
+    void u;
+  } finally { app.done(); }
+});
+
+test('Sign in with Apple: form_post callback, first-time name, ES256 client secret', async () => {
+  const crypto = require('node:crypto'), http = require('node:http');
+  const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', { modulusLength: 2048 });
+  const ec = crypto.generateKeyPairSync('ec', { namedCurve: 'P-256' });
+  const jwk = { ...publicKey.export({ format: 'jwk' }), kid: 'a1' };
+  const b64 = o => Buffer.from(JSON.stringify(o)).toString('base64url');
+  let nonce = '', secretOk = false;
+  const idp = http.createServer((req, res) => { let body = ''; req.on('data', d => body += d); req.on('end', () => {
+    if (req.url === '/keys') return res.end(JSON.stringify({ keys: [jwk] }));
+    const p = new URLSearchParams(body), [h, pl, sig] = p.get('client_secret').split('.');
+    secretOk = JSON.parse(Buffer.from(h, 'base64url')).alg === 'ES256' && JSON.parse(Buffer.from(pl, 'base64url')).iss === 'TEAM123'
+      && crypto.verify('sha256', Buffer.from(`${h}.${pl}`), { key: ec.publicKey, dsaEncoding: 'ieee-p1363' }, Buffer.from(sig, 'base64url'));
+    const hh = b64({ alg: 'RS256', kid: 'a1' }), body2 = b64({ iss: 'https://appleid.apple.com', aud: 'com.delta.web', exp: Math.floor(Date.now() / 1000) + 600, nonce, sub: 'apple-1', email: 'relay@privaterelay.appleid.com', email_verified: 'true' });
+    res.end(JSON.stringify({ id_token: `${hh}.${body2}.${crypto.sign('RSA-SHA256', Buffer.from(`${hh}.${body2}`), privateKey).toString('base64url')}` }));
+  }); });
+  await new Promise(r => idp.listen(0, r));
+  const u = `http://127.0.0.1:${idp.address().port}`;
+  const app = await boot({ apple: { clientId: 'com.delta.web', teamId: 'TEAM123', keyId: 'KEY1', privateKey: ec.privateKey.export({ type: 'pkcs8', format: 'pem' }) }, oauthOverrides: { apple: { tokenUrl: u + '/token', jwksUrl: u + '/keys' } } });
+  try {
+    const c = client(app.url);
+    const loc = new URL((await c.get('/auth/apple/start')).headers.get('location'));
+    assert.equal(loc.searchParams.get('response_mode'), 'form_post');
+    nonce = loc.searchParams.get('nonce');
+    const form = new URLSearchParams({ code: 'c', state: loc.searchParams.get('state'), user: JSON.stringify({ name: { firstName: 'Mia', lastName: 'Stone' } }) });
+    const r = await fetch(app.url + '/auth/apple/callback', { method: 'POST', body: form, redirect: 'manual' });
+    assert.equal(r.status, 303); assert.equal(r.headers.get('location'), '/#/join');
+    assert.ok(secretOk, 'client secret is a valid ES256 JWT');
+    const cookie = r.headers.get('set-cookie').split(';')[0];
+    const s = await fetch(app.url + '/api/state', { headers: { cookie } }).then(x => x.json());
+    assert.equal(s.users[0].name, 'Mia Stone'); assert.deepEqual(s.users[0].signIn, ['email', 'apple']);
+  } finally { app.done(); idp.close(); }
 });

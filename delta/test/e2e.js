@@ -35,6 +35,7 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) failed+
   // new visitor: join → test payment → intake (meds) → simulate → safety review
   await api('logout'); await fresh('/join');
   await p.fill('input[name=name]', 'Riley Test'); await p.fill('input[name=email]', 'riley@example.com');
+  await p.fill('input[name=phone]', '+44 7700 900555'); await p.selectOption('select[name=nationality]', 'British'); await p.fill('input[name=dob]', '1988-03-14');
   await p.check('input[name=terms]'); await p.click('text=Complete purchase & continue'); await wait();
   ok(p.url().includes('#/pay/'), 'checkout → test payment page');
   await p.click('text=Pay (test)'); await wait();
@@ -52,7 +53,7 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) failed+
   ok(Math.abs(me.expiresAt - d.getTime()) < 864e5 * 1.1, 'early renewal adds 6 months to existing expiry');
   // duplicate account protection
   await api('logout'); const dup = await api('checkout', { name: 'X', email: 'riley@example.com', terms: true });
-  ok(/already have a DELTA account/.test(dup.error || ''), 'checkout refuses an existing email while signed out');
+  ok(/already a DELTA account/.test(dup.error || ''), 'checkout refuses an existing email while signed out');
 
   // practitioner clears the review (withholding supplements)
   await as('Practitioner'); await visit('/admin/safety');
@@ -103,6 +104,18 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) failed+
   const blocked = await api('lesson-done', { key: 'body:2' }); ok(/paused/.test(blocked.error || ''), 'server refuses member-only action after expiry');
   await visit('/join'); await p.check('input[name=terms]'); await p.click('text=Complete purchase & continue'); await wait(); await p.click('text=Pay (test)'); await wait();
   const s2 = await state(); ok(Math.abs((s2.users[0].expiresAt - s2.now) / 864e5 - 182) < 4, 'expired repurchase: 6 months from purchase date');
+
+  // registration page: validation, then a new account
+  await api('logout'); await fresh('/register');
+  ok((await p.locator('.btn.social').count()) === 2, 'Google and Apple buttons shown on registration');
+  await p.fill('input[name=name]', 'Ana López'); await p.fill('input[name=email]', 'ana@example.com'); await p.fill('input[name=phone]', '+34 612 22 58 43');
+  await p.selectOption('select[name=nationality]', 'Spanish'); await p.fill('input[name=dob]', '1990-06-01'); await p.check('input[name=terms]');
+  await p.click('text=Create account'); await wait();
+  let ana = (await state()).users[0];
+  ok(p.url().endsWith('#/join') && ana.name === 'Ana López' && ana.phone === '+34612225843' && ana.nationality === 'Spanish', 'registered with email, phone, nationality and date of birth');
+  await visit('/account'); ok((await main()).includes('not confirmed'), 'account shows email not yet confirmed');
+  await p.fill('#details input[name=phone]', '+34 600 000 000'); await p.click('text=Save details'); await wait();
+  ok((await state()).users[0].phone === '+34600000000', 'details can be updated in Account');
 
   // email sign-in link round trip (via dev mailbox)
   await api('logout'); await fresh('/login');

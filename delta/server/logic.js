@@ -6,7 +6,7 @@ const D = require('../shared/data.js');
 const Dom = require('../shared/domain.js');
 const { DAY } = Dom;
 
-const DEFAULT_SETTINGS = { price: 295, voicePrice: 45, voiceQuestions: 3, voiceTurnaround: '5 working days', reminderDays: [30, 7], accessMonths: 6, autoPublish: true, ruleset: D.CURRENT_RULESET };
+const DEFAULT_SETTINGS = { minAge: 18, price: 295, voicePrice: 45, voiceQuestions: 3, voiceTurnaround: '5 working days', reminderDays: [30, 7], accessMonths: 6, autoPublish: true, ruleset: D.CURRENT_RULESET };
 const id = p => p + '_' + crypto.randomBytes(6).toString('base64url');
 const money = n => '£' + Number(n).toFixed(2).replace(/\.00$/, '');
 const fmtDate = t => t ? new Date(t).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
@@ -26,8 +26,8 @@ function createLogic(store, mailer, config) {
 
     /* ── users ── */
     user: uid => store.get('users', uid),
-    createUser({ name, email, role = 'member', marketing = false }) {
-      const u = { id: id('u'), name: String(name).trim().slice(0, 80), email: String(email).trim().toLowerCase(), role, createdAt: L.now(), at: L.now(),
+    createUser({ name, email, role = 'member', marketing = false, phone = null, nationality = null, dob = null }) {
+      const u = { id: id('u'), name: String(name).trim().slice(0, 80), email: String(email).trim().toLowerCase(), role, phone, nationality, dob, createdAt: L.now(), at: L.now(),
         expiresAt: null, intake: null, consent: { marketing: !!marketing, sms: true }, lessonsDone: [], practice: {}, reminders: {}, emailVerified: false };
       store.put('users', u); L.audit(u.name, 'Account created', u.email);
       return u;
@@ -174,6 +174,7 @@ function createLogic(store, mailer, config) {
       for (const p of people) {
         const u = L.withNow(base - 240 * DAY, () => L.createUser({ name: p.name, email: p.email, role: p.role || 'member' }));
         u.emailVerified = true; u.demo = true;
+        if (u.role === 'member') Object.assign(u, { phone: '+44 7700 900' + String(100 + people.indexOf(p)), nationality: ['British', 'Spanish', 'Irish', 'British', 'Nigerian', 'Chinese', 'Irish', 'British'][people.indexOf(p) % 8], dob: `19${70 + people.indexOf(p) * 3}-0${1 + people.indexOf(p) % 9}-15` });
         if (p.intake) u.intake = { ...p.intake };
         L.saveUser(u);
         (p.buy || []).forEach((d, i) => L.withNow(base + d * DAY, () => {

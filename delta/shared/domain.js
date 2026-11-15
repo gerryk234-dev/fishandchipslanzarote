@@ -116,5 +116,22 @@
   }
   const demoLab = (vals = D.DEMO_RESULT) => MINERALS.map(m => `${m.name}, ${vals[m.name]}, mg%`).join('\n') + '\nPb, 0.02, mg%\nHg, 0.01, mg%';
 
-  return { DAY, addMonths, renewedExpiry, memberStatus, hasAccess, STAGES, TEST_STATUSES, stageOf, stageLabel, intakeNeedsReview, parseLab, positionOf, statusOf, rangeSummary, evaluate, buildReport, RULE_TESTS, runRuleTests, demoLab };
+  /* ── profile ── */
+  function ageOn(dob, now) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dob || '')); if (!m) return null;
+    const d = new Date(now); let age = d.getUTCFullYear() - +m[1];
+    if (d.getUTCMonth() + 1 < +m[2] || (d.getUTCMonth() + 1 === +m[2] && d.getUTCDate() < +m[3])) age--;
+    return age;
+  }
+  /* Keeps a leading + and digits; returns null if it can't be a phone number (7–15 digits, E.164). */
+  function normalizePhone(p) {
+    const s = String(p || '').trim(); if (!s) return null;
+    if (!/^\+?[\d\s().-]{7,24}$/.test(s)) return null;
+    const digits = s.replace(/\D/g, '');
+    if (digits.length < 7 || digits.length > 15) return null;
+    return (s.startsWith('+') ? '+' : '') + digits;
+  }
+  const profileComplete = u => !!(u && u.phone && u.nationality && u.dob);
+
+  return { ageOn, normalizePhone, profileComplete, DAY, addMonths, renewedExpiry, memberStatus, hasAccess, STAGES, TEST_STATUSES, stageOf, stageLabel, intakeNeedsReview, parseLab, positionOf, statusOf, rangeSummary, evaluate, buildReport, RULE_TESTS, runRuleTests, demoLab };
 });

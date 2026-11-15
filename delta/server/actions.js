@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const D = require('../shared/data.js');
+const { NATIONALITIES } = require('../shared/countries.js');
 const Dom = require('../shared/domain.js');
 const { can } = require('./state.js');
 
@@ -13,7 +14,29 @@ const need = (cond, msg, status) => { if (!cond) fail(msg, status); };
 const str = (v, max = 500) => String(v ?? '').trim().slice(0, max);
 const GROUPS = [...D.PILLARS.map(p => p.id), 'awakening', 'general'];
 
-function createActions(store, L, auth, payments, mailer, config) {
+function createActions(store, L, auth, payments, mailer, config, oauth) {
+  /* Registration details: phone, nationality, date of birth (with the minimum age from settings). */
+  const readProfile = body => {
+    const phone = Dom.normalizePhone(body.phone);
+    need(phone, 'Please enter a valid phone number, including the country code (for example +44 7700 900123).');
+    need(NATIONALITIES.includes(body.nationality), 'Please choose your nationality.');
+    const dob = String(body.dob || '');
+    const age = Dom.ageOn(dob, L.now());
+    need(age != null && age >= 0 && age < 120 && Date.parse(dob) < L.now(), 'Please enter a valid date of birth.');
+    need(age >= L.settings().minAge, `Sorry — DELTA is for adults aged ${L.settings().minAge} and over.`);
+    return { phone, nationality: body.nationality, dob };
+  };
+  const registerNew = (body, res) => {
+    const email = str(body.email, 200).toLowerCase(), name = str(body.name, 80);
+    need(name, 'Please enter your name.');
+    need(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email), 'Please enter a valid email address.');
+    need(!store.byEmail(email), 'There is already a DELTA account with that email — please sign in instead.', 409);
+    const profile = readProfile(body);
+    const u = L.createUser({ name, email, marketing: !!body.marketing, ...profile });
+    auth.startSession(res, u.id);
+    auth.sendVerification(u);
+    return u;
+  };
   const saveFile = (ownerId, kind, f, allowed) => {
     if (!f || !f.b64) return null;
     const buf = Buffer.from(String(f.b64), 'base64');
@@ -40,18 +63,23 @@ function createActions(store, L, auth, payments, mailer, config) {
     logout: { perm: 'public', fn: ({ req, res }) => { auth.endSession(req, res); return { go: '/' }; } },
     checkout: { perm: 'public', fn: async ({ user, body, res }) => {
       need(body.terms, 'Please accept the terms to continue.');
-      let u = user;
-      if (!u) {
-        const email = str(body.email, 200).toLowerCase(), name = str(body.name, 80);
-        need(name && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email), 'Please enter your name and a valid email.');
-        need(!store.byEmail(email), 'You already have a DELTA account with that email — please sign in first, then renew.', 409);
-        u = L.createUser({ name, email, marketing: !!body.marketing });
-        auth.startSession(res, u.id);
-      }
+      const u = user || registerNew(body, res);
       need(u.role === 'member', 'Staff accounts cannot buy the DELTA Experience.');
       const o = L.createOrder(u, 'experience', { withVoice: !!body.voice });
       return payments.checkout(o, u);
     } },
+    register: { perm: 'public', fn: ({ user, body, res }) => {
+      need(!user, 'You are already signed in.');
+      need(body.terms, 'Please accept the terms and privacy notice to continue.');
+      const u = registerNew(body, res);
+      return { toast: `Welcome, ${u.name.split(' ')[0]}! We've emailed you a link to confirm your address.`, go: '/join' };
+    } },
+    profile: { perm: 'auth', fn: ({ user, body }) => {
+      const name = str(body.name, 80); need(name, 'Please enter your name.');
+      Object.assign(user, { name }, readProfile(body)); L.saveUser(user);
+      L.audit(user.name, 'Profile updated', ''); return { toast: 'Your details are saved.' };
+    } },
+    'resend-verification': { perm: 'auth', fn: ({ user }) => { need(!user.emailVerified, 'Your email is already confirmed.'); auth.sendVerification(user); return { toast: 'Confirmation link sent — check your inbox.' }; } },
     'pay-test': { perm: 'auth', fn: ({ user, body }) => {
       need(payments.mode === 'test', 'Test payments are disabled.');
       const o = store.get('orders', body.orderId); need(o && o.userId === user.id, 'Order not found', 404);
@@ -65,6 +93,9 @@ function createActions(store, L, auth, payments, mailer, config) {
     /* ── any signed-in person ── */
     intake: { perm: 'auth', fn: ({ user, body }) => {
       need(body.edu && body.consent, 'Please confirm both statements to continue.');
+      if (!Dom.profileComplete(user)) Object.assign(user, readProfile(body)); // e.g. joined with Google/Apple
+      const age = Dom.ageOn(user.dob, L.now());
+      if (age != null) body.under18 = age < 18 ? 'yes' : 'no'; // date of birth is authoritative
       const pick = (v, ok) => ok.includes(v) ? v : ok[0];
       const i = { complete: true, pregnant: pick(body.pregnant, ['no', 'yes', 'unspecified']), under18: pick(body.under18, ['no', 'yes']), medications: str(body.medications, 1000), conditions: str(body.conditions, 1000), at: L.now(), consent: true };
       const wasCleared = user.intake?.review_status === 'cleared' && user.intake.medications === i.medications && user.intake.conditions === i.conditions && user.intake.pregnant === i.pregnant && user.intake.under18 === i.under18;

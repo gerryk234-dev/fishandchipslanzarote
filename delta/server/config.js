@@ -16,6 +16,8 @@ const config = {
   stripeWebhookSecret: env.STRIPE_WEBHOOK_SECRET || '',
   smtpUrl: env.SMTP_URL || '',
   mailFrom: env.MAIL_FROM || 'DELTA <no-reply@delta.example>',
+  google: { clientId: env.GOOGLE_CLIENT_ID || '', clientSecret: env.GOOGLE_CLIENT_SECRET || '' },
+  apple: { clientId: env.APPLE_CLIENT_ID || '', teamId: env.APPLE_TEAM_ID || '', keyId: env.APPLE_KEY_ID || '', privateKey: env.APPLE_PRIVATE_KEY || '' },
   adminEmails: (env.ADMIN_EMAILS || '').split(',').map(s => s.trim().toLowerCase()).filter(Boolean),
   cookieSecure: env.COOKIE_SECURE ? env.COOKIE_SECURE === '1' : production,
   sessionDays: 30,

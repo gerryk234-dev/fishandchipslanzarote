@@ -13,7 +13,7 @@ const PERMS = {
 const can = (u, area) => !!u && u.role !== 'member' && (PERMS[u.role] === '*' || (PERMS[u.role] || []).includes(area));
 const CLIENT_DATA_AREAS = ['/admin/members', '/admin/upload', '/admin/exceptions', '/admin/safety', '/admin/reports', '/admin/analyses', '/admin/voice'];
 
-function createState(store, L, mailer, payments, config) {
+function createState(store, L, mailer, payments, config, oauth) {
   const files = uid => store.db.prepare('SELECT id, kind, name, mime, size, at FROM files WHERE user_id = ? ORDER BY at').all(uid);
 
   function memberTest(u, t) {
@@ -28,6 +28,8 @@ function createState(store, L, mailer, payments, config) {
     const tests = store.find('tests', { user_id: u.id });
     return {
       id: u.id, name: u.name, email: staffView || self ? u.email : undefined, role: u.role, expiresAt: u.expiresAt, createdAt: u.createdAt,
+      phone: staffView || self ? u.phone : undefined, nationality: staffView || self ? u.nationality : undefined, dob: staffView || self ? u.dob : undefined,
+      signIn: staffView || self ? ['email', ...oauth.providersFor(u.id)] : undefined, emailVerified: self ? u.emailVerified : undefined,
       intake: self || staffView ? u.intake : undefined, consent: self ? u.consent : undefined,
       lessonsDone: u.lessonsDone || [], practice: self ? u.practice || {} : {},
       inbox: self ? store.find('notifications', { user_id: u.id }, 'desc').slice(0, 100) : [],
@@ -45,7 +47,7 @@ function createState(store, L, mailer, payments, config) {
     const contentAdmin = can(user, '/admin/content'), partnerAdmin = can(user, '/admin/partners');
     const access = !!user && L.hasAccess(user);
     const out = {
-      v: 3, now, demo: config.demo, clockDays: config.demo ? store.kvGet('clockDays', 0) : 0, payments: payments.mode, mail: mailer.mode,
+      v: 3, oauth: oauth.enabled(), now, demo: config.demo, clockDays: config.demo ? store.kvGet('clockDays', 0) : 0, payments: payments.mode, mail: mailer.mode,
       session: user ? user.id : null, role: user ? user.role : null,
       perms: user ? (PERMS[user.role] || []) : [],
       settings: s,

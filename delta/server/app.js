@@ -10,6 +10,7 @@ const { createAuth } = require('./auth');
 const { createPayments } = require('./payments');
 const { createState, can } = require('./state');
 const { createActions } = require('./actions');
+const { createOAuth } = require('./oauth');
 
 function createApp(config) {
   const store = open(config.dbFile || path.join(config.dataDir, 'delta.db'));
@@ -17,8 +18,9 @@ function createApp(config) {
   const L = createLogic(store, mailer, config);
   const auth = createAuth(store, L, mailer, config);
   const payments = createPayments(store, L, config);
-  const state = createState(store, L, mailer, payments, config);
-  const run = createActions(store, L, auth, payments, mailer, config);
+  const oauth = createOAuth(store, L, auth, config);
+  const state = createState(store, L, mailer, payments, config, oauth);
+  const run = createActions(store, L, auth, payments, mailer, config, oauth);
   L.seedContent();
   if (config.demo) L.seedDemo();
   L.runReminders();
@@ -61,6 +63,15 @@ function createApp(config) {
     if (!u) return res.redirect('/#/login?expired=1');
     auth.startSession(res, u.id);
     res.redirect(u.role === 'member' ? '/#/portal' : '/#/admin');
+  });
+  /* Google / Apple sign-in. Apple returns via a form POST, Google via a GET redirect. */
+  app.get('/auth/:provider/start', (req, res) => {
+    const url = oauth.start(req.params.provider, req.query.next);
+    res.redirect(url || '/#/login?error=notconfigured');
+  });
+  app.all('/auth/:provider/callback', express.urlencoded({ extended: false, limit: '20kb' }), async (req, res) => {
+    try { res.redirect(303, '/#' + await oauth.callback(req.params.provider, req.method === 'POST' ? req.body : req.query, res)); }
+    catch (e) { console.error('oauth', req.params.provider, e.message); res.redirect(303, '/#/login?error=failed'); }
   });
   /* Private files: owner or staff with a relevant area. Always served as a download. */
   app.get('/api/files/:id', (req, res) => {
