@@ -38,13 +38,14 @@ No public view counts, but priority is readable from sitemap + internal linking.
 1. **Price teaser** — "From €X" = the *cheapest* day; a tooltip says the final price "varies depending on the day or season" → **dynamic/seasonal pricing per date**.
 2. **`<calendar-form>` Vue widget** holds the booking logic:
    - `dates_available_init` = an **explicit allow-list of departure dates** (e.g. this tour runs ~every 2–3 days, not daily). The calendar only enables those dates — real availability, not faked.
+   - **Departure times/sessions:** a `show_sessions` flag supports **multiple time-slots on the same day**. On the tours sampled it was `0` (single fixed departure, pickup **time printed on the voucher**), but some dates appear twice in the list = the system holding two sessions for one day. So it handles both dates and multiple departure times per day.
    - Passenger categories: **Adult (>11)**, **Child (2–11)**, plus baby/senior tiers per tour.
    - Languages offered per departure (ES/EN/FR/DE guide).
    - Each tour carries an `integration` object with a `hash` (per-product booking token).
 3. **Add to cart** (`/show-cart`) → booking form (name, phone *with country code*, hotel, comments where you note children's ages) → **pay**.
 4. **Payment options** (all stated on the tour FAQ): payment-gateway **link sent with your booking number**, **card** (gateway or by phone), **PayPal**, or **bank transfer / cash deposit** with emailed proof to `info@lcteurope.com`. No surcharge on any method.
 5. **Confirmation:** "instant confirmations and digital tickets" — you get a **digital voucher** (print or show on phone) with the **assigned pick-up point**. **Free cancellation up to 24h.**
-6. **Affiliate / agency layer:** every URL carries `?affiliate=<id>&qr_hash=<hash>`; there are `/register-agency` and `/show-agency` pages. Reps/offices get **QR codes** that stamp the affiliate id onto the booking — that's how a physical rep or partner office earns commission on an online booking. (The code in the link you sent me was their *empty fallback*, not a Tickets Direct code — so that particular link tracks to nobody.)
+6. **Affiliate / agency layer (confirmed on `/show-agency`):** two partner tiers — **Travel agencies** and **Affiliates** — register for an account, log into an **"Agency zone,"** and sell LCT's tours for a **"very good commercial margin… start winning from the first booking."** Every URL carries `?affiliate=<id>&qr_hash=<hash>`, and reps/offices get **QR codes** that stamp the affiliate id onto the booking — so a rep or partner office can place/attribute a customer's online booking and earn commission on it. (The code in the link you sent me was their *empty fallback*, not a Tickets Direct code — so that particular link tracks to nobody.) In short, LCT is a **booking platform with a reseller network built in** — structurally what Tickets Direct already is (11 offices + reps), but we have no equivalent attribution layer yet.
 
 ### How this compares to what we built for Tickets Direct
 
