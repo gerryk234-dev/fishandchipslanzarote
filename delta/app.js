@@ -23,7 +23,7 @@ function load() {
   try { S = JSON.parse(localStorage.getItem(KEY)); } catch { S = null; }
   if (!S || S.v !== 2) S = seed();
 }
-function save() { localStorage.setItem(KEY, JSON.stringify(S)); }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch { /* storage unavailable: demo still works for this visit */ } }
 const user = id => S.users.find(u => u.id === id);
 const me = () => S.session ? user(S.session) : null;
 const members = () => S.users.filter(u => u.role === 'member');
@@ -938,7 +938,30 @@ function render() {
 }
 function go(to) { if (location.hash === '#' + to) render(); else location.hash = to; window.scrollTo(0, 0); }
 function toast(msg) { const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 3800); }
-function download(name, text, type = 'application/json') { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); }
+/* In-page dialog (native confirm/prompt and downloads are blocked in sandboxed hosts). */
+function dialog({ title, body = '', input = null, value = '', ok = 'OK', onOk, wide = false }) {
+  document.querySelectorAll('[data-dialog]').forEach(x => x.remove());
+  const d = document.createElement('div');
+  d.dataset.dialog = '1';
+  d.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);display:grid;place-items:center;z-index:300;padding:1rem';
+  d.innerHTML = `<form class="card stack" style="width:100%;max-width:${wide ? '44rem' : '28rem'}" role="dialog" aria-modal="true" aria-label="${esc(title)}"><h2 class="gold">${esc(title)}</h2>${body ? `<p class="sm muted">${esc(body)}</p>` : ''}
+    ${input === 'textarea' ? `<textarea class="code" rows="14" readonly>${esc(value)}</textarea>` : input ? `<input type="text" required value="${esc(value)}" aria-label="${esc(title)}">` : ''}
+    <div class="flex">${onOk ? `<button class="btn">${esc(ok)}</button>` : ''}${input === 'textarea' ? '<button type="button" class="btn ghost" data-copy>Copy</button><button type="button" class="btn ghost" data-dl>Download</button>' : ''}<button type="button" class="btn ghost" data-close>${onOk ? 'Cancel' : 'Close'}</button></div></form>`;
+  const close = () => d.remove();
+  d.querySelector('[data-close]').onclick = close;
+  d.addEventListener('click', e => { if (e.target === d) close(); });
+  d.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  const f = d.querySelector('form');
+  f.addEventListener('submit', e => { e.preventDefault(); e.stopPropagation(); const i = f.querySelector('input'); close(); onOk && onOk(i ? i.value.trim() : true); });
+  document.body.appendChild(d);
+  (f.querySelector('input,textarea,button') || f).focus();
+  return d;
+}
+function download(name, text, type = 'application/json') {
+  const d = dialog({ title: name, body: 'Copy the data below, or download it as a file where your browser allows.', input: 'textarea', value: text, wide: true });
+  d.querySelector('[data-copy]').onclick = async () => { try { await navigator.clipboard.writeText(text); toast('Copied.'); } catch { d.querySelector('textarea').select(); toast('Select all and copy.'); } };
+  d.querySelector('[data-dl]').onclick = () => { try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; a.click(); } catch { toast('Downloads are blocked here — use Copy.'); } };
+}
 
 /* ───────────────────────── actions ───────────────────────── */
 const A = {
@@ -946,7 +969,7 @@ const A = {
   skip(el, ev) { ev.preventDefault(); document.getElementById('main')?.focus?.(); document.getElementById('main')?.scrollIntoView(); },
   nav(el) { go(el.dataset.to); },
   clock(el) { const d = +el.dataset.days; S.clockDays = d === 0 ? 0 : S.clockDays + d; audit('Demo clock moved', `+${S.clockDays} days`, 'Demo'); render(); toast(`Demo date is now ${fmtDate(now())}. Reminders and expiries have been processed.`); },
-  reset() { if (confirm('Reset all demo data in this browser?')) { localStorage.removeItem(KEY); load(); go('/'); } },
+  reset() { dialog({ title: 'Reset demo?', body: 'All demo data in this browser goes back to the starting state.', ok: 'Reset', onOk: () => { try { localStorage.removeItem(KEY); } catch {} S = null; S = seed(); go('/'); toast('Demo reset.'); } }); },
   login(el) { S.session = el.dataset.id; const u = me(); audit('Signed in', u.name, u.name); go(isStaff(u) ? '/admin' : '/portal'); },
   impersonate(el) { S.session = el.dataset.id; audit('Viewed as member', user(el.dataset.id).name); go('/portal'); },
   logout() { S.session = null; go('/'); },
@@ -960,13 +983,13 @@ const A = {
   love(el) { const l = S.laughs.find(x => x.id === el.dataset.id); l.loves++; render(); },
   'report-laugh'(el) { const l = S.laughs.find(x => x.id === el.dataset.id); l.status = 'pending'; l.flag = 'Reported by a member'; audit('Submission reported', l.text.slice(0, 40)); render(); toast('Thanks — a moderator will review it.'); },
   'post-love'(el) { S.posts.find(x => x.id === el.dataset.id).loves++; render(); },
-  'post-report'(el) { const p = S.posts.find(x => x.id === el.dataset.id); const r = prompt('Why are you reporting this post?'); if (r === null) return; p.reported = true; p.reportReason = r || 'No reason given'; audit('Post reported', p.text.slice(0, 40)); render(); toast('Reported to moderators.'); },
+  'post-report'(el) { const p = S.posts.find(x => x.id === el.dataset.id); dialog({ title: 'Report this post', body: 'Tell the moderators what concerns you.', input: 'text', ok: 'Report', onOk: r => { p.reported = true; p.reportReason = r || 'No reason given'; audit('Post reported', p.text.slice(0, 40)); render(); toast('Reported to moderators.'); } }); },
   consent(el) { const u = me(); u.consent[el.dataset.k] = el.checked; audit('Consent updated', `${u.name}: ${el.dataset.k}=${el.checked}`, u.name); save(); },
   export() { const u = me(); download(`delta-data-${u.id}.json`, JSON.stringify({ exportedAt: new Date(now()).toISOString(), profile: { name: u.name, email: u.email }, membership: { expiresAt: u.expiresAt ? new Date(u.expiresAt).toISOString() : null, status: memberStatus(u) }, intake: u.intake, purchases: u.purchases, tests: u.tests, lessonsDone: u.lessonsDone, messages: u.inbox, voiceNotes: S.voiceNotes.filter(v => v.userId === u.id) }, null, 2)); audit('Data export', u.name, u.name); },
-  'delete-request'() { const u = me(); if (!confirm('Send a deletion request? Our team will confirm what can be deleted under the retention policy.')) return; audit('Deletion requested', u.name, u.name); notify(u, 'Deletion request received', 'We will respond within one month, as required by UK GDPR.'); render(); },
+  'delete-request'() { const u = me(); dialog({ title: 'Request deletion?', body: 'Our team will confirm what can be deleted under the retention policy.', ok: 'Send request', onOk: () => { audit('Deletion requested', u.name, u.name); notify(u, 'Deletion request received', 'We will respond within one month, as required by UK GDPR.'); render(); toast('Deletion request sent.'); } }); },
   'set-role'(el) { const u = user(el.dataset.id); audit('Role changed', `${u.name}: ${u.role} → ${el.value}`); u.role = el.value; render(); },
   'set-stage'(el) { const u = user(el.dataset.id), t = latestTest(u); audit('Workflow corrected manually', `${u.name}: ${t.status} → ${el.value}`); t.status = el.value; if (el.value === 'published' && t.generatedAt) t.publishedAt = t.publishedAt || now(); render(); },
-  'set-expiry'(el) { const u = user(el.dataset.id); const reason = prompt(`Reason for changing ${u.name}'s expiry (audited):`); if (!reason) { render(); return; } const old = u.expiresAt; u.expiresAt = new Date(el.value + 'T23:59:00').getTime(); audit('Expiry overridden', `${u.name}: ${fmtDate(old)} → ${fmtDate(u.expiresAt)} — ${reason}`); render(); },
+  'set-expiry'(el) { const u = user(el.dataset.id), val = el.value; if (!val) return; dialog({ title: `Change ${u.name}'s expiry`, body: 'Give a reason — it is written to the audit log.', input: 'text', ok: 'Save', onOk: reason => { const old = u.expiresAt; u.expiresAt = new Date(val + 'T23:59:00').getTime(); audit('Expiry overridden', `${u.name}: ${fmtDate(old)} → ${fmtDate(u.expiresAt)} — ${reason}`); render(); } }); el.value = u.expiresAt ? new Date(u.expiresAt).toISOString().slice(0, 10) : ''; },
   'sample-received'(el) { const u = user(el.dataset.id), t = latestTest(u); t.status = 'lab_processing'; notify(u, 'Sample received', 'Your sample has arrived at the laboratory.'); audit('Sample received', u.name); render(); },
   'fill-lab'(el) { const ta = document.querySelector('textarea[name=data]'); ta.value = el.dataset.k === 'clean' ? demoLab() : el.dataset.k === 'toxic' ? demoLab({ Ca: 50, Mg: 5, Na: 25, K: 8, Zn: 15, Cu: 2 }).replace('Pb, 0.02', 'Pb, 0.31') : 'Ca, 62, mg%\nMg, 3.2, mg%\nNa, 180, ppm\nK, 8, mg%\nZn, sixteen, mg%\nPb, 0.02, mg%'; },
   'reject-lab'(el) { const u = user(el.dataset.id), t = latestTest(u); t.status = 'sample_pending'; t.issues = []; notify(u, 'We need a new sample', 'The laboratory could not complete your analysis. A replacement kit is on its way at no extra cost.'); audit('Lab result rejected — resample', u.name); render(); },
