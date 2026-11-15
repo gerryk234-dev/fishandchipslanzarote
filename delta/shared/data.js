@@ -134,3 +134,9 @@ const SAFETY_QS = [
   { id: 'chronic', q: 'Are you under medical care for any other diagnosed condition?' },
   { id: 'supps', q: 'Are you currently taking supplements?' },
 ];
+
+/* Shared by the browser (global) and the server (require). */
+(function (exportsObj) {
+  if (typeof module !== 'undefined' && module.exports) module.exports = exportsObj;
+  else self.DeltaData = exportsObj;
+})({ PILLARS, EPISODES, VIDEOS, PARTNERS, FAQS, JOKES, MINERALS, DEMO_RESULT, TOXIC, RATIOS, RULESETS, CURRENT_RULESET, SAFETY_QS });

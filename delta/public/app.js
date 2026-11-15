@@ -1,283 +1,67 @@
-/* DELTA — clickable prototype (continuation of the Grok build).
-   Static, no build step: state lives in localStorage so every flow can be demoed end-to-end.
-   In production the state/actions below map 1:1 onto server endpoints + a database. */
+/* DELTA — browser client. Renders the screens from a role-scoped snapshot served by
+   /api/state; every change goes through POST /api/act/:name, where the server enforces
+   the rules. Shared rules (charts, statuses) come from /shared/domain.js. */
 'use strict';
 
 const DAY = 864e5;
-const KEY = 'delta_demo_v2';
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const uid = p => p + '_' + Math.random().toString(36).slice(2, 9);
 const uniq = a => [...new Set(a)];
-let S;
+const { addMonths, positionOf, statusOf, rangeSummary, evaluate, STAGES, stageOf, stageLabel } = Domain;
+let S = null, fetchedAt = 0, chatLog = [];
 
 /* ───────────────────────── time & money ───────────────────────── */
-const now = () => Date.now() + S.clockDays * DAY;
-function addMonths(t, n) { const d = new Date(t), day = d.getDate(); d.setMonth(d.getMonth() + n); if (d.getDate() < day) d.setDate(0); return d.getTime(); }
+const now = () => S.now + (Date.now() - fetchedAt);
 const fmtDate = t => t ? new Date(t).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
 const fmtDT = t => t ? new Date(t).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
 const money = n => '£' + Number(n).toFixed(2).replace(/\.00$/, '');
 const todayKey = () => new Date(now()).toISOString().slice(0, 10);
 
-/* ───────────────────────── state ───────────────────────── */
-function load() {
-  try { S = JSON.parse(localStorage.getItem(KEY)); } catch { S = null; }
-  if (!S || S.v !== 2) S = seed();
+/* ───────────────────────── server ───────────────────────── */
+async function load() {
+  const r = await fetch('/api/state', { credentials: 'same-origin' });
+  if (!r.ok) throw new Error('Could not load DELTA (' + r.status + ')');
+  S = await r.json(); fetchedAt = Date.now();
 }
-function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch { /* storage unavailable: demo still works for this visit */ } }
+/* Calls a server action, then refreshes the snapshot and re-renders (unless told not to). */
+async function act(name, body = {}, { refresh = true } = {}) {
+  let out;
+  try {
+    const r = await fetch('/api/act/' + encodeURIComponent(name), { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'X-Delta': '1' }, body: JSON.stringify(body) });
+    out = await r.json().catch(() => ({ error: 'Unexpected response from server' }));
+    if (!r.ok) { toast(out.error || 'Something went wrong.'); return null; }
+  } catch { toast('Network problem — please check your connection.'); return null; }
+  if (out.redirect && !out.redirect.startsWith('#')) { location.href = out.redirect; return out; } // e.g. Stripe Checkout
+  if (refresh && !out.quiet) await load();
+  if (out.toast) toast(out.toast);
+  if (out.download) download(out.download.name, out.download.text);
+  if (out.open) window.open(out.open, '_blank', 'noopener');
+  const target = out.go || (out.redirect && out.redirect.slice(1));
+  if (target) go(target); else if (refresh && !out.quiet) render();
+  return out;
+}
+const fileToB64 = f => new Promise((res, rej) => { if (!f || !f.size) return res(null); const r = new FileReader(); r.onload = () => res({ name: f.name, mime: f.type, b64: String(r.result).split(',')[1] }); r.onerror = rej; r.readAsDataURL(f); });
+
+/* ───────────────────────── state helpers ───────────────────────── */
 const user = id => S.users.find(u => u.id === id);
 const me = () => S.session ? user(S.session) : null;
 const members = () => S.users.filter(u => u.role === 'member');
 const latestTest = u => u.tests[u.tests.length - 1] || null;
 const reviewTest = u => u.tests.find(t => t.status === 'safety_review') || latestTest(u);
 const publishedTests = u => u.tests.filter(t => t.status === 'published');
-
-function audit(action, details, actor) {
-  const a = actor || (me() ? me().name : 'System');
-  S.audit.unshift({ at: now(), actor: a, action, details });
-  if (S.audit.length > 400) S.audit.length = 400;
-}
-function notify(u, title, body, channel = 'email') {
-  if (channel !== 'sms') u.inbox.unshift({ id: uid('n'), at: now(), title, body, read: false });
-  S.outbox.unshift({ at: now(), to: u.name, channel, title });
-}
-
-/* ───────────────────────── membership rules (brief §02) ───────────────────────── */
-function memberStatus(u) {
-  if (!u.expiresAt) return 'none';
-  const left = u.expiresAt - now();
-  if (left <= 0) return 'expired';
-  if (left <= S.settings.reminderDays[0] * DAY) return 'renewal_due';
-  return 'active';
-}
-const hasAccess = u => !!u && (u.role !== 'member' || ['active', 'renewal_due'].includes(memberStatus(u)));
+const memberStatus = u => Domain.memberStatus(u, now(), S.settings);
+const hasAccess = u => Domain.hasAccess(u, now(), S.settings);
 const STATUS_BADGE = { active: ['Active', 'b-ok'], renewal_due: ['Renewal due', 'b-warn'], expired: ['Paused — expired', 'b-bad'], none: ['Not joined', 'b-mute'] };
 const badge = st => { const [t, c] = STATUS_BADGE[st] || [st, 'b-mute']; return `<span class="badge ${c}">${t}</span>`; };
-
-/* A qualifying test adds six months from the LATER of current expiry or purchase date. */
-function purchaseExperience(u, withVoice) {
-  const t = now();
-  const before = u.expiresAt;
-  const base = Math.max(u.expiresAt || 0, t);
-  u.expiresAt = addMonths(base, S.settings.accessMonths);
-  const kind = u.purchases.some(p => p.type !== 'voice') ? 'retest' : 'experience';
-  const p = { id: uid('ord'), at: t, type: kind, amount: S.settings.price, desc: kind === 'retest' ? 'DELTA Experience — repeat test (+6 months)' : 'The DELTA Experience (test + 6 months access)' };
-  u.purchases.push(p);
-  u.tests.push({ id: uid('t'), created: t, purchaseId: p.id, status: 'sample_pending', minerals: [], toxic: {}, issues: [] });
-  const wasExpired = before && before <= t;
-  notify(u, 'Payment receipt', `${p.desc}: ${money(p.amount)}. Access now runs until ${fmtDate(u.expiresAt)}.`);
-  notify(u, wasExpired ? 'Welcome back — account reactivated' : (kind === 'retest' ? 'Retest booked' : 'Welcome to DELTA'),
-    u.intake?.complete ? 'Your sample kit is on its way. Follow the sample instructions in your portal.' : 'Next step: complete your intake and safety questions in the portal.');
-  audit(kind === 'retest' ? 'Retest purchased' : 'Purchase', `${u.name} — ${money(p.amount)}; expiry ${before ? fmtDate(before) : 'none'} → ${fmtDate(u.expiresAt)}`, u.name);
-  if (withVoice) buyVoiceNote(u, []);
-  return p;
-}
-
-function runReminders() {
-  for (const u of members()) {
-    if (!u.expiresAt) continue;
-    const left = Math.ceil((u.expiresAt - now()) / DAY);
-    u.reminders = u.reminders || {};
-    if (left <= 0) {
-      const k = u.expiresAt + ':exp';
-      if (!u.reminders[k]) { u.reminders[k] = 1; notify(u, 'Your DELTA access has paused', 'Member learning and groups are paused. Your account and reports are kept safe — renew any time with a new test.'); audit('Access expired', u.name, 'Automation'); }
-      continue;
-    }
-    for (const d of S.settings.reminderDays) {
-      const k = u.expiresAt + ':' + d;
-      if (left <= d && !u.reminders[k]) { u.reminders[k] = 1; notify(u, `Your access renews in ${left} day${left === 1 ? '' : 's'}`, `Order a repeat test before ${fmtDate(u.expiresAt)} — early renewals keep every remaining day.`); audit('Renewal reminder sent', `${u.name} (${left} days left)`, 'Automation'); }
-    }
-  }
-}
-
-/* ───────────────────────── workflow (brief §03–04) ───────────────────────── */
-const STAGES = [
-  ['purchased', 'Purchased'], ['intake_pending', 'Intake'], ['sample_pending', 'Sample'], ['lab_processing', 'Lab processing'],
-  ['validation_needed', 'Validation'], ['safety_review', 'Safety review'], ['ready_to_publish', 'Ready'], ['published', 'Published'],
-];
-function stageOf(u, t) {
-  if (!t) return 'none';
-  if (!u.intake?.complete) return 'intake_pending';
-  return t.status;
-}
 function pipelineHTML(u, t) {
   const st = stageOf(u, t);
-  let idx = STAGES.findIndex(s => s[0] === st);
+  const idx = STAGES.findIndex(s => s[0] === st);
   return `<div class="pipeline" aria-label="Progress">${STAGES.map(([k, l], i) => {
     if (k === 'validation_needed' && st !== k) return '';
     if (k === 'safety_review' && st !== k && !(t && t.wasReviewed)) return '';
     return `<span class="${i < idx ? 'done' : i === idx ? 'now' : ''}">${l}</span>`;
   }).join('')}</div>`;
 }
-const stageLabel = st => (STAGES.find(s => s[0] === st) || [st, st.replace(/_/g, ' ')])[1];
-
-function intakeNeedsReview(i) {
-  return i.pregnant !== 'no' || !!i.medications.trim() || !!i.conditions.trim() || i.under18 === 'yes';
-}
-
-/* Lab upload parsing — never infers missing values, never silently accepts unparseable text. */
-function parseLab(text) {
-  const issues = [], seen = {}, toxic = {};
-  const lines = text.split(/\n/).map(l => l.trim()).filter(l => l && !l.startsWith('#'));
-  for (const line of lines) {
-    const m = line.match(/^([A-Za-z]+)\s*[,;:\t ]\s*([^\s,;]+)\s*[,;\t ]?\s*([A-Za-z%µ/]+)?$/);
-    if (!m) { issues.push({ level: 'error', msg: `Could not read line: "${line}"` }); continue; }
-    const [, key, raw, unit] = m;
-    const def = MINERALS.find(x => x.name.toLowerCase() === key.toLowerCase() || x.label.toLowerCase() === key.toLowerCase());
-    const tdef = TOXIC.find(x => x.name.toLowerCase() === key.toLowerCase() || x.label.toLowerCase() === key.toLowerCase());
-    const d = def || tdef;
-    if (!d) { issues.push({ level: 'error', msg: `Unknown element "${key}"` }); continue; }
-    const val = Number(raw);
-    if (!Number.isFinite(val)) { issues.push({ level: 'error', msg: `${d.label}: value "${raw}" is not a number` }); continue; }
-    if (val < 0) { issues.push({ level: 'error', msg: `${d.label}: negative value` }); continue; }
-    if (unit && unit !== d.unit) issues.push({ level: 'error', msg: `${d.label}: unit "${unit}" does not match expected ${d.unit} — not converted automatically` });
-    if (seen[d.name]) { issues.push({ level: 'error', msg: `${d.label} appears twice` }); continue; }
-    seen[d.name] = val;
-    if (tdef) toxic[d.name] = val;
-    else if (val > d.high * 4 || val < d.low / 4) issues.push({ level: 'warn', msg: `${d.label} = ${val} is far outside the band — confirm against the original report` });
-  }
-  for (const d of MINERALS) if (!(d.name in seen)) issues.push({ level: 'error', msg: `Missing ${d.label} — missing values are never inferred` });
-  const minerals = MINERALS.map(d => ({ ...d, value: seen[d.name] ?? null }));
-  return { minerals, toxic, issues };
-}
-
-/* Rules engine: version-controlled, records exact version used. */
-function positionOf(m) { const span = (m.high - m.low) || 1; return Math.round((m.value - m.low) / span * 1000) / 10; }
-function statusOf(m) { return m.value < m.low ? 'Below range' : m.value > m.high ? 'Above range' : 'Inside range'; }
-function rangeSummary(ms) {
-  const g = s => ms.filter(m => statusOf(m) === s).map(m => m.label);
-  const ins = g('Inside range'), lo = g('Below range'), hi = g('Above range'), out = [];
-  if (ins.length) out.push(`${ins.join(', ')} sit inside the laboratory band`);
-  if (lo.length) out.push(`${lo.join(', ')} sit below it`);
-  if (hi.length) out.push(`${hi.join(', ')} sit above it`);
-  return out.length ? out.join('. ') + '. This is an educational reading of the chart, not a diagnosis.' : 'No mineral values yet.';
-}
-function evaluate(minerals, toxicVals, version = S?.settings?.ruleset || CURRENT_RULESET) {
-  const v = Object.fromEntries(minerals.map(m => [m.name, m.value]));
-  const r = {}; RATIOS.forEach(x => r[x.id] = v[x.b] ? Math.round(v[x.a] / v[x.b] * 100) / 100 : null);
-  const tox = TOXIC.filter(t => (toxicVals?.[t.name] ?? 0) > t.high).map(t => t.label);
-  const rs = RULESETS[version];
-  const hits = rs.rules.filter(rule => { try { return rule.when(v, r, tox); } catch { return false; } });
-  return { v, r, tox, hits, rs, version };
-}
-function generate(u, t) {
-  const e = evaluate(t.minerals, t.toxic);
-  const ratioTxt = RATIOS.map(x => { const val = e.r[x.id]; const s = val == null ? 'n/a' : val < x.low ? 'below' : val > x.high ? 'above' : 'inside'; return `${x.id} ${val ?? '—'} (${s} the ${x.low}–${x.high} band)`; }).join('; ') + '.';
-  const lessons = uniq([...e.hits.flatMap(h => h.lessons), ...e.rs.baseline.lessons]);
-  const first = PILLARS.find(p => p.id === lessons[0]);
-  t.ruleset = e.version;
-  t.findings = e.hits.map(h => ({ id: h.id, title: h.title, text: h.text, supplement: !!h.supplement }));
-  t.toxicFlags = e.tox;
-  t.lessons = lessons;
-  t.programme = [...e.hits.map(h => h.prog), e.rs.baseline.prog];
-  t.sections = {
-    patterns: rangeSummary(t.minerals),
-    ratios: ratioTxt,
-    notes: e.hits.length ? e.hits.map(h => h.text).join(' ') : 'Your readings sit close to the laboratory bands DELTA uses. Your learning path focuses on maintaining a steady daily rhythm.',
-    nextStep: `Start with ${first ? first.name + ' — ' + first.tag : 'the six pillars'}, then follow the lessons suggested below.`,
-  };
-  t.generatedAt = now();
-  audit('Report generated', `${u.name} — rule set ${e.version}, ${e.hits.length} rule(s) matched`, 'Automation');
-}
-function routeAfterGenerate(u, t) {
-  const review = u.intake?.review_status === 'needs_review' || (t.toxicFlags || []).length > 0;
-  if (review) {
-    t.status = 'safety_review'; t.wasReviewed = true;
-    notify(u, 'Your results are in', 'Your chart is being prepared. A guide is reviewing your file before any personal programme is released.');
-    audit('Routed to safety review', `${u.name}${t.toxicFlags?.length ? ' — toxic element flag' : ''}${u.intake?.review_status === 'needs_review' ? ' — intake flag' : ''}`, 'Automation');
-  } else if (S.settings.autoPublish) publish(u, t, 'Automation');
-  else { t.status = 'ready_to_publish'; audit('Ready to publish', u.name, 'Automation'); }
-}
-function publish(u, t, actor) {
-  t.status = 'published'; t.publishedAt = now();
-  notify(u, 'Your Mineral Intelligence report is ready', 'Open your portal to read your chart, summary, proposed programme and first lessons.');
-  notify(u, 'Report ready', 'Your DELTA report is ready in the portal.', 'sms');
-  audit('Report published', u.name, actor);
-}
-function ingest(u, t, text, nameOnReport) {
-  const res = parseLab(text);
-  if (nameOnReport && nameOnReport.trim().toLowerCase() !== u.name.toLowerCase())
-    res.issues.unshift({ level: 'error', msg: `Identity check: name on report "${nameOnReport}" does not match client "${u.name}"` });
-  t.raw = text; t.minerals = res.minerals; t.toxic = res.toxic; t.issues = res.issues; t.receivedAt = now();
-  audit('Lab report received', `${u.name} — ${res.issues.length} issue(s)`);
-  if (res.issues.length) { t.status = 'validation_needed'; audit('Sent to exception queue', `${u.name}: ${res.issues.map(i => i.msg).join(' | ')}`, 'Automation'); return false; }
-  generate(u, t); routeAfterGenerate(u, t); return true;
-}
-const demoLab = (vals = DEMO_RESULT, extra = '') => MINERALS.map(m => `${m.name}, ${vals[m.name]}, mg%`).join('\n') + '\nPb, 0.02, mg%\nHg, 0.01, mg%' + extra;
-
-/* Voice notes (brief §14) */
-function buyVoiceNote(u, questions) {
-  const p = { id: uid('ord'), at: now(), type: 'voice', amount: S.settings.voicePrice, desc: 'Practitioner voice note' };
-  u.purchases.push(p);
-  const vn = { id: uid('vn'), orderId: p.id, at: now(), status: 'requested', questions: questions.filter(Boolean).slice(0, S.settings.voiceQuestions), userId: u.id };
-  S.voiceNotes.unshift(vn);
-  notify(u, 'Voice note requested', `Receipt ${money(p.amount)}. Expected turnaround: ${S.settings.voiceTurnaround}.`);
-  audit('Voice note purchased', u.name, u.name);
-  return vn;
-}
-
-/* ───────────────────────── seed data ───────────────────────── */
-function mkMembers() {
-  const d = n => Date.now() + n * DAY;
-  const base = { inbox: [], purchases: [], tests: [], lessonsDone: [], practice: {}, consent: { marketing: false, sms: true }, reminders: {} };
-  const okIntake = { complete: true, pregnant: 'no', medications: '', conditions: '', under18: 'no', review_status: 'cleared', at: d(-30) };
-  return [
-    { id: 'u_founder', name: 'Founder', email: 'founder@delta.example', role: 'admin', ...structuredClone(base) },
-    { id: 'u_prac', name: 'Practitioner', email: 'guide@delta.example', role: 'practitioner', ...structuredClone(base) },
-    { id: 'u_mod', name: 'Moderator', email: 'mod@delta.example', role: 'moderator', ...structuredClone(base) },
-    { id: 'u_sam', name: 'Sam Taylor', email: 'sam@example.com', role: 'member', ...structuredClone(base), _buy: [0], intake: null },
-    { id: 'u_alex', name: 'Alex Morgan', email: 'alex@example.com', role: 'member', ...structuredClone(base), _buy: [-220, -40], intake: { ...okIntake },
-      _labs: [{ Ca: 71, Mg: 2.9, Na: 16, K: 7, Zn: 11, Cu: 3.1 }, DEMO_RESULT] },
-    { id: 'u_jo', name: 'Jo Rivera', email: 'jo@example.com', role: 'member', ...structuredClone(base), _buy: [-21], intake: { ...okIntake, medications: 'Levothyroxine 50mcg', review_status: 'needs_review' },
-      _labs: [{ Ca: 55, Mg: 3.6, Na: 24, K: 9, Zn: 10.5, Cu: 2.1 }] },
-    { id: 'u_pat', name: 'Pat Okafor', email: 'pat@example.com', role: 'member', ...structuredClone(base), _buy: [-18], intake: { ...okIntake },
-      _rawlab: 'Ca, 48, mg%\nMg, 5.1, mg%\nNa, 210, ppm\nK, 9, mg%\nZn, 17, mg%\nPb, 0.03, mg%' },
-    { id: 'u_lee', name: 'Lee Chen', email: 'lee@example.com', role: 'member', ...structuredClone(base), _buy: [-12], intake: { ...okIntake }, _stage: 'lab_processing' },
-    { id: 'u_chris', name: 'Chris Byrne', email: 'chris@example.com', role: 'member', ...structuredClone(base), _buy: [-200], intake: { ...okIntake },
-      _labs: [{ Ca: 44, Mg: 5.5, Na: 26, K: 10, Zn: 15, Cu: 1.9 }] },
-    { id: 'u_dana', name: 'Dana Price', email: 'dana@example.com', role: 'member', ...structuredClone(base), _buy: [-160], intake: { ...okIntake },
-      _labs: [{ Ca: 52, Mg: 4.4, Na: 22, K: 6, Zn: 13, Cu: 2.4 }] },
-  ];
-}
-function seed() {
-  S = {
-    v: 2, clockDays: 0, session: null,
-    settings: { price: 295, voicePrice: 45, voiceQuestions: 3, voiceTurnaround: '5 working days', reminderDays: [30, 7], accessMonths: 6, autoPublish: true, ruleset: CURRENT_RULESET },
-    lessons: PILLARS.map(p => ({ id: p.id, pillar: p.name, title: p.lessons[0], body: p.summary })),
-    founderStory: 'I spent years searching for answers about my own health and energy. Testing my minerals was the first practical step — but the bigger change came from slowing down, getting outside, laughing more and paying attention to what I was feeling. DELTA is the path I wish I had found sooner: practical first, then as deep as you want to go.',
-    episodes: structuredClone(EPISODES), videos: structuredClone(VIDEOS), partners: structuredClone(PARTNERS),
-    users: mkMembers(), voiceNotes: [], audit: [], outbox: [], laughs: [], posts: [],
-  };
-  for (const u of S.users) {
-    if (!u._buy) continue;
-    for (let i = 0; i < u._buy.length; i++) {
-      S.clockDays = u._buy[i];
-      purchaseExperience(u, false);
-      const t = latestTest(u);
-      if (u._labs?.[i]) { t.status = 'lab_processing'; ingest(u, t, demoLab(u._labs[i]), u.name); if (t.status === 'published') t.publishedAt = now() + 9 * DAY; }
-    }
-    if (u._rawlab) { const t = latestTest(u); ingest(u, t, u._rawlab, u.name); }
-    if (u._stage) latestTest(u).status = u._stage;
-    delete u._buy; delete u._labs; delete u._rawlab; delete u._stage;
-  }
-  S.clockDays = 0;
-  const alex = user('u_alex');
-  alex.lessonsDone = ['body:0', 'body:1', 'rest:0', 'ground:0'];
-  S.voiceNotes.push({ id: uid('vn'), at: Date.now() - 3 * DAY, status: 'requested', questions: ['Why is my magnesium low?', 'What should I focus on first?'], userId: 'u_alex' });
-  S.laughs = [
-    { id: uid('l'), type: 'joke', text: 'I tried to write a joke about sodium. Na.', by: 'Alex', at: Date.now() - 5 * DAY, status: 'approved', loves: 14 },
-    { id: uid('l'), type: 'story', text: 'Tried the evening wind-down routine. Fell asleep during the "relaxing music" setup. 10/10.', by: 'Anonymous', at: Date.now() - 3 * DAY, status: 'approved', loves: 22 },
-    { id: uid('l'), type: 'video', text: 'Otters holding hands', url: 'https://www.youtube.com/results?search_query=otters+holding+hands', by: 'Dana', at: Date.now() - 2 * DAY, status: 'approved', loves: 9 },
-    { id: uid('l'), type: 'joke', text: 'Why did the zinc refuse to argue? It was too well grounded.', by: 'Jo', at: Date.now() - DAY, status: 'pending', loves: 0 },
-    { id: uid('l'), type: 'video', text: 'Best cat fails', url: 'http://bit.ly/x9', by: 'Anonymous', at: Date.now() - 3600e3, status: 'pending', loves: 0, flag: 'Shortened link — check destination' },
-  ];
-  S.posts = [
-    { id: uid('p'), group: 'ground', by: 'Dana', at: Date.now() - 4 * DAY, text: 'Tried the lying version of the Energy Circuit tonight — so much calmer than I expected.', loves: 5, replies: [{ by: 'Alex', at: Date.now() - 3 * DAY, text: 'Same! The standing one is harder for me.' }], reported: false },
-    { id: uid('p'), group: 'move', by: 'Alex', at: Date.now() - 2 * DAY, text: 'Anyone else doing the brisk-walk challenge this week? Rainy but worth it.', loves: 3, replies: [], reported: false },
-    { id: uid('p'), group: 'general', by: 'Anonymous member', at: Date.now() - DAY, text: 'Has anyone stopped their medication because of their results?', loves: 0, replies: [], reported: true, reportReason: 'Possible medical advice — needs escalation guidance' },
-  ];
-  S.audit.unshift({ at: Date.now(), actor: 'System', action: 'Demo data created', details: 'Seed members, reports and queues' });
-  return S;
-}
+const fileLink = (fid, label) => fid ? `<a href="/api/files/${esc(fid)}" class="sm">${esc(label)}</a>` : '';
 
 /* ───────────────────────── charts (port of Grok/Recharts charts to SVG) ───────────────────────── */
 function rangeChart(ms, title) {
@@ -355,13 +139,14 @@ function footer() {
   </div><div class="base">DELTA · Analysis · Intelligence · Method · Awakening Human Potential<br>DELTA is an educational wellbeing service. Hair Tissue Mineral Analysis is not a standalone diagnostic tool, and nothing here is medical advice, diagnosis or treatment.</div></footer>`;
 }
 function demobar() {
+  if (!S.demo) return '';
   const u = me();
   return `<div class="demobar"><div class="container">
-    <span><b>Prototype</b> · demo data in this browser only</span>
+    <span><b>Demo mode</b> · payments: ${S.payments === 'stripe' ? 'Stripe' : 'test'} · email: ${S.mail === 'smtp' ? 'SMTP' : 'logged'}</span>
     <span>Signed in: <b>${u ? esc(u.name) + ' (' + u.role + ')' : 'visitor'}</b></span>
     <span>Demo date: <b>${fmtDate(now())}</b>${S.clockDays ? ` (+${S.clockDays}d)` : ''}</span>
     <button data-act="clock" data-days="30">+30 days</button><button data-act="clock" data-days="90">+90 days</button>${S.clockDays ? '<button data-act="clock" data-days="0">Back to today</button>' : ''}
-    <span class="sp"></span><a href="#/login" style="color:var(--gold)">Switch user</a><button data-act="reset">Reset demo</button></div></div>`;
+    <span class="sp"></span><a href="/dev/mailbox" target="_blank" rel="noopener" style="color:var(--gold)">Dev mailbox</a><a href="#/login" style="color:var(--gold)">Switch user</a><button data-act="reset">Reset demo</button></div></div>`;
 }
 function subnav(items, counts = {}) {
   const path = location.hash.slice(1);
@@ -377,7 +162,7 @@ function adminNav() {
     '/admin/voice': S.voiceNotes.filter(v => v.status === 'requested').length,
     '/admin/moderation': S.laughs.filter(l => l.status === 'pending').length + S.posts.filter(p => p.reported).length,
   };
-  return subnav([['/admin', 'Dashboard'], ['/admin/members', 'Members'], ['/admin/upload', 'Lab upload'], ['/admin/exceptions', 'Exceptions'], ['/admin/safety', 'Safety'], ['/admin/reports', 'Reports'], ['/admin/analyses', 'Client charts'], ['/admin/voice', 'Voice notes'], ['/admin/lessons', 'Lessons'], ['/admin/content', 'Content'], ['/admin/moderation', 'Moderation'], ['/admin/partners', 'Partners'], ['/admin/rules', 'Rules'], ['/admin/settings', 'Settings'], ['/admin/audit', 'Audit log'], ['/admin/assistant', 'AI Assistant'], ['/portal', 'Member Portal']], c);
+  return subnav([['/admin', 'Dashboard'], ['/admin/members', 'Members'], ['/admin/upload', 'Lab upload'], ['/admin/exceptions', 'Exceptions'], ['/admin/safety', 'Safety'], ['/admin/reports', 'Reports'], ['/admin/analyses', 'Client charts'], ['/admin/voice', 'Voice notes'], ['/admin/lessons', 'Lessons'], ['/admin/content', 'Content'], ['/admin/moderation', 'Moderation'], ['/admin/partners', 'Partners'], ['/admin/rules', 'Rules'], ['/admin/settings', 'Settings'], ['/admin/audit', 'Audit log'], ['/admin/assistant', 'AI Assistant'], ['/portal', 'Member Portal']].filter(([to]) => to === '/portal' || canArea(to)), c);
 }
 const page = (inner, cls = 'wide') => `<main id="main" tabindex="-1" class="page"><div class="${cls}">${inner}</div></main>`;
 const back = (to, l) => `<a href="#${to}" class="sm muted" style="text-decoration:none">← ${l}</a>`;
@@ -566,19 +351,28 @@ R['/join'] = () => {
     <label class="chk"><input type="checkbox" name="terms" required> I accept the <a href="#/legal">terms</a> and understand DELTA is educational and does not diagnose or treat.</label>
     <label class="chk"><input type="checkbox" name="marketing"> Send me occasional DELTA news (optional).</label>
     <button class="btn block">Complete purchase & continue</button>
-    <p class="xs muted center">Demo purchase — no real payment is taken in this preview.</p>
+    <p class="xs muted center">${S.payments === 'stripe' ? 'You\'ll pay securely on Stripe. DELTA never sees your card details.' : 'TEST MODE — no real payment is taken.'}</p>
+    ${u ? '' : '<p class="xs muted center">Already a member? <a href="#/login">Sign in</a> first to renew.</p>'}
   </form><p class="center mt6"><a href="#/" class="sm muted">Back</a></p>`, 'narrow');
 };
-R['/login'] = () => {
-  const people = S.users;
-  const desc = u => u.role !== 'member' ? u.role : (() => { const t = latestTest(u); return `${STATUS_BADGE[memberStatus(u)][0]} · ${t ? stageLabel(stageOf(u, t)) : 'no test'}`; })();
+R['/login'] = (q = {}) => {
+  const u = me();
   return `<main id="main" class="page" style="display:grid;place-items:center"><div class="card" style="width:100%;max-width:30rem;padding:2rem">
     <div class="center">${logo('').replace('class="logo ', 'style="width:5rem;height:5rem;margin:0 auto 1rem" class="logo ')}<h1 style="font-size:1.5rem;font-weight:600">Sign in to DELTA</h1><p class="sm muted mt2">Access your Mineral Intelligence and the six pillars.</p></div>
-    <div class="stack mt6"><button class="btn ghost block" data-act="login" data-id="u_sam">Continue with Google</button><button class="btn ghost block" data-act="login" data-id="u_sam">Continue with X</button></div>
-    <hr class="sep"><p class="xs muted">Prototype: pick a demo persona to see each stage of the journey.</p>
-    <div class="stack mt3">${people.map(u => `<button class="inner flex between" style="width:100%;background:none;color:var(--fg);cursor:pointer;font:inherit;text-align:left" data-act="login" data-id="${u.id}"><span>${esc(u.name)}</span><span class="xs muted">${esc(desc(u))}</span></button>`).join('')}</div>
-    ${S.session ? '<button class="linkbtn sm mt6" data-act="logout">Sign out</button>' : ''}</div></main>`;
+    ${q.expired ? '<p class="sm b-warn mt4 center">That sign-in link has expired or was already used. Request a new one below.</p>' : ''}
+    ${u ? `<p class="sm mt6 center">Signed in as <b>${esc(u.name)}</b>. <a href="#${isStaff(u) ? '/admin' : '/portal'}">Continue</a> · <button class="linkbtn" data-act="logout">Sign out</button></p>` : ''}
+    ${loginSent ? `<div class="card hl mt6 sm"><b>Check your email.</b> If <b>${esc(loginSent)}</b> has a DELTA account, a sign-in link is on its way. It works once and expires in 20 minutes.${S.demo ? ' <a href="/dev/mailbox" target="_blank" rel="noopener">Open the dev mailbox</a>.' : ''}</div>`
+      : `<form class="stack mt6" data-form="login-email"><label class="f"><span>Email address</span><input type="email" name="email" required autocomplete="email"></label><button class="btn block">Email me a sign-in link</button><p class="xs muted center">No password needed. New here? <a href="#/join">Join the DELTA Experience</a>.</p></form>`}
+    ${S.demo && S.personas.length ? `<hr class="sep"><p class="xs muted">Demo mode: sign in instantly as a persona to see each stage of the journey.</p>
+    <div class="stack mt3">${S.personas.map(p => `<button class="inner flex between" style="width:100%;background:none;color:var(--fg);cursor:pointer;font:inherit;text-align:left" data-act="login" data-id="${p.id}"><span>${esc(p.name)}</span><span class="xs muted">${esc(p.desc.replace('_', ' '))}</span></button>`).join('')}</div>` : ''}</div></main>`;
 };
+function payPage(orderId) {
+  const u = me(); if (!u) return needLogin();
+  return page(`<div class="card center" style="padding:2rem"><span class="badge b-warn">Test mode</span><h1 class="mt4">Test payment</h1>
+    <p class="muted mt4">Stripe isn't connected yet, so this page stands in for the secure checkout. No card is charged. When Stripe keys are added, buyers go to Stripe's own payment page instead.</p>
+    <button class="btn lg mt6" data-act="pay-test" data-id="${esc(orderId)}">Pay (test)</button><p class="mt4"><a href="#/join" class="sm muted">Cancel</a></p></div>`, 'narrow');
+}
+R['/paid'] = () => page(`<div class="card center"><h1>Confirming your payment…</h1><p class="muted mt4">This takes a moment. You'll be taken to your portal automatically.</p></div>`, 'narrow');
 R['/intake'] = () => {
   const u = me(); if (!u) return needLogin();
   const i = u.intake || { pregnant: 'no', medications: '', conditions: '', under18: 'no' };
@@ -628,7 +422,7 @@ R['/portal'] = () => {
       <div class="grid md2 mt4">${sect('Patterns', rep.sections.patterns)}${sect('Ratios', rep.sections.ratios)}${sect('Guide note', rep.sections.guide)}${sect('Next step', rep.sections.nextStep)}</div>
       ${held ? '<p class="sm gold mt4">A guide is reviewing your intake. The personal programme stays hidden until that review is cleared. Charts and general lessons stay available.</p>' : `<h3 class="mt4">Proposed programme</h3><ul class="sm muted mt1">${rep.programme.map(p => `<li>${esc(p)}</li>`).join('')}</ul>`}
       <a href="#/report" class="btn ghost xs mt4">Open full report</a></div>`
-      : (stage !== 'safety_review' ? `<div class="card sm muted">Your Mineral Intelligence report, including the mineral chart, will appear here once laboratory results have been processed and published.${u.intake?.complete ? '<div class="mt4"><button class="btn ghost xs" data-act="simulate">Simulate lab results (demo)</button></div>' : ''}</div>` : '')}
+      : (stage !== 'safety_review' ? `<div class="card sm muted">Your Mineral Intelligence report, including the mineral chart, will appear here once laboratory results have been processed and published.${u.intake?.complete && S.demo ? '<div class="mt4"><button class="btn ghost xs" data-act="simulate">Simulate lab results (demo)</button></div>' : ''}</div>` : '')}
     ${gated(u, `<div class="card"><h2>Next lesson</h2>${nextP ? `<p class="sm muted mt2">${nextP.name}: ${esc(nextP.lessons[+next.split(':')[1]])}</p><a href="#/pillars/${nextP.id}" class="sm mt4" style="display:inline-block">Continue in the six pillars</a>` : '<p class="sm muted mt2">Every current lesson is marked done. <a href="#/learn">Review them</a>.</p>'}
       ${rep?.lessons?.length ? `<p class="xs muted mt4">Suggested from your report: ${rep.lessons.map(id => `<a href="#/pillars/${id}">${PILLARS.find(p => p.id === id).name}</a>`).join(' · ')}</p>` : ''}</div>`)}
     <div class="card"><h2>Next steps</h2><ul class="sm muted mt3"><li>Follow the sample instructions if you have not yet sent your hair.</li><li>Explore the six pillars while you wait.</li><li>Optional: request a practitioner voice note once your report is ready.</li></ul><a href="#/pillars" class="sm mt4" style="display:inline-block">View the six pillars</a></div>
@@ -658,7 +452,7 @@ R['/report'] = (q = {}) => {
     ${t.minerals.map(m => `<tr><td>${esc(m.label)} (${m.name})</td><td>${m.value} ${m.unit}</td><td>${m.low}–${m.high} ${m.unit}</td><td><span class="badge ${statusOf(m) === 'Inside range' ? 'b-ok' : 'b-warn'}">${statusOf(m)}</span></td></tr>`).join('')}
     ${RATIOS.map(x => `<tr><td>Ratio ${x.id}</td><td>${e.r[x.id] ?? '—'}</td><td>${x.low}–${x.high}</td><td>${e.r[x.id] == null ? '' : `<span class="badge ${e.r[x.id] < x.low || e.r[x.id] > x.high ? 'b-warn' : 'b-ok'}">${e.r[x.id] < x.low ? 'Below' : e.r[x.id] > x.high ? 'Above' : 'Inside'}</span>`}</td></tr>`).join('')}
     ${TOXIC.map(x => `<tr><td>${x.label} (${x.name})</td><td>${t.toxic?.[x.name] ?? '—'} ${x.unit}</td><td>below ${x.high}</td><td>${(t.toxic?.[x.name] ?? 0) > x.high ? '<span class="badge b-bad">Flagged for review</span>' : '<span class="badge b-ok">Below reference</span>'}</td></tr>`).join('')}
-  </tbody></table></div><button class="linkbtn sm mt4" data-act="raw" data-t="${t.id}">View original laboratory data</button><pre id="raw-${t.id}" class="mono card p4 mt2" hidden>${esc(t.raw || '')}</pre></div>
+  </tbody></table></div><div class="flex mt4"><button class="linkbtn sm" data-act="raw" data-t="${t.id}">View original laboratory data</button>${fileLink(t.pdfFile, "Download original lab report (PDF)")}</div><pre id="raw-${t.id}" class="mono card p4 mt2" hidden>${esc(t.raw || '')}</pre></div>
   <div class="card mt6"><h2 class="gold">What this may mean</h2><div class="stack mt4">${t.findings.length ? t.findings.map(f => `<div class="inner"><div class="label">${esc(f.title)}</div><p class="sm muted mt1">${esc(f.text)}</p></div>`).join('') : '<p class="sm muted">No rules matched — your readings sit close to the bands DELTA uses.</p>'}
     ${sect('Guide note', t.sections.guide)}</div></div>
   <div class="card mt6"><h2 class="gold">Proposed programme</h2>${held ? '<p class="sm gold mt2">A guide is reviewing your intake. The personal programme stays hidden until that review is cleared.</p>' : `<ul class="sm mt3">${t.programme.map(p => `<li>${esc(p)}</li>`).join('')}</ul>
@@ -689,7 +483,7 @@ R['/laughology'] = (q = {}) => {
   <div class="card"><div class="label">Funny Video of the Day</div>${vid ? `<p class="mt2">${esc(vid.text)}</p><a href="${esc(vid.url)}" target="_blank" rel="noopener nofollow" class="sm">Watch ↗</a>` : '<p class="sm muted mt2">None yet.</p>'}</div>
   <div class="card"><div class="label">Laugh of the Week</div>${week ? `<p class="mt2">${esc(week.text)}</p><p class="xs muted mt1">♥ ${week.loves} · ${esc(week.by)}</p>` : '<p class="sm muted mt2">Share one!</p>'}</div></div>
   <div class="grid md2 mt8" style="align-items:start"><div><div class="chips"><button class="chip ${!cat && q.sort !== 'loved' ? 'on' : ''}" data-act="nav" data-to="/laughology">Latest</button><button class="chip ${q.sort === 'loved' ? 'on' : ''}" data-act="nav" data-to="/laughology?sort=loved">Most Loved</button>${['joke', 'video', 'story'].map(c => `<button class="chip ${cat === c ? 'on' : ''}" data-act="nav" data-to="/laughology?cat=${c}">${c[0].toUpperCase() + c.slice(1)}s</button>`).join('')}</div>
-    <div class="stack mt4">${list.map(l => `<div class="card p4"><div class="xs muted">${l.type} · ${esc(l.by)} · ${fmtDate(l.at)}</div><p class="mt1">${esc(l.text)}</p>${l.url ? `<a href="${esc(l.url)}" target="_blank" rel="noopener nofollow" class="sm">Open link ↗</a>` : ''}<div class="flex mt2"><button class="btn ghost xs" data-act="love" data-id="${l.id}">♥ ${l.loves}</button><button class="linkbtn xs" data-act="report-laugh" data-id="${l.id}">Report</button></div></div>`).join('')}</div></div>
+    <div class="stack mt4">${list.map(l => `<div class="card p4"><div class="xs muted">${l.type} · ${esc(l.by)} · ${fmtDate(l.at)}</div><p class="mt1">${esc(l.text)}</p>${l.url ? `<a href="${esc(l.url)}" target="_blank" rel="noopener nofollow" class="sm">Open link ↗</a>` : ''}<div class="flex mt2"><button class="btn ghost xs" data-act="love" data-id="${l.id}" ${l.loved ? 'aria-pressed="true" disabled' : ''}>♥ ${l.loves}</button><button class="linkbtn xs" data-act="report-laugh" data-id="${l.id}">Report</button></div></div>`).join('')}</div></div>
   <form class="card stack" data-form="laugh"><h2 class="gold">Share a Laugh</h2>
     <label class="f"><span>Type</span><select name="type"><option value="joke">Joke</option><option value="video">Funny video link</option><option value="story">Short story</option></select></label>
     <label class="f"><span>Your joke, story or video title</span><textarea name="text" rows="3" maxlength="500" required></textarea></label>
@@ -712,14 +506,13 @@ R['/community'] = (q, parts) => {
   <form class="card stack mt6" data-form="post" data-group="${g.id}"><label class="f"><span>Share with the group</span><textarea name="text" rows="3" maxlength="1000" required></textarea></label><label class="chk"><input type="checkbox" name="anon"> Post as "Anonymous member"</label><button class="btn">Post</button></form>
   <form class="flex mt6" data-form="group-search" data-group="${g.id}" role="search"><input type="search" name="q" value="${esc(q.q || '')}" placeholder="Search this group" style="max-width:20rem;margin:0"><button class="btn ghost xs">Search</button></form>
   <div class="stack mt4">${posts.map(p => `<div class="card p4"><div class="xs muted">${esc(p.by)} · ${fmtDT(p.at)}</div><p class="mt1">${esc(p.text)}</p>
-    <div class="flex mt2"><button class="btn ghost xs" data-act="post-love" data-id="${p.id}">♥ ${p.loves}</button><button class="linkbtn xs" data-act="post-report" data-id="${p.id}">${p.reported ? 'Reported' : 'Report'}</button></div>
+    <div class="flex mt2"><button class="btn ghost xs" data-act="post-love" data-id="${p.id}" ${p.loved ? 'aria-pressed="true" disabled' : ''}>♥ ${p.loves}</button><button class="linkbtn xs" data-act="post-report" data-id="${p.id}">${p.reported ? 'Reported' : 'Report'}</button></div>
     ${p.replies.map(r => `<div class="inner mt2 sm"><span class="xs muted">${esc(r.by)} · ${fmtDT(r.at)}</span><p>${esc(r.text)}</p></div>`).join('')}
     <form class="flex mt2" data-form="reply" data-id="${p.id}"><input type="text" name="text" placeholder="Reply" required style="flex:1;margin:0"><button class="btn ghost xs">Reply</button></form></div>`).join('') || '<p class="muted">No posts yet — start the conversation.</p>'}</div>`, 'mid');
 };
 
 R['/account'] = () => {
   const u = me(); if (!u) return needLogin();
-  u.inbox.forEach(n => n.read = true); save();
   const vns = S.voiceNotes.filter(v => v.userId === u.id);
   const canVoice = publishedTests(u).length > 0;
   return portalNav() + page(`<h1>Account</h1>
@@ -727,8 +520,8 @@ R['/account'] = () => {
     <div class="card"><h2 class="gold">Membership & billing</h2><p class="sm mt2">${badge(memberStatus(u))} Access until <b>${fmtDate(u.expiresAt)}</b></p><a href="#/join" class="btn xs mt4">Retest & renew</a>
       <h3 class="mt6">Purchases & receipts</h3><div class="tablewrap mt2"><table><thead><tr><th>Date</th><th>Item</th><th>Amount</th></tr></thead><tbody>${u.purchases.slice().reverse().map(p => `<tr><td>${fmtDate(p.at)}</td><td>${esc(p.desc)}</td><td>${money(p.amount)}</td></tr>`).join('') || '<tr><td colspan="3" class="muted">None</td></tr>'}</tbody></table></div></div>
     <div class="card"><h2 class="gold">Practitioner voice notes</h2><p class="sm muted mt2">An optional personal audio explanation of your report. Asynchronous — not a live consultation. ${money(S.settings.voicePrice)}, up to ${S.settings.voiceQuestions} questions, typical turnaround ${esc(S.settings.voiceTurnaround)}. If your questions need a different professional service (for example a doctor), we'll tell you.</p>
-      ${vns.map(v => `<div class="inner mt3 sm"><div class="flex between"><span>${fmtDate(v.at)}</span><span class="badge ${v.status === 'delivered' ? 'b-ok' : 'b-gold'}">${v.status}</span></div><ul class="muted xs mt1">${v.questions.map(q => `<li>${esc(q)}</li>`).join('') || '<li>General explanation of my report</li>'}</ul>${v.status === 'delivered' ? `<div class="player"><button data-act="play" aria-label="Play voice note">▶</button><div class="track"><div></div></div><span class="xs muted">${esc(v.audioName || 'voice-note.m4a')}</span></div>${v.transcript ? `<details class="mt2" style="padding:.4rem .7rem"><summary class="xs">Transcript</summary><p class="xs">${esc(v.transcript)}</p></details>` : ''}` : ''}</div>`).join('')}
-      ${canVoice ? `<form class="stack mt4" data-form="voice">${Array.from({ length: S.settings.voiceQuestions }, (_, i) => `<label class="f"><span>Question ${i + 1} (optional)</span><input type="text" name="q${i}" maxlength="200"></label>`).join('')}<button class="btn ghost">Buy voice note — ${money(S.settings.voicePrice)}</button><p class="xs muted">A task is created for the practitioner only after payment succeeds.</p></form>` : '<p class="xs muted mt3">Available once your report is published.</p>'}</div>
+      ${vns.map(v => `<div class="inner mt3 sm"><div class="flex between"><span>${fmtDate(v.at)}</span><span class="badge ${v.status === 'delivered' ? 'b-ok' : 'b-gold'}">${v.status}</span></div><ul class="muted xs mt1">${v.questions.map(q => `<li>${esc(q)}</li>`).join('') || '<li>General explanation of my report</li>'}</ul>${v.status === 'delivered' ? `${v.audioFile ? `<audio controls preload="none" src="/api/files/${esc(v.audioFile)}?inline=1" style="width:100%;margin-top:.6rem"></audio>` : '<p class="xs muted mt2">Written reply — see transcript.</p>'}${v.transcript ? `<details class="mt2" style="padding:.4rem .7rem"><summary class="xs">Transcript</summary><p class="xs">${esc(v.transcript)}</p></details>` : ''}` : ''}</div>`).join('')}
+      ${canVoice ? `<form class="stack mt4" data-form="voice">${Array.from({ length: S.settings.voiceQuestions }, (_, i) => `<label class="f"><span>Question ${i + 1} (optional)</span><input type="text" name="q${i}" maxlength="200"></label>`).join('')}<button class="btn ghost">Buy voice note — ${money(S.settings.voicePrice)}</button><p class="xs muted">A task is created for the practitioner only after payment succeeds.${S.payments === "test" ? " (Test mode — no real payment.)" : ""}</p></form>` : '<p class="xs muted mt3">Available once your report is published.</p>'}</div>
   </div><div class="stack6">
     <div class="card"><h2 class="gold">Messages</h2><div class="mt3">${u.inbox.map(n => `<div class="inbox-item"><b class="sm">${esc(n.title)}</b><div class="sm muted">${esc(n.body)}</div><div class="xs muted">${fmtDT(n.at)}</div></div>`).join('') || '<p class="sm muted">No messages.</p>'}</div></div>
     <div class="card"><h2 class="gold">Communication & consent</h2><div class="stack mt3">
@@ -742,13 +535,12 @@ R['/account'] = () => {
 };
 
 /* ───────────────────────── admin ───────────────────────── */
-const PERMS = { admin: '*', practitioner: ['/admin', '/admin/members', '/admin/upload', '/admin/exceptions', '/admin/safety', '/admin/reports', '/admin/analyses', '/admin/voice', '/admin/rules', '/admin/assistant'], moderator: ['/admin', '/admin/moderation'], support: ['/admin', '/admin/members', '/admin/audit'] };
+const canArea = area => S.role === 'admin' || (S.perms || []).includes(area);
 function adminGuard(path) {
   const u = me();
   if (!u) return needLogin();
-  if (!isStaff(u)) return page(`<div class="card center"><p class="muted">The admin area is for DELTA staff. <a href="#/login">Switch to the Founder persona</a> to explore it.</p></div>`, 'narrow');
-  const p = PERMS[u.role];
-  if (p !== '*' && !p.includes(path)) return adminNav() + page(`<div class="card"><p class="muted">Your role (<b>${u.role}</b>) does not have access to this area. Role-based access is enforced for founder, practitioner, support, moderator and technical admin.</p></div>`);
+  if (!isStaff(u)) return page(`<div class="card center"><p class="muted">The admin area is for DELTA staff.${S.demo ? ' <a href="#/login">Switch to the Founder persona</a> to explore it.' : ''}</p></div>`, 'narrow');
+  if (!canArea(path)) return adminNav() + page(`<div class="card"><p class="muted">Your role (<b>${u.role}</b>) does not have access to this area.</p></div>`);
   return null;
 }
 const allTests = () => members().flatMap(u => u.tests.map(t => ({ u, t })));
@@ -762,7 +554,7 @@ R['/admin'] = () => {
   return adminNav() + page(`<h1>Admin Dashboard</h1><p class="muted mt2">Manage analyses, run workflows, and review activity.</p>
   <div class="grid md4 mt8">${[['Members', m.length], ['Active', m.filter(u => hasAccess(u)).length], ['Lab reports', tests.filter(x => x.t.receivedAt).length], ['HTMA analyses', tests.filter(x => x.t.generatedAt).length],
     ['Revenue (demo)', money(purchases.reduce((a, p) => a + p.amount, 0))], ['Renewals due', m.filter(u => memberStatus(u) === 'renewal_due').length], ['Expired', m.filter(u => memberStatus(u) === 'expired').length], ['Avg turnaround', turn.length ? (turn.reduce((a, b) => a + b, 0) / turn.length).toFixed(1) + ' d' : '—'],
-    ['Automation success', auto.length ? Math.round(autoOk.length / auto.length * 100) + '%' : '—'], ['Voice-note requests', S.voiceNotes.filter(v => v.status === 'requested').length], ['Partner clicks', S.partners.reduce((a, p) => a + p.clicks, 0)], ['Lessons completed', m.reduce((a, u) => a + u.lessonsDone.length, 0)]]
+    ['Automation success', auto.length ? Math.round(autoOk.length / auto.length * 100) + '%' : '—'], ['Voice-note requests', S.voiceNotes.filter(v => v.status === 'requested').length], ['Partner clicks', S.partners.reduce((a, p) => a + (p.clicks || 0), 0)], ['Lessons completed', m.reduce((a, u) => a + u.lessonsDone.length, 0)]]
     .map(([k, v]) => `<div class="kpi"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('')}</div>
   <div class="grid md4 mt6">${[['Awaiting sample', cnt('sample_pending'), '/admin/members'], ['Lab processing', cnt('lab_processing'), '/admin/upload'], ['Exceptions', cnt('validation_needed'), '/admin/exceptions'], ['Safety review', cnt('safety_review'), '/admin/safety'], ['Ready to publish', cnt('ready_to_publish'), '/admin/reports'], ['Moderation', S.laughs.filter(l => l.status === 'pending').length + S.posts.filter(p => p.reported).length, '/admin/moderation']]
     .map(([k, v, to]) => `<a class="card p4" href="#${to}"><div class="sm muted">${k}</div><div style="font-size:1.6rem;font-weight:300" class="${v ? 'gold' : ''}">${v}</div></a>`).join('')}</div>
@@ -774,10 +566,10 @@ R['/admin/members'] = () => adminNav() + page(`<h1>Members</h1><p class="muted m
   <div class="tablewrap mt6"><table><thead><tr><th>Member</th><th>Status</th><th>Sample / workflow</th><th>Role</th><th>Expires</th><th>Tests</th><th>Actions</th></tr></thead><tbody>
   ${S.users.map(u => { const t = latestTest(u); return `<tr><td>${esc(u.name)}<div class="xs muted">${esc(u.email)}</div></td><td>${u.role === 'member' ? badge(memberStatus(u)) : '<span class="xs muted">staff</span>'}</td>
     <td>${t ? `<select class="mini" data-act="set-stage" data-id="${u.id}">${STAGES.slice(2).map(([k, l]) => `<option value="${k}" ${t.status === k ? 'selected' : ''}>${l}</option>`).join('')}</select>${!u.intake?.complete ? '<div class="xs gold">intake pending</div>' : ''}` : '—'}</td>
-    <td><select class="mini" data-act="set-role" data-id="${u.id}">${['member', 'practitioner', 'moderator', 'support', 'admin'].map(r => `<option ${u.role === r ? 'selected' : ''}>${r}</option>`).join('')}</select></td>
+    <td><select class="mini" data-act="set-role" data-id="${u.id}" ${S.role === 'admin' ? '' : 'disabled'}>${['member', 'practitioner', 'moderator', 'support', 'admin'].map(r => `<option ${u.role === r ? 'selected' : ''}>${r}</option>`).join('')}</select></td>
     <td>${u.role === 'member' ? `<input type="date" class="mini" data-act="set-expiry" data-id="${u.id}" value="${u.expiresAt ? new Date(u.expiresAt).toISOString().slice(0, 10) : ''}">` : '—'}</td>
     <td class="xs">${u.tests.length}</td>
-    <td>${t && t.status === 'sample_pending' && u.intake?.complete ? `<button class="btn ghost xs" data-act="sample-received" data-id="${u.id}">Sample received</button>` : ''} ${u.role === 'member' ? `<button class="linkbtn xs" data-act="impersonate" data-id="${u.id}">View as</button>` : ''}</td></tr>`; }).join('')}
+    <td>${t && t.status === 'sample_pending' && u.intake?.complete ? `<button class="btn ghost xs" data-act="sample-received" data-id="${u.id}">Sample received</button>` : ''} ${u.role === 'member' && S.demo && S.role === 'admin' ? `<button class="linkbtn xs" data-act="impersonate" data-id="${u.id}">View as</button>` : ''}</td></tr>`; }).join('')}
   </tbody></table></div>`);
 
 R['/admin/upload'] = (q = {}) => {
@@ -788,7 +580,7 @@ R['/admin/upload'] = (q = {}) => {
     <label class="f"><span>Client</span><select name="u">${ready.map(x => `<option value="${x.u.id}" ${x.u.id === sel ? 'selected' : ''}>${esc(x.u.name)} — ${stageLabel(x.t.status)} (ordered ${fmtDate(x.t.created)})</option>`).join('')}</select></label>
     <label class="f"><span>Name as printed on the lab report</span><input type="text" name="name" value="${esc(user(sel)?.name || '')}" required></label>
     <label class="f"><span>Lab report PDF (stored with the record; text extraction would populate the box below)</span><input type="file" name="pdf" accept="application/pdf"></label>
-    <label class="f"><span>Extracted / imported values — one per line: <span class="mono">Symbol, value, unit</span></span><textarea class="code" name="data" rows="10" required>${esc(demoLab())}</textarea></label>
+    <label class="f"><span>Extracted / imported values — one per line: <span class="mono">Symbol, value, unit</span></span><textarea class="code" name="data" rows="10" required>${esc(Domain.demoLab())}</textarea></label>
     <div class="flex"><button type="button" class="btn ghost xs" data-act="fill-lab" data-k="clean">Load clean sample</button><button type="button" class="btn ghost xs" data-act="fill-lab" data-k="issues">Load sample with problems</button><button type="button" class="btn ghost xs" data-act="fill-lab" data-k="toxic">Load sample with toxic flag</button></div>
     <button class="btn">Validate & process</button></form>` : '<div class="card mt8 muted">No clients are waiting for results. Mark a sample as received on the <a href="#/admin/members">Members</a> page.</div>'}`, 'mid');
 };
@@ -837,7 +629,7 @@ R['/admin/analyses'] = (q = {}) => {
   const tests = cu.tests.filter(t => t.minerals.length && t.minerals.every(m => m.value != null));
   const t = tests[tests.length - 1];
   if (!t) return adminNav() + page('<h1>Client charts</h1><p class="muted mt4">This client has no complete results yet.</p>');
-  const draft = S._chartDraft && S._chartDraft.u === cu.id ? S._chartDraft.minerals : t.minerals;
+  const draft = chartDraft && chartDraft.u === cu.id ? chartDraft.minerals : t.minerals;
   return adminNav() + page(`<h1>Client charts</h1><p class="muted mt2">One client at a time. The charts explain the range and the change between tests. Each section below is what the guide edits.</p>
   <label class="f mt6" style="max-width:28rem"><span class="xs">Client</span><select data-act="pick-client">${clients.map(u => `<option value="${u.id}" ${u === cu ? 'selected' : ''}>${esc(u.name)} (${u.id})</option>`).join('')}</select></label>
   <div class="stack6 mt6"><div id="live-chart">${rangeChart(draft, `Latest reading for ${cu.name}`)}</div>
@@ -853,7 +645,7 @@ R['/admin/analyses'] = (q = {}) => {
 R['/admin/voice'] = () => adminNav() + page(`<h1>Voice notes</h1><p class="muted mt2">Paid requests only. Record on phone or computer and upload; the client is notified privately.</p>
   <div class="stack mt6">${S.voiceNotes.map(v => { const u = user(v.userId); const rep = publishedTests(u).slice(-1)[0]; return `<div class="card p4"><div class="flex between"><b>${esc(u.name)}</b><span class="badge ${v.status === 'delivered' ? 'b-ok' : 'b-gold'}">${v.status}</span></div><p class="xs muted">Requested ${fmtDT(v.at)} · due ${fmtDate(v.at + 7 * DAY)}</p>
     <ul class="sm mt2">${v.questions.map(q => `<li>${esc(q)}</li>`).join('') || '<li class="muted">General explanation of report</li>'}</ul>${rep ? `<a class="xs" href="#/admin/reports?edit=${rep.id}">Open client report</a>` : ''}
-    ${v.status === 'requested' ? `<form class="stack mt3" data-form="voice-deliver" data-id="${v.id}"><label class="f"><span>Audio file</span><input type="file" name="audio" accept="audio/*" capture></label><label class="f"><span>Transcript / summary (for accessibility)</span><textarea name="transcript" rows="3"></textarea></label><label class="chk"><input type="checkbox" name="refer"> Questions need a different professional service — include signposting</label><button class="btn xs">Upload & notify client</button></form>` : `<p class="xs muted mt2">Delivered ${fmtDT(v.deliveredAt)}</p>`}</div>`; }).join('') || '<p class="muted">No requests.</p>'}</div>`, 'mid');
+    ${v.status === 'requested' ? `<form class="stack mt3" data-form="voice-deliver" data-id="${v.id}"><label class="f"><span>Audio file</span><input type="file" name="audio" accept="audio/*" capture></label><label class="f"><span>Transcript / summary (for accessibility)</span><textarea name="transcript" rows="3"></textarea></label><label class="chk"><input type="checkbox" name="refer"> Questions need a different professional service — include signposting</label><button class="btn xs">Upload & notify client</button></form>` : `<p class="xs muted mt2">Delivered ${fmtDT(v.deliveredAt)} ${fileLink(v.audioFile, '· audio file')}</p>`}</div>`; }).join('') || '<p class="muted">No requests.</p>'}</div>`, 'mid');
 
 R['/admin/lessons'] = () => adminNav() + page(`<h1>Lessons</h1><p class="muted mt2">Edit the six pillar lessons. Members see the saved text on their learning page.</p>
   <div class="stack mt6">${S.lessons.map(l => `<form class="card p4" data-form="lesson" data-id="${l.id}"><div class="xs gold">${esc(l.pillar)}</div><input type="text" name="title" value="${esc(l.title)}"><textarea name="body" rows="4">${esc(l.body)}</textarea><div class="flex mt3"><button class="btn xs">Save lesson</button><label class="f xs" style="display:flex;gap:.4rem;align-items:center"><span>Release on</span><input type="date" name="release" class="mini" value="${l.release || ''}"></label></div></form>`).join('')}</div>`, 'mid');
@@ -895,10 +687,10 @@ R['/admin/settings'] = () => adminNav() + page(`<h1>Settings</h1><p class="muted
 
 R['/admin/audit'] = () => adminNav() + page(`<div class="flex between"><h1>Audit log</h1><button class="btn ghost xs" data-act="export-audit">Export CSV</button></div>
   <div class="tablewrap mt6"><table><thead><tr><th>When</th><th>Who</th><th>Action</th><th>Details</th></tr></thead><tbody>${S.audit.map(a => `<tr><td class="xs">${fmtDT(a.at)}</td><td class="xs">${esc(a.actor)}</td><td>${esc(a.action)}</td><td class="sm muted">${esc(a.details)}</td></tr>`).join('')}</tbody></table></div>
-  <h2 class="mt8">Communications sent</h2><div class="tablewrap mt3"><table><thead><tr><th>When</th><th>To</th><th>Channel</th><th>Message</th></tr></thead><tbody>${S.outbox.slice(0, 60).map(o => `<tr><td class="xs">${fmtDT(o.at)}</td><td>${esc(o.to)}</td><td class="xs">${o.channel}</td><td class="sm">${esc(o.title)}</td></tr>`).join('')}</tbody></table></div>`);
+  <h2 class="mt8">Communications sent</h2><div class="tablewrap mt3"><table><thead><tr><th>When</th><th>To</th><th>Channel</th><th>Message</th><th>Status</th></tr></thead><tbody>${S.outbox.slice(0, 60).map(o => `<tr><td class="xs">${fmtDT(o.at)}</td><td>${esc(o.to)}</td><td class="xs">${o.channel}</td><td class="sm">${esc(o.title)}</td><td class="xs">${esc(o.status || '')}</td></tr>`).join('')}</tbody></table></div>`);
 
 R['/admin/assistant'] = () => adminNav() + page(`<h1>AI Assistant</h1><p class="muted mt2">A workflow helper grounded only in DELTA's own records. It can summarise activity and run routine, already-approved workflow steps. It cannot clear safety reviews, change interpretations or make clinical decisions, and no identifiable health data is sent to a third-party AI provider in this prototype.</p>
-  <div class="card flush chat mt6"><div class="log" id="chatlog">${(S._chat || []).map(m => `<div class="msg ${m.role === 'user' ? 'user' : 'bot'}">${esc(m.text)}</div>`).join('') || '<p class="sm muted">Ask me to publish ready results, summarise activity, list what\'s waiting, or show who is due to renew. Every request is logged.</p>'}</div>
+  <div class="card flush chat mt6"><div class="log" id="chatlog">${chatLog.map(m => `<div class="msg ${m.role === 'user' ? 'user' : 'bot'}">${esc(m.text)}</div>`).join('') || '<p class="sm muted">Ask me to publish ready results, summarise activity, list what\'s waiting, or show who is due to renew. Every request is logged.</p>'}</div>
   <form data-form="assistant"><input type="text" name="q" placeholder="e.g. What is waiting for me today?" autocomplete="off"><button class="btn">Send</button></form></div>`, 'mid');
 
 function assistantReply(q) {
@@ -923,7 +715,6 @@ function notFound() { return page(`<h1>Page not found</h1><p class="mt4"><a href
 
 /* ───────────────────────── router ───────────────────────── */
 function render() {
-  runReminders(); save();
   const [path, qs] = (location.hash.slice(1) || '/').split('?');
   const q = Object.fromEntries(new URLSearchParams(qs || ''));
   const parts = path.split('/').filter(Boolean);
@@ -931,13 +722,22 @@ function render() {
   if (path.startsWith('/admin')) html = adminGuard(path) ?? (R[path] ? R[path](q) : notFound());
   else if (parts[0] === 'pillars' && parts[1]) html = pillarPage(parts[1]);
   else if (parts[0] === 'community') html = R['/community'](q, parts);
+  else if (parts[0] === 'pay') html = payPage(parts[1]);
   else html = R[path] ? R[path](q, parts) : notFound();
   document.getElementById('app').innerHTML = `<a class="skip" href="#main" data-act="skip">Skip to content</a>${demobar()}${header()}${html}${footer()}`;
   document.title = 'DELTA — Awakening Human Potential';
   const log = document.getElementById('chatlog'); if (log) log.scrollTop = log.scrollHeight;
+  onRoute(path, q);
+}
+/* Side effects that belong to arriving on a page. */
+let lastRoute = '';
+function onRoute(path, q) {
+  const key = path + JSON.stringify(q); if (key === lastRoute) return; lastRoute = key;
+  if (path === '/account' && me()?.inbox.some(n => !n.read)) act('mark-read', {}, { refresh: false }).then(() => me()?.inbox.forEach(n => n.read = true));
+  if (path === '/paid' && q.session_id) act('confirm-stripe', { sessionId: q.session_id });
 }
 function go(to) { if (location.hash === '#' + to) render(); else location.hash = to; window.scrollTo(0, 0); }
-function toast(msg) { const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 3800); }
+function toast(msg) { const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 4200); }
 /* In-page dialog (native confirm/prompt and downloads are blocked in sandboxed hosts). */
 function dialog({ title, body = '', input = null, value = '', ok = 'OK', onOk, wide = false }) {
   document.querySelectorAll('[data-dialog]').forEach(x => x.remove());
@@ -963,182 +763,105 @@ function download(name, text, type = 'application/json') {
   d.querySelector('[data-dl]').onclick = () => { try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; a.click(); } catch { toast('Downloads are blocked here — use Copy.'); } };
 }
 
-/* ───────────────────────── actions ───────────────────────── */
+/* ───────────────────────── actions (buttons) ───────────────────────── */
+const ds = el => el.dataset;
 const A = {
   menu(el) { const n = document.getElementById('mainnav'); n.classList.toggle('open'); el.setAttribute('aria-expanded', n.classList.contains('open')); },
-  skip(el, ev) { ev.preventDefault(); document.getElementById('main')?.focus?.(); document.getElementById('main')?.scrollIntoView(); },
+  skip(el, ev) { ev.preventDefault(); const m = document.getElementById('main'); m?.focus(); m?.scrollIntoView(); },
   nav(el) { go(el.dataset.to); },
-  clock(el) { const d = +el.dataset.days; S.clockDays = d === 0 ? 0 : S.clockDays + d; audit('Demo clock moved', `+${S.clockDays} days`, 'Demo'); render(); toast(`Demo date is now ${fmtDate(now())}. Reminders and expiries have been processed.`); },
-  reset() { dialog({ title: 'Reset demo?', body: 'All demo data in this browser goes back to the starting state.', ok: 'Reset', onOk: () => { try { localStorage.removeItem(KEY); } catch {} S = null; S = seed(); go('/'); toast('Demo reset.'); } }); },
-  login(el) { S.session = el.dataset.id; const u = me(); audit('Signed in', u.name, u.name); go(isStaff(u) ? '/admin' : '/portal'); },
-  impersonate(el) { S.session = el.dataset.id; audit('Viewed as member', user(el.dataset.id).name); go('/portal'); },
-  logout() { S.session = null; go('/'); },
-  'lesson-done'(el) { const u = me(); if (!u.lessonsDone.includes(el.dataset.key)) u.lessonsDone.push(el.dataset.key); audit('Lesson completed', `${u.name} — ${el.dataset.key}`, u.name); render(); },
-  practice(el) { const u = me(), k = todayKey(), i = +el.dataset.i; const a = u.practice[k] = u.practice[k] || []; el.checked ? a.push(i) : a.splice(a.indexOf(i), 1); save(); },
-  'sample-sent'() { const u = me(); audit('Client posted sample', u.name, u.name); toast('Thanks — we\'ll let you know when the lab receives it.'); },
-  simulate() { const u = me(), t = latestTest(u); t.status = 'lab_processing'; ingest(u, t, demoLab(), u.name); render(); toast(t.status === 'published' ? 'Lab results processed and published.' : `Results received — now in ${stageLabel(t.status)}.`); },
+  clock(el) { act('clock', { days: +el.dataset.days }); },
+  reset() { dialog({ title: 'Reset demo?', body: 'All demo data on this server goes back to the starting state, and you are signed out.', ok: 'Reset', onOk: () => act('reset') }); },
+  login(el) { act('dev-login', { id: el.dataset.id }); },
+  impersonate(el) { act('impersonate', { id: el.dataset.id }); },
+  logout() { act('logout'); },
+  'lesson-done'(el) { act('lesson-done', { key: el.dataset.key }); },
+  practice(el) { act('practice', { i: +el.dataset.i, on: el.checked }); },
+  'sample-sent'() { act('sample-sent'); },
+  simulate() { act('simulate'); },
   play(el) { const bar = el.parentElement.querySelector('.track div'); const on = el.textContent === '▶'; el.textContent = on ? '❚❚' : '▶'; bar.style.transition = on ? 'width 30s linear' : 'none'; bar.style.width = on ? '100%' : getComputedStyle(bar).width; },
   raw(el) { const p = document.getElementById('raw-' + el.dataset.t); p.hidden = !p.hidden; },
-  'partner-click'(el) { const p = S.partners.find(x => x.id === el.dataset.id); p.clicks++; audit('Partner click', p.name, me()?.name || 'Visitor'); save(); toast(`Outbound click to ${p.name} tracked (demo — no external link).`); render(); },
-  love(el) { const l = S.laughs.find(x => x.id === el.dataset.id); l.loves++; render(); },
-  'report-laugh'(el) { const l = S.laughs.find(x => x.id === el.dataset.id); l.status = 'pending'; l.flag = 'Reported by a member'; audit('Submission reported', l.text.slice(0, 40)); render(); toast('Thanks — a moderator will review it.'); },
-  'post-love'(el) { S.posts.find(x => x.id === el.dataset.id).loves++; render(); },
-  'post-report'(el) { const p = S.posts.find(x => x.id === el.dataset.id); dialog({ title: 'Report this post', body: 'Tell the moderators what concerns you.', input: 'text', ok: 'Report', onOk: r => { p.reported = true; p.reportReason = r || 'No reason given'; audit('Post reported', p.text.slice(0, 40)); render(); toast('Reported to moderators.'); } }); },
-  consent(el) { const u = me(); u.consent[el.dataset.k] = el.checked; audit('Consent updated', `${u.name}: ${el.dataset.k}=${el.checked}`, u.name); save(); },
-  export() { const u = me(); download(`delta-data-${u.id}.json`, JSON.stringify({ exportedAt: new Date(now()).toISOString(), profile: { name: u.name, email: u.email }, membership: { expiresAt: u.expiresAt ? new Date(u.expiresAt).toISOString() : null, status: memberStatus(u) }, intake: u.intake, purchases: u.purchases, tests: u.tests, lessonsDone: u.lessonsDone, messages: u.inbox, voiceNotes: S.voiceNotes.filter(v => v.userId === u.id) }, null, 2)); audit('Data export', u.name, u.name); },
-  'delete-request'() { const u = me(); dialog({ title: 'Request deletion?', body: 'Our team will confirm what can be deleted under the retention policy.', ok: 'Send request', onOk: () => { audit('Deletion requested', u.name, u.name); notify(u, 'Deletion request received', 'We will respond within one month, as required by UK GDPR.'); render(); toast('Deletion request sent.'); } }); },
-  'set-role'(el) { const u = user(el.dataset.id); audit('Role changed', `${u.name}: ${u.role} → ${el.value}`); u.role = el.value; render(); },
-  'set-stage'(el) { const u = user(el.dataset.id), t = latestTest(u); audit('Workflow corrected manually', `${u.name}: ${t.status} → ${el.value}`); t.status = el.value; if (el.value === 'published' && t.generatedAt) t.publishedAt = t.publishedAt || now(); render(); },
-  'set-expiry'(el) { const u = user(el.dataset.id), val = el.value; if (!val) return; dialog({ title: `Change ${u.name}'s expiry`, body: 'Give a reason — it is written to the audit log.', input: 'text', ok: 'Save', onOk: reason => { const old = u.expiresAt; u.expiresAt = new Date(val + 'T23:59:00').getTime(); audit('Expiry overridden', `${u.name}: ${fmtDate(old)} → ${fmtDate(u.expiresAt)} — ${reason}`); render(); } }); el.value = u.expiresAt ? new Date(u.expiresAt).toISOString().slice(0, 10) : ''; },
-  'sample-received'(el) { const u = user(el.dataset.id), t = latestTest(u); t.status = 'lab_processing'; notify(u, 'Sample received', 'Your sample has arrived at the laboratory.'); audit('Sample received', u.name); render(); },
-  'fill-lab'(el) { const ta = document.querySelector('textarea[name=data]'); ta.value = el.dataset.k === 'clean' ? demoLab() : el.dataset.k === 'toxic' ? demoLab({ Ca: 50, Mg: 5, Na: 25, K: 8, Zn: 15, Cu: 2 }).replace('Pb, 0.02', 'Pb, 0.31') : 'Ca, 62, mg%\nMg, 3.2, mg%\nNa, 180, ppm\nK, 8, mg%\nZn, sixteen, mg%\nPb, 0.02, mg%'; },
-  'reject-lab'(el) { const u = user(el.dataset.id), t = latestTest(u); t.status = 'sample_pending'; t.issues = []; notify(u, 'We need a new sample', 'The laboratory could not complete your analysis. A replacement kit is on its way at no extra cost.'); audit('Lab result rejected — resample', u.name); render(); },
-  publish(el) { const u = user(el.dataset.u), t = u.tests.find(x => x.id === el.dataset.t); publish(u, t); render(); toast(`Published ${u.name}'s report.`); },
-  'pick-client'(el) { S._chartDraft = null; go('/admin/analyses?u=' + el.value); },
+  'partner-click'(el) { act('partner-click', { id: el.dataset.id }); },
+  love(el) { act('love', { id: el.dataset.id }).then(r => r && load().then(render)); },
+  'report-laugh'(el) { act('report-laugh', { id: el.dataset.id }); },
+  'post-love'(el) { act('post-love', { id: el.dataset.id }).then(r => r && load().then(render)); },
+  'post-report'(el) { dialog({ title: 'Report this post', body: 'Tell the moderators what concerns you.', input: 'text', ok: 'Report', onOk: reason => act('post-report', { id: el.dataset.id, reason }) }); },
+  consent(el) { act('consent', { k: el.dataset.k, v: el.checked }); },
+  export() { act('export', {}, { refresh: false }); },
+  'delete-request'() { dialog({ title: 'Request deletion?', body: 'Our team will confirm what can be deleted under the retention policy.', ok: 'Send request', onOk: () => act('delete-request') }); },
+  'set-role'(el) { act('set-role', { id: el.dataset.id, role: el.value }); },
+  'set-stage'(el) { act('set-stage', { id: el.dataset.id, stage: el.value }); },
+  'set-expiry'(el) { const u = user(el.dataset.id), date = el.value; if (!date) return; dialog({ title: `Change ${u.name}'s expiry`, body: 'Give a reason — it is written to the audit log.', input: 'text', ok: 'Save', onOk: reason => act('set-expiry', { id: u.id, date, reason }) }); el.value = u.expiresAt ? new Date(u.expiresAt).toISOString().slice(0, 10) : ''; },
+  'sample-received'(el) { act('sample-received', { id: el.dataset.id }); },
+  'fill-lab'(el) { const ta = document.querySelector('textarea[name=data]'); ta.value = el.dataset.k === 'clean' ? Domain.demoLab() : el.dataset.k === 'toxic' ? Domain.demoLab({ Ca: 50, Mg: 5, Na: 25, K: 8, Zn: 15, Cu: 2 }).replace('Pb, 0.02', 'Pb, 0.31') : 'Ca, 62, mg%\nMg, 3.2, mg%\nNa, 180, ppm\nK, 8, mg%\nZn, sixteen, mg%\nPb, 0.02, mg%'; },
+  'reject-lab'(el) { dialog({ title: 'Reject and request a new sample?', body: 'The client is told a replacement kit is on its way.', ok: 'Reject', onOk: () => act('reject-lab', { id: el.dataset.id }) }); },
+  publish(el) { act('publish', { userId: el.dataset.u, testId: el.dataset.t }); },
+  'pick-client'(el) { chartDraft = null; go('/admin/analyses?u=' + el.value); },
   'chart-input'(el) {
     const f = el.form, u = user(f.dataset.u), t = u.tests.find(x => x.id === f.dataset.t);
     const ms = t.minerals.map((m, i) => ({ ...m, value: +f[`${i}.value`].value, low: +f[`${i}.low`].value, high: +f[`${i}.high`].value }));
-    S._chartDraft = { u: u.id, minerals: ms };
+    chartDraft = { u: u.id, minerals: ms };
     document.getElementById('live-chart').innerHTML = rangeChart(ms, `Latest reading for ${u.name}`);
   },
-  'ep-access'(el) { const e = S.episodes.find(x => x.id === el.dataset.id); e.access = e.access === 'public' ? 'members' : 'public'; audit('Episode access', `${e.title}: ${e.access}`); render(); },
-  'ep-feature'(el) { S.episodes.forEach(e => e.featured = e.id === el.dataset.id); audit('Episode featured', el.dataset.id); render(); },
-  'ep-archive'(el) { const e = S.episodes.find(x => x.id === el.dataset.id); e.archived = !e.archived; audit(e.archived ? 'Episode archived' : 'Episode restored', e.title); render(); },
-  'vid-access'(el) { const v = S.videos.find(x => x.id === el.dataset.id); v.access = v.access === 'public' ? 'members' : 'public'; audit('Video access', `${v.title}: ${v.access}`); render(); },
-  'vid-archive'(el) { const v = S.videos.find(x => x.id === el.dataset.id); v.archived = !v.archived; audit(v.archived ? 'Video archived' : 'Video restored', v.title); render(); },
-  'mod-laugh'(el) { const l = S.laughs.find(x => x.id === el.dataset.id); l.status = el.dataset.v; audit(`Submission ${el.dataset.v}`, l.text.slice(0, 50)); render(); },
-  'mod-post'(el) {
-    const p = S.posts.find(x => x.id === el.dataset.id), v = el.dataset.v;
-    if (v === 'remove') p.removed = true;
-    if (v === 'signpost') p.replies.push({ by: 'DELTA Moderator', at: now(), text: 'Thanks for sharing. Please don\'t change or stop any medication without speaking to your GP or pharmacist first. DELTA reports are educational and can\'t replace medical advice.' });
-    p.reported = false; audit(`Reported post: ${v}`, p.text.slice(0, 50)); render();
+  'ep-access'(el) { act('ep-access', { id: el.dataset.id }); },
+  'ep-feature'(el) { act('ep-feature', { id: el.dataset.id }); },
+  'ep-archive'(el) { act('ep-archive', { id: el.dataset.id }); },
+  'vid-access'(el) { act('vid-access', { id: el.dataset.id }); },
+  'vid-archive'(el) { act('vid-archive', { id: el.dataset.id }); },
+  'mod-laugh'(el) { act('mod-laugh', { id: el.dataset.id, v: el.dataset.v }); },
+  'mod-post'(el) { act('mod-post', { id: el.dataset.id, v: el.dataset.v }); },
+  'partner-toggle'(el) { act('partner-toggle', { id: el.dataset.id }); },
+  async 'run-tests'() {
+    const r = await act('run-tests', {}, { refresh: false }); if (!r) return;
+    document.getElementById('test-out').innerHTML = r.results.map(c => `<div class="sm ${c.pass ? 'b-ok' : 'b-bad'}">${c.pass ? '✓' : '✕'} ${esc(c.name)} — expected [${c.expect.join(', ')}], got [${c.got.join(', ')}]</div>`).join('');
   },
-  'partner-toggle'(el) { const p = S.partners.find(x => x.id === el.dataset.id); p.active = !p.active; audit(p.active ? 'Partner activated' : 'Partner paused', p.name); render(); },
-  'run-tests'() {
-    const mk = vals => MINERALS.map(m => ({ ...m, value: vals[m.name] }));
-    const cases = [
-      { name: 'Grok demo panel', m: DEMO_RESULT, tox: {}, expect: ['MG-LOW', 'CAMG-HIGH', 'NA-LOW', 'CU-HIGH'] },
-      { name: 'All in range', m: { Ca: 55, Mg: 6, Na: 25, K: 10, Zn: 16, Cu: 2 }, tox: {}, expect: [] },
-      { name: 'Toxic lead flag', m: { Ca: 55, Mg: 6, Na: 25, K: 10, Zn: 16, Cu: 2 }, tox: { Pb: 0.3 }, expect: ['TOXIC'] },
-      { name: 'Low zinc + low Na/K', m: { Ca: 55, Mg: 6, Na: 20, K: 11, Zn: 10, Cu: 2 }, tox: {}, expect: ['NAK-LOW', 'ZN-LOW'] },
-    ];
-    const out = cases.map(c => { const got = evaluate(mk(c.m), c.tox).hits.map(h => h.id); const pass = got.length === c.expect.length && c.expect.every(x => got.includes(x)); return `<div class="sm ${pass ? 'b-ok' : 'b-bad'}">${pass ? '✓' : '✕'} ${c.name} — expected [${c.expect.join(', ')}], got [${got.join(', ')}]</div>`; });
-    document.getElementById('test-out').innerHTML = out.join('');
-    audit('Rule regression tests run', S.settings.ruleset);
-  },
-  'export-audit'() { download('delta-audit.csv', 'when,actor,action,details\n' + S.audit.map(a => [new Date(a.at).toISOString(), a.actor, a.action, a.details].map(x => `"${String(x).replace(/"/g, '""')}"`).join(',')).join('\n'), 'text/csv'); },
+  'pay-test'(el) { el.disabled = true; act('pay-test', { orderId: el.dataset.id }).finally(() => { el.disabled = false; }); },
 };
 
 /* ───────────────────────── forms ───────────────────────── */
+const obj = d => Object.fromEntries(d.entries());
 const F = {
-  join(f, d) {
-    let u = me();
-    if (!u) {
-      u = { id: uid('u'), name: d.get('name').trim(), email: d.get('email').trim(), role: 'member', inbox: [], purchases: [], tests: [], lessonsDone: [], practice: {}, consent: { marketing: !!d.get('marketing'), sms: true }, reminders: {}, intake: null };
-      S.users.push(u); S.session = u.id; audit('Account created', u.name, u.name);
-    }
-    purchaseExperience(u, !!d.get('voice'));
-    toast('Purchase complete (demo). Receipt sent.');
-    go(u.intake?.complete ? '/portal' : '/intake');
-  },
-  intake(f, d) {
-    const u = me();
-    const i = { complete: true, pregnant: d.get('pregnant'), under18: d.get('under18'), medications: d.get('medications'), conditions: d.get('conditions'), at: now(), consent: true };
-    i.review_status = intakeNeedsReview(i) ? 'needs_review' : 'cleared';
-    u.intake = i;
-    audit('Intake completed', `${u.name} — ${i.review_status.replace('_', ' ')}`, u.name);
-    if (i.review_status === 'needs_review') S.outbox.unshift({ at: now(), to: 'Practitioner team', channel: 'task', title: `Safety review needed: ${u.name}` });
-    notify(u, 'Sample instructions', 'Your kit is on its way. Wash with plain shampoo 24h before, cut a small sample from the nape of the neck, and post it back in the envelope.');
-    go('/portal');
-  },
-  laugh(f, d) {
-    const u = me(), url = (d.get('url') || '').trim();
-    const flag = url && (/bit\.ly|tinyurl|t\.co\//i.test(url) ? 'Shortened link — check destination' : !/^https:\/\//i.test(url) ? 'Not HTTPS' : '');
-    S.laughs.unshift({ id: uid('l'), type: d.get('type'), text: d.get('text').trim(), url, by: d.get('anon') ? 'Anonymous' : (d.get('by') || u.name).trim(), at: now(), status: 'pending', loves: 0, flag, userId: u.id });
-    audit('LAUGHOLOGY submission', u.name, u.name); toast('Thanks! A moderator will review it before it appears.'); render();
-  },
-  post(f, d) { const u = me(); S.posts.unshift({ id: uid('p'), group: f.dataset.group, by: d.get('anon') ? 'Anonymous member' : u.name, at: now(), text: d.get('text').trim(), loves: 0, replies: [], reported: false }); render(); },
-  reply(f, d) { const u = me(); S.posts.find(p => p.id === f.dataset.id).replies.push({ by: u.name, at: now(), text: d.get('text').trim() }); render(); },
+  join(f, d) { const b = obj(d); return act('checkout', { ...b, voice: !!b.voice, terms: !!b.terms, marketing: !!b.marketing }); },
+  'login-email'(f, d) { return act('login-request', { email: d.get('email') }, { refresh: false }).then(r => { if (r) { loginSent = d.get('email'); render(); } }); },
+  intake(f, d) { const b = obj(d); return act('intake', { ...b, edu: !!b.edu, consent: !!b.consent }); },
+  laugh(f, d) { const b = obj(d); return act('laugh', { ...b, anon: !!b.anon }); },
+  post(f, d) { return act('post', { group: f.dataset.group, text: d.get('text'), anon: !!d.get('anon') }); },
+  reply(f, d) { return act('reply', { id: f.dataset.id, text: d.get('text') }); },
   'group-search'(f, d) { go(`/community/${f.dataset.group}?q=${encodeURIComponent(d.get('q'))}`); },
   'podcast-search'(f, d) { go(`/podcast?q=${encodeURIComponent(d.get('q'))}`); },
-  contact() { toast('Message sent (demo).'); render(); },
-  voice(f, d) { const u = me(); buyVoiceNote(u, Array.from({ length: S.settings.voiceQuestions }, (_, i) => (d.get('q' + i) || '').trim())); toast('Voice note purchased — the practitioner has been notified.'); render(); },
-  upload(f, d) {
-    const u = user(d.get('u')), t = latestTest(u);
-    const ok = ingest(u, t, d.get('data'), d.get('name'));
-    if (!ok) t.hadIssues = true;
-    toast(ok ? `${u.name}: validated and ${stageLabel(t.status).toLowerCase()}.` : `${u.name}: ${t.issues.length} issue(s) — sent to the exception queue.`);
-    go(ok ? (t.status === 'safety_review' ? '/admin/safety' : '/admin/reports') : '/admin/exceptions');
-  },
-  fix(f, d) {
-    const u = user(f.dataset.u), t = latestTest(u);
-    const text = [...MINERALS, ...TOXIC].map(m => d.get(m.name) !== '' ? `${m.name}, ${d.get(m.name)}, ${m.unit}` : '').filter(Boolean).join('\n');
-    audit('Exception corrected', `${u.name} — ${d.get('note')}`);
-    t.hadIssues = true;
-    const ok = ingest(u, t, text, u.name);
-    toast(ok ? `${u.name} validated — ${stageLabel(t.status)}.` : 'Still has issues — see the list.'); render();
-  },
-  safety(f, d, sub) {
-    const u = user(f.dataset.u), t = reviewTest(u), dec = sub?.value || 'clear', note = d.get('note');
-    u.intake.review_note = note;
-    if (dec === 'escalate') { audit('Escalated to clinician', `${u.name} — ${note}`); S.outbox.unshift({ at: now(), to: 'Responsible clinician', channel: 'task', title: `Escalation: ${u.name}` }); toast('Escalated. The file stays held.'); render(); return; }
-    u.intake.review_status = 'cleared';
-    if (dec === 'general' && t) { t.programme = t.programme.filter((_, i) => !(t.findings[i]?.supplement)); t.findings = t.findings.map(x => ({ ...x, supplement: false })); t.sections.guide = 'Your chart and general lessons are available. Personal supplement guidance was not included after review — please discuss supplements with your GP or pharmacist.'; }
-    audit('Safety review cleared', `${u.name} — ${dec === 'general' ? 'supplements withheld' : 'cleared'} — ${note}`);
-    if (t && t.status === 'safety_review') { if (S.settings.autoPublish) publish(u, t); else t.status = 'ready_to_publish'; }
-    toast(`${u.name} cleared.`); render();
-  },
-  'report-edit'(f, d) {
-    const u = user(f.dataset.u), t = u.tests.find(x => x.id === f.dataset.t);
-    ['patterns', 'ratios', 'notes', 'guide', 'nextStep'].forEach(k => t.sections[k] = d.get(k));
-    t.programme = d.get('programme').split('\n').map(s => s.trim()).filter(Boolean);
-    t.edited = true;
-    const st = d.get('status');
-    audit('Report edited', `${u.name} (${t.id})`);
-    if (st === 'published' && t.status !== 'published') publish(u, t); else t.status = st;
-    toast('Report updated.'); go('/admin/reports');
-  },
+  contact(f, d) { return act('contact', obj(d), { refresh: false }).then(r => r && f.reset()); },
+  voice(f, d) { return act('voice-checkout', { questions: Array.from({ length: S.settings.voiceQuestions }, (_, i) => d.get('q' + i) || '') }); },
+  async upload(f, d) { const pdf = await fileToB64(d.get('pdf')); return act('upload', { userId: d.get('u'), name: d.get('name'), data: d.get('data'), pdf }); },
+  fix(f, d) { const values = {}; [...MINERALS, ...TOXIC].forEach(m => values[m.name] = d.get(m.name)); return act('fix', { userId: f.dataset.u, values, note: d.get('note') }); },
+  safety(f, d, sub) { return act('safety', { userId: f.dataset.u, decision: sub?.value || 'clear', note: d.get('note') }); },
+  'report-edit'(f, d) { return act('report-edit', { userId: f.dataset.u, testId: f.dataset.t, ...obj(d) }); },
   chart(f, d, sub) {
     const u = user(f.dataset.u), t = u.tests.find(x => x.id === f.dataset.t);
-    const ms = t.minerals.map((m, i) => ({ ...m, value: +d.get(`${i}.value`), low: +d.get(`${i}.low`), high: +d.get(`${i}.high`) }));
-    const secs = Object.fromEntries(['patterns', 'ratios', 'guide', 'nextStep'].map(k => [k, d.get(k)]));
-    if (sub?.value === 'next') {
-      const nt = { id: uid('t'), created: now(), status: 'published', minerals: ms, toxic: {}, issues: [], manual: true, receivedAt: now() };
-      u.tests.push(nt); generate(u, nt); Object.assign(nt.sections, secs); nt.publishedAt = now();
-      audit('Manual test added (client charts)', u.name);
-      toast('Saved as the next test — the progress chart now includes it.');
-    } else { t.minerals = ms; Object.assign(t.sections, secs); audit('Client chart edited', `${u.name} (${t.id})`); toast('Section saved.'); }
-    S._chartDraft = null; render();
+    const minerals = t.minerals.map((_, i) => ({ value: d.get(`${i}.value`), low: d.get(`${i}.low`), high: d.get(`${i}.high`) }));
+    const sections = Object.fromEntries(['patterns', 'ratios', 'guide', 'nextStep'].map(k => [k, d.get(k)]));
+    chartDraft = null;
+    return act('chart', { userId: u.id, testId: t.id, minerals, sections, mode: sub?.value });
   },
-  'voice-deliver'(f, d) {
-    const v = S.voiceNotes.find(x => x.id === f.dataset.id), u = user(v.userId), file = d.get('audio');
-    v.status = 'delivered'; v.deliveredAt = now(); v.audioName = file && file.name ? file.name : 'voice-note.m4a'; v.transcript = d.get('transcript');
-    if (d.get('refer')) v.transcript += '\n\nSome of your questions are best answered by your GP or another qualified professional.';
-    notify(u, 'Your practitioner voice note is ready', 'Listen privately in your account.');
-    audit('Voice note delivered', u.name); render();
-  },
-  lesson(f, d) { const l = S.lessons.find(x => x.id === f.dataset.id); l.title = d.get('title'); l.body = d.get('body'); l.release = d.get('release'); audit('Lesson edited', l.pillar); toast('Saved ' + l.pillar); render(); },
-  story(f, d) { S.founderStory = d.get('story'); audit('Founder story edited', ''); toast('Story saved.'); render(); },
-  episode(f, d) { const n = Math.max(...S.episodes.map(e => e.n)) + 1; S.episodes.unshift({ id: uid('e'), n, title: d.get('title'), date: d.get('date'), topics: d.get('topics').split(',').map(s => s.trim()).filter(Boolean), host: 'Founder', guest: d.get('guest'), mins: 30, access: d.get('access'), desc: d.get('desc') }); S.users.filter(u => u.role === 'member' && u.consent.marketing && hasAccess(u)).forEach(u => notify(u, 'New podcast episode', d.get('title'))); audit('Episode added', d.get('title')); render(); },
-  video(f, d) { S.videos.unshift({ id: uid('v'), title: d.get('title'), cat: d.get('cat'), pillar: d.get('pillar'), access: d.get('access'), mins: 5 }); audit('Video added', d.get('title')); render(); },
-  partner(f, d) { S.partners.push({ id: uid('pt'), name: d.get('name'), cat: d.get('cat'), desc: d.get('desc'), code: d.get('code'), paid: !!d.get('paid'), affiliate: !!d.get('affiliate'), active: true, clicks: 0 }); audit('Partner added', d.get('name')); render(); },
-  settings(f, d) {
-    const days = d.get('reminderDays').split(',').map(x => parseInt(x, 10)).filter(x => x > 0).sort((a, b) => b - a);
-    Object.assign(S.settings, { price: +d.get('price'), voicePrice: +d.get('voicePrice'), voiceQuestions: Math.max(1, +d.get('voiceQuestions')), voiceTurnaround: d.get('voiceTurnaround'), reminderDays: days.length ? days : [30], autoPublish: !!d.get('autoPublish') });
-    audit('Settings changed', JSON.stringify(S.settings)); toast('Settings saved.'); render();
-  },
-  assistant(f, d) {
+  async 'voice-deliver'(f, d) { const audio = await fileToB64(d.get('audio')); return act('voice-deliver', { id: f.dataset.id, transcript: d.get('transcript'), refer: !!d.get('refer'), audio }); },
+  lesson(f, d) { return act('lesson', { id: f.dataset.id, ...obj(d) }); },
+  story(f, d) { return act('story', obj(d)); },
+  episode(f, d) { return act('episode', obj(d)); },
+  video(f, d) { return act('video', obj(d)); },
+  partner(f, d) { const b = obj(d); return act('partner', { ...b, paid: !!b.paid, affiliate: !!b.affiliate }); },
+  settings(f, d) { const b = obj(d); return act('settings', { ...b, autoPublish: !!b.autoPublish }); },
+  async assistant(f, d) {
     const q = (d.get('q') || '').trim(); if (!q) return;
-    S._chat = S._chat || []; S._chat.push({ role: 'user', text: q }); S._chat.push({ role: 'bot', text: assistantReply(q) });
-    audit('Assistant request', q); render();
+    chatLog.push({ role: 'user', text: q });
+    const r = await act('assistant', { q }, { refresh: false });
+    chatLog.push({ role: 'bot', text: r ? r.reply : 'Sorry — that request failed.' });
+    await load(); render();
   },
 };
 
 /* ───────────────────────── wiring ───────────────────────── */
+let chartDraft = null, loginSent = '';
 document.addEventListener('click', ev => {
   const el = ev.target.closest('[data-act]');
-  if (!el || el.tagName === 'SELECT' || (el.tagName === 'INPUT' && el.type !== 'checkbox')) return;
-  if (el.type === 'checkbox') return;
+  if (!el || el.tagName === 'SELECT' || el.tagName === 'INPUT') return;
   const fn = A[el.dataset.act]; if (fn) { if (el.tagName === 'A') ev.preventDefault(); fn(el, ev); }
 });
 document.addEventListener('change', ev => {
@@ -1146,10 +869,12 @@ document.addEventListener('change', ev => {
   if (el.tagName === 'SELECT' || el.type === 'checkbox' || el.type === 'date') { const fn = A[el.dataset.act]; if (fn) fn(el, ev); }
 });
 document.addEventListener('input', ev => { const el = ev.target; if (el.dataset?.act === 'chart-input') A['chart-input'](el); });
-document.addEventListener('submit', ev => {
+document.addEventListener('submit', async ev => {
   const f = ev.target.closest('form[data-form]'); if (!f) return;
   ev.preventDefault();
-  const fn = F[f.dataset.form]; if (fn) { fn(f, new FormData(f), ev.submitter); save(); }
+  const fn = F[f.dataset.form]; if (!fn) return;
+  const btns = f.querySelectorAll('button'); btns.forEach(b => b.disabled = true);
+  try { await fn(f, new FormData(f), ev.submitter); } finally { btns.forEach(b => b.disabled = false); }
 });
 window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
-load(); render();
+load().then(render).catch(e => { document.getElementById('app').innerHTML = `<main class="page"><div class="narrow card"><h1>DELTA is unavailable</h1><p class="muted mt2">${esc(e.message)}. Please try again shortly.</p></div></main>`; });
