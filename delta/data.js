@@ -3,23 +3,23 @@
    Reference ranges and rules are ILLUSTRATIVE ONLY and await clinical sign-off (brief §19). */
 
 const PILLARS = [
-  { id: 'body', n: 1, name: 'BODY', tag: 'Nourish & Strengthen', icon: '◆',
+  { id: 'body', n: 1, name: 'BODY', image: 'brand/nourish.jpg', alt: 'Vegetables and protein on a plate', short: 'Nourish and strengthen — vegetables, protein, water, and a simple shower practice.', tag: 'Nourish & Strengthen', icon: '◆',
     summary: 'Vegetables and protein, hydration, carrot juice and wheatgrass education, individual nutritional and supplement guidance with timing where appropriate, warm-to-cool showers and optional sauna.',
     note: 'Personalised advice lives in your Mineral Intelligence report and is kept separate from these general lessons.',
     lessons: ['Building a plate: vegetables & protein', 'Hydration basics', 'Carrot juice & wheatgrass: what we know', 'Timing your nutrition', 'Warm-to-cool showers', 'Sauna: an optional practice'] },
-  { id: 'environment', n: 2, name: 'ENVIRONMENT', tag: 'Create Better Spaces', icon: '⬡',
+  { id: 'environment', n: 2, name: 'ENVIRONMENT', image: 'brand/space.jpg', alt: 'A bright room with plants and an open window', short: 'Create better spaces — air, light, less clutter, and kinder boundaries.', tag: 'Create Better Spaces', icon: '⬡',
     summary: 'Home and workplace conditions, damp and mould awareness, ventilation, clutter, relationships, boundaries, supportive social surroundings, comfort, enjoyment and creating positive spaces.',
     lessons: ['Damp & mould awareness', 'Ventilation at home', 'Clearing clutter', 'Relationships & boundaries', 'Supportive surroundings', 'Designing a space you enjoy'] },
-  { id: 'ground', n: 3, name: 'GROUND', tag: 'Reconnect with Yourself and Nature', icon: '◎',
+  { id: 'ground', n: 3, name: 'GROUND', image: 'brand/ground.jpg', alt: 'Bare feet on grass', short: 'Reconnect — time outside, quieter screens, and an easy breath.', tag: 'Reconnect with Yourself and Nature', icon: '◎',
     summary: 'Nature, digital quiet, mindfulness, breathing, grounding practices and the Zhineng Qigong-inspired DELTA Energy Circuit golden-energy visualisation, with standing and lying options.',
     lessons: ['Time in nature', 'Digital quiet', 'Breathing foundations', 'Mindful grounding', 'DELTA Energy Circuit — standing', 'DELTA Energy Circuit — lying'] },
-  { id: 'move', n: 4, name: 'MOVE', tag: 'Build Strength & Get the Energy Moving', icon: '▲',
+  { id: 'move', n: 4, name: 'MOVE', image: 'brand/move.jpg', alt: 'Walking a quiet path at sunrise', short: 'Get energy moving — a walk, a little strength, and a version that fits you.', tag: 'Build Strength & Get the Energy Moving', icon: '▲',
     summary: 'Brisk outdoor walking, appropriate inclines, resistance and strength, mobility, stretching, posture, Qi Gong and enjoyable sports — with accessible variations.',
     lessons: ['Brisk outdoor walking', 'Using inclines safely', 'Strength at home', 'Mobility & stretching', 'Posture check-in', 'Qi Gong for beginners'] },
-  { id: 'release', n: 5, name: 'RELEASE', tag: 'Feel, Express & Let Go', icon: '✦',
+  { id: 'release', n: 5, name: 'RELEASE', image: 'brand/release.jpg', alt: 'Two people laughing outdoors', short: 'Feel and let go — notice tension, and leave room for laughter.', tag: 'Feel, Express & Let Go', icon: '✦',
     summary: 'TER (Timeline Emotional Release), BTR (Body Tension Release) and ST (The Stillness Technique) — gentle, non-forcing practices — plus LAUGHOLOGY as a distinct entry point.',
     lessons: ['TER — present emotions & gentle timeline reflection', 'BTR — noticing and softening tension', 'ST — The Stillness Technique', 'Tapping: an introduction', 'LAUGHOLOGY: why laughter matters'] },
-  { id: 'rest', n: 6, name: 'REST', tag: 'Restore & Renew', icon: '☾',
+  { id: 'rest', n: 6, name: 'REST', image: 'brand/rest.jpg', alt: 'A calm bedroom in the evening', short: 'Restore — an evening routine and sleep treated as the practice.', tag: 'Restore & Renew', icon: '☾',
     summary: 'Sleep, recovery, evening routines, breathing, relaxation, massage, restorative practices and spiritual peace.',
     lessons: ['Sleep foundations', 'An evening wind-down routine', 'Breathing for relaxation', 'Self-massage basics', 'Restorative practice', 'Finding peace'] },
 ];
@@ -70,29 +70,27 @@ const JOKES = [
   'My doctor told me to watch my iron levels. Now I just stare at the kettle.',
 ];
 
-/* Illustrative HTMA panel. Units mg% . Ranges are PLACEHOLDERS for prototype only. */
+/* Illustrative HTMA panel — same shape and placeholder bands as the Grok build ({name,label,value,low,high,unit}).
+   Bands are PLACEHOLDERS for the prototype only and must be replaced by the chosen laboratory's intervals. */
 const MINERALS = [
-  { key: 'Ca', name: 'Calcium', unit: 'mg%', lo: 35, hi: 55, pillar: 'body' },
-  { key: 'Mg', name: 'Magnesium', unit: 'mg%', lo: 4, hi: 8, pillar: 'rest' },
-  { key: 'Na', name: 'Sodium', unit: 'mg%', lo: 20, hi: 30, pillar: 'body' },
-  { key: 'K', name: 'Potassium', unit: 'mg%', lo: 8, hi: 12, pillar: 'move' },
-  { key: 'Cu', name: 'Copper', unit: 'mg%', lo: 2.0, hi: 3.0, pillar: 'body' },
-  { key: 'Zn', name: 'Zinc', unit: 'mg%', lo: 15, hi: 20, pillar: 'body' },
-  { key: 'P', name: 'Phosphorus', unit: 'mg%', lo: 14, hi: 18, pillar: 'body' },
-  { key: 'Fe', name: 'Iron', unit: 'mg%', lo: 1.5, hi: 3.0, pillar: 'body' },
-  { key: 'Se', name: 'Selenium', unit: 'mg%', lo: 0.10, hi: 0.15, pillar: 'body' },
+  { name: 'Ca', label: 'Calcium', low: 40, high: 80, unit: 'mg%' },
+  { name: 'Mg', label: 'Magnesium', low: 4, high: 8, unit: 'mg%' },
+  { name: 'Na', label: 'Sodium', low: 20, high: 35, unit: 'mg%' },
+  { name: 'K', label: 'Potassium', low: 5, high: 12, unit: 'mg%' },
+  { name: 'Zn', label: 'Zinc', low: 12, high: 22, unit: 'mg%' },
+  { name: 'Cu', label: 'Copper', low: 1.5, high: 2.5, unit: 'mg%' },
 ];
+const DEMO_RESULT = { Ca: 62, Mg: 3.2, Na: 18, K: 8, Zn: 16, Cu: 2.8 }; // the Grok demo values
 const TOXIC = [
-  { key: 'Pb', name: 'Lead', unit: 'mg%', hi: 0.10 },
-  { key: 'Hg', name: 'Mercury', unit: 'mg%', hi: 0.04 },
-  { key: 'Cd', name: 'Cadmium', unit: 'mg%', hi: 0.01 },
-  { key: 'Al', name: 'Aluminium', unit: 'mg%', hi: 0.70 },
+  { name: 'Pb', label: 'Lead', unit: 'mg%', high: 0.10 },
+  { name: 'Hg', label: 'Mercury', unit: 'mg%', high: 0.04 },
+  { name: 'Cd', label: 'Cadmium', unit: 'mg%', high: 0.01 },
+  { name: 'Al', label: 'Aluminium', unit: 'mg%', high: 0.70 },
 ];
 const RATIOS = [
-  { id: 'Ca/Mg', a: 'Ca', b: 'Mg', lo: 5, hi: 9 },
-  { id: 'Na/K', a: 'Na', b: 'K', lo: 2, hi: 3 },
-  { id: 'Ca/P', a: 'Ca', b: 'P', lo: 2, hi: 3 },
-  { id: 'Zn/Cu', a: 'Zn', b: 'Cu', lo: 6, hi: 10 },
+  { id: 'Ca/Mg', a: 'Ca', b: 'Mg', low: 5, high: 10 },
+  { id: 'Na/K', a: 'Na', b: 'K', low: 2, high: 3 },
+  { id: 'Zn/Cu', a: 'Zn', b: 'Cu', low: 6, high: 10 },
 ];
 
 /* Version-controlled educational rule set. Each rule: condition → explanation + lessons + programme template.
@@ -104,16 +102,19 @@ const RULESETS = {
       { id: 'MG-LOW', when: v => v.Mg < 4, title: 'Magnesium below reference interval',
         text: 'Your magnesium reading sits below the reference interval used by DELTA. Magnesium is widely discussed in relation to relaxation and rest. This is educational context, not a diagnosis.',
         lessons: ['rest', 'body'], prog: 'Magnesium-rich food focus; supplement template MG-A (practitioner-approved protocol)', supplement: true },
-      { id: 'CAMG-HIGH', when: (v, r) => r['Ca/Mg'] > 9, title: 'Higher calcium-to-magnesium ratio',
+      { id: 'CAMG-HIGH', when: (v, r) => r['Ca/Mg'] > 10, title: 'Higher calcium-to-magnesium ratio',
         text: 'Your calcium-to-magnesium ratio is above the interval DELTA uses. We explain what this ratio is generally thought to reflect in the "Calcium & magnesium" video.',
         lessons: ['body', 'rest'], prog: 'Education: Ca/Mg balance video & food sources', supplement: false },
       { id: 'NAK-LOW', when: (v, r) => r['Na/K'] < 2, title: 'Lower sodium-to-potassium ratio',
         text: 'Your sodium-to-potassium ratio is below the DELTA interval. Many practitioners associate this ratio with energy patterns; we suggest starting with the MOVE and REST pillars.',
         lessons: ['move', 'rest'], prog: 'Daily brisk walk & evening wind-down routine', supplement: false },
-      { id: 'ZN-LOW', when: v => v.Zn < 15, title: 'Zinc below reference interval',
+      { id: 'NA-LOW', when: v => v.Na < 20, title: 'Sodium below reference interval',
+        text: 'Your sodium reading sits below the laboratory band. We cover hydration and everyday energy in the BODY and REST lessons.',
+        lessons: ['body', 'rest'], prog: 'Hydration habits lesson & evening routine', supplement: false },
+      { id: 'ZN-LOW', when: v => v.Zn < 12, title: 'Zinc below reference interval',
         text: 'Your zinc reading is below the reference interval. Zinc-containing foods are covered in BODY lessons.',
         lessons: ['body'], prog: 'Zinc-rich food focus; supplement template ZN-A (practitioner-approved protocol)', supplement: true },
-      { id: 'CU-HIGH', when: v => v.Cu > 3.0, title: 'Copper above reference interval',
+      { id: 'CU-HIGH', when: v => v.Cu > 2.5, title: 'Copper above reference interval',
         text: 'Your copper reading is above the reference interval. Because copper and zinc interact, this is considered alongside your zinc result.',
         lessons: ['body', 'environment'], prog: 'Review of water/pipework awareness (ENVIRONMENT lesson)', supplement: false },
       { id: 'TOXIC', when: (v, r, t) => t.length > 0, title: 'Elevated toxic-element reading',
