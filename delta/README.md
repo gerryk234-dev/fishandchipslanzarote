@@ -5,6 +5,16 @@ DELTA — Analysis · Intelligence · Method. Continues the Grok prototype
 working web app: real accounts, checkout, the lab → report pipeline, the safety gate, the member
 portal and the admin area. Design, copy and imagery carry over from the Grok build.
 
+## Preview it on GitHub (no install)
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/gerryk234-dev/fishandchipslanzarote?ref=ccr-939744ce-jk6o5l&devcontainer_path=.devcontainer%2Fdelta%2Fdevcontainer.json)
+
+1. Open the link above while signed in to GitHub and press **Create codespace**.
+2. Wait 1–2 minutes while it installs and starts. The DELTA app opens in a new tab; if it doesn't,
+   open the **Ports** tab and click the globe icon next to **DELTA (3000)**.
+3. The preview runs in demo mode. Use **Switch user** to try each persona.
+4. When finished, stop the codespace (github.com/codespaces → ⋯ → Stop) so it doesn't use your free hours.
+
 ## Run it
 
 ```bash

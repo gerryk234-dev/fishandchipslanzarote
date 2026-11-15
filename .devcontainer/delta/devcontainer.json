@@ -1,0 +1,14 @@
+{
+  "name": "DELTA preview",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "postCreateCommand": "cd delta && npm install --no-audit --no-fund",
+  "postAttachCommand": "cd delta && npm start",
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": { "label": "DELTA", "onAutoForward": "openBrowser" }
+  },
+  "containerEnv": { "DEMO_MODE": "1" },
+  "customizations": {
+    "codespaces": { "openFiles": ["delta/README.md"] }
+  }
+}

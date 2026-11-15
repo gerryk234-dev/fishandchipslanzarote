@@ -5,7 +5,10 @@ const production = env.NODE_ENV === 'production';
 const config = {
   production,
   port: +(env.PORT || 3000),
-  baseUrl: (env.BASE_URL || `http://localhost:${env.PORT || 3000}`).replace(/\/$/, ''),
+  /* In GitHub Codespaces, links in emails must use the forwarded preview address. */
+  baseUrl: (env.BASE_URL || (env.CODESPACE_NAME && env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN
+    ? `https://${env.CODESPACE_NAME}-${env.PORT || 3000}.${env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`
+    : `http://localhost:${env.PORT || 3000}`)).replace(/\/$/, ''),
   /* Demo mode: seeded personas, persona switching, demo clock, simulated results, dev mailbox. Never in production. */
   demo: env.DEMO_MODE ? env.DEMO_MODE === '1' : !production,
   dataDir: env.DATA_DIR || path.join(__dirname, '..', 'data'),
