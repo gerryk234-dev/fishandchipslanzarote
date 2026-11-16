@@ -54,7 +54,7 @@ function createState(store, L, mailer, payments, config, oauth) {
       founderStory: store.kvGet('founderStory', ''),
       lessons: of('lesson').sort((a, b) => a.at - b.at).map(l => ({ id: l.pillarId, pillar: l.pillar, title: l.title, body: l.body, release: l.release || '' })),
       episodes: of('episode').filter(e => contentAdmin || !e.archived).sort((a, b) => b.n - a.n),
-      videos: of('video').filter(v => contentAdmin || !v.archived),
+      videos: of('video').filter(v => contentAdmin || (!v.archived && v.status !== 'review')).sort((a, b) => (b.order || 0) - (a.order || 0)),
       partners: of('partner').filter(p => partnerAdmin || p.active).map(p => partnerAdmin ? p : { ...p, clicks: undefined }),
       users: [], voiceNotes: [], laughs: [], posts: [], audit: [], outbox: [], personas: [],
     };

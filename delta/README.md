@@ -70,6 +70,15 @@ safety review is stripped before it leaves the server.
 - Admin: members, roles (admin / practitioner / support / moderator), content, settings, audit log, communications log
 - Data export and deletion requests (UK GDPR)
 
+## Meet Mineral Man videos
+
+The library is imported from the YouTube channel (youtube.com/@mineralman) into `shared/youtube-videos.json`
+in upload order, each tagged with a topic and DELTA pillar. Videos play in a privacy-enhanced YouTube
+player only when tapped. **22 videos are held for review** because they make strong health or product
+claims (brief §07, §16) — the founder publishes or keeps each one from *Admin → Content*. New uploads are
+added there by pasting their YouTube link. The 18 oldest videos on the channel aren't imported yet —
+add them by link, or connect the YouTube Data API to import the full channel automatically.
+
 ## Before going live
 
 1. **Clinical sign-off** — the mineral bands, rules and supplement templates in `shared/data.js` are placeholders (brief §19).

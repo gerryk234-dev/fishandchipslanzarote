@@ -22,6 +22,7 @@ function createApp(config) {
   const state = createState(store, L, mailer, payments, config, oauth);
   const run = createActions(store, L, auth, payments, mailer, config, oauth);
   L.seedContent();
+  L.importYouTube();
   if (config.demo) L.seedDemo();
   L.runReminders();
 
@@ -29,7 +30,7 @@ function createApp(config) {
   app.disable('x-powered-by');
   app.set('trust proxy', 1);
   app.use((req, res, next) => {
-    res.setHeader('Content-Security-Policy', "default-src 'self'; img-src 'self' data: blob:; media-src 'self' blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://checkout.stripe.com");
+    res.setHeader('Content-Security-Policy', "default-src 'self'; img-src 'self' data: blob: https://i.ytimg.com; frame-src https://www.youtube-nocookie.com; media-src 'self' blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://checkout.stripe.com");
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'same-origin');
     res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');

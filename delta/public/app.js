@@ -215,6 +215,8 @@ R['/'] = () => `<main id="main">
     <div class="card hl"><ul class="sm" style="margin:0;padding-left:1.1rem;line-height:2">
       <li>Hair mineral test kit and laboratory analysis</li><li>Your Mineral Intelligence chart and plain-English summary</li><li>A safety-screened proposed programme</li><li>Six months of the six pillars, Awakening, the DELTA Podcast and Meet Mineral Man</li><li>LAUGHOLOGY, community groups and the Partner Collective</li><li class="muted">Optional: a personal practitioner voice note (${money(S.settings.voicePrice)})</li></ul></div>
   </div></section>
+  ${S.videos.some(v => v.youtubeId && v.status !== 'review') ? `<section class="band"><div class="container"><div class="flex between"><h2 style="font-size:1.6rem;font-weight:300">New on Meet Mineral Man</h2><a href="#/mineral-man">The full video library</a></div>
+    <div class="grid md3 mt6">${S.videos.filter(v => v.youtubeId && v.status !== 'review' && !v.archived).slice(0, 3).map(videoCard).join('')}</div></div></section>` : ''}
   <section class="band"><div class="container"><div class="flex between"><h2 style="font-size:1.6rem;font-weight:300">Latest from the DELTA Podcast</h2><a href="#/podcast">All episodes</a></div>
     <div class="grid md3 mt6">${S.episodes.filter(e => !e.archived).slice(0, 3).map(episodeCard).join('')}</div></div></section>
 </main>`;
@@ -256,7 +258,7 @@ function pillarPage(id) {
   const p = PILLARS.find(x => x.id === id); if (!p) return notFound();
   const u = me(), access = hasAccess(u) && u;
   const featured = S.lessons.find(l => l.id === id);
-  const vids = S.videos.filter(v => v.pillar === id && !v.archived);
+  const vids = S.videos.filter(v => v.pillar === id && !v.archived && v.status !== 'review');
   const eps = S.episodes.filter(e => e.topics.some(t => t.toLowerCase() === id) && !e.archived);
   const partners = S.partners.filter(pt => pt.active && ((id === 'body' && pt.cat.startsWith('Supplements')) || (id === 'ground' && pt.cat.startsWith('Grounding')) || (['move', 'rest'].includes(id) && pt.cat.startsWith('Movement')) || (id === 'environment' && pt.cat.startsWith('Grounding'))));
   return page(`${back('/pillars', 'Six Pillars')}
@@ -270,7 +272,7 @@ function pillarPage(id) {
     return `<div class="card p4 flex between"><div><div class="xs muted">Lesson ${i + 1} · video · audio guide · notes</div><div>${esc(l)}</div></div>${access ? (done ? '<span class="xs gold">Marked done</span>' : `<button class="btn ghost xs" data-act="lesson-done" data-key="${id}:${i}">Mark done</button>`) : lockNote()}</div>`;
   }).join('')}</div>
   ${id === 'release' ? `<div class="card hl mt6 flex between"><div><h2>LAUGHOLOGY</h2><p class="sm muted mt1">Humour as a way in to RELEASE — jokes, funny videos and stories from members.</p></div><a href="#/laughology" class="btn">Open LAUGHOLOGY</a></div>` : ''}
-  ${vids.length ? `<h2 class="mt8">Meet Mineral Man videos</h2><div class="grid md3 mt4">${vids.map(videoCard).join('')}</div>` : ''}
+  ${vids.length ? `<div class="flex between mt8"><h2>Meet Mineral Man videos</h2><a class="sm" href="#/mineral-man?cat=${encodeURIComponent(vids[0].cat)}">See all</a></div><div class="grid md3 mt4">${vids.slice(0, 6).map(videoCard).join('')}</div>` : ''}
   ${eps.length ? `<h2 class="mt8">Related podcast episodes</h2><div class="grid md2 mt4">${eps.map(episodeCard).join('')}</div>` : ''}
   ${partners.length ? `<h2 class="mt8">From the Partner Collective</h2><p class="xs muted mt1">Commercial partners are shown separately from DELTA's teaching and from your personal recommendations.</p><div class="grid md3 mt4">${partners.map(partnerCard).join('')}</div>` : ''}
   <p class="xs muted mt8">Educational material only. It does not treat trauma or any medical condition. Choose the variation that suits you and stop if anything feels wrong.</p>
@@ -289,6 +291,7 @@ R['/awakening'] = () => {
     <div class="card"><h2 class="gold">Guided Experiences</h2><p class="sm muted mt2">Reflection, meditation, visualisation, stillness and journalling.</p>${access ? '<ul class="sm mt3"><li>10-minute stillness</li><li>Golden-light visualisation</li><li>Evening reflection journal</li></ul>' : `<p class="mt3">${lockNote()}</p>`}</div>
     <div class="card"><h2 class="gold">Awakening Conversations</h2><p class="sm muted mt2">Podcast episodes, interviews and Meet Mineral Man videos.</p><ul class="sm mt3">${conv.map(e => `<li><a href="#/podcast">${esc(e.title)}</a></li>`).join('')}</ul></div>
   </div>
+  ${(() => { const av = S.videos.filter(v => v.awakening && !v.archived && v.status !== 'review'); return av.length ? `<div class="flex between mt10"><h2>Awakening on Meet Mineral Man</h2><a class="sm" href="#/mineral-man?cat=${encodeURIComponent('Awakening & consciousness')}">All ${av.length} videos</a></div><div class="grid md3 mt4">${av.slice(0, 6).map(videoCard).join('')}</div>` : ''; })()}
   <div class="card hl mt6 flex between"><div><h2>Awakening discussion group</h2><p class="sm muted mt1">A moderated, respectful space. Please don't make health claims or share sensitive personal details.</p></div>${access ? '<a class="btn" href="#/community/awakening">Join the discussion</a>' : lockNote()}</div>`);
 };
 
@@ -313,17 +316,32 @@ R['/podcast'] = (q = {}) => {
   <div class="grid md2 mt6">${list.map(episodeCard).join('') || '<p class="muted">No episodes match.</p>'}</div>`);
 };
 
+/* Mineral Man videos come from the YouTube channel. The player loads only when tapped
+   (privacy-enhanced youtube-nocookie embed), so pages stay fast and nothing is sent to YouTube until then. */
+const CHANNEL_URL = 'https://www.youtube.com/@mineralman';
 function videoCard(v) {
   const locked = v.access === 'members' && !hasAccess(me());
-  return `<article class="card p4"><div class="video" aria-hidden="true">${locked ? '🔒' : '▶'}</div><div class="xs muted mt2">${esc(v.cat)} · ${v.mins} min · captions</div><h3 class="mt1 sm">${esc(v.title)}</h3>${locked ? `<p class="mt2">${lockNote()}</p>` : ''}</article>`;
+  if (!v.youtubeId) return `<article class="card p4"><div class="video" aria-hidden="true">${locked ? '🔒' : '▶'}</div><h3 class="mt2 sm">${esc(v.title)}</h3></article>`;
+  return `<article class="card flush vcard"><button class="vthumb" data-act="yt" data-id="${esc(v.youtubeId)}" aria-label="Play: ${esc(v.title)}">
+      <img src="https://i.ytimg.com/vi/${esc(v.youtubeId)}/mqdefault.jpg" alt="" loading="lazy" width="320" height="180"><span class="vplay" aria-hidden="true">▶</span>${v.length ? `<span class="vlen">${esc(v.length)}</span>` : ''}</button>
+    <div class="body" style="padding:.9rem 1rem"><div class="xs muted">${esc(v.cat)}${v.year ? ' · ' + esc(v.year) : ''}</div><h3 class="mt1 sm vtitle">${esc(v.title)}</h3>
+    <a class="xs" href="https://www.youtube.com/watch?v=${esc(v.youtubeId)}" target="_blank" rel="noopener">Watch on YouTube ↗</a></div></article>`;
 }
 R['/mineral-man'] = (q = {}) => {
-  const cats = uniq(S.videos.map(v => v.cat)), c = q.cat || '';
-  const list = S.videos.filter(v => !v.archived && (!c || v.cat === c));
-  return `${me() ? portalNav() : ''}` + page(`<div class="kicker">Meet Mineral Man</div><h1 class="mt3">Short videos that answer the common questions</h1>
-  <p class="lg muted mt4">A founder-led educational series. Every video has captions and a transcript, and links to the pillar it supports.</p>
-  <div class="chips mt8"><button class="chip ${!c ? 'on' : ''}" data-act="nav" data-to="/mineral-man">All</button>${cats.map(x => `<button class="chip ${c === x ? 'on' : ''}" data-act="nav" data-to="/mineral-man?cat=${encodeURIComponent(x)}">${esc(x)}</button>`).join('')}</div>
-  <div class="grid md3 mt6">${list.map(videoCard).join('')}</div>`);
+  const all = S.videos.filter(v => !v.archived && v.status !== 'review');
+  const cats = uniq(all.map(v => v.cat)), c = q.cat || '', term = (q.q || '').toLowerCase(), oldest = q.sort === 'oldest', shown = +q.n || 24;
+  let list = all.filter(v => (!c || v.cat === c) && (!term || v.title.toLowerCase().includes(term)));
+  list = list.slice().sort((a, b) => oldest ? (a.order || 0) - (b.order || 0) : (b.order || 0) - (a.order || 0));
+  const latest = all[0];
+  const link = (o) => '/mineral-man?' + new URLSearchParams(Object.entries({ cat: c, q: q.q || '', sort: q.sort || '', ...o }).filter(([, v]) => v)).toString();
+  return `${me() ? portalNav() : ''}` + page(`<div class="flex between"><div><div class="kicker">Meet Mineral Man</div><h1 class="mt3">The video library</h1></div><a class="btn ghost" href="${CHANNEL_URL}?sub_confirmation=1" target="_blank" rel="noopener">Subscribe on YouTube ↗</a></div>
+  <p class="lg muted mt4">${all.length} founder-led videos on minerals, the six pillars, grounding, emotions and awakening — straight from the Mineral Man channel. Educational only; not medical advice.</p>
+  ${latest && !c && !term ? `<div class="card hl mt8"><div class="label">Latest video</div><div class="grid md2 mt3" style="align-items:center">${videoCard(latest).replace('class="card flush vcard"', 'class="vcard"')}<p class="muted">New videos appear here as they are added to the channel and approved.</p></div></div>` : ''}
+  <form class="flex mt8" data-form="video-search" role="search"><input type="search" name="q" value="${esc(q.q || '')}" placeholder="Search videos" aria-label="Search videos" style="max-width:20rem;margin:0"><button class="btn ghost xs">Search</button>
+    <select class="mini" data-act="video-sort" aria-label="Order"><option value="">Newest first</option><option value="oldest" ${oldest ? 'selected' : ''}>Oldest first</option></select></form>
+  <div class="chips mt4"><button class="chip ${!c ? 'on' : ''}" data-act="nav" data-to="${link({ cat: '' })}">All (${all.length})</button>${cats.map(x => `<button class="chip ${c === x ? 'on' : ''}" data-act="nav" data-to="${link({ cat: x })}">${esc(x)} (${all.filter(v => v.cat === x).length})</button>`).join('')}</div>
+  <div class="grid md3 mt6">${list.slice(0, shown).map(videoCard).join('') || '<p class="muted">No videos match.</p>'}</div>
+  ${list.length > shown ? `<p class="center mt6"><button class="btn ghost" data-act="nav" data-to="${link({ n: shown + 24 })}">Show more (${list.length - shown} more)</button></p>` : ''}`);
 };
 
 function partnerCard(p) {
@@ -698,8 +716,21 @@ R['/admin/content'] = () => adminNav() + page(`<h1>Content</h1><p class="muted m
   <form class="card stack mt6" data-form="story"><h2 class="gold">Founder's Awakening Story</h2><textarea name="story" rows="6">${esc(S.founderStory)}</textarea><button class="btn xs">Save story</button></form>
   <div class="card mt6"><h2 class="gold">Podcast episodes</h2><p class="xs muted mt1">Audio is hosted by your podcast provider; paste its episode/RSS details here.</p><div class="tablewrap mt3"><table><thead><tr><th>#</th><th>Title</th><th>Date</th><th>Access</th><th></th></tr></thead><tbody>${S.episodes.map(e => `<tr style="${e.archived ? 'opacity:.45' : ''}"><td>${e.n}</td><td>${esc(e.title)}${e.featured ? ' <span class="badge b-gold">Featured</span>' : ''}</td><td class="xs">${e.date}</td><td><button class="linkbtn xs" data-act="ep-access" data-id="${e.id}">${e.access}</button></td><td class="xs"><button class="linkbtn xs" data-act="ep-feature" data-id="${e.id}">Feature</button> · <button class="linkbtn xs" data-act="ep-archive" data-id="${e.id}">${e.archived ? 'Restore' : 'Archive'}</button></td></tr>`).join('')}</tbody></table></div>
     <form class="grid md2 mt4" data-form="episode"><label class="f"><span>Title</span><input type="text" name="title" required></label><label class="f"><span>Publish date</span><input type="date" name="date" required></label><label class="f"><span>Topics (comma separated)</span><input type="text" name="topics" placeholder="Minerals, REST"></label><label class="f"><span>Guest</span><input type="text" name="guest"></label><label class="f" style="grid-column:1/-1"><span>Description</span><textarea name="desc" rows="2"></textarea></label><label class="f"><span>Access</span><select name="access"><option value="public">public</option><option value="members">members</option></select></label><div style="align-self:end"><button class="btn xs">Add episode</button></div></form></div>
-  <div class="card mt6"><h2 class="gold">Meet Mineral Man videos</h2><div class="tablewrap mt3"><table><thead><tr><th>Title</th><th>Category</th><th>Pillar</th><th>Access</th><th></th></tr></thead><tbody>${S.videos.map(v => `<tr style="${v.archived ? 'opacity:.45' : ''}"><td>${esc(v.title)}</td><td class="xs">${esc(v.cat)}</td><td class="xs">${v.pillar || '—'}</td><td><button class="linkbtn xs" data-act="vid-access" data-id="${v.id}">${v.access}</button></td><td><button class="linkbtn xs" data-act="vid-archive" data-id="${v.id}">${v.archived ? 'Restore' : 'Archive'}</button></td></tr>`).join('')}</tbody></table></div>
-    <form class="grid md2 mt4" data-form="video"><label class="f"><span>Title</span><input type="text" name="title" required></label><label class="f"><span>Category</span><input type="text" name="cat" required value="Minerals"></label><label class="f"><span>Pillar</span><select name="pillar"><option value="">—</option>${PILLARS.map(p => `<option value="${p.id}">${p.name}</option>`).join('')}</select></label><label class="f"><span>Access</span><select name="access"><option>members</option><option>public</option></select></label><div><button class="btn xs">Add video</button></div></form></div>`);
+  ${(() => { const vids = S.videos.slice().sort((a, b) => (a.status === 'review') === (b.status === 'review') ? (b.order || 0) - (a.order || 0) : a.status === 'review' ? -1 : 1);
+    const held = vids.filter(v => v.status === 'review').length;
+    return `<div class="card mt6"><div class="flex between"><h2 class="gold">Meet Mineral Man videos (${vids.length})</h2><a class="sm" href="${CHANNEL_URL}" target="_blank" rel="noopener">Open the channel ↗</a></div>
+    <p class="sm muted mt1">Imported from the YouTube channel. ${held ? `<b class="b-warn">${held} awaiting your review</b> — hidden from the website because they make strong health or product claims (brief §07, §16). Check each one and publish it, or keep it held.` : 'All videos are reviewed.'}</p>
+    <form class="grid md2 mt4" data-form="video-youtube"><p class="form-error" role="alert" tabindex="-1" hidden style="grid-column:1/-1"></p>
+      <label class="f" style="grid-column:1/-1"><span>Add a video by its YouTube link</span><input type="url" name="url" required placeholder="https://www.youtube.com/watch?v=…"></label>
+      <label class="f"><span>Topic</span><select name="cat">${uniq(S.videos.map(v => v.cat)).map(c => `<option>${esc(c)}</option>`).join('')}</select></label>
+      <label class="f"><span>Pillar</span><select name="pillar"><option value="">— (Awakening)</option>${PILLARS.map(p => `<option value="${p.id}">${p.name}</option>`).join('')}</select></label>
+      <label class="f"><span>Title (optional — looked up automatically)</span><input type="text" name="title"></label><div style="align-self:end"><button class="btn xs">Add video</button></div></form>
+    <div class="tablewrap mt4"><table><thead><tr><th></th><th>Title</th><th>Topic · pillar</th><th>Status</th><th></th></tr></thead><tbody>${vids.map(v => `<tr style="${v.archived ? 'opacity:.45' : ''}">
+      <td>${v.youtubeId ? `<img src="https://i.ytimg.com/vi/${esc(v.youtubeId)}/default.jpg" alt="" width="64" height="48" loading="lazy" style="border-radius:4px">` : ''}</td>
+      <td>${v.youtubeId ? `<a href="https://www.youtube.com/watch?v=${esc(v.youtubeId)}" target="_blank" rel="noopener">${esc(v.title)}</a>` : esc(v.title)}<div class="xs muted">${esc(v.length || '')}${v.year ? ' · ' + esc(v.year) : ''}</div></td>
+      <td class="xs">${esc(v.cat)}${v.pillar ? ' · ' + v.pillar.toUpperCase() : ''}</td>
+      <td>${v.status === 'review' ? `<span class="badge b-warn">Awaiting review</span><div class="xs muted mt1">${esc(v.reviewNote || '')}</div>` : '<span class="badge b-ok">On website</span>'}</td>
+      <td class="xs" style="white-space:nowrap">${v.status === 'review' ? `<button class="btn xs" data-act="vid-publish" data-id="${v.id}">Publish</button>` : `<button class="linkbtn xs" data-act="vid-hold" data-id="${v.id}">Hold</button>`} · <button class="linkbtn xs" data-act="vid-archive" data-id="${v.id}">${v.archived ? 'Restore' : 'Archive'}</button></td></tr>`).join('')}</tbody></table></div></div>`; })()}`);
 
 R['/admin/moderation'] = () => {
   const pend = S.laughs.filter(l => l.status === 'pending'), rep = S.posts.filter(p => p.reported && !p.removed);
@@ -849,6 +880,16 @@ const A = {
   'ep-access'(el) { act('ep-access', { id: el.dataset.id }); },
   'ep-feature'(el) { act('ep-feature', { id: el.dataset.id }); },
   'ep-archive'(el) { act('ep-archive', { id: el.dataset.id }); },
+  'vid-publish'(el) { act('vid-publish', { id: el.dataset.id }); },
+  'vid-hold'(el) { act('vid-hold', { id: el.dataset.id }); },
+  yt(el) {
+    const id = el.dataset.id; if (!/^[\w-]{11}$/.test(id)) return;
+    const f = document.createElement('iframe');
+    f.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
+    f.title = el.getAttribute('aria-label') || 'Video'; f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen'; f.allowFullscreen = true; f.className = 'vframe';
+    el.replaceWith(f); f.focus();
+  },
+  'video-sort'(el) { const [path, qs] = location.hash.slice(1).split('?'); const p = new URLSearchParams(qs || ''); el.value ? p.set('sort', el.value) : p.delete('sort'); p.delete('n'); go(path + (p.toString() ? '?' + p : '')); },
   'vid-access'(el) { act('vid-access', { id: el.dataset.id }); },
   'vid-archive'(el) { act('vid-archive', { id: el.dataset.id }); },
   'mod-laugh'(el) { act('mod-laugh', { id: el.dataset.id, v: el.dataset.v }); },
@@ -894,6 +935,8 @@ const F = {
   story(f, d) { return act('story', obj(d)); },
   episode(f, d) { return act('episode', obj(d)); },
   video(f, d) { return act('video', obj(d)); },
+  'video-youtube'(f, d) { return act('video-youtube', obj(d)).then(r => { if (r) f.reset(); return r; }); },
+  'video-search'(f, d) { const [path, qs] = location.hash.slice(1).split('?'); const p = new URLSearchParams(qs || ''); const t = d.get('q'); t ? p.set('q', t) : p.delete('q'); p.delete('n'); go('/mineral-man' + (p.toString() ? '?' + p : '')); },
   partner(f, d) { const b = obj(d); return act('partner', { ...b, paid: !!b.paid, affiliate: !!b.affiliate }); },
   settings(f, d) { const b = obj(d); return act('settings', { ...b, autoPublish: !!b.autoPublish }); },
   async assistant(f, d) {
@@ -927,5 +970,6 @@ document.addEventListener('submit', async ev => {
   try { const r = await fn(f, new FormData(f), ev.submitter); if (r === null && errBox && lastError && document.contains(f)) { errBox.textContent = lastError; errBox.hidden = false; errBox.focus(); } }
   finally { f.classList.remove('busy'); btns.forEach(b => b.disabled = false); }
 });
+document.addEventListener('error', ev => { if (ev.target.matches?.('.vthumb img')) ev.target.style.visibility = 'hidden'; }, true);
 window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
 load().then(render).catch(e => { document.getElementById('app').innerHTML = `<main class="page"><div class="narrow card"><h1>DELTA is unavailable</h1><p class="muted mt2">${esc(e.message)}. Please try again shortly.</p></div></main>`; });

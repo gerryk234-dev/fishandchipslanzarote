@@ -297,3 +297,28 @@ test('Microsoft sign-in: personal accounts are trusted; work accounts never take
     assert.match(await signIn(d), /error=failed/);
   } finally { app.done(); idp.close(); }
 });
+
+test('YouTube library: imported in channel order, held videos stay private until published, add by link', async () => {
+  const app = await boot();
+  try {
+    const pub = client(app.url), s = await pub.state();
+    const yt = require('../shared/youtube-videos.json');
+    assert.equal(s.videos.length, yt.videos.filter(v => !v.review).length);
+    assert.ok(s.videos.every(v => v.status === 'published'));
+    assert.deepEqual(s.videos.map(v => v.order), s.videos.map(v => v.order).slice().sort((a, b) => b - a));
+    const held = yt.videos.find(v => v.review);
+    const f = client(app.url); await persona(f, 'Founder');
+    assert.ok((await f.state()).videos.some(v => v.youtubeId === held.youtubeId && v.status === 'review'));
+    assert.equal((await pub.act('vid-publish', { id: 'yt_' + held.youtubeId })).status, 401);
+    await f.act('vid-publish', { id: 'yt_' + held.youtubeId });
+    assert.ok((await pub.state()).videos.some(v => v.youtubeId === held.youtubeId));
+    assert.match((await f.act('video-youtube', { url: 'https://example.com/x' })).error, /YouTube video link/);
+    assert.match((await f.act('video-youtube', { url: 'https://youtu.be/' + held.youtubeId })).error, /already/);
+    const r = await f.act('video-youtube', { url: 'https://www.youtube.com/watch?v=AbCdEfGhIjK&t=10', title: 'New upload', cat: 'Minerals & testing', pillar: 'body' });
+    assert.equal(r.ok, true);
+    const added = (await pub.state()).videos[0];
+    assert.equal(added.youtubeId, 'AbCdEfGhIjK'); assert.equal(added.title, 'New upload');
+    // importing twice does nothing
+    assert.equal(app.L.importYouTube(), 0);
+  } finally { app.done(); }
+});

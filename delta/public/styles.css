@@ -226,3 +226,12 @@ hr.sep { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
 .btn.social.microsoft:hover { background: #f2f2f2; }
 .form-error { border-left: 4px solid var(--bad); background: rgba(239,125,109,.1); color: var(--fg); padding: .6rem .8rem; border-radius: 0 .5rem .5rem 0; font-size: .875rem; }
 .form-error:focus { outline: none; }
+
+/* YouTube video cards */
+.vcard .vthumb { position: relative; display: block; width: 100%; padding: 0; border: 0; background: #000; cursor: pointer; aspect-ratio: 16/9; overflow: hidden; }
+.vcard .vthumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s, opacity .3s; opacity: .9; }
+.vcard .vthumb:hover img { transform: scale(1.04); opacity: 1; }
+.vcard .vplay { position: absolute; inset: 0; margin: auto; width: 3.2rem; height: 3.2rem; border-radius: 50%; background: rgba(10,14,26,.75); color: var(--gold); display: grid; place-items: center; font-size: 1.1rem; border: 1px solid rgba(212,175,55,.6); }
+.vcard .vlen { position: absolute; right: .4rem; bottom: .4rem; background: rgba(0,0,0,.8); color: #fff; font-size: .7rem; padding: .05rem .35rem; border-radius: 4px; }
+.vcard .vtitle { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.vframe { width: 100%; aspect-ratio: 16/9; border: 0; display: block; background: #000; }

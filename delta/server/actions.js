@@ -233,6 +233,23 @@ function createActions(store, L, auth, payments, mailer, config, oauth) {
     'ep-feature': { perm: '/admin/content', fn: ({ user, body }) => { content('episode', body.id); for (const e of store.all('content').filter(c => c.kind === 'episode')) { e.featured = e.id === body.id; store.put('content', e); } L.audit(L.actorName(user), 'Episode featured', body.id); return {}; } },
     'ep-archive': { perm: '/admin/content', fn: ({ user, body }) => { const e = content('episode', body.id); e.archived = !e.archived; store.put('content', e); L.audit(L.actorName(user), e.archived ? 'Episode archived' : 'Episode restored', e.title); return {}; } },
     video: { perm: '/admin/content', fn: ({ user, body }) => { need(str(body.title), 'Title is required.'); const v = { id: L.id('v'), kind: 'video', title: str(body.title, 200), cat: str(body.cat, 60) || 'Minerals', pillar: D.PILLARS.some(p => p.id === body.pillar) ? body.pillar : '', access: body.access === 'public' ? 'public' : 'members', mins: 5, at: L.now() }; store.put('content', v); L.audit(L.actorName(user), 'Video added', v.title); return {}; } },
+    'vid-publish': { perm: '/admin/content', fn: ({ user, body }) => { const v = content('video', body.id); v.status = 'published'; v.reviewedBy = user.name; v.reviewedAt = L.now(); store.put('content', v); L.audit(L.actorName(user), 'Video approved for the website', v.title); return { toast: 'Published on the website.' }; } },
+    'vid-hold': { perm: '/admin/content', fn: ({ user, body }) => { const v = content('video', body.id); v.status = 'review'; v.reviewNote = v.reviewNote || 'Held by ' + user.name; store.put('content', v); L.audit(L.actorName(user), 'Video held for review', v.title); return {}; } },
+    'video-youtube': { perm: '/admin/content', fn: async ({ user, body }) => {
+      const m = String(body.url || '').match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})/);
+      need(m, 'Paste a YouTube video link, e.g. https://www.youtube.com/watch?v=…');
+      const yid = m[1]; need(!store.get('content', 'yt_' + yid), 'That video is already in the library.');
+      let title = str(body.title, 200);
+      if (!title) {
+        try { const r = await fetch(`https://www.youtube.com/oembed?format=json&url=${encodeURIComponent('https://www.youtube.com/watch?v=' + yid)}`); if (r.ok) title = str((await r.json()).title, 200); } catch { /* offline: ask for a title */ }
+        need(title, 'Could not look up the title — please type it in.');
+      }
+      const vids = store.all('content').filter(c => c.kind === 'video');
+      const cat = str(body.cat, 60) || 'Awakening & consciousness';
+      const v = { id: 'yt_' + yid, kind: 'video', youtubeId: yid, title, cat, pillar: D.PILLARS.some(p => p.id === body.pillar) ? body.pillar : '', awakening: !body.pillar, mins: 0, length: '', year: String(new Date(L.now()).getUTCFullYear()), published: '', order: Math.max(0, ...vids.map(x => x.order || 0)) + 1, access: 'public', status: 'published', at: L.now() };
+      store.tx(() => { store.put('content', v); L.audit(L.actorName(user), 'Video added from YouTube', title); });
+      return { toast: `Added "${title}".` };
+    } },
     'vid-access': { perm: '/admin/content', fn: ({ user, body }) => { const v = content('video', body.id); v.access = v.access === 'public' ? 'members' : 'public'; store.put('content', v); L.audit(L.actorName(user), 'Video access', `${v.title}: ${v.access}`); return {}; } },
     'vid-archive': { perm: '/admin/content', fn: ({ user, body }) => { const v = content('video', body.id); v.archived = !v.archived; store.put('content', v); L.audit(L.actorName(user), v.archived ? 'Video archived' : 'Video restored', v.title); return {}; } },
     'mod-laugh': { perm: '/admin/moderation', fn: ({ user, body }) => { const l = store.get('laughs', body.id); need(l, 'Not found', 404); need(['approved', 'rejected'].includes(body.v), 'Unknown decision'); l.status = body.v; l.flag = ''; store.put('laughs', l); L.audit(L.actorName(user), `Submission ${body.v}`, l.text.slice(0, 50)); return {}; } },
@@ -255,7 +272,7 @@ function createActions(store, L, auth, payments, mailer, config, oauth) {
 
     /* ── demo-only tools ── */
     clock: { perm: '/admin', demo: true, anyone: true, fn: ({ user, body }) => { const d = +body.days; store.kvSet('clockDays', d === 0 ? 0 : store.kvGet('clockDays', 0) + d); L.audit(L.actorName(user), 'Demo clock moved', `+${store.kvGet('clockDays', 0)} days`); L.runReminders(); return { toast: `Demo date is now ${L.fmtDate(L.now())}. Reminders and expiries processed.` }; } },
-    reset: { perm: '/admin', demo: true, anyone: true, fn: ({ req, res }) => { store.wipe(); L.seedContent(); L.seedDemo(); L.runReminders(); auth.endSession(req, res); return { toast: 'Demo reset.', go: '/' }; } },
+    reset: { perm: '/admin', demo: true, anyone: true, fn: ({ req, res }) => { store.wipe(); L.seedContent(); L.importYouTube(); L.seedDemo(); L.runReminders(); auth.endSession(req, res); return { toast: 'Demo reset.', go: '/' }; } },
     impersonate: { perm: '/admin/members', demo: true, fn: ({ user, body, res }) => { need(user.role === 'admin', 'Admins only', 403); const u = member(body.id); auth.startSession(res, u.id); L.audit(L.actorName(user), 'Viewed as member', u.name); return { go: '/portal' }; } },
   };
 

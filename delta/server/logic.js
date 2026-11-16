@@ -154,6 +154,18 @@ function createLogic(store, mailer, config) {
     store.kvSet('founderStory', 'I spent years searching for answers about my own health and energy. Testing my minerals was the first practical step — but the bigger change came from slowing down, getting outside, laughing more and paying attention to what I was feeling. DELTA is the path I wish I had found sooner: practical first, then as deep as you want to go.');
     store.kvSet('settings', DEFAULT_SETTINGS);
   };
+  /* Imports the Mineral Man YouTube library once (replacing placeholder videos). Held videos stay hidden until approved. */
+  L.importYouTube = () => {
+    const all = store.all('content').filter(c => c.kind === 'video');
+    if (all.some(v => v.youtubeId)) return 0;
+    const yt = require('../shared/youtube-videos.json');
+    store.tx(() => {
+      all.forEach(v => store.del('content', v.id));
+      for (const v of yt.videos) store.put('content', { id: 'yt_' + v.youtubeId, kind: 'video', ...v, access: 'public', status: v.review ? 'review' : 'published', reviewNote: v.review || '', at: v.order });
+      L.audit('System', 'YouTube library imported', `${yt.videos.length} videos from ${yt.channel} (${yt.videos.filter(v => v.review).length} held for review)`);
+    });
+    return yt.videos.length;
+  };
   L.seedDemo = () => {
     if (store.count('users')) return;
     const base = Date.now();
