@@ -222,3 +222,7 @@ hr.sep { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
 .or::before, .or::after { content: ''; flex: 1; border-top: 1px solid var(--border); }
 .hint { font-size: .75rem; color: var(--muted); margin-top: .2rem; display: block; }
 @media (max-width: 900px) { header.site { position: static; } }
+.btn.social.microsoft { background: #fff; color: #5e5e5e; border-color: #8c8c8c; }
+.btn.social.microsoft:hover { background: #f2f2f2; }
+.form-error { border-left: 4px solid var(--bad); background: rgba(239,125,109,.1); color: var(--fg); padding: .6rem .8rem; border-radius: 0 .5rem .5rem 0; font-size: .875rem; }
+.form-error:focus { outline: none; }

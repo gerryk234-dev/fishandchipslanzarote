@@ -1,4 +1,4 @@
-/* "Continue with Google" and "Sign in with Apple" (OpenID Connect, authorization-code flow).
+/* "Continue with Google", "Continue with Microsoft" and "Sign in with Apple" (OpenID Connect, authorization-code flow).
    - state + nonce (+ PKCE for Google) are stored server-side and single-use
    - the ID token's signature is verified against the provider's published keys (JWKS),
      and its issuer, audience, expiry, nonce and email-verified claim are checked
@@ -31,7 +31,30 @@ function providerConfigs(config) {
     authorizeUrl: 'https://appleid.apple.com/auth/authorize', tokenUrl: 'https://appleid.apple.com/auth/token',
     jwksUrl: 'https://appleid.apple.com/auth/keys', issuers: ['https://appleid.apple.com'], ...(o.apple || {}),
   };
+  const m = config.microsoft || {};
+  if (m.clientId && m.clientSecret) {
+    const tenant = m.tenant || 'common';
+    p.microsoft = {
+      label: 'Microsoft', clientId: m.clientId, secret: () => m.clientSecret, scope: 'openid email profile', pkce: true, extra: { prompt: 'select_account' },
+      authorizeUrl: `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/authorize`, tokenUrl: `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/token`,
+      jwksUrl: 'https://login.microsoftonline.com/common/discovery/v2.0/keys',
+      /* Multi-tenant: the issuer contains the account's own tenant id. */
+      issuerOk: c => typeof c.tid === 'string' && c.iss === `https://login.microsoftonline.com/${c.tid}/v2.0`,
+      ...(o.microsoft || {}),
+    };
+  }
   return p;
+}
+/* Personal Microsoft accounts (Outlook, Hotmail, Live) live in this tenant and their email is verified by Microsoft. */
+const MS_CONSUMER_TENANT = '9188040d-6c67-4c5b-b112-36a304b66dad';
+/* Returns { email, verified } — whether the provider vouches for the address. */
+function emailFrom(name, c) {
+  if (name === 'microsoft') {
+    const personal = c.tid === MS_CONSUMER_TENANT;
+    const email = c.email || (personal ? c.preferred_username : null);
+    return { email, verified: personal && !!email };
+  }
+  return { email: c.email, verified: c.email_verified === true || c.email_verified === 'true' };
 }
 
 function createOAuth(store, L, auth, config) {
@@ -60,16 +83,15 @@ function createOAuth(store, L, auth, config) {
     if (header.alg !== 'RS256') throw new Error('Unexpected token algorithm');
     const ok = crypto.verify('RSA-SHA256', Buffer.from(`${h}.${p}`), await keyFor(prov, header.kid), fromB64u(s));
     if (!ok) throw new Error('Bad token signature');
-    if (!prov.issuers.includes(claims.iss)) throw new Error('Wrong issuer');
+    if (!(prov.issuerOk ? prov.issuerOk(claims) : prov.issuers.includes(claims.iss))) throw new Error('Wrong issuer');
     if (!(claims.aud === prov.clientId || (Array.isArray(claims.aud) && claims.aud.includes(prov.clientId)))) throw new Error('Wrong audience');
     if (!(claims.exp * 1000 > Date.now() - 60e3)) throw new Error('Token expired');
     if (claims.nonce !== nonce) throw new Error('Nonce mismatch');
-    if (!claims.email || !(claims.email_verified === true || claims.email_verified === 'true')) throw new Error('Email not verified by provider');
     return claims;
   }
 
   return {
-    enabled: () => Object.fromEntries(['google', 'apple'].map(k => [k, !!P[k]])),
+    enabled: () => Object.fromEntries(['google', 'microsoft', 'apple'].map(k => [k, !!P[k]])),
     start(name, next) {
       const prov = P[name]; if (!prov) return null;
       const state = crypto.randomBytes(24).toString('base64url'), nonce = crypto.randomBytes(16).toString('base64url');
@@ -94,12 +116,21 @@ function createOAuth(store, L, auth, config) {
       if (!tr.ok) throw new Error('Token exchange failed (' + tr.status + ')');
       const claims = await verifyIdToken(prov, (await tr.json()).id_token, row.nonce);
 
-      const email = claims.email.toLowerCase();
-      let u, isNew = false;
+      const found = emailFrom(name, claims);
+      if (!found.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(found.email)) throw new Error('No usable email from provider');
+      /* Google and Apple only hand over verified emails; anything else is refused. */
+      if (!found.verified && name !== 'microsoft') throw new Error('Email not verified by provider');
+      const email = found.email.toLowerCase();
+      let u, isNew = false, blocked = false;
       const link = store.db.prepare('SELECT user_id FROM identities WHERE provider = ? AND sub = ?').get(name, String(claims.sub));
       store.tx(() => {
         u = link && L.user(link.user_id);
-        if (!u) u = store.byEmail(email);
+        if (!u) {
+          const existing = store.byEmail(email);
+          /* Never take over an existing account on an email the provider hasn't verified. */
+          if (existing && !found.verified) { blocked = true; return; }
+          u = existing;
+        }
         if (!u) {
           let given = claims.name;
           if (!given && params.user) { try { const n = JSON.parse(params.user).name || {}; given = [n.firstName, n.lastName].filter(Boolean).join(' '); } catch { /* Apple sends the name only on first sign-in */ } }
@@ -107,9 +138,11 @@ function createOAuth(store, L, auth, config) {
           isNew = true;
         }
         if (!link) store.db.prepare('INSERT OR IGNORE INTO identities (provider, sub, user_id, email, at) VALUES (?, ?, ?, ?, ?)').run(name, String(claims.sub), u.id, email, Date.now());
-        if (!u.emailVerified) { u.emailVerified = true; L.saveUser(u); }
+        if (!u.emailVerified && found.verified) { u.emailVerified = true; L.saveUser(u); }
         L.audit(u.name, isNew ? 'Account created' : 'Signed in', `via ${prov.label}`);
       });
+      if (blocked) return '/login?error=link';
+      if (isNew && !found.verified) auth.sendVerification(u);
       auth.startSession(res, u.id);
       return row.next || (u.role === 'member' ? (isNew ? '/join' : '/portal') : '/admin');
     },

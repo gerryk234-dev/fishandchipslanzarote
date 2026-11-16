@@ -7,7 +7,7 @@ const DAY = 864e5;
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const uniq = a => [...new Set(a)];
 const { addMonths, positionOf, statusOf, rangeSummary, evaluate, STAGES, stageOf, stageLabel } = Domain;
-let S = null, fetchedAt = 0, chatLog = [];
+let S = null, fetchedAt = 0, chatLog = [], lastError = '';
 
 /* ───────────────────────── time & money ───────────────────────── */
 const now = () => S.now + (Date.now() - fetchedAt);
@@ -28,8 +28,8 @@ async function act(name, body = {}, { refresh = true } = {}) {
   try {
     const r = await fetch('/api/act/' + encodeURIComponent(name), { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'X-Delta': '1' }, body: JSON.stringify(body) });
     out = await r.json().catch(() => ({ error: 'Unexpected response from server' }));
-    if (!r.ok) { toast(out.error || 'Something went wrong.'); return null; }
-  } catch { toast('Network problem — please check your connection.'); return null; }
+    if (!r.ok) { lastError = out.error || 'Something went wrong.'; if (!document.querySelector('form.busy .form-error')) toast(lastError); return null; }
+  } catch { lastError = 'Network problem — please check your connection.'; toast(lastError); return null; }
   if (out.redirect && !out.redirect.startsWith('#')) { location.href = out.redirect; return out; } // e.g. Stripe Checkout
   if (refresh && !out.quiet) await load();
   if (out.toast) toast(out.toast);
@@ -63,12 +63,14 @@ function pipelineHTML(u, t) {
 }
 const GOOGLE_ICON = '<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59A14.5 14.5 0 0 1 9.5 24c0-1.59.28-3.14.76-4.59l-7.98-6.19A23.94 23.94 0 0 0 0 24c0 3.77.9 7.35 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>';
 const APPLE_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M16.37 12.62c-.02-2.3 1.88-3.4 1.96-3.46-1.07-1.56-2.73-1.78-3.32-1.8-1.41-.14-2.76.83-3.48.83-.72 0-1.82-.81-3-.79-1.54.02-2.96.9-3.76 2.27-1.6 2.78-.41 6.9 1.15 9.16.76 1.1 1.67 2.34 2.86 2.3 1.15-.05 1.58-.74 2.97-.74 1.38 0 1.77.74 2.98.72 1.23-.02 2.01-1.12 2.77-2.23.87-1.28 1.23-2.52 1.25-2.58-.03-.01-2.4-.92-2.42-3.65zM14.1 5.86c.63-.77 1.06-1.83.94-2.89-.91.04-2.01.61-2.66 1.37-.58.67-1.09 1.75-.96 2.79 1.02.08 2.05-.52 2.68-1.27z"/></svg>';
-/* Google / Apple buttons. Unconfigured providers are hidden in production and explained in demo mode. */
+const MICROSOFT_ICON = '<svg viewBox="0 0 21 21" aria-hidden="true"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>';
+const PROVIDER = { google: 'Google', microsoft: 'Microsoft', apple: 'Apple', email: 'Email' };
+/* Google / Microsoft / Apple buttons. Unconfigured providers are hidden in production and explained in demo mode. */
 function socialButtons(next = '') {
-  const list = [['google', 'Continue with Google', GOOGLE_ICON], ['apple', 'Sign in with Apple', APPLE_ICON]];
+  const list = [['google', 'Continue with Google', GOOGLE_ICON], ['microsoft', 'Continue with Microsoft', MICROSOFT_ICON], ['apple', 'Continue with Apple', APPLE_ICON]];
   const html = list.map(([k, l, ic]) => S.oauth?.[k]
     ? `<a class="btn social ${k}" href="/auth/${k}/start${next ? '?next=' + encodeURIComponent(next) : ''}">${ic}<span>${l}</span></a>`
-    : S.demo ? `<button type="button" class="btn social ${k}" data-act="social-off" data-p="${k === 'google' ? 'Google' : 'Apple'}">${ic}<span>${l}</span></button>` : '').join('');
+    : S.demo ? `<button type="button" class="btn social ${k}" data-act="social-off" data-p="${PROVIDER[k]}">${ic}<span>${l}</span></button>` : '').join('');
   return html ? `<div class="stack">${html}</div>` : '';
 }
 const maxDob = () => { const d = new Date(now()); d.setUTCFullYear(d.getUTCFullYear() - (S.settings.minAge || 18)); return d.toISOString().slice(0, 10); };
@@ -145,7 +147,7 @@ function header() {
     <button class="menu-btn" data-act="menu" aria-expanded="false" aria-controls="mainnav">Menu</button>
     <nav class="main" id="mainnav" aria-label="Main">
       ${a('/how-it-works', 'How it works')}${a('/pillars', 'Six Pillars')}${a('/awakening', 'Awakening')}${a('/podcast', 'Podcast')}${a('/mineral-man', 'Mineral Man')}${a('/partners', 'Partners')}${a('/faq', 'FAQs')}
-      ${u ? (isStaff(u) ? a('/admin', 'Admin', 'strong') : '') + a('/portal', 'My Portal', 'strong') : a('/login', 'Sign in') + a('/join', 'Join', 'strong')}
+      ${u ? (isStaff(u) ? a('/admin', 'Admin', 'strong') : '') + a('/portal', 'My Portal', 'strong') : a('/login', 'Sign in') + a('/register', 'Sign up', 'strong')}
     </nav></div></header>`;
 }
 function footer() {
@@ -361,7 +363,7 @@ R['/join'] = () => {
   const newExp = u ? addMonths(Math.max(u.expiresAt || 0, now()), S.settings.accessMonths) : addMonths(now(), S.settings.accessMonths);
   return page(`<div class="center"><h1>${renew ? 'Retest & renew' : 'Join the DELTA Experience'}</h1>
   <p class="muted mt4">One purchase includes your qualifying mineral test and six months of full platform access. After payment you will receive clear instructions to prepare and send your hair sample to our laboratory.</p></div>
-  <form class="card mt8 stack" data-form="join">
+  <form class="card mt8 stack" data-form="join"><p class="form-error" role="alert" tabindex="-1" hidden></p>
     <div class="flex between"><span>${renew ? 'Repeat qualifying test' : 'The DELTA Experience'}</span><b style="font-size:1.5rem;font-weight:300">${money(S.settings.price)}</b></div>
     ${u ? `<p class="sm muted">${renew ? `Current access ${st === 'expired' ? 'ended' : 'ends'} ${fmtDate(u.expiresAt)}. ` : ''}Access after this purchase: <b class="gold">until ${fmtDate(newExp)}</b>${renew && st !== 'expired' ? ' — six months added on to your current end date, so you lose no time.' : '.'}</p>`
       : `${socialButtons('/join')}<div class="or">or register with your email</div><label class="f"><span>Full name</span><input type="text" name="name" required autocomplete="name"></label><label class="f"><span>Email</span><input type="email" name="email" required autocomplete="email"></label>${profileFields()}`}
@@ -378,7 +380,7 @@ R['/login'] = (q = {}) => {
   return `<main id="main" class="page" style="display:grid;place-items:center"><div class="card" style="width:100%;max-width:30rem;padding:2rem">
     <div class="center">${logo('').replace('class="logo ', 'style="width:5rem;height:5rem;margin:0 auto 1rem" class="logo ')}<h1 style="font-size:1.5rem;font-weight:600">Sign in to DELTA</h1><p class="sm muted mt2">Access your Mineral Intelligence and the six pillars.</p></div>
     ${q.expired ? '<p class="sm b-warn mt4 center">That sign-in link has expired or was already used. Request a new one below.</p>' : ''}
-    ${q.error ? `<p class="sm b-warn mt4 center">${{ notconfigured: 'That sign-in option isn\'t connected yet — please use email for now.', cancelled: 'Sign-in was cancelled.', expired: 'That sign-in attempt expired — please try again.', failed: 'We couldn\'t verify that sign-in. Please try again or use email.' }[q.error] || 'Sign-in failed.'}</p>` : ''}
+    ${q.error ? `<p class="sm b-warn mt4 center">${{ notconfigured: 'That sign-in option isn\'t connected yet — please use email for now.', cancelled: 'Sign-in was cancelled.', expired: 'That sign-in attempt expired — please try again.', failed: 'We couldn\'t verify that sign-in. Please try again or use email.', link: 'There is already a DELTA account with that email. Please sign in with an email link first — for your security we don\'t merge work or school Microsoft accounts automatically.' }[q.error] || 'Sign-in failed.'}</p>` : ''}
     ${u ? '' : `<div class="mt6">${socialButtons()}</div><div class="or">or use your email</div>`}
     ${u ? `<p class="sm mt6 center">Signed in as <b>${esc(u.name)}</b>. <a href="#${isStaff(u) ? '/admin' : '/portal'}">Continue</a> · <button class="linkbtn" data-act="logout">Sign out</button></p>` : ''}
     ${loginSent ? `<div class="card hl mt6 sm"><b>Check your email.</b> If <b>${esc(loginSent)}</b> has a DELTA account, a sign-in link is on its way. It works once and expires in 20 minutes.${S.demo ? ' <a href="/dev/mailbox" target="_blank" rel="noopener">Open the dev mailbox</a>.' : ''}</div>`
@@ -389,9 +391,9 @@ R['/login'] = (q = {}) => {
 R['/register'] = () => {
   if (me()) return page(`<div class="card center"><p>You're already signed in as <b>${esc(me().name)}</b>.</p><a href="#/join" class="btn mt4">Join the DELTA Experience</a></div>`, 'narrow');
   return `<main id="main" class="page" style="display:grid;place-items:center"><div class="card" style="width:100%;max-width:32rem;padding:2rem">
-    <div class="center">${logo('').replace('class="logo ', 'style="width:4.5rem;height:4.5rem;margin:0 auto 1rem" class="logo ')}<h1 style="font-size:1.5rem;font-weight:600">Create your DELTA account</h1><p class="sm muted mt2">Sign up in seconds — then choose when to start the DELTA Experience.</p></div>
-    <div class="mt6">${socialButtons('/join')}</div><div class="or">or register with your email</div>
-    <form class="stack" data-form="register">
+    <div class="center">${logo('').replace('class="logo ', 'style="width:4.5rem;height:4.5rem;margin:0 auto 1rem" class="logo ')}<h1 style="font-size:1.5rem;font-weight:600">Create your DELTA account</h1><p class="sm muted mt2">The quickest way: use an account you already have.</p></div>
+    <div class="mt6">${socialButtons('/join')}</div>${socialButtons('/join') ? '<p class="xs muted center mt2">One tap — no forms to fill in now. We\'ll only ask for your phone, nationality and date of birth later, before your test.</p><div class="or">or fill in your details</div>' : ''}
+    <form class="stack" data-form="register"><p class="form-error" role="alert" tabindex="-1" hidden></p>
       <label class="f"><span>Full name</span><input type="text" name="name" required autocomplete="name" maxlength="80"></label>
       <label class="f"><span>Email</span><input type="email" name="email" required autocomplete="email"></label>
       ${profileFields()}
@@ -413,7 +415,7 @@ R['/intake'] = () => {
   const i = u.intake || { pregnant: 'no', medications: '', conditions: '', under18: 'no' };
   return page(`${back('/portal', 'Portal')}<h1 class="mt4">Before your sample</h1>
   <p class="sm muted mt3">These questions are a safety screen, not a diagnosis. If you are pregnant, taking medicines, or note a condition, a guide reviews your file before any personal programme is released. General lessons stay available.</p>
-  <form class="mt8 stack" data-form="intake">
+  <form class="mt8 stack" data-form="intake"><p class="form-error" role="alert" tabindex="-1" hidden></p>
     <label class="f"><span>Pregnant, or trying to be</span><select name="pregnant">${[['no', 'No'], ['yes', 'Yes'], ['unspecified', 'Prefer not to say']].map(([v, l]) => `<option value="${v}" ${i.pregnant === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
     ${Domain.profileComplete(u) ? `<p class="sm muted">Age: <b>${ageOf(u)}</b> (from your date of birth — <a href="#/account">change</a>)</p>` : `<fieldset class="stack" style="border:1px solid var(--border);border-radius:.75rem;padding:1rem"><legend class="sm gold">Your details</legend>${profileFields(u)}</fieldset>`}
     <label class="f"><span>Medicines and supplements you already take</span><textarea name="medications" rows="3" placeholder="Leave blank if none">${esc(i.medications)}</textarea></label>
@@ -562,7 +564,7 @@ R['/account'] = () => {
     <div class="card"><h2 class="gold">Messages</h2><div class="mt3">${u.inbox.map(n => `<div class="inbox-item"><b class="sm">${esc(n.title)}</b><div class="sm muted">${esc(n.body)}</div><div class="xs muted">${fmtDT(n.at)}</div></div>`).join('') || '<p class="sm muted">No messages.</p>'}</div></div>
     <form class="card stack" id="details" data-form="profile"><h2 class="gold">Your details</h2>
       <p class="sm muted">Email: <b>${esc(u.email)}</b> ${u.emailVerified ? '<span class="badge b-ok">confirmed</span>' : '<span class="badge b-warn">not confirmed</span> <button type="button" class="linkbtn xs" data-act="resend-verification">Resend link</button>'}</p>
-      <p class="xs muted">Sign-in methods: ${(u.signIn || ['email']).map(m => ({ email: 'Email link', google: 'Google', apple: 'Apple' }[m] || m)).join(' · ')}</p>
+      <p class="xs muted">Sign-in methods: ${(u.signIn || ['email']).map(m => m === 'email' ? 'Email link' : (PROVIDER[m] || m)).join(' · ')}</p>
       <label class="f"><span>Full name</span><input type="text" name="name" required maxlength="80" value="${esc(u.name)}"></label>
       ${profileFields(u)}
       <button class="btn ghost">Save details</button></form>
@@ -606,7 +608,7 @@ R['/admin'] = () => {
 
 R['/admin/members'] = () => adminNav() + page(`<h1>Members</h1><p class="muted mt2">Membership status, sample workflow and roles. Every manual change is written to the audit log.</p>
   <div class="tablewrap mt6"><table><thead><tr><th>Member</th><th>Details</th><th>Status</th><th>Sample / workflow</th><th>Role</th><th>Expires</th><th>Tests</th><th>Actions</th></tr></thead><tbody>
-  ${S.users.map(u => { const t = latestTest(u); return `<tr><td>${esc(u.name)}<div class="xs muted">${esc(u.email)}</div></td><td class="xs muted">${esc(u.phone || '—')}<br>${esc(u.nationality || '—')}${u.dob ? ` · age ${ageOf(u)}` : ''}<br>${(u.signIn || []).filter(m => m !== 'email').map(m => m === 'google' ? 'Google' : 'Apple').join(', ')}</td><td>${u.role === 'member' ? badge(memberStatus(u)) : '<span class="xs muted">staff</span>'}</td>
+  ${S.users.map(u => { const t = latestTest(u); return `<tr><td>${esc(u.name)}<div class="xs muted">${esc(u.email)}</div></td><td class="xs muted">${esc(u.phone || '—')}<br>${esc(u.nationality || '—')}${u.dob ? ` · age ${ageOf(u)}` : ''}<br>${(u.signIn || []).filter(m => m !== 'email').map(m => PROVIDER[m] || m).join(', ')}</td><td>${u.role === 'member' ? badge(memberStatus(u)) : '<span class="xs muted">staff</span>'}</td>
     <td>${t ? `<select class="mini" data-act="set-stage" data-id="${u.id}">${STAGES.slice(2).map(([k, l]) => `<option value="${k}" ${t.status === k ? 'selected' : ''}>${l}</option>`).join('')}</select>${!u.intake?.complete ? '<div class="xs gold">intake pending</div>' : ''}` : '—'}</td>
     <td><select class="mini" data-act="set-role" data-id="${u.id}" ${S.role === 'admin' ? '' : 'disabled'}>${['member', 'practitioner', 'moderator', 'support', 'admin'].map(r => `<option ${u.role === r ? 'selected' : ''}>${r}</option>`).join('')}</select></td>
     <td>${u.role === 'member' ? `<input type="date" class="mini" data-act="set-expiry" data-id="${u.id}" value="${u.expiresAt ? new Date(u.expiresAt).toISOString().slice(0, 10) : ''}">` : '—'}</td>
@@ -920,7 +922,10 @@ document.addEventListener('submit', async ev => {
   ev.preventDefault();
   const fn = F[f.dataset.form]; if (!fn) return;
   const btns = f.querySelectorAll('button'); btns.forEach(b => b.disabled = true);
-  try { await fn(f, new FormData(f), ev.submitter); } finally { btns.forEach(b => b.disabled = false); }
+  const errBox = f.querySelector('.form-error'); if (errBox) { errBox.hidden = true; errBox.textContent = ''; }
+  f.classList.add('busy'); lastError = '';
+  try { const r = await fn(f, new FormData(f), ev.submitter); if (r === null && errBox && lastError && document.contains(f)) { errBox.textContent = lastError; errBox.hidden = false; errBox.focus(); } }
+  finally { f.classList.remove('busy'); btns.forEach(b => b.disabled = false); }
 });
 window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
 load().then(render).catch(e => { document.getElementById('app').innerHTML = `<main class="page"><div class="narrow card"><h1>DELTA is unavailable</h1><p class="muted mt2">${esc(e.message)}. Please try again shortly.</p></div></main>`; });

@@ -107,9 +107,13 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) failed+
 
   // registration page: validation, then a new account
   await api('logout'); await fresh('/register');
-  ok((await p.locator('.btn.social').count()) === 2, 'Google and Apple buttons shown on registration');
+  ok((await p.locator('.btn.social').count()) === 3, 'Google, Microsoft and Apple buttons shown on registration');
   await p.fill('input[name=name]', 'Ana López'); await p.fill('input[name=email]', 'ana@example.com'); await p.fill('input[name=phone]', '+34 612 22 58 43');
   await p.selectOption('select[name=nationality]', 'Spanish'); await p.fill('input[name=dob]', '1990-06-01'); await p.check('input[name=terms]');
+  await p.fill('input[name=phone]', 'call me'); await p.click('text=Create account'); await wait();
+  ok(/phone number/.test(await p.textContent('form[data-form=register] .form-error')), 'error shown inside the form, details kept');
+  ok((await p.inputValue('input[name=name]')) === 'Ana López', 'typed details are not lost after an error');
+  await p.fill('input[name=phone]', '+34 612 22 58 43');
   await p.click('text=Create account'); await wait();
   let ana = (await state()).users[0];
   ok(p.url().endsWith('#/join') && ana.name === 'Ana López' && ana.phone === '+34612225843' && ana.nationality === 'Spanish', 'registered with email, phone, nationality and date of birth');

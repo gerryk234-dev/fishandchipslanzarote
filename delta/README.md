@@ -37,8 +37,8 @@ in production.
 |---|---|---|
 | Server | Node.js 22 + Express 5 | Small, common, easy to hand over |
 | Database | SQLite via Node's built-in `node:sqlite` | No separate DB server for Phase 1; one file to back up. `server/db.js` is the only file to change to move to Postgres |
-| Sign-in | Emailed single-use link, **Continue with Google**, **Sign in with Apple** (OpenID Connect, ID-token signature verified) → httpOnly session cookie | No passwords to leak or reset. Google/Apple switch on when their keys are set |
-| Registration | Name, email, mobile phone, nationality, date of birth (minimum age in Settings, default 18) | Google/Apple sign-ups add phone, nationality and date of birth at intake |
+| Sign-in | Emailed single-use link, **Continue with Google**, **Continue with Microsoft**, **Continue with Apple** (OpenID Connect, ID-token signature verified) → httpOnly session cookie | No passwords to leak or reset. Each switches on when its keys are set. Work/school Microsoft accounts never merge into an existing account by email |
+| Registration | Name, email, mobile phone, nationality, date of birth (minimum age in Settings, default 18) | Social sign-ups skip the form and add phone, nationality and date of birth at intake |
 | Payments | Stripe Checkout + signed webhook | Card data never touches DELTA; TEST mode until keys are added |
 | Email | Any SMTP provider (nodemailer) | Logged to the outbox until configured |
 | Files | Lab PDFs and voice-note audio on private disk storage | Served only to the owner or authorised staff, every access audited |
@@ -73,7 +73,7 @@ safety review is stripped before it leaves the server.
 ## Before going live
 
 1. **Clinical sign-off** — the mineral bands, rules and supplement templates in `shared/data.js` are placeholders (brief §19).
-2. **Accounts** — Stripe (keys + webhook), an email provider (SMTP), Google OAuth client and Apple developer account
+2. **Accounts** — Stripe (keys + webhook), an email provider (SMTP), Google OAuth client, Microsoft app registration and Apple developer account
    (Apple charges an annual fee) for social sign-in, a domain, and hosting with persistent storage in the UK/EU. See `.env.example`.
 3. **Legal** — privacy notice, terms, retention policy, processor agreements; replace the placeholder text on `#/legal`.
 4. **Lab supplier** — once chosen, add an importer for their CSV/API/PDF format (feeds the same validation).

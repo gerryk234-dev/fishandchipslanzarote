@@ -188,7 +188,7 @@ test('Google / Apple sign-in: verified ID token creates or links the account; fo
     return c.get(`/auth/google/callback?code=abc&state=${loc.searchParams.get('state')}`);
   };
   try {
-    assert.deepEqual((await client(app.url).state()).oauth, { google: true, apple: false });
+    assert.deepEqual((await client(app.url).state()).oauth, { google: true, microsoft: false, apple: false });
     // new person → account created, sent to /join
     const c = client(app.url); claims = { sub: 'g-1', email: 'New.Person@gmail.com', name: 'New Person' };
     assert.equal((await signIn(c)).headers.get('location'), '/#/join');
@@ -256,5 +256,44 @@ test('Sign in with Apple: form_post callback, first-time name, ES256 client secr
     const cookie = r.headers.get('set-cookie').split(';')[0];
     const s = await fetch(app.url + '/api/state', { headers: { cookie } }).then(x => x.json());
     assert.equal(s.users[0].name, 'Mia Stone'); assert.deepEqual(s.users[0].signIn, ['email', 'apple']);
+  } finally { app.done(); idp.close(); }
+});
+
+test('Microsoft sign-in: personal accounts are trusted; work accounts never take over an existing email', async () => {
+  const crypto = require('node:crypto'), http = require('node:http');
+  const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', { modulusLength: 2048 });
+  const jwk = { ...publicKey.export({ format: 'jwk' }), kid: 'm1' };
+  const b64 = o => Buffer.from(JSON.stringify(o)).toString('base64url');
+  const PERSONAL = '9188040d-6c67-4c5b-b112-36a304b66dad', WORK = '11111111-2222-3333-4444-555555555555';
+  let claims = {}, nonce = '';
+  const idp = http.createServer((req, res) => { req.resume(); req.on('end', () => {
+    if (req.url === '/keys') return res.end(JSON.stringify({ keys: [jwk] }));
+    const h = b64({ alg: 'RS256', kid: 'm1' }), pl = b64({ iss: `https://login.microsoftonline.com/${claims.tid}/v2.0`, aud: 'mid', exp: Math.floor(Date.now() / 1000) + 600, nonce, ...claims });
+    res.end(JSON.stringify({ id_token: `${h}.${pl}.${crypto.sign('RSA-SHA256', Buffer.from(`${h}.${pl}`), privateKey).toString('base64url')}` }));
+  }); });
+  await new Promise(r => idp.listen(0, r));
+  const u = `http://127.0.0.1:${idp.address().port}`;
+  const app = await boot({ microsoft: { clientId: 'mid', clientSecret: 'ms', tenant: 'common' }, oauthOverrides: { microsoft: { tokenUrl: u + '/token', jwksUrl: u + '/keys' } } });
+  const signIn = async c => {
+    const loc = new URL((await c.get('/auth/microsoft/start')).headers.get('location'));
+    assert.equal(loc.origin + loc.pathname, 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize');
+    nonce = loc.searchParams.get('nonce');
+    return (await c.get(`/auth/microsoft/callback?code=x&state=${loc.searchParams.get('state')}`)).headers.get('location');
+  };
+  try {
+    assert.equal((await client(app.url).state()).oauth.microsoft, true);
+    // personal account, no "email" claim → preferred_username, verified, links to existing member
+    const a = client(app.url); claims = { tid: PERSONAL, sub: 'm-1', preferred_username: 'jo@example.com', name: 'Jo' };
+    assert.equal(await signIn(a), '/#/portal'); assert.equal((await a.state()).users[0].name, 'Jo Rivera');
+    // work account claiming an existing member's email → refused, no session
+    const b = client(app.url); claims = { tid: WORK, sub: 'm-2', email: 'alex@example.com', name: 'Fake Alex' };
+    assert.match(await signIn(b), /error=link/); assert.equal((await b.state()).session, null);
+    // new work account → created, asked to confirm email
+    const c = client(app.url); claims = { tid: WORK, sub: 'm-3', email: 'kai@contoso.com', name: 'Kai' };
+    assert.equal(await signIn(c), '/#/join');
+    const me = (await c.state()).users[0]; assert.equal(me.emailVerified, false); assert.deepEqual(me.signIn, ['email', 'microsoft']);
+    // token from a different issuer pattern → refused
+    const d = client(app.url); claims = { tid: WORK, sub: 'm-4', email: 'z@contoso.com', iss: 'https://evil.example/v2.0' };
+    assert.match(await signIn(d), /error=failed/);
   } finally { app.done(); idp.close(); }
 });
