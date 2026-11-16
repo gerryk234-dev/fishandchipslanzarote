@@ -1,0 +1,338 @@
+{
+  "_note": "From the owner's Google Business Profiles (read 2026-10-24). All physical offices open daily 09:30–18:00 (owner, 2026-10-24). C. Bajamar office confirmed by the owner 2026-11-02. puerto-calero-charters is a Google profile for boat trips and charters, not a walk-in office (physical:false): it is kept out of office lists and LocalBusiness data. 'gbp' records what each profile showed, used by the audit in npm run gbp.",
+  "offices": [
+    {
+      "id": "playa-blanca-playa-dorada",
+      "resort": "playa-blanca",
+      "name": "Tickets Direct Excursions Playa Dorada",
+      "streetAddress": "Av. Marítima",
+      "postalCode": "35580",
+      "locality": "Playa Blanca",
+      "phone": "+34 633 22 92 44",
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
+      "geo": [
+        28.8623104,
+        -13.8248522
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/narSq2p33znJ9GdG9",
+      "mapsQuery": "Tickets Direct Excursions Playa Dorada",
+      "verified": true,
+      "gbp": {
+        "category": "Sightseeing tour agency",
+        "rating": "4.4",
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": "9:30–18:00"
+      },
+      "physical": true
+    },
+    {
+      "id": "playa-blanca-flamingo",
+      "resort": "playa-blanca",
+      "name": "Tickets Direct Excursions Lanzarote Flamingo Beach",
+      "streetAddress": "C. Gran Canaria",
+      "postalCode": "35580",
+      "locality": "Playa Blanca",
+      "phone": "+34 633 22 92 44",
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
+      "geo": [
+        28.8581227,
+        -13.8419208
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/pdSrdT3E7yeEqKPM6",
+      "mapsQuery": "Tickets Direct Excursions Lanzarote Flamingo Beach",
+      "verified": true,
+      "gbp": {
+        "category": "Tour agency",
+        "rating": "5.0",
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": "9:30–18:00"
+      },
+      "physical": true
+    },
+    {
+      "id": "playa-blanca-port",
+      "resort": "playa-blanca",
+      "name": "Tickets Direct Excursions Playa Blanca Port",
+      "streetAddress": "Punta Limones (Puerto de Playa Blanca)",
+      "postalCode": "35580",
+      "locality": "Playa Blanca",
+      "phone": "+34 675 83 08 81",
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
+      "geo": [
+        28.859247,
+        -13.835167
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/zKWqGU6hA3qi4KGY9",
+      "mapsQuery": "Tickets Direct Excursions Playa Blanca Port",
+      "verified": true,
+      "gbp": {
+        "category": "Boat tour agency",
+        "rating": "4.8",
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": "9:30–18:00"
+      },
+      "physical": true
+    },
+    {
+      "id": "puerto-del-carmen-buggy",
+      "resort": "puerto-del-carmen",
+      "name": "Buggy Tours Lanzarote Tickets Direct Excursions",
+      "streetAddress": "Av. de las Playas",
+      "postalCode": "35510",
+      "locality": "Puerto del Carmen",
+      "phone": "+34 699 32 64 75",
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
+      "geo": [
+        28.92066,
+        -13.6471035
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/oCxVLkV6mM7oKjrLA",
+      "mapsQuery": "Buggy Tours Lanzarote Tickets Direct Excursions",
+      "verified": true,
+      "gbp": {
+        "category": "Travel agency",
+        "rating": "5.0",
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": "Open 24 hours"
+      },
+      "physical": true
+    },
+    {
+      "id": "puerto-del-carmen-old-town",
+      "resort": "puerto-del-carmen",
+      "name": "Tickets Direct Excursions Old Town PDC",
+      "streetAddress": "C. Reina Sofía, 60",
+      "postalCode": "35518",
+      "locality": "Puerto del Carmen",
+      "phone": "+34 699 32 64 75",
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
+      "geo": [
+        28.9283957,
+        -13.6775422
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/wyR2zPUFZzsez3dV7",
+      "mapsQuery": "Tickets Direct Excursions Old Town PDC",
+      "verified": true,
+      "gbp": {
+        "category": "Tourist information center",
+        "rating": "5.0",
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": "9:30–18:00"
+      },
+      "physical": true
+    },
+    {
+      "id": "puerto-del-carmen-beach",
+      "resort": "puerto-del-carmen",
+      "name": "Excursions Tickets Direct Puerto del Carmen Beach",
+      "streetAddress": "Av. de las Playas, 39",
+      "postalCode": "35510",
+      "locality": "Puerto del Carmen",
+      "phone": "+34 602 67 78 73",
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
+      "geo": [
+        28.9204398,
+        -13.650112
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/1DKfsE2xXkPzHK319",
+      "mapsQuery": "Excursions Tickets Direct Puerto del Carmen Beach",
+      "verified": true,
+      "gbp": {
+        "category": "Tour agency",
+        "rating": "5.0",
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": "9:00–21:00"
+      },
+      "physical": true
+    },
+    {
+      "id": "puerto-del-carmen-anzuelo",
+      "resort": "puerto-del-carmen",
+      "name": "Tickets Direct Excursions Anzuelo",
+      "streetAddress": "C. Anzuelo, 38",
+      "postalCode": "35510",
+      "locality": "Puerto del Carmen",
+      "phone": "+34 699 32 64 75",
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
+      "geo": [
+        28.9205847,
+        -13.6535199
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/J3jY8otV25PL4WaD7",
+      "mapsQuery": "Tickets Direct Excursions Anzuelo",
+      "verified": true,
+      "gbp": {
+        "category": "Tour agency",
+        "rating": "4.2",
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": "9:00–18:00"
+      },
+      "physical": true
+    },
+    {
+      "id": "puerto-del-carmen-bajamar",
+      "resort": "puerto-del-carmen",
+      "name": "Tickets Direct Excursions Lanzarote Puerto del Carmen",
+      "streetAddress": "C. Bajamar, 26",
+      "postalCode": "35510",
+      "locality": "Puerto del Carmen",
+      "phone": "+34 633 22 92 44",
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
+      "geo": [
+        28.9212018,
+        -13.6703048
+      ],
+      "mapsUrl": "https://www.google.com/maps?cid=5071691303768189437",
+      "mapsQuery": "Tickets Direct Excursions Lanzarote Puerto del Carmen",
+      "verified": true,
+      "gbp": {
+        "category": "Boat tour agency",
+        "rating": "4.9",
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": "9:30–18:00"
+      },
+      "physical": true
+    },
+    {
+      "id": "costa-teguise-center",
+      "resort": "costa-teguise",
+      "name": "Tickets Direct Excursions Costa Teguise Center",
+      "streetAddress": "C. las Olas, Local 10 (Apartamentos Tahíche 122)",
+      "postalCode": "35508",
+      "locality": "Costa Teguise",
+      "phone": "+34 633 22 92 44",
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
+      "geo": [
+        28.9968515,
+        -13.4902233
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/oZDVvZHhPCPabMT28",
+      "mapsQuery": "Tickets Direct Excursions Costa Teguise Center",
+      "verified": true,
+      "gbp": {
+        "category": "Bus tour agency",
+        "rating": "4.7",
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": null
+      },
+      "physical": true
+    },
+    {
+      "id": "costa-teguise-playa-bastian",
+      "resort": "costa-teguise",
+      "name": "Tickets Direct Excursions Playa Bastián",
+      "streetAddress": "Av. del Mar, 28",
+      "postalCode": "35508",
+      "locality": "Costa Teguise",
+      "phone": "+34 633 22 92 44",
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
+      "geo": [
+        28.9947498,
+        -13.4983871
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/Wzz1DhPvkqaUuBzAA",
+      "mapsQuery": "Tickets Direct Excursions Playa Bastián",
+      "verified": true,
+      "gbp": {
+        "category": "ATV rental service",
+        "rating": "4.5",
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": "9:30–18:00"
+      },
+      "physical": true
+    },
+    {
+      "id": "costa-teguise-cucharas",
+      "resort": "costa-teguise",
+      "name": "Tickets Direct Excursions Costa Teguise Cucharas",
+      "streetAddress": "Avenida Las Canarias 14, C.C. Las Cucharas, Local 4012",
+      "postalCode": "35508",
+      "locality": "Costa Teguise",
+      "phone": "+34 608 24 05 42",
+      "hours": {
+        "days": "daily",
+        "opens": "09:30",
+        "closes": "18:00"
+      },
+      "geo": [
+        29.0011002,
+        -13.4867861
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/VFCr4GjQK79UP21L6",
+      "mapsQuery": "Tickets Direct Excursions Costa Teguise Cucharas",
+      "verified": true,
+      "gbp": {
+        "category": "Tour agency",
+        "rating": "4.4",
+        "website": "http://excursionsticketsdirect.com/",
+        "hoursShown": "9:00–17:00"
+      },
+      "physical": true
+    },
+    {
+      "id": "puerto-calero-charters",
+      "resort": null,
+      "name": "Tickets Direct Excursions Lanzarote: Boat Trips and Private Charters",
+      "streetAddress": "Cortijo Viejo, 43",
+      "postalCode": "35571",
+      "locality": "Puerto Calero",
+      "phone": "+34 633 22 92 44",
+      "hours": null,
+      "geo": [
+        28.9177064,
+        -13.7067947
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJRXhPzyRYRgwRMTfimNzLg0o",
+      "mapsQuery": "Tickets Direct Excursions Lanzarote: Boat Trips and Private Charters",
+      "verified": true,
+      "physical": false,
+      "gbp": {
+        "category": "Boat tour agency",
+        "rating": "4.6",
+        "website": "https://excursionsticketsdirect.com/trip-types/lanzarote-boat-trips/",
+        "hoursShown": "9:00–21:00",
+        "formerName": "Excursions Lanzarote: Boat Trips and Private Charters"
+      }
+    }
+  ]
+}

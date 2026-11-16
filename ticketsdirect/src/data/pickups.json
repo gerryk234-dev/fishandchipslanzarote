@@ -1,0 +1,15 @@
+{
+  "_note": "Meeting and collection points. Add each place once under 'points', then link points to tours under 'assignments' (by tour slug or by category slug, e.g. all bus-tours). 'time' is the pickup time at that point; leave it null if it varies and is sent on the e-ticket. 'kind' is 'pickup' (we collect you there) or 'meeting' (you make your own way there, e.g. a marina). Nothing shows on the site until points exist.",
+  "points": [],
+  "assignments": [],
+  "_example": {
+    "points": [
+      { "id": "ct-cucharas-bus-stop", "kind": "pickup", "resort": "costa-teguise", "name": { "en": "Las Cucharas bus stop (Av. Las Canarias)", "es": "Parada de Las Cucharas (Av. Las Canarias)" }, "address": "Avenida Las Canarias, Costa Teguise", "geo": [29.0009, -13.4870], "notes": { "en": "Opposite the Las Cucharas shopping centre.", "es": "Frente al C.C. Las Cucharas." } },
+      { "id": "puerto-calero-marina", "kind": "meeting", "resort": null, "name": { "en": "Puerto Calero marina, pontoon B", "es": "Puerto Calero, pantalán B" }, "address": "Puerto Calero, 35571", "geo": [28.9177, -13.7068], "notes": { "en": "Be there 15 minutes before departure.", "es": "Llega 15 minutos antes de la salida." } }
+    ],
+    "assignments": [
+      { "categories": ["bus-tours"], "points": [{ "point": "ct-cucharas-bus-stop", "time": "08:15" }] },
+      { "tours": ["katfish-premium-cruises"], "points": [{ "point": "puerto-calero-marina", "time": null }] }
+    ]
+  }
+}
