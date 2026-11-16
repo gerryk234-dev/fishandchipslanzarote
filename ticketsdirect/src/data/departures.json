@@ -1,0 +1,18 @@
+{
+  "_note": "Departure schedule for the on-site booking system. The generator (build.mjs → availabilityFor) expands this into concrete dated departures per tour, written to /data/availability/<tourId>.json and read by the booking widget. This is the source of truth for WHICH DAYS and TIMES each tour runs and how many seats are open — it replaces reading availability from WordPress. Replace these placeholder patterns with the real schedule from BookingMyTour (or a supplier feed) when available; until then every bookable tour still gets a full, honest forward calendar. Weekdays: 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat, 7=Sun. 'times' are local departure/first-pickup times (empty = all-day attraction, no fixed time). 'capacity' is seats offered online per departure. 'seasons' multiply the fare for dates inside a window (priceFactor 1 = no change); leave empty to keep fixed prices.",
+  "horizonDays": 180,
+  "defaults": {
+    "boat-trips":      { "days": [2, 4, 6],             "times": ["10:00"],                   "capacity": 48 },
+    "bus-tours":       { "days": [1, 3, 5],             "times": ["08:45"],                   "capacity": 52 },
+    "ferries-islands": { "days": [1, 2, 3, 4, 5, 6, 7], "times": ["09:30"],                   "capacity": 180 },
+    "water-sports":    { "days": [1, 2, 3, 4, 5, 6],    "times": ["10:00", "12:00", "15:00"], "capacity": 12 },
+    "buggy-tours":     { "days": [1, 3, 5, 6],          "times": ["09:30", "14:00"],          "capacity": 16 },
+    "underwater":      { "days": [2, 4, 6],             "times": ["10:00"],                   "capacity": 8 },
+    "parks":           { "days": [1, 2, 3, 4, 5, 6, 7], "times": [],                          "capacity": 400 },
+    "nightlife":       { "days": [5, 6],                "times": ["20:00"],                   "capacity": 80 },
+    "special-packs":   { "days": [2, 4, 6],             "times": ["09:00"],                   "capacity": 30 }
+  },
+  "fallback": { "days": [2, 4, 6], "times": ["09:00"], "capacity": 40 },
+  "seasons": [],
+  "tours": {}
+}

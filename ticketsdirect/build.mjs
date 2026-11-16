@@ -14,6 +14,7 @@ const reviews = JSON.parse(fs.readFileSync(path.join(here, "src/data/reviews.jso
 const reels = JSON.parse(fs.readFileSync(path.join(here, "src/data/reels.json"), "utf8")).items;
 const posts = fs.existsSync(path.join(here, "src/data/posts.json")) ? JSON.parse(fs.readFileSync(path.join(here, "src/data/posts.json"), "utf8")).posts : [];
 const promo = JSON.parse(fs.readFileSync(path.join(here, "src/data/promo.json"), "utf8"));
+const departures = JSON.parse(fs.readFileSync(path.join(here, "src/data/departures.json"), "utf8"));
 const legalPages = fs.existsSync(path.join(here, "src/data/legal.json")) ? JSON.parse(fs.readFileSync(path.join(here, "src/data/legal.json"), "utf8")).pages : [];
 const legalBy = Object.fromEntries(legalPages.map((pg) => [pg.slug.en, pg]));
 // Guides and posts are written in en/es; de/it/fr fall back to English until translated.
@@ -87,7 +88,8 @@ const T = {
     destTitle: "Lanzarote destinations", destLead: "Every place our excursions visit, with the tours that take you there.",
     quickFacts: "Quick facts", toursTo: (n) => `Excursions to ${n}`, aboutPlace: (n) => `About ${n}`,
     langs: "Languages", minAge: (n) => `Minimum age ${n}`, installApp: "Install app",
-    bk: { option: "Option", date: "Date", checking: "Checking availability…", pickDate: "Choose a date", noDates: "No online dates right now: ask us on WhatsApp", total: "Total", depositToday: "Deposit today", onDay: "rest on the day", travellers: "Travellers", waBook: "Book on WhatsApp" },
+    bk: { option: "Option", date: "Date", checking: "Checking availability…", pickDate: "Choose a date", noDates: "No online dates right now: ask us on WhatsApp", total: "Total", depositToday: "Deposit today", onDay: "rest on the day", travellers: "Travellers", waBook: "Book on WhatsApp", add: "Add to booking", pickFirst: "Choose a date and at least one traveller", soldOut: "Not enough seats left on this date — ask us on WhatsApp", added: "Added to your booking", viewCart: "View booking" },
+    cart: { nav: "Booking", title: "Your booking", empty: "Your booking is empty.", browse: "Browse excursions", remove: "Remove", when: "When", travellers: "Travellers", item: "Excursion", each: "each", summary: "Summary", total: "Total", depositNow: "Deposit to pay now", balance: "Balance on the day", continue: "Continue to your details", details: "Your details", lead: "Lead traveller", name: "Full name", email: "Email", phone: "Phone (with country code)", hotel: "Hotel & room number", hotelPh: "e.g. Hotel Las Olas, room 214", pickup: "Pickup point (if known)", notes: "Anything we should know?", notesPh: "Children's ages, dietary needs, flight times, access needs…", place: "Request my booking", payNote: "No payment is taken now. We check availability, then send you a secure link to pay the deposit together with your e-ticket.", required: "Please fill in your name, email and phone.", okTitle: "Booking request received", ref: "Your reference", okLead: "Thank you — we've got your request and will confirm availability. Your e-ticket, with pickup point and time, will arrive by email and WhatsApp.", waSend: "Send my booking on WhatsApp", emailSend: "Also send by email", download: "Save a copy", newBooking: "Make another booking", step1: "Booking", step2: "Details", step3: "Done", backToCart: "Back to booking" },
     badges: { best: "Bestseller", family: "Family favourite" },
     reelsTitle: "Watch before you book", reelsLead: "Real clips from the excursions we sell.", reelsNav: "Reels", watchOn: "Watch on", bookThis: "Book this tour", subscribe: "Subscribe on YouTube", tourShorts: "Watch this tour",
     counters: { tours: "excursions", since: "selling since", offices: "walk-in offices", rating: "avg. Google rating of our offices" },
@@ -146,7 +148,8 @@ const T = {
     destTitle: "Destinos en Lanzarote", destLead: "Todos los lugares que visitan nuestras excursiones, con las excursiones que te llevan.",
     quickFacts: "Datos rápidos", toursTo: (n) => `Excursiones a ${n}`, aboutPlace: (n) => `Sobre ${n}`,
     langs: "Idiomas", minAge: (n) => `Edad mínima ${n}`, installApp: "Instalar app",
-    bk: { option: "Opción", date: "Fecha", checking: "Consultando disponibilidad…", pickDate: "Elige una fecha", noDates: "Ahora no hay fechas online: pregúntanos por WhatsApp", total: "Total", depositToday: "Depósito hoy", onDay: "resto el día de la excursión", travellers: "Viajeros", waBook: "Reservar por WhatsApp" },
+    bk: { option: "Opción", date: "Fecha", checking: "Consultando disponibilidad…", pickDate: "Elige una fecha", noDates: "Ahora no hay fechas online: pregúntanos por WhatsApp", total: "Total", depositToday: "Depósito hoy", onDay: "resto el día de la excursión", travellers: "Viajeros", waBook: "Reservar por WhatsApp", add: "Añadir a la reserva", pickFirst: "Elige una fecha y al menos un viajero", soldOut: "No quedan plazas suficientes ese día: escríbenos por WhatsApp", added: "Añadido a tu reserva", viewCart: "Ver reserva" },
+    cart: { nav: "Reserva", title: "Tu reserva", empty: "Tu reserva está vacía.", browse: "Ver excursiones", remove: "Quitar", when: "Cuándo", travellers: "Viajeros", item: "Excursión", each: "c/u", summary: "Resumen", total: "Total", depositNow: "Depósito a pagar ahora", balance: "Resto el día de la excursión", continue: "Continuar con tus datos", details: "Tus datos", lead: "Viajero principal", name: "Nombre completo", email: "Correo electrónico", phone: "Teléfono (con prefijo del país)", hotel: "Hotel y número de habitación", hotelPh: "p. ej. Hotel Las Olas, habitación 214", pickup: "Punto de recogida (si lo sabes)", notes: "¿Algo que debamos saber?", notesPh: "Edades de los niños, dieta, horarios de vuelo, necesidades de acceso…", place: "Solicitar mi reserva", payNote: "Ahora no se cobra nada. Comprobamos la disponibilidad y te enviamos un enlace seguro para pagar el depósito junto con tu e-ticket.", required: "Indica tu nombre, correo y teléfono.", okTitle: "Solicitud de reserva recibida", ref: "Tu referencia", okLead: "Gracias: hemos recibido tu solicitud y confirmaremos la disponibilidad. Tu e-ticket, con punto y hora de recogida, llegará por correo y WhatsApp.", waSend: "Enviar mi reserva por WhatsApp", emailSend: "Enviar también por correo", download: "Guardar una copia", newBooking: "Hacer otra reserva", step1: "Reserva", step2: "Datos", step3: "Listo", backToCart: "Volver a la reserva" },
     badges: { best: "Más vendida", family: "Favorita en familia" },
     reelsTitle: "Míralo antes de reservar", reelsLead: "Vídeos reales de las excursiones que vendemos.", reelsNav: "Vídeos", watchOn: "Ver en", bookThis: "Reservar esta excursión", subscribe: "Suscríbete en YouTube", tourShorts: "Mira esta excursión",
     counters: { tours: "excursiones", since: "vendiendo desde", offices: "oficinas", rating: "valoración media en Google de nuestras oficinas" },
@@ -211,7 +214,8 @@ Object.assign(T.de, {
   destTitle: "Reiseziele auf Lanzarote", destLead: "Jeder Ort, den unsere Ausflüge besuchen, mit den Touren, die dich hinbringen.",
   quickFacts: "Auf einen Blick", toursTo: (n) => `Ausflüge nach ${n}`, aboutPlace: (n) => `Über ${n}`,
   langs: "Sprachen", minAge: (n) => `Mindestalter ${n}`, installApp: "App installieren",
-  bk: { option: "Option", date: "Datum", checking: "Verfügbarkeit wird geprüft…", pickDate: "Datum wählen", noDates: "Gerade keine Online-Termine: frag uns auf WhatsApp", total: "Gesamt", depositToday: "Anzahlung heute", onDay: "Rest am Tag", travellers: "Reisende", waBook: "Auf WhatsApp buchen" },
+  bk: { option: "Option", date: "Datum", checking: "Verfügbarkeit wird geprüft…", pickDate: "Datum wählen", noDates: "Gerade keine Online-Termine: frag uns auf WhatsApp", total: "Gesamt", depositToday: "Anzahlung heute", onDay: "Rest am Tag", travellers: "Reisende", waBook: "Auf WhatsApp buchen", add: "Zur Buchung hinzufügen", pickFirst: "Wähle ein Datum und mindestens einen Reisenden", soldOut: "An diesem Tag nicht genug Plätze frei — frag uns auf WhatsApp", added: "Zur Buchung hinzugefügt", viewCart: "Buchung ansehen" },
+  cart: { nav: "Buchung", title: "Deine Buchung", empty: "Deine Buchung ist leer.", browse: "Ausflüge ansehen", remove: "Entfernen", when: "Wann", travellers: "Reisende", item: "Ausflug", each: "pro Person", summary: "Übersicht", total: "Gesamt", depositNow: "Jetzt fällige Anzahlung", balance: "Restbetrag am Tag", continue: "Weiter zu deinen Daten", details: "Deine Daten", lead: "Hauptreisender", name: "Vollständiger Name", email: "E-Mail", phone: "Telefon (mit Ländervorwahl)", hotel: "Hotel & Zimmernummer", hotelPh: "z. B. Hotel Las Olas, Zimmer 214", pickup: "Abholpunkt (falls bekannt)", notes: "Sollten wir etwas wissen?", notesPh: "Alter der Kinder, Ernährung, Flugzeiten, Barrierefreiheit…", place: "Buchung anfragen", payNote: "Jetzt wird nichts abgebucht. Wir prüfen die Verfügbarkeit und senden dir dann einen sicheren Link für die Anzahlung zusammen mit deinem E-Ticket.", required: "Bitte Name, E-Mail und Telefon angeben.", okTitle: "Buchungsanfrage erhalten", ref: "Deine Referenz", okLead: "Danke — wir haben deine Anfrage erhalten und bestätigen die Verfügbarkeit. Dein E-Ticket mit Abholpunkt und -zeit kommt per E-Mail und WhatsApp.", waSend: "Buchung per WhatsApp senden", emailSend: "Auch per E-Mail senden", download: "Kopie speichern", newBooking: "Weitere Buchung", step1: "Buchung", step2: "Daten", step3: "Fertig", backToCart: "Zurück zur Buchung" },
   badges: { best: "Bestseller", family: "Familienliebling" },
   reelsTitle: "Ansehen vor dem Buchen", reelsLead: "Echte Clips von den Ausflügen, die wir verkaufen.", reelsNav: "Reels", watchOn: "Ansehen auf", bookThis: "Diesen Ausflug buchen", subscribe: "Auf YouTube abonnieren", tourShorts: "Diesen Ausflug ansehen",
   counters: { tours: "Ausflüge", since: "verkaufen seit", offices: "Büros vor Ort", rating: "⌀ Google-Bewertung unserer Büros" },
@@ -236,10 +240,10 @@ Object.assign(T.de, {
 // Tours, categories and destinations keep the exact URLs of the WordPress site (from catalog.json),
 // so existing Google rankings and backlinks carry over. Our own pages use the segments below.
 const SEG = {
-  en: { reels: "reels", tours: "trip", resort: "excursions-from", destinations: "destinations", guide: "guides", offices: "offices", about: "about", faq: "faq", contact: "contact", app: "app" },
-  es: { reels: "reels", tours: "trip", resort: "excursiones-desde", destinations: "destinations", guide: "guias", offices: "oficinas", about: "sobre-nosotros", faq: "preguntas-frecuentes", contact: "contacto", app: "app" },
+  en: { reels: "reels", tours: "trip", resort: "excursions-from", destinations: "destinations", guide: "guides", offices: "offices", about: "about", faq: "faq", contact: "contact", app: "app", book: "book" },
+  es: { reels: "reels", tours: "trip", resort: "excursiones-desde", destinations: "destinations", guide: "guias", offices: "oficinas", about: "sobre-nosotros", faq: "preguntas-frecuentes", contact: "contacto", app: "app", book: "reservar" },
 };
-SEG.de = { ...SEG.en };
+SEG.de = { ...SEG.en, book: "buchen" };
 const prefix = (lang) => (lang === "en" ? "" : `/${lang}`);
 function url(lang, kind, slug) {
   if (kind === "home") return `${prefix(lang)}/`;
@@ -259,7 +263,53 @@ const clip = (s, n) => (s.length <= n ? s : s.slice(0, s.lastIndexOf(" ", n)).re
 const dur = (lang, t) => formatDuration(lang, t);
 const unitLabel = (lang, t) => (t.unit && t.unit !== "per-person" ? UNIT[lang][t.unit] : "");
 const summary = (lang, t) => clip(t.seo[lang]?.description || plain(t.overview[lang]), 150);
-const bookingUrl = (lang, t) => BOOK + (t.path[lang] || t.path.en);
+// Cart/checkout lives on-site now (replaces the external WordPress booking origin).
+const bookingUrl = (lang) => url(lang, "book");
+
+// ---------- departures / availability ----------
+// Expand src/data/departures.json into concrete dated departures per tour. The booking widget
+// fetches /data/availability/<tourId>.json; staff replace the schedule patterns with real data.
+const isoDay = (d) => ((d.getDay() + 6) % 7) + 1; // 1=Mon … 7=Sun
+const mmdd = (iso) => iso.slice(5);
+function seasonFactor(iso) {
+  const md = mmdd(iso);
+  for (const s of departures.seasons || []) {
+    const within = s.from <= s.to ? md >= s.from && md <= s.to : md >= s.from || md <= s.to; // wrap over year end
+    if (within) return s.priceFactor || 1;
+  }
+  return 1;
+}
+function scheduleFor(t) {
+  return departures.tours?.[t.slug] || departures.defaults?.[t.cat] || departures.fallback;
+}
+function availabilityFor(t) {
+  const s = scheduleFor(t);
+  const days = s.days || [], times = s.times || [], cap = s.capacity || 40;
+  const closed = new Set(s.closedDates || []);
+  const horizon = departures.horizonDays || 180;
+  const today = new Date(); today.setHours(12, 0, 0, 0);
+  const slots = [];
+  for (let i = 1; i <= horizon; i++) {
+    const d = new Date(today); d.setDate(d.getDate() + i);
+    const iso = d.toISOString().slice(0, 10);
+    if (days.length && !days.includes(isoDay(d))) continue;
+    if (closed.has(iso)) continue;
+    slots.push({ date: iso, times, capacity: cap, factor: seasonFactor(iso) });
+  }
+  const packages = (t.packages || []).map((p) => ({
+    id: p.id,
+    name: p.name,
+    dates: slots.map((sl) => ({
+      date: sl.date,
+      times: sl.times,
+      capacity: sl.capacity,
+      prices: p.categories
+        .filter((c) => c.price > 0)
+        .map((c) => ({ label: c.label, price: sl.factor === 1 ? c.price : Math.round(c.price * sl.factor) })),
+    })),
+  }));
+  return { id: t.id, slug: t.slug, name: t.name, deposit: t.deposit || 0, currency: "EUR", unit: t.unit, packages };
+}
 const waLink = (text) => `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`;
 const waTour = (lang, t) => waLink(lang !== "es" ? `Hi! I'd like to ask about "${t.name.en}".` : `¡Hola! Quiero información sobre "${t.name.es}".`);
 const catName = (lang, c) => c.name[lang] || c.name.en || c.term?.name?.[lang] || c.slug;
@@ -287,6 +337,7 @@ const ICONS = {
   globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
   download: '<path d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14"/>',
   play: '<path d="M8 5v14l11-7z"/>',
+  ticket: '<path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2 2 0 0 0 0 6v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-6V7z"/><path d="M14 5v14" stroke-dasharray="2 2"/>',
 };
 const icon = (name, cls = "i") => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[name] || ""}</svg>`;
 
@@ -494,6 +545,7 @@ function header(lang, alt) {
     <a href="${url(lang, "reels")}">${L.reelsNav}</a>
     <a href="${url(lang, "guide")}">${L.nav.guides}</a>
     <a href="${url(lang, "offices")}">${L.nav.offices}</a>
+    <a class="nav-cart" href="${url(lang, "book")}" aria-label="${esc(L.cart.title)}">${icon("ticket")}<span>${esc(L.cart.nav)}</span><b data-cart-count hidden>0</b></a>
     <a class="lang" href="${otherHref}" hreflang="${other}" lang="${other}">${other.toUpperCase()}</a>
     <button class="btn ghost small" data-install hidden>${icon("download")}${L.installApp}</button>
     <a class="btn wa small" href="${waLink(lang !== "es" ? "Hi! I'd like help choosing an excursion." : "¡Hola! Quiero ayuda para elegir una excursión.")}" rel="noopener">${icon("wa")}WhatsApp</a>
@@ -575,7 +627,7 @@ ${body}
 </main>
 ${footer(lang)}
 ${chatWidget(lang)}
-<script>window.TD={lang:"${lang}",wa:"${site.whatsapp}",api:"/api/chat",data:"/data/tours-${lang}.json"};</script>
+<script>window.TD={lang:"${lang}",wa:"${site.whatsapp}",email:"${site.email || ""}",phone:"${site.phone || ""}",api:"/api/chat",data:"/data/tours-${lang}.json",book:"${url(lang, "book")}",avail:"/data/availability/",cart:${JSON.stringify(T[lang].cart)}};</script>
 <script src="/assets/app.js?v=${BUILD_ID}" defer></script>
 </body>
 </html>`;
@@ -735,12 +787,12 @@ function tourPage(lang, t) {
   </aside>` : `<aside class="book-box" aria-label="${L.book}">
     <p class="bb-price"><span>${L.from}</span> <strong>${price(lang, t.price)}</strong> <small>${esc(unitLabel(lang, t) || UNIT[lang]["per-person"])}</small></p>
     <p class="bb-meta">${icon("clock")}${esc(d)}</p>
-    <form class="bk" id="book" data-trip="${t.id}" data-deposit="${t.deposit || ""}" data-name="${esc(t.name[lang])}" data-i18n="${esc(JSON.stringify(L.bk))}">
+    <form class="bk" id="book" data-trip="${t.id}" data-slug="${esc(t.slug)}" data-url="${esc(url(lang, "tour", t.slug))}" data-deposit="${t.deposit || ""}" data-unit="${esc(unitLabel(lang, t) || "")}" data-name="${esc(t.name[lang])}" data-i18n="${esc(JSON.stringify(L.bk))}">
       ${pkgTable.length > 1 ? `<label class="bk-field"><span>${L.bk.option}</span><select name="pkg">${pkgTable.map((p, i) => `<option value="${i}" data-id="${p.id ?? ""}">${esc(p.name)}</option>`).join("")}</select></label>` : ""}
       <label class="bk-field bk-live"><span>${L.bk.date}</span><select name="date" disabled><option>${L.bk.checking}</option></select></label>
       ${pkgTable.map((p, i) => `<div class="bk-pax" data-pkg="${i}"${i ? " hidden" : ""}>${p.categories.filter((x) => x.price > 0).map((x, j) => `<div class="bk-row" data-price="${x.price}" data-label="${esc(x.label)}"><span>${esc(paxLabel(lang, x.label))}${x.ages ? ` <small>(${esc(x.ages)})</small>` : ""}</span><b>${price(lang, x.price)}</b><span class="bk-step bk-live"><button type="button" data-d="-1" aria-label="−">−</button><output>${j === 0 ? 2 : 0}</output><button type="button" data-d="1" aria-label="+">+</button></span></div>`).join("")}</div>`).join("")}
       <p class="bk-total bk-live" aria-live="polite"></p>
-      <a class="btn block" data-book href="${bookingUrl(lang, t)}" rel="noopener">${L.book}</a>
+      <a class="btn block" data-book href="${bookingUrl(lang)}" rel="noopener">${L.bk.add}</a>
       <a class="btn wa block" data-wa href="${waTour(lang, t)}" rel="noopener" target="_blank">${icon("wa")}${L.ask}</a>
     </form>
     <ul class="bb-trust"><li>${icon("check")}${L.freeCancel}</li><li>${icon("check")}${esc(L.deposit(t.deposit))}</li><li>${icon("pin")}${lang !== "es" ? `${site.officeCount} offices across Lanzarote` : lang === "de" ? `${site.officeCount} Büros auf Lanzarote` : `${site.officeCount} oficinas en Lanzarote`}</li><li>${icon("shield")}${lang !== "es" ? `Local agency since ${site.foundingYear}` : lang === "de" ? `Lokale Agentur seit ${site.foundingYear}` : `Agencia local desde ${site.foundingYear}`}</li></ul>
@@ -1034,6 +1086,24 @@ ${L.app.steps.map(([h, items]) => `<article class="office"><h2>${esc(h)}</h2><ol
   page({ lang, path: alt[lang], alt, title: `${L.app.title} | Tickets Direct Lanzarote`, description: L.app.lead, body, ld: [bc.ld, { "@context": "https://schema.org", "@type": "MobileApplication", name: "Tickets Direct Lanzarote", operatingSystem: "Android, iOS, Windows, macOS, ChromeOS", applicationCategory: "TravelApplication", offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" }, url: abs(alt[lang]), publisher: { "@id": ORG_ID } }] });
 }
 
+function bookPage(lang) {
+  const L = T[lang];
+  const C = L.cart;
+  const alt = altOf("book");
+  const bc = breadcrumbs(lang, [[C.title, alt[lang]]]);
+  const steps = [C.step1, C.step2, C.step3];
+  const body = `<div class="wrap">${bc.html}</div>
+<section class="wrap section co" id="cart-app" data-wa="${site.whatsapp}">
+  <ol class="co-steps" aria-hidden="true">${steps.map((s, i) => `<li data-step="${i + 1}"><span>${i + 1}</span>${esc(s)}</li>`).join("")}</ol>
+  <h1>${esc(C.title)}</h1>
+  <div class="co-body">
+    <noscript><p class="lead">${esc(C.payNote)}</p><p><a class="btn wa" href="https://wa.me/${site.whatsapp}" rel="noopener" target="_blank">${icon("wa")}WhatsApp</a> <a class="btn ghost" href="tel:${site.phoneHref}">${esc(site.phone)}</a></p></noscript>
+    <div class="co-empty"><p class="lead">${esc(C.empty)}</p><p><a class="btn" href="${url(lang, "tours")}">${esc(C.browse)}</a></p></div>
+  </div>
+</section>`;
+  page({ lang, path: alt[lang], alt, noindex: true, title: `${C.title} | Tickets Direct Lanzarote`, description: C.payNote, body, ld: [bc.ld] });
+}
+
 function notFound() {
   const L = T.en;
   page({ lang: "en", path: "/404.html", alt: null, noindex: true, title: `${L.notFound} | Tickets Direct`, description: L.notFoundLead, body: `<section class="wrap section page-head"><h1>${L.notFound}</h1><p class="lead">${L.notFoundLead}</p><p><a class="btn" href="${url("en", "tours")}">${L.allTours}</a> <a class="btn ghost" href="/es/">Español</a></p></section>` });
@@ -1088,6 +1158,13 @@ self.addEventListener("fetch", (e) => {
   const req = e.request;
   const u = new URL(req.url);
   if (req.method !== "GET" || u.origin !== location.origin || u.pathname.startsWith("/api/")) return;
+  // Availability must be fresh (seats/dates): network-first, fall back to cache offline.
+  if (u.pathname.startsWith("/data/availability/")) {
+    e.respondWith(
+      fetch(req).then((res) => { if (res.ok) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); } return res; }).catch(() => caches.match(req)),
+    );
+    return;
+  }
   if (req.mode === "navigate") {
     e.respondWith(
       fetch(req)
@@ -1184,6 +1261,11 @@ function dataFiles() {
   }
 }
 
+// One availability file per bookable tour (language-independent), consumed by the booking widget.
+function availabilityFiles() {
+  for (const t of tours) write(`/data/availability/${t.id}.json`, JSON.stringify(availabilityFor(t)));
+}
+
 function assets() {
   fs.cpSync(path.join(here, "src/assets"), path.join(OUT, "assets"), { recursive: true });
 }
@@ -1228,6 +1310,7 @@ for (const lang of LANGS) {
   contactPage(lang);
   legalPages.forEach((pg) => (lang !== "es" || pg.slug.es) && legalPage(lang, pg));
   appPage(lang);
+  bookPage(lang);
 }
 notFound();
 pwa();
@@ -1235,4 +1318,5 @@ sitemap();
 robots();
 llms();
 dataFiles();
+availabilityFiles();
 console.log(`built ${pages.length} pages (${tours.length} tours) into ${path.relative(process.cwd(), OUT) || "dist"} for ${SITE}`);

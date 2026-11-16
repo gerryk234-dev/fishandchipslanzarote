@@ -4,6 +4,20 @@
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 
+  // ---- shared formatting + cart store (on-site booking) ----
+  const locale = ES ? "es-ES" : TD.lang === "de" ? "de-DE" : "en-GB";
+  const money = (n) => new Intl.NumberFormat(locale, { style: "currency", currency: "EUR", minimumFractionDigits: n % 1 ? 2 : 0 }).format(n);
+  const fmtDate = (iso) => (iso ? new Date(`${iso}T12:00:00`).toLocaleDateString(locale, { weekday: "short", day: "numeric", month: "short", year: "numeric" }) : "");
+  const CART_KEY = "td_cart_v1";
+  const cartRead = () => { try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch { return []; } };
+  const cartWrite = (items) => { try { localStorage.setItem(CART_KEY, JSON.stringify(items)); } catch {} paintCartBadge(); };
+  const cartUnits = (items = cartRead()) => items.reduce((n, it) => n + (it.pax || []).reduce((m, p) => m + p.qty, 0), 0);
+  const itemTotal = (it) => (it.pax || []).reduce((s, p) => s + p.qty * p.price, 0);
+  const paintCartBadge = () => {
+    const n = cartUnits();
+    $$("[data-cart-count]").forEach((b) => { b.textContent = n; b.hidden = !n; });
+  };
+
   // ---- installable app ----
   if ("serviceWorker" in navigator) {
     addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
@@ -178,11 +192,11 @@
     const total = $(".bk-total", bk);
     const wa = $("[data-wa]", bk);
     const deposit = Number(bk.dataset.deposit) || 0;
-    const locale = ES ? "es-ES" : "en-GB";
-    const money = (n) => new Intl.NumberFormat(locale, { style: "currency", currency: "EUR", minimumFractionDigits: n % 1 ? 2 : 0 }).format(n);
+    const addBtn = $("[data-book]", bk);
     const pkgIndex = () => (pkgSel ? Number(pkgSel.value) : 0);
     const paxBox = () => $(`.bk-pax[data-pkg="${pkgIndex()}"]`, bk);
     let avail = null;
+    let capacityNow = Infinity; // seats left on the selected date
     bk.classList.add("ready");
 
     const fillDates = () => {
@@ -207,11 +221,13 @@
 
     // Prices can vary by date: when one is chosen, use that date's prices for each traveller type.
     const applyDatePrices = () => {
+      capacityNow = Infinity;
       if (!avail || !dateSel.value) return;
       const pkgId = pkgSel ? pkgSel.selectedOptions[0].dataset.id : null;
       const p = avail.packages.find((x) => String(x.id) === String(pkgId)) || avail.packages[0];
       const d = p?.dates.find((x) => x.date === dateSel.value);
       if (!d) return;
+      if (typeof d.capacity === "number") capacityNow = d.capacity;
       $$(".bk-row", paxBox()).forEach((r) => {
         const hit = d.prices.find((x) => x.label === r.dataset.label);
         if (hit && hit.price > 0) {
@@ -219,6 +235,28 @@
           $("b", r).textContent = money(hit.price);
         }
       });
+    };
+
+    // Build a cart line from the current form state (null if nothing chosen).
+    const currentItem = () => {
+      const pax = $$(".bk-row", paxBox())
+        .map((r) => ({ label: r.dataset.label, qty: Number($("output", r).textContent) || 0, price: Number(r.dataset.price) }))
+        .filter((p) => p.qty > 0);
+      if (!pax.length) return null;
+      const dateOpt = dateSel.value ? dateSel.selectedOptions[0] : null;
+      return {
+        id: bk.dataset.trip,
+        slug: bk.dataset.slug,
+        name: bk.dataset.name,
+        url: bk.dataset.url,
+        unit: bk.dataset.unit || "",
+        deposit,
+        pkgId: pkgSel ? pkgSel.selectedOptions[0].dataset.id : null,
+        pkgName: pkgSel ? pkgSel.selectedOptions[0].textContent : "",
+        date: dateSel.value || "",
+        dateLabel: dateOpt ? dateOpt.textContent : "",
+        pax,
+      };
     };
 
     const update = () => {
@@ -231,7 +269,16 @@
         sum += n * Number(r.dataset.price);
         if (n) parts.push(`${n} × ${r.dataset.label}`);
       });
-      total.textContent = sum ? `${t.total}: ${money(sum)}${deposit ? ` · ${t.depositToday}: ${money(Math.round(sum * deposit) / 100)} (${t.onDay})` : ""}` : "";
+      const units = $$(".bk-row", paxBox()).reduce((n, r) => n + (Number($("output", r).textContent) || 0), 0);
+      const over = units > capacityNow;
+      total.textContent = sum
+        ? `${t.total}: ${money(sum)}${deposit ? ` · ${t.depositToday}: ${money(Math.round(sum * deposit) / 100)} (${t.onDay})` : ""}`
+        : "";
+      if (addBtn) {
+        addBtn.classList.toggle("disabled", over);
+        addBtn.setAttribute("aria-disabled", over ? "true" : "false");
+        addBtn.title = over ? t.soldOut : "";
+      }
       const date = dateSel.value ? dateSel.selectedOptions[0].textContent : "";
       const opt = pkgSel ? pkgSel.selectedOptions[0].textContent : "";
       const name = bk.dataset.name;
@@ -240,6 +287,21 @@
         : `Hi! I'd like to book "${name}"${date ? ` on ${date}` : ""}${opt ? ` (${opt})` : ""}: ${parts.join(", ")}. Total ${money(sum)}.`;
       wa.href = `https://wa.me/${TD.wa}?text=${encodeURIComponent(msg)}`;
     };
+
+    // Add to booking → cart (localStorage) → booking page.
+    addBtn?.addEventListener("click", (e) => {
+      e.preventDefault();
+      const item = currentItem();
+      if (!item) return toast(t.pickFirst);
+      if (!dateSel.disabled && dateSel.closest("label") && !dateSel.closest("label").hidden && !item.date) return toast(t.pickFirst);
+      const units = item.pax.reduce((n, p) => n + p.qty, 0);
+      if (units > capacityNow) return toast(t.soldOut);
+      const cart = cartRead();
+      cart.push({ ...item, addedAt: Date.now() });
+      cartWrite(cart);
+      toast(t.added);
+      location.href = TD.book;
+    });
 
     bk.addEventListener("click", (e) => {
       const b = e.target.closest(".bk-step button");
@@ -253,14 +315,14 @@
       update();
     });
     dateSel.addEventListener("change", update);
-    fetch(`/api/availability?id=${bk.dataset.trip}`)
+    fetch(`${TD.avail || "/data/availability/"}${bk.dataset.trip}.json`)
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
       .then((d) => {
         avail = d;
         fillDates();
         update();
       })
-      // Static preview or WordPress unreachable: the calculator still works, just without dates.
+      // Availability file missing (old build / offline): the calculator still works, just without dates.
       .catch(() => (dateSel.closest("label").hidden = true));
     update();
   }
@@ -277,6 +339,135 @@
       b.replaceWith(f);
     }),
   );
+
+  // ---- toast ----
+  let toastEl;
+  const toast = (msg) => {
+    if (!toastEl) {
+      toastEl = document.createElement("div");
+      toastEl.className = "td-toast";
+      toastEl.setAttribute("role", "status");
+      document.body.appendChild(toastEl);
+    }
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => toastEl.classList.remove("show"), 2600);
+  };
+
+  paintCartBadge();
+
+  // ---- booking cart + checkout (on-site, request-and-confirm) ----
+  (() => {
+    const mount = $("#cart-app");
+    if (!mount) return;
+    const C = TD.cart || {};
+    const wa = mount.dataset.wa || TD.wa;
+    const body = $(".co-body", mount);
+    const stepsEl = $(".co-steps", mount);
+    const emptyHtml = body.innerHTML; // server-rendered empty state (keeps the correct tours link)
+    const e2 = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    let customer = {};
+    let lastBooking = null;
+
+    const depositOf = (it) => Math.round(itemTotal(it) * (Number(it.deposit) || 0)) / 100;
+    const grand = (items) => items.reduce((s, it) => s + itemTotal(it), 0);
+    const depositSum = (items) => items.reduce((s, it) => s + depositOf(it), 0);
+    const setStep = (n) => { if (stepsEl) { stepsEl.hidden = false; $$("li", stepsEl).forEach((li) => li.classList.toggle("on", Number(li.dataset.step) <= n)); } };
+    const makeRef = () => { const d = new Date(), p = (n) => String(n).padStart(2, "0"); return `TD-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`; };
+
+    const bookingText = (items, ref) => {
+      const head = ES ? `Reserva ${ref}` : TD.lang === "de" ? `Buchung ${ref}` : `Booking ${ref}`;
+      const lines = items.map((it) => {
+        const pax = it.pax.map((p) => `${p.qty}×${p.label} (${money(p.price)})`).join(", ");
+        return `• ${it.name}${it.pkgName ? ` [${it.pkgName}]` : ""}\n  ${C.when}: ${it.dateLabel || "—"}\n  ${C.travellers}: ${pax}\n  ${C.total}: ${money(itemTotal(it))}`;
+      }).join("\n");
+      const out = [head, lines, `${C.total}: ${money(grand(items))} · ${C.depositNow}: ${money(depositSum(items))}`, `${C.lead}: ${customer.name} · ${customer.phone} · ${customer.email}`];
+      if (customer.hotel) out.push(`${C.hotel}: ${customer.hotel}`);
+      if (customer.pickup) out.push(`${C.pickup}: ${customer.pickup}`);
+      if (customer.notes) out.push(`${C.notes} ${customer.notes}`);
+      return out.join("\n");
+    };
+
+    const renderCart = () => {
+      const items = cartRead();
+      if (!items.length) { body.innerHTML = emptyHtml; if (stepsEl) stepsEl.hidden = true; return; }
+      setStep(1);
+      body.innerHTML = `<div class="co-grid">
+        <ul class="co-items">${items.map((it, i) => `<li>
+          <div class="ci-main"><a href="${e2(it.url)}"><strong>${e2(it.name)}</strong></a>${it.pkgName ? `<span class="ci-pkg">${e2(it.pkgName)}</span>` : ""}
+            <p class="ci-meta">${e2(C.when)}: ${e2(it.dateLabel || "—")}</p>
+            <ul class="ci-pax">${it.pax.map((p) => `<li>${p.qty} × ${e2(p.label)} <b>${money(p.qty * p.price)}</b></li>`).join("")}</ul></div>
+          <div class="ci-side"><b>${money(itemTotal(it))}</b><button type="button" class="link" data-remove="${i}">${e2(C.remove)}</button></div></li>`).join("")}</ul>
+        <aside class="co-sum"><h2>${e2(C.summary)}</h2>
+          <div class="row"><span>${e2(C.total)}</span><b>${money(grand(items))}</b></div>
+          <div class="row"><span>${e2(C.depositNow)}</span><b>${money(depositSum(items))}</b></div>
+          <div class="row muted"><span>${e2(C.balance)}</span><span>${money(grand(items) - depositSum(items))}</span></div>
+          <button type="button" class="btn block" data-go-details>${e2(C.continue)}</button>
+          <p class="co-note">${e2(C.payNote)}</p></aside></div>`;
+    };
+
+    const renderDetails = () => {
+      const items = cartRead();
+      if (!items.length) return renderCart();
+      setStep(2);
+      body.innerHTML = `<form class="co-details" novalidate>
+        <div class="co-grid2">
+          <label><span>${e2(C.name)} *</span><input name="name" required autocomplete="name" value="${e2(customer.name || "")}"></label>
+          <label><span>${e2(C.phone)} *</span><input name="phone" required autocomplete="tel" inputmode="tel" value="${e2(customer.phone || "")}"></label>
+          <label><span>${e2(C.email)} *</span><input name="email" type="email" required autocomplete="email" value="${e2(customer.email || "")}"></label>
+          <label><span>${e2(C.hotel)}</span><input name="hotel" placeholder="${e2(C.hotelPh)}" value="${e2(customer.hotel || "")}"></label>
+          <label class="full"><span>${e2(C.pickup)}</span><input name="pickup" value="${e2(customer.pickup || "")}"></label>
+          <label class="full"><span>${e2(C.notes)}</span><textarea name="notes" rows="3" placeholder="${e2(C.notesPh)}">${e2(customer.notes || "")}</textarea></label>
+        </div>
+        <div class="co-actions"><button type="button" class="btn ghost" data-back>${e2(C.backToCart)}</button><button type="submit" class="btn">${e2(C.place)}</button></div>
+        <p class="co-note">${e2(C.payNote)}</p></form>`;
+    };
+
+    const renderDone = (ref, items) => {
+      setStep(3);
+      const text = bookingText(items, ref);
+      const subject = ES ? `Reserva ${ref}` : TD.lang === "de" ? `Buchung ${ref}` : `Booking ${ref}`;
+      const waHref = `https://wa.me/${wa}?text=${encodeURIComponent(text)}`;
+      const mailHref = `mailto:${TD.email || ""}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
+      body.innerHTML = `<div class="co-done"><div class="co-tick" aria-hidden="true">✓</div>
+        <h2>${e2(C.okTitle)}</h2><p class="co-ref">${e2(C.ref)}: <b>${e2(ref)}</b></p><p class="lead">${e2(C.okLead)}</p>
+        <p class="co-cta"><a class="btn wa" href="${waHref}" target="_blank" rel="noopener">${e2(C.waSend)}</a><a class="btn ghost" href="${mailHref}">${e2(C.emailSend)}</a><button type="button" class="btn ghost" data-download>${e2(C.download)}</button></p>
+        <p><a class="link" data-new href="${TD.book}">${e2(C.newBooking)}</a></p></div>`;
+    };
+
+    body.addEventListener("click", (e) => {
+      const rm = e.target.closest("[data-remove]");
+      if (rm) { const c = cartRead(); c.splice(Number(rm.dataset.remove), 1); cartWrite(c); renderCart(); return; }
+      if (e.target.closest("[data-go-details]")) return renderDetails();
+      if (e.target.closest("[data-back]")) return renderCart();
+      if (e.target.closest("[data-new]")) { renderCart(); return; }
+      if (e.target.closest("[data-download]") && lastBooking) {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob([JSON.stringify(lastBooking, null, 2)], { type: "application/json" }));
+        a.download = `${lastBooking.ref}.json`;
+        a.click();
+      }
+    });
+
+    body.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const f = e.target;
+      customer = { name: f.name.value.trim(), phone: f.phone.value.trim(), email: f.email.value.trim(), hotel: f.hotel.value.trim(), pickup: f.pickup.value.trim(), notes: f.notes.value.trim() };
+      if (!customer.name || !customer.phone || !customer.email) return toast(C.required);
+      const items = cartRead();
+      if (!items.length) return renderCart();
+      const ref = makeRef();
+      lastBooking = { ref, lang: TD.lang, createdAt: new Date().toISOString(), customer, items, total: grand(items), deposit: depositSum(items), currency: "EUR" };
+      try { localStorage.setItem("td_last_booking", JSON.stringify(lastBooking)); } catch {}
+      // A server endpoint can be POSTed here later; for now staff receive the booking via WhatsApp/email/copy.
+      cartWrite([]);
+      renderDone(ref, items);
+      mount.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    renderCart();
+  })();
 
   // ---- assistant ----
   const chat = $("#td-chat");
