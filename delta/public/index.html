@@ -11,9 +11,10 @@
 <meta property="og:image" content="brand/logo.jpg">
 <link rel="icon" type="image/jpeg" href="brand/logo.jpg">
 <link rel="stylesheet" href="/styles.css">
+<link rel="preload" as="image" href="/brand/space.jpg" imagesrcset="/brand/space-800.jpg 800w, /brand/space.jpg 1400w" imagesizes="100vw" fetchpriority="high">
 </head>
 <body>
-<div id="app"><noscript><p style="padding:2rem">DELTA needs JavaScript enabled to run this prototype.</p></noscript></div>
+<div id="app"><div class="boot" role="status" aria-label="Loading DELTA"><img src="/brand/logo.jpg" alt=""></div><noscript><p style="padding:2rem">DELTA needs JavaScript enabled.</p></noscript></div>
 <script src="/shared/data.js"></script>
 <script src="/shared/domain.js"></script>
 <script src="/shared/countries.js"></script>

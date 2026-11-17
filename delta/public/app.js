@@ -88,7 +88,7 @@ function rangeChart(ms, title) {
   const data = ms.filter(m => m.value != null).map(m => ({ ...m, position: positionOf(m), status: statusOf(m) }));
   const pos = data.map(d => d.position);
   const lo = Math.floor(Math.min(0, ...pos) - 15), hi = Math.ceil(Math.max(100, ...pos) + 15);
-  const W = 640, H = 270, L = 40, B = 26, T = 8, R = 8, ih = H - B - T, iw = W - L - R;
+  const W = innerWidth < 600 ? 380 : 640, H = innerWidth < 600 ? 240 : 270, L = 40, B = 26, T = 8, R = 8, ih = H - B - T, iw = W - L - R;
   const y = v => T + ih - (v - lo) / (hi - lo) * ih;
   const bw = Math.min(42, iw / data.length * .55);
   const ticks = []; const step = (hi - lo) > 160 ? 50 : 25; for (let v = Math.ceil(lo / step) * step; v <= hi; v += step) ticks.push(v);
@@ -97,9 +97,9 @@ function rangeChart(ms, title) {
     const top = Math.min(y0, y1), h = Math.max(1, Math.abs(y1 - y0));
     const col = d.status === 'Inside range' ? 'var(--gold-soft)' : d.status === 'Below range' ? '#8fb3ff' : 'var(--bad)';
     return `<g><title>${esc(`${d.label}: result ${d.value} ${d.unit}. Laboratory band ${d.low}–${d.high} ${d.unit}. ${d.status}. Drawn at ${d.position} on a scale where 0 is the low end and 100 the high end.`)}</title>
-      <rect x="${cx - bw / 2}" y="${top}" width="${bw}" height="${h}" rx="4" fill="${col}"/>
+      <rect class="bar ${d.position >= 0 ? 'up' : 'down'}" style="--i:${i}" x="${cx - bw / 2}" y="${top}" width="${bw}" height="${h}" rx="4" fill="${col}"/>
       <text x="${cx}" y="${H - 8}" text-anchor="middle" font-size="12" fill="var(--muted)">${esc(d.name)}</text>
-      <text x="${cx}" y="${(d.position >= 0 ? top : top + h) + (d.position >= 0 ? -5 : 13)}" text-anchor="middle" font-size="10.5" fill="var(--fg)">${d.value}</text></g>`;
+      <text x="${cx}" y="${(d.position >= 0 ? top : top + h) + (d.position >= 0 ? -5 : 13)}" text-anchor="middle" font-size="10.5" fill="var(--fg)" class="lbl">${d.value}</text></g>`;
   }).join('');
   return `<figure class="card p4 chart" role="group" aria-label="${esc(title || 'Mineral range chart')}">
     <figcaption><h3 class="gold">${esc(title || 'Where each mineral sits in its lab range')}</h3><p class="sm muted mt1">${esc(rangeSummary(ms.filter(m => m.value != null)))}</p></figcaption>
@@ -118,12 +118,12 @@ function progressChart(snaps) {
   const rows = snaps.map(s => Object.fromEntries(s.minerals.map(m => [m.name, positionOf(m)])));
   const all = rows.flatMap(r => Object.values(r));
   const lo = Math.min(0, Math.floor(Math.min(...all) / 10) * 10 - 10), hi = Math.max(140, Math.ceil(Math.max(...all) / 10) * 10 + 10);
-  const W = 640, H = 270, L = 40, B = 26, T = 8, R = 16, ih = H - B - T, iw = W - L - R;
+  const W = innerWidth < 600 ? 380 : 640, H = innerWidth < 600 ? 240 : 270, L = 40, B = 26, T = 8, R = 16, ih = H - B - T, iw = W - L - R;
   const x = i => L + (snaps.length === 1 ? iw / 2 : iw * i / (snaps.length - 1));
   const y = v => T + ih - (v - lo) / (hi - lo) * ih;
   const cols = ['var(--gold)', 'var(--gold-soft)', 'var(--fg)', 'var(--muted)', 'var(--gold)', 'var(--fg)'];
   const ticks = []; for (let v = Math.ceil(lo / 20) * 20; v <= hi; v += 20) ticks.push(v);
-  const lines = names.map((n, k) => `<g><title>${esc(snaps[0].minerals[k].label)}</title><polyline fill="none" stroke="${cols[k % 6]}" stroke-width="2" ${k >= 4 ? 'stroke-dasharray="5 4"' : ''} points="${rows.map((r, i) => `${x(i)},${y(r[n])}`).join(' ')}"/>${rows.map((r, i) => `<circle cx="${x(i)}" cy="${y(r[n])}" r="3" fill="${cols[k % 6]}"><title>${esc(`${snaps[i].label} — ${snaps[0].minerals[k].label}: ${r[n]}`)}</title></circle>`).join('')}</g>`).join('');
+  const lines = names.map((n, k) => `<g><title>${esc(snaps[0].minerals[k].label)}</title><polyline fill="none" stroke="${cols[k % 6]}" stroke-width="2" ${k >= 4 ? 'stroke-dasharray="5 4"' : `class="draw" pathLength="1" style="--i:${k}"`} points="${rows.map((r, i) => `${x(i)},${y(r[n])}`).join(' ')}"/>${rows.map((r, i) => `<circle cx="${x(i)}" cy="${y(r[n])}" r="3" fill="${cols[k % 6]}"><title>${esc(`${snaps[i].label} — ${snaps[0].minerals[k].label}: ${r[n]}`)}</title></circle>`).join('')}</g>`).join('');
   return `<figure class="card p4 chart"><figcaption><h3 class="gold">Progress across tests</h3><p class="sm muted mt1">Each line is one mineral. The line rises when that mineral moves up through its laboratory range, and falls when it moves down. 0 is the low end of the range and 100 is the high end. This chart is for one client only.</p></figcaption>
     <svg viewBox="0 0 ${W} ${H}" class="mt4" role="img" aria-label="Line chart of mineral positions across tests">
       ${ticks.map(v => `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--border)"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end" font-size="11" fill="var(--muted)">${v}</text>`).join('')}
@@ -141,14 +141,15 @@ const logo = (cls = '') => `<img src="brand/logo.jpg" alt="DELTA logo" width="88
 const isStaff = u => u && u.role !== 'member';
 function header() {
   const u = me(); const path = location.hash.slice(1) || '/';
-  const a = (to, label, cls = '') => `<a href="#${to}" class="${cls} ${path === to || (to !== '/' && path.startsWith(to + '/')) ? 'active' : ''}">${label}</a>`;
+  let n = 0;
+  const a = (to, label, cls = '') => `<a href="#${to}" style="--i:${n++}" class="${cls} ${path === to || (to !== '/' && path.startsWith(to + '/')) ? 'active' : ''}"${path === to ? ' aria-current="page"' : ''}>${label}</a>`;
   return `<header class="site"><div class="container">
     <a class="brand" href="#/">${logo()}<div><div class="t1">DELTA</div><div class="t2">Analysis · Intelligence · Method</div></div></a>
-    <button class="menu-btn" data-act="menu" aria-expanded="false" aria-controls="mainnav">Menu</button>
-    <nav class="main" id="mainnav" aria-label="Main">
+    <button class="menu-btn" data-act="menu" aria-expanded="false" aria-controls="mainnav" aria-label="Open menu"><span></span></button>
+    <nav class="main" id="mainnav" aria-label="Main"><div>
       ${a('/how-it-works', 'How it works')}${a('/pillars', 'Six Pillars')}${a('/awakening', 'Awakening')}${a('/podcast', 'Podcast')}${a('/mineral-man', 'Mineral Man')}${a('/partners', 'Partners')}${a('/faq', 'FAQs')}
       ${u ? (isStaff(u) ? a('/admin', 'Admin', 'strong') : '') + a('/portal', 'My Portal', 'strong') : a('/login', 'Sign in') + a('/register', 'Sign up', 'strong')}
-    </nav></div></header>`;
+    </div></nav></div></header>`;
 }
 function footer() {
   return `<footer class="site"><div class="cols">
@@ -162,11 +163,13 @@ function demobar() {
   if (!S.demo) return '';
   const u = me();
   return `<div class="demobar"><div class="container">
-    <span><b>Demo mode</b> · payments: ${S.payments === 'stripe' ? 'Stripe' : 'test'} · email: ${S.mail === 'smtp' ? 'SMTP' : 'logged'}</span>
-    <span>Signed in: <b>${u ? esc(u.name) + ' (' + u.role + ')' : 'visitor'}</b></span>
-    <span>Demo date: <b>${fmtDate(now())}</b>${S.clockDays ? ` (+${S.clockDays}d)` : ''}</span>
-    <button data-act="clock" data-days="30">+30 days</button><button data-act="clock" data-days="90">+90 days</button>${S.clockDays ? '<button data-act="clock" data-days="0">Back to today</button>' : ''}
-    <span class="sp"></span><a href="/dev/mailbox" target="_blank" rel="noopener" style="color:var(--gold)">Dev mailbox</a><a href="#/login" style="color:var(--gold)">Switch user</a><button data-act="reset">Reset demo</button></div></div>`;
+    <span><b>Demo</b> · ${u ? esc(u.name) : 'visitor'} · ${fmtDate(now())}${S.clockDays ? ` (+${S.clockDays}d)` : ''}</span>
+    <a href="#/login" style="color:var(--gold)">Switch user</a>
+    <details class="demotools"${demoOpen ? ' open' : ''}><summary>Demo tools</summary><div class="panel">
+      <span>Payments: ${S.payments === 'stripe' ? 'Stripe' : 'test'} · email: ${S.mail === 'smtp' ? 'SMTP' : 'logged'}</span>
+      <button data-act="clock" data-days="30">+30 days</button><button data-act="clock" data-days="90">+90 days</button>${S.clockDays ? '<button data-act="clock" data-days="0">Back to today</button>' : ''}
+      <a href="/dev/mailbox" target="_blank" rel="noopener" style="color:var(--gold)">Dev mailbox</a><button data-act="reset">Reset demo</button></div></details>
+  </div></div>`;
 }
 function subnav(items, counts = {}) {
   const path = location.hash.slice(1);
@@ -799,10 +802,38 @@ function render() {
   else if (parts[0] === 'community') html = R['/community'](q, parts);
   else if (parts[0] === 'pay') html = payPage(parts[1]);
   else html = R[path] ? R[path](q, parts) : notFound();
-  document.getElementById('app').innerHTML = `<a class="skip" href="#main" data-act="skip">Skip to content</a>${demobar()}${header()}${html}${footer()}`;
+  document.getElementById('app').innerHTML = responsiveImages(`<a class="skip" href="#main" data-act="skip">Skip to content</a>${demobar()}${header()}${html}${footer()}`);
   document.title = 'DELTA — Awakening Human Potential';
   const log = document.getElementById('chatlog'); if (log) log.scrollTop = log.scrollHeight;
+  enhance(path);
   onRoute(path, q);
+}
+/* Photos get a phone-sized version (800px) and load lazily; the hero photo loads first. */
+function responsiveImages(markup) {
+  let first = true;
+  return markup.replace(/<img src="brand\/(space|nourish|ground|move|release|rest)\.jpg"/g, (m, name) => {
+    const hero = first && markup.indexOf(m) < markup.indexOf('</section>') && markup.includes('class="hero"'); first = false;
+    return `<img src="brand/${name}.jpg" srcset="brand/${name}-800.jpg 800w, brand/${name}.jpg 1400w" sizes="${hero ? '100vw' : '(min-width: 768px) 50vw, 100vw'}" decoding="async" ${hero ? 'fetchpriority="high"' : 'loading="lazy"'}`;
+  });
+}
+/* Progressive enhancement after each render: responsive images, fade-ins, scroll reveals, focus & title. */
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let revealer = null, lastPath = null;
+function enhance(path) {
+  const main = document.getElementById('main');
+  document.querySelectorAll('main img[srcset], .vthumb img').forEach(img => { if (!img.complete) { img.classList.add('fade'); img.addEventListener('load', () => img.classList.add('loaded'), { once: true }); } });
+  if (!reduceMotion && 'IntersectionObserver' in window) {
+    revealer?.disconnect();
+    revealer = new IntersectionObserver(entries => {
+      let n = 0;
+      for (const e of entries) if (e.isIntersecting) { e.target.style.setProperty('--d', `${Math.min(n++, 6) * 70}ms`); e.target.classList.add('in'); revealer.unobserve(e.target); }
+    }, { rootMargin: '0px 0px -8% 0px' });
+    document.querySelectorAll('main .card:not(.rise), main .kpi, main ol.steps li, main details, main section.band > .container > .flex').forEach(el => { el.classList.add('reveal'); revealer.observe(el); });
+  }
+  const h1 = main?.querySelector('h1');
+  document.title = h1 && path !== '/' ? `${h1.textContent.trim()} — DELTA` : 'DELTA — Awakening Human Potential';
+  if (lastPath !== null && lastPath !== path && main) { main.setAttribute('tabindex', '-1'); main.focus({ preventScroll: true }); }
+  lastPath = path;
 }
 /* Side effects that belong to arriving on a page. */
 let lastRoute = '';
@@ -812,7 +843,11 @@ function onRoute(path, q) {
   if (path === '/paid' && q.session_id) act('confirm-stripe', { sessionId: q.session_id });
 }
 function go(to) { if (location.hash === '#' + to) render(); else location.hash = to; window.scrollTo(0, 0); }
-function toast(msg) { const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 4200); }
+function toast(msg) {
+  document.querySelectorAll('.toast').forEach(x => x.remove());
+  const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); t.textContent = msg; document.body.appendChild(t);
+  setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 350); }, 4200);
+}
 /* In-page dialog (native confirm/prompt and downloads are blocked in sandboxed hosts). */
 function dialog({ title, body = '', input = null, value = '', ok = 'OK', onOk, wide = false }) {
   document.querySelectorAll('[data-dialog]').forEach(x => x.remove());
@@ -841,7 +876,7 @@ function download(name, text, type = 'application/json') {
 /* ───────────────────────── actions (buttons) ───────────────────────── */
 const ds = el => el.dataset;
 const A = {
-  menu(el) { const n = document.getElementById('mainnav'); n.classList.toggle('open'); el.setAttribute('aria-expanded', n.classList.contains('open')); },
+  menu(el) { const n = document.getElementById('mainnav'), open = n.classList.toggle('open'); el.setAttribute('aria-expanded', open); el.setAttribute('aria-label', open ? 'Close menu' : 'Open menu'); },
   skip(el, ev) { ev.preventDefault(); const m = document.getElementById('main'); m?.focus(); m?.scrollIntoView(); },
   nav(el) { go(el.dataset.to); },
   clock(el) { act('clock', { days: +el.dataset.days }); },
@@ -949,7 +984,8 @@ const F = {
 };
 
 /* ───────────────────────── wiring ───────────────────────── */
-let chartDraft = null, loginSent = '';
+let chartDraft = null, loginSent = '', demoOpen = false;
+document.addEventListener('toggle', ev => { if (ev.target.classList?.contains('demotools')) demoOpen = ev.target.open; }, true);
 document.addEventListener('click', ev => {
   const el = ev.target.closest('[data-act]');
   if (!el || el.tagName === 'SELECT' || el.tagName === 'INPUT') return;

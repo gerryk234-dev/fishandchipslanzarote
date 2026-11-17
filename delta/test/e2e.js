@@ -96,6 +96,7 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) failed+
   await visit('/account'); ok(await p.locator('audio').count() >= 1, 'member sees their voice note player');
 
   // clock: reminders then expiry, paused access, renewal from purchase date
+  if (!(await p.locator('details.demotools').evaluate(d => d.open))) await p.click('.demotools summary');
   for (const n of ['+90 days', '+30 days', '+30 days']) { await p.click(`button:text("${n}")`); await wait(); }
   const alex = (await state()).users[0];
   ok(alex.inbox.some(n => /renews in/.test(n.title)) && alex.inbox.some(n => /paused/.test(n.title)), 'renewal reminders and expiry notice sent');

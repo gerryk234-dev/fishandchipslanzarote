@@ -1,5 +1,7 @@
 /* DELTA — design tokens carried over from the Grok build */
 :root {
+  color-scheme: dark;
+  --ease: cubic-bezier(.22, 1, .36, 1);
   --bg: #0a0e1a;
   --surface: #121826;
   --border: #2a364c;
@@ -76,13 +78,7 @@ nav.main { display: flex; align-items: center; flex-wrap: wrap; gap: .4rem 1.25r
 nav.main a { color: var(--muted); text-decoration: none; }
 nav.main a:hover, nav.main a.active { color: var(--fg); }
 nav.main a.strong { color: var(--gold); font-weight: 600; }
-.menu-btn { display: none; background: none; border: 1px solid rgba(212,175,55,.4); color: var(--gold); border-radius: 8px; padding: .35rem .7rem; font: inherit; cursor: pointer; }
-@media (max-width: 900px) {
-  .menu-btn { display: block; }
-  header.site .container { flex-wrap: wrap; }
-  nav.main { display: none; width: 100%; flex-direction: column; align-items: flex-start; padding-bottom: .5rem; }
-  nav.main.open { display: flex; }
-}
+
 .subnav { border-bottom: 1px solid rgba(42,54,76,.6); }
 .subnav .container { display: flex; flex-wrap: wrap; gap: .3rem 1rem; padding-top: .6rem; padding-bottom: .6rem; font-size: .875rem; }
 .subnav a { color: var(--muted); text-decoration: none; position: relative; }
@@ -235,3 +231,96 @@ hr.sep { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
 .vcard .vlen { position: absolute; right: .4rem; bottom: .4rem; background: rgba(0,0,0,.8); color: #fff; font-size: .7rem; padding: .05rem .35rem; border-radius: 4px; }
 .vcard .vtitle { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .vframe { width: 100%; aspect-ratio: 16/9; border: 0; display: block; background: #000; }
+
+/* ───────── UI/UX polish: motion, media, mobile ───────── */
+/* first-load splash */
+.boot { min-height: 100vh; display: grid; place-items: center; }
+.boot img { width: 5rem; height: 5rem; border-radius: 50%; animation: 1.6s ease-in-out infinite glow, 1.6s ease-in-out infinite breathe; }
+@keyframes breathe { 50% { transform: scale(1.06); } }
+
+/* header: brand + menu on one row; animated drop-down on small screens */
+.menu-btn { display: none; width: 2.75rem; height: 2.75rem; border-radius: .75rem; border: 1px solid rgba(212,175,55,.4); background: transparent; cursor: pointer; position: relative; flex: none; }
+.menu-btn span, .menu-btn::before, .menu-btn::after { content: ''; position: absolute; left: .75rem; right: .75rem; height: 2px; border-radius: 2px; background: var(--gold); transition: transform .3s var(--ease), opacity .2s; }
+.menu-btn::before { top: .95rem; } .menu-btn span { top: 1.33rem; } .menu-btn::after { top: 1.71rem; }
+.menu-btn[aria-expanded="true"]::before { transform: translateY(.38rem) rotate(45deg); }
+.menu-btn[aria-expanded="true"] span { opacity: 0; }
+.menu-btn[aria-expanded="true"]::after { transform: translateY(-.38rem) rotate(-45deg); }
+@media (max-width: 900px) {
+  header.site .container { flex-wrap: wrap; padding-top: .75rem; padding-bottom: .75rem; }
+  .menu-btn { display: block; }
+  .brand .logo { width: 2.4rem; height: 2.4rem; }
+  .brand .t2 { font-size: .75rem; }
+  nav.main { display: grid; grid-template-rows: 0fr; width: 100%; transition: grid-template-rows .35s var(--ease); }
+  nav.main > div { overflow: hidden; min-height: 0; display: flex; flex-direction: column; visibility: hidden; transition: visibility 0s .35s; }
+  nav.main.open > div { visibility: visible; transition: visibility 0s; }
+  nav.main.open { grid-template-rows: 1fr; }
+  nav.main a { padding: .8rem .25rem; border-bottom: 1px solid rgba(42,54,76,.6); font-size: 1.05rem; opacity: 0; transform: translateY(-6px); transition: opacity .3s, transform .3s var(--ease); }
+  nav.main.open a { opacity: 1; transform: none; }
+  nav.main.open a:nth-child(n) { transition-delay: calc(var(--i, 0) * 30ms); }
+}
+@media (min-width: 901px) { nav.main > div { display: flex; align-items: center; flex-wrap: wrap; gap: .4rem 1.25rem; } }
+nav.main a { position: relative; transition: color .2s; }
+@media (min-width: 901px) {
+  nav.main a::after { content: ''; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px; background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform .3s var(--ease); }
+  nav.main a:hover::after, nav.main a.active::after { transform: scaleX(1); }
+}
+
+/* compact demo bar */
+.demobar .container { padding-top: .3rem; padding-bottom: .3rem; }
+.demotools { position: relative; }
+.demotools summary { list-style: none; cursor: pointer; color: var(--gold); font-weight: 600; }
+.demotools summary::-webkit-details-marker { display: none; }
+.demotools summary::after { content: ' ▾'; }
+.demotools[open] summary::after { content: ' ▴'; }
+.demotools .panel { display: flex; flex-wrap: wrap; gap: .4rem .8rem; align-items: center; padding: .4rem 0 .2rem; }
+
+/* page transition + scroll reveal */
+main.page, main#main { animation: pageIn .45s var(--ease) both; }
+@keyframes pageIn { from { opacity: 0; transform: translateY(8px); } }
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s var(--ease), transform .6s var(--ease); transition-delay: var(--d, 0ms); }
+.reveal.in { opacity: 1; transform: none; }
+
+/* hero: slow drift of the background photo */
+.hero > img { animation: drift 28s ease-in-out infinite alternate; transform-origin: 60% 40%; }
+@keyframes drift { from { transform: scale(1); } to { transform: scale(1.12) translate(-1.5%, -1%); } }
+
+/* images fade in when loaded */
+img.fade { opacity: 0; transition: opacity .6s ease; }
+img.fade.loaded { opacity: 1; }
+
+/* cards & buttons respond to touch */
+a.card, .card.flush, .kpi { transition: border-color .25s, transform .3s var(--ease), box-shadow .3s; }
+@media (hover: hover) { a.card:hover, .vcard:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,.35); } }
+.btn, .chip, .linkbtn { transition: background .2s, color .2s, transform .12s, box-shadow .2s; }
+.btn:active, .chip:active { transform: scale(.97); }
+.btn:hover { box-shadow: 0 6px 22px rgba(212,175,55,.25); }
+.btn.ghost:hover, .btn.social:hover { box-shadow: none; }
+form.busy button:not([type=button]) { position: relative; color: transparent !important; pointer-events: none; }
+form.busy button:not([type=button])::after { content: ''; position: absolute; inset: 0; margin: auto; width: 1.1rem; height: 1.1rem; border-radius: 50%; border: 2px solid rgba(10,14,26,.35); border-top-color: var(--bg); animation: spin .7s linear infinite; }
+form.busy .btn.ghost::after { border-color: rgba(212,175,55,.3); border-top-color: var(--gold); }
+@keyframes spin { to { transform: rotate(360deg); } }
+.progress > div { transition: width 1s var(--ease); }
+
+/* charts animate in */
+.chart rect.bar { transform-box: fill-box; animation: grow .9s var(--ease) both; animation-delay: calc(var(--i) * 70ms); }
+.chart rect.bar.up { transform-origin: bottom; } .chart rect.bar.down { transform-origin: top; }
+@keyframes grow { from { transform: scaleY(0); } }
+.chart polyline.draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1.4s var(--ease) forwards; animation-delay: calc(var(--i) * 120ms); }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.chart .lbl { animation: fadeIn .4s .6s both; }
+@keyframes fadeIn { from { opacity: 0; } }
+
+/* toast: bottom-centre on phones, respects the home indicator */
+.toast { transition: opacity .3s, transform .3s var(--ease); }
+.toast.out { opacity: 0; transform: translateY(10px); }
+@media (max-width: 600px) { .toast { left: 1rem; right: 1rem; max-width: none; bottom: calc(1rem + env(safe-area-inset-bottom)); } }
+
+/* comfortable tap targets on touch screens */
+@media (pointer: coarse) {
+  .chip { min-height: 2.5rem; padding: .45rem 1rem; }
+  .btn.xs { min-height: 2.5rem; padding: .5rem 1rem; }
+  .linkbtn { min-height: 2.25rem; }
+  .subnav .container { overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .subnav a { white-space: nowrap; padding: .4rem 0; }
+}
+@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1 !important; transform: none !important; } img.fade { opacity: 1; } }
