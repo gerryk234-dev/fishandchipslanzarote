@@ -3,7 +3,7 @@
 const path = require('node:path');
 const fs = require('node:fs');
 const express = require('express');
-const { open } = require('./db');
+
 const { createMailer } = require('./mail');
 const { createLogic } = require('./logic');
 const { createAuth } = require('./auth');
@@ -13,7 +13,7 @@ const { createActions } = require('./actions');
 const { createOAuth } = require('./oauth');
 
 function createApp(config) {
-  const store = open(config.dbFile || path.join(config.dataDir, 'delta.db'));
+  const store = config.memory ? require('./memory-store').openMemory() : require('./db').open(config.dbFile || path.join(config.dataDir, 'delta.db'));
   const mailer = createMailer(store);
   const L = createLogic(store, mailer, config);
   const auth = createAuth(store, L, mailer, config);
@@ -76,7 +76,7 @@ function createApp(config) {
   });
   /* Private files: owner or staff with a relevant area. Always served as a download. */
   app.get('/api/files/:id', (req, res) => {
-    const f = store.db.prepare('SELECT * FROM files WHERE id = ?').get(req.params.id);
+    const f = store.getFile(req.params.id);
     const u = req.user;
     const ok = f && u && (f.user_id === u.id || (f.kind === 'lab-report' && ['/admin/upload', '/admin/reports', '/admin/exceptions'].some(a => can(u, a))) || (f.kind === 'voice-note' && can(u, '/admin/voice')));
     if (!ok) return res.status(404).send('Not found');
@@ -99,6 +99,6 @@ function createApp(config) {
 
   const timer = setInterval(() => { try { store.tx(() => L.runReminders()); } catch (e) { console.error('reminders', e); } }, 3600e3);
   timer.unref();
-  return { app, store, L, close: () => { clearInterval(timer); store.db.close(); } };
+  return { app, store, L, close: () => { clearInterval(timer); store.db?.close(); } };
 }
 module.exports = { createApp };

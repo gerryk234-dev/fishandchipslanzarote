@@ -81,7 +81,10 @@ function profileFields(u = {}) {
     <label class="f"><span>Date of birth</span><input type="date" name="dob" required max="${maxDob()}" min="1900-01-01" value="${esc(u.dob || '')}" autocomplete="bday"><span class="hint">DELTA is for adults aged ${S.settings.minAge || 18}+. Your age also helps us screen supplement guidance safely.</span></label>`;
 }
 const ageOf = u => Domain.ageOn(u?.dob, now());
-const fileLink = (fid, label) => fid ? `<a href="/api/files/${esc(fid)}" class="sm">${esc(label)}</a>` : '';
+/* Instant browser demo (static build): the server runs inside the page. */
+const STATIC = !!window.DELTA_STATIC;
+const fileHref = fid => STATIC ? DELTA_STATIC.fileUrl(fid) : `/api/files/${encodeURIComponent(fid)}`;
+const fileLink = (fid, label) => fid ? `<a href="${esc(fileHref(fid))}" class="sm" target="_blank" rel="noopener">${esc(label)}</a>` : '';
 
 /* ───────────────────────── charts (port of Grok/Recharts charts to SVG) ───────────────────────── */
 function rangeChart(ms, title) {
@@ -168,7 +171,7 @@ function demobar() {
     <details class="demotools"${demoOpen ? ' open' : ''}><summary>Demo tools</summary><div class="panel">
       <span>Payments: ${S.payments === 'stripe' ? 'Stripe' : 'test'} · email: ${S.mail === 'smtp' ? 'SMTP' : 'logged'}</span>
       <button data-act="clock" data-days="30">+30 days</button><button data-act="clock" data-days="90">+90 days</button>${S.clockDays ? '<button data-act="clock" data-days="0">Back to today</button>' : ''}
-      <a href="/dev/mailbox" target="_blank" rel="noopener" style="color:var(--gold)">Dev mailbox</a><button data-act="reset">Reset demo</button></div></details>
+      ${STATIC ? '<a href="#/dev/mailbox" style="color:var(--gold)">Dev mailbox</a>' : '<a href="/dev/mailbox" target="_blank" rel="noopener" style="color:var(--gold)">Dev mailbox</a>'}<button data-act="reset">Reset demo</button></div></details>
   </div></div>`;
 }
 function subnav(items, counts = {}) {
@@ -324,6 +327,9 @@ R['/podcast'] = (q = {}) => {
 const CHANNEL_URL = 'https://www.youtube.com/@mineralman';
 function videoCard(v) {
   const locked = v.access === 'members' && !hasAccess(me());
+  if (STATIC && v.youtubeId) return `<article class="card flush vcard"><a class="vthumb vstatic" href="https://www.youtube.com/watch?v=${esc(v.youtubeId)}" target="_blank" rel="noopener" aria-label="Watch on YouTube: ${esc(v.title)}">
+      <span class="vinitial" aria-hidden="true">${esc((v.cat || 'M')[0])}</span><span class="vplay" aria-hidden="true">▶</span>${v.length ? `<span class="vlen">${esc(v.length)}</span>` : ''}</a>
+    <div class="body" style="padding:.9rem 1rem"><div class="xs muted">${esc(v.cat)}${v.year ? ' · ' + esc(v.year) : ''}</div><h3 class="mt1 sm vtitle">${esc(v.title)}</h3><span class="xs muted">Opens on YouTube ↗</span></div></article>`;
   if (!v.youtubeId) return `<article class="card p4"><div class="video" aria-hidden="true">${locked ? '🔒' : '▶'}</div><h3 class="mt2 sm">${esc(v.title)}</h3></article>`;
   return `<article class="card flush vcard"><button class="vthumb" data-act="yt" data-id="${esc(v.youtubeId)}" aria-label="Play: ${esc(v.title)}">
       <img src="https://i.ytimg.com/vi/${esc(v.youtubeId)}/mqdefault.jpg" alt="" loading="lazy" width="320" height="180"><span class="vplay" aria-hidden="true">▶</span>${v.length ? `<span class="vlen">${esc(v.length)}</span>` : ''}</button>
@@ -404,7 +410,7 @@ R['/login'] = (q = {}) => {
     ${q.error ? `<p class="sm b-warn mt4 center">${{ notconfigured: 'That sign-in option isn\'t connected yet — please use email for now.', cancelled: 'Sign-in was cancelled.', expired: 'That sign-in attempt expired — please try again.', failed: 'We couldn\'t verify that sign-in. Please try again or use email.', link: 'There is already a DELTA account with that email. Please sign in with an email link first — for your security we don\'t merge work or school Microsoft accounts automatically.' }[q.error] || 'Sign-in failed.'}</p>` : ''}
     ${u ? '' : `<div class="mt6">${socialButtons()}</div><div class="or">or use your email</div>`}
     ${u ? `<p class="sm mt6 center">Signed in as <b>${esc(u.name)}</b>. <a href="#${isStaff(u) ? '/admin' : '/portal'}">Continue</a> · <button class="linkbtn" data-act="logout">Sign out</button></p>` : ''}
-    ${loginSent ? `<div class="card hl mt6 sm"><b>Check your email.</b> If <b>${esc(loginSent)}</b> has a DELTA account, a sign-in link is on its way. It works once and expires in 20 minutes.${S.demo ? ' <a href="/dev/mailbox" target="_blank" rel="noopener">Open the dev mailbox</a>.' : ''}</div>`
+    ${loginSent ? `<div class="card hl mt6 sm"><b>Check your email.</b> If <b>${esc(loginSent)}</b> has a DELTA account, a sign-in link is on its way. It works once and expires in 20 minutes.${S.demo ? (STATIC ? ' <a href="#/dev/mailbox">Open the dev mailbox</a>.' : ' <a href="/dev/mailbox" target="_blank" rel="noopener">Open the dev mailbox</a>.') : ''}</div>`
       : `<form class="stack" data-form="login-email"><label class="f"><span>Email address</span><input type="email" name="email" required autocomplete="email"></label><button class="btn block">Email me a sign-in link</button><p class="xs muted center">No password needed. New here? <a href="#/register">Create an account</a>.</p></form>`}
     ${S.demo && S.personas.length ? `<hr class="sep"><p class="xs muted">Demo mode: sign in instantly as a persona to see each stage of the journey.</p>
     <div class="stack mt3">${S.personas.map(p => `<button class="inner flex between" style="width:100%;background:none;color:var(--fg);cursor:pointer;font:inherit;text-align:left" data-act="login" data-id="${p.id}"><span>${esc(p.name)}</span><span class="xs muted">${esc(p.desc.replace('_', ' '))}</span></button>`).join('')}</div>` : ''}</div></main>`;
@@ -424,6 +430,10 @@ R['/register'] = () => {
       <p class="xs muted center">Already have an account? <a href="#/login">Sign in</a></p>
     </form></div></main>`;
 };
+R['/dev/mailbox'] = () => STATIC ? page(`<h1>Dev mailbox</h1><p class="sm muted mt2">Demo only — the emails and texts DELTA would send. Sign-in links open right here.</p>
+  <div class="stack mt6">${DELTA_STATIC.mailbox().map(m => `<article class="card p4"><b>${esc(m.subject)}</b><div class="xs muted">${fmtDT(m.at)} · ${esc(m.channel)} · to ${esc(m.to_email || m.to_name)}</div>
+  <pre class="mono mt2" style="white-space:pre-wrap">${esc(m.body).replace(/\/auth\/verify\?token=([\w-]+)/g, '<a href="#/auth/verify?token=$1">Open sign-in link</a>')}</pre></article>`).join('') || '<p class="muted">No messages yet.</p>'}</div>`, 'mid') : notFound();
+R['/auth/verify'] = (q = {}) => { if (STATIC) setTimeout(async () => { const to = DELTA_STATIC.verify(q.token); await load(); go(to); }); return page('<div class="card center"><p class="muted">Signing you in…</p></div>', 'narrow'); };
 function payPage(orderId) {
   const u = me(); if (!u) return needLogin();
   return page(`<div class="card center" style="padding:2rem"><span class="badge b-warn">Test mode</span><h1 class="mt4">Test payment</h1>
@@ -579,7 +589,7 @@ R['/account'] = () => {
     <div class="card"><h2 class="gold">Membership & billing</h2><p class="sm mt2">${badge(memberStatus(u))} Access until <b>${fmtDate(u.expiresAt)}</b></p><a href="#/join" class="btn xs mt4">Retest & renew</a>
       <h3 class="mt6">Purchases & receipts</h3><div class="tablewrap mt2"><table><thead><tr><th>Date</th><th>Item</th><th>Amount</th></tr></thead><tbody>${u.purchases.slice().reverse().map(p => `<tr><td>${fmtDate(p.at)}</td><td>${esc(p.desc)}</td><td>${money(p.amount)}</td></tr>`).join('') || '<tr><td colspan="3" class="muted">None</td></tr>'}</tbody></table></div></div>
     <div class="card"><h2 class="gold">Practitioner voice notes</h2><p class="sm muted mt2">An optional personal audio explanation of your report. Asynchronous — not a live consultation. ${money(S.settings.voicePrice)}, up to ${S.settings.voiceQuestions} questions, typical turnaround ${esc(S.settings.voiceTurnaround)}. If your questions need a different professional service (for example a doctor), we'll tell you.</p>
-      ${vns.map(v => `<div class="inner mt3 sm"><div class="flex between"><span>${fmtDate(v.at)}</span><span class="badge ${v.status === 'delivered' ? 'b-ok' : 'b-gold'}">${v.status}</span></div><ul class="muted xs mt1">${v.questions.map(q => `<li>${esc(q)}</li>`).join('') || '<li>General explanation of my report</li>'}</ul>${v.status === 'delivered' ? `${v.audioFile ? `<audio controls preload="none" src="/api/files/${esc(v.audioFile)}?inline=1" style="width:100%;margin-top:.6rem"></audio>` : '<p class="xs muted mt2">Written reply — see transcript.</p>'}${v.transcript ? `<details class="mt2" style="padding:.4rem .7rem"><summary class="xs">Transcript</summary><p class="xs">${esc(v.transcript)}</p></details>` : ''}` : ''}</div>`).join('')}
+      ${vns.map(v => `<div class="inner mt3 sm"><div class="flex between"><span>${fmtDate(v.at)}</span><span class="badge ${v.status === 'delivered' ? 'b-ok' : 'b-gold'}">${v.status}</span></div><ul class="muted xs mt1">${v.questions.map(q => `<li>${esc(q)}</li>`).join('') || '<li>General explanation of my report</li>'}</ul>${v.status === 'delivered' ? `${v.audioFile ? `<audio controls preload="none" src="${esc(STATIC ? fileHref(v.audioFile) : `/api/files/${v.audioFile}?inline=1`)}" style="width:100%;margin-top:.6rem"></audio>` : '<p class="xs muted mt2">Written reply — see transcript.</p>'}${v.transcript ? `<details class="mt2" style="padding:.4rem .7rem"><summary class="xs">Transcript</summary><p class="xs">${esc(v.transcript)}</p></details>` : ''}` : ''}</div>`).join('')}
       ${canVoice ? `<form class="stack mt4" data-form="voice">${Array.from({ length: S.settings.voiceQuestions }, (_, i) => `<label class="f"><span>Question ${i + 1} (optional)</span><input type="text" name="q${i}" maxlength="200"></label>`).join('')}<button class="btn ghost">Buy voice note — ${money(S.settings.voicePrice)}</button><p class="xs muted">A task is created for the practitioner only after payment succeeds.${S.payments === "test" ? " (Test mode — no real payment.)" : ""}</p></form>` : '<p class="xs muted mt3">Available once your report is published.</p>'}</div>
   </div><div class="stack6">
     <div class="card"><h2 class="gold">Messages</h2><div class="mt3">${u.inbox.map(n => `<div class="inbox-item"><b class="sm">${esc(n.title)}</b><div class="sm muted">${esc(n.body)}</div><div class="xs muted">${fmtDT(n.at)}</div></div>`).join('') || '<p class="sm muted">No messages.</p>'}</div></div>
@@ -880,7 +890,7 @@ const A = {
   skip(el, ev) { ev.preventDefault(); const m = document.getElementById('main'); m?.focus(); m?.scrollIntoView(); },
   nav(el) { go(el.dataset.to); },
   clock(el) { act('clock', { days: +el.dataset.days }); },
-  reset() { dialog({ title: 'Reset demo?', body: 'All demo data on this server goes back to the starting state, and you are signed out.', ok: 'Reset', onOk: () => act('reset') }); },
+  reset() { dialog({ title: 'Reset demo?', body: 'All demo data goes back to the starting state, and you are signed out.', ok: 'Reset', onOk: () => act('reset') }); },
   login(el) { act('dev-login', { id: el.dataset.id }); },
   impersonate(el) { act('impersonate', { id: el.dataset.id }); },
   logout() { act('logout'); },

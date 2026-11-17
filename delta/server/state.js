@@ -14,7 +14,7 @@ const can = (u, area) => !!u && u.role !== 'member' && (PERMS[u.role] === '*' ||
 const CLIENT_DATA_AREAS = ['/admin/members', '/admin/upload', '/admin/exceptions', '/admin/safety', '/admin/reports', '/admin/analyses', '/admin/voice'];
 
 function createState(store, L, mailer, payments, config, oauth) {
-  const files = uid => store.db.prepare('SELECT id, kind, name, mime, size, at FROM files WHERE user_id = ? ORDER BY at').all(uid);
+  const files = uid => store.filesFor(uid);
 
   function memberTest(u, t) {
     const base = { id: t.id, status: t.status, created: t.created, receivedAt: t.receivedAt, publishedAt: t.publishedAt, wasReviewed: t.wasReviewed, minerals: [], toxic: {}, findings: [], programme: [], sections: {}, lessons: [] };
@@ -73,7 +73,7 @@ function createState(store, L, mailer, payments, config, oauth) {
       }
       if (staff) {
         const lim = can(user, '/admin/audit') ? 400 : 15;
-        out.audit = store.db.prepare('SELECT at, actor, action, details FROM audit ORDER BY id DESC LIMIT ?').all(lim);
+        out.audit = store.recentAudit(lim);
         if (can(user, '/admin/audit')) out.outbox = mailer.recent(80).map(o => ({ at: o.at, to: o.to_name || o.to_email, channel: o.channel, title: o.subject, status: o.status }));
       }
     }

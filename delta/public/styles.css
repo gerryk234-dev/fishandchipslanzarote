@@ -324,3 +324,5 @@ form.busy .btn.ghost::after { border-color: rgba(212,175,55,.3); border-top-colo
   .subnav a { white-space: nowrap; padding: .4rem 0; }
 }
 @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1 !important; transform: none !important; } img.fade { opacity: 1; } }
+.vthumb.vstatic { display: grid; place-items: center; text-decoration: none; background: radial-gradient(circle at 30% 20%, rgba(212,175,55,.28), transparent 55%), linear-gradient(135deg, #1b2438, #070a12); }
+.vthumb .vinitial { font-size: 4rem; font-weight: 200; color: rgba(212,175,55,.18); }

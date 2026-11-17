@@ -4,10 +4,13 @@
   "private": true,
   "description": "DELTA — Analysis · Intelligence · Method. Member platform (Phase 1).",
   "main": "server/index.js",
-  "engines": { "node": ">=22.5" },
+  "engines": {
+    "node": ">=22.5"
+  },
   "scripts": {
     "start": "node --experimental-sqlite --disable-warning=ExperimentalWarning server/index.js",
-    "test": "node --experimental-sqlite --disable-warning=ExperimentalWarning --test \"test/*.test.js\""
+    "build:static": "node scripts/build-static.js",
+    "test": "node --experimental-sqlite --disable-warning=ExperimentalWarning --test \"test/*.test.js\" && DELTA_TEST_STORE=memory node --experimental-sqlite --disable-warning=ExperimentalWarning --test \"test/*.test.js\""
   },
   "dependencies": {
     "express": "^5.1.0"
@@ -15,5 +18,10 @@
   "optionalDependencies": {
     "nodemailer": "^7.0.0",
     "stripe": "^18.0.0"
+  },
+  "devDependencies": {
+    "@noble/hashes": "^2.4.0",
+    "buffer": "^6.0.3",
+    "esbuild": "^0.28.2"
   }
 }

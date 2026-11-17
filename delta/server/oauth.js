@@ -59,8 +59,6 @@ function emailFrom(name, c) {
 
 function createOAuth(store, L, auth, config) {
   const P = providerConfigs(config);
-  store.db.exec(`CREATE TABLE IF NOT EXISTS oauth_states (state TEXT PRIMARY KEY, provider TEXT, verifier TEXT, nonce TEXT, next TEXT, expires_at INTEGER);
-    CREATE TABLE IF NOT EXISTS identities (provider TEXT, sub TEXT, user_id TEXT, email TEXT, at INTEGER, PRIMARY KEY (provider, sub));`);
   const jwksCache = new Map();
   const redirectUri = name => `${config.baseUrl}/auth/${name}/callback`;
   const safeNext = n => (typeof n === 'string' && /^\/[\w\-/]*$/.test(n) ? n : '');
@@ -96,8 +94,7 @@ function createOAuth(store, L, auth, config) {
       const prov = P[name]; if (!prov) return null;
       const state = crypto.randomBytes(24).toString('base64url'), nonce = crypto.randomBytes(16).toString('base64url');
       const verifier = prov.pkce ? crypto.randomBytes(32).toString('base64url') : null;
-      store.db.prepare('DELETE FROM oauth_states WHERE expires_at < ?').run(Date.now());
-      store.db.prepare('INSERT INTO oauth_states (state, provider, verifier, nonce, next, expires_at) VALUES (?, ?, ?, ?, ?, ?)').run(state, name, verifier, nonce, safeNext(next), Date.now() + 10 * 60e3);
+      store.addOAuthState({ state, provider: name, verifier, nonce, next: safeNext(next), expires_at: Date.now() + 10 * 60e3 });
       const q = new URLSearchParams({ client_id: prov.clientId, redirect_uri: redirectUri(name), response_type: 'code', scope: prov.scope, state, nonce, ...prov.extra });
       if (prov.formPost) q.set('response_mode', 'form_post');
       if (verifier) { q.set('code_challenge', b64u(crypto.createHash('sha256').update(verifier).digest())); q.set('code_challenge_method', 'S256'); }
@@ -107,9 +104,8 @@ function createOAuth(store, L, auth, config) {
     async callback(name, params, res) {
       const prov = P[name]; if (!prov) throw new Error('Provider not configured');
       if (params.error) return '/login?error=cancelled';
-      const row = store.db.prepare('SELECT * FROM oauth_states WHERE state = ?').get(String(params.state || ''));
+      const row = store.takeOAuthState(String(params.state || ''));
       if (!row || row.provider !== name || row.expires_at < Date.now()) return '/login?error=expired';
-      store.db.prepare('DELETE FROM oauth_states WHERE state = ?').run(row.state);
       const body = new URLSearchParams({ grant_type: 'authorization_code', code: String(params.code || ''), redirect_uri: redirectUri(name), client_id: prov.clientId, client_secret: prov.secret() });
       if (row.verifier) body.set('code_verifier', row.verifier);
       const tr = await fetch(prov.tokenUrl, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body });
@@ -122,7 +118,7 @@ function createOAuth(store, L, auth, config) {
       if (!found.verified && name !== 'microsoft') throw new Error('Email not verified by provider');
       const email = found.email.toLowerCase();
       let u, isNew = false, blocked = false;
-      const link = store.db.prepare('SELECT user_id FROM identities WHERE provider = ? AND sub = ?').get(name, String(claims.sub));
+      const link = store.getIdentity(name, String(claims.sub));
       store.tx(() => {
         u = link && L.user(link.user_id);
         if (!u) {
@@ -137,7 +133,7 @@ function createOAuth(store, L, auth, config) {
           u = L.createUser({ name: given || email.split('@')[0], email, role: config.adminEmails.includes(email) ? 'admin' : 'member' });
           isNew = true;
         }
-        if (!link) store.db.prepare('INSERT OR IGNORE INTO identities (provider, sub, user_id, email, at) VALUES (?, ?, ?, ?, ?)').run(name, String(claims.sub), u.id, email, Date.now());
+        if (!link) store.addIdentity(name, String(claims.sub), u.id, email, Date.now());
         if (!u.emailVerified && found.verified) { u.emailVerified = true; L.saveUser(u); }
         L.audit(u.name, isNew ? 'Account created' : 'Signed in', `via ${prov.label}`);
       });
@@ -146,7 +142,7 @@ function createOAuth(store, L, auth, config) {
       auth.startSession(res, u.id);
       return row.next || (u.role === 'member' ? (isNew ? '/join' : '/portal') : '/admin');
     },
-    providersFor: uid => store.db.prepare('SELECT provider FROM identities WHERE user_id = ?').all(uid).map(r => r.provider),
+    providersFor: uid => store.providersFor(uid),
   };
 }
 module.exports = { createOAuth };

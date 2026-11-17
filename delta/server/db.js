@@ -6,7 +6,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { DatabaseSync } = require('node:sqlite');
 
-const DOC_TABLES = ['users', 'orders', 'tests', 'notifications', 'voice_notes', 'laughs', 'posts', 'content'];
+const { DOC_TABLES } = require('./tables');
 
 function open(file) {
   if (file !== ':memory:') fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -25,7 +25,9 @@ function open(file) {
     CREATE TABLE IF NOT EXISTS audit (id INTEGER PRIMARY KEY AUTOINCREMENT, at INTEGER, actor TEXT, action TEXT, details TEXT);
     CREATE TABLE IF NOT EXISTS outbox (id INTEGER PRIMARY KEY AUTOINCREMENT, at INTEGER, to_email TEXT, to_name TEXT, channel TEXT, subject TEXT, body TEXT, status TEXT, error TEXT);
     CREATE TABLE IF NOT EXISTS files (id TEXT PRIMARY KEY, user_id TEXT, kind TEXT, name TEXT, mime TEXT, size INTEGER, path TEXT, at INTEGER);
-    CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY, value TEXT);`);
+    CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY, value TEXT);
+    CREATE TABLE IF NOT EXISTS oauth_states (state TEXT PRIMARY KEY, provider TEXT, verifier TEXT, nonce TEXT, next TEXT, expires_at INTEGER);
+    CREATE TABLE IF NOT EXISTS identities (provider TEXT, sub TEXT, user_id TEXT, email TEXT, at INTEGER, PRIMARY KEY (provider, sub));`);
 
   const row2doc = r => r ? JSON.parse(r.data) : null;
   const store = {
@@ -59,7 +61,27 @@ function open(file) {
       catch (e) { db.exec('ROLLBACK'); throw e; }
       finally { store._inTx = false; }
     },
-    wipe() { for (const t of [...DOC_TABLES, 'sessions', 'login_tokens', 'audit', 'outbox', 'files', 'kv']) db.exec(`DELETE FROM ${t}`); },
+    wipe() { for (const t of [...DOC_TABLES, 'sessions', 'login_tokens', 'audit', 'outbox', 'files', 'kv', 'oauth_states', 'identities']) db.exec(`DELETE FROM ${t}`); },
+    /* ── everything else the app stores, behind named methods (the only SQL in the app lives in this file) ── */
+    addAudit(at, actor, action, details) { db.prepare('INSERT INTO audit (at, actor, action, details) VALUES (?, ?, ?, ?)').run(at, actor, action, details); },
+    recentAudit(limit) { return db.prepare('SELECT at, actor, action, details FROM audit ORDER BY id DESC LIMIT ?').all(limit); },
+    addOutbox(m) { return db.prepare('INSERT INTO outbox (at, to_email, to_name, channel, subject, body, status, error) VALUES (?, ?, ?, ?, ?, ?, ?, ?)').run(m.at, m.to_email, m.to_name, m.channel, m.subject, m.body, m.status, m.error ?? null).lastInsertRowid; },
+    setOutboxStatus(id, status, error = null) { db.prepare('UPDATE outbox SET status = ?, error = ? WHERE id = ?').run(status, error, id); },
+    recentOutbox(limit) { return db.prepare('SELECT * FROM outbox ORDER BY id DESC LIMIT ?').all(limit); },
+    addFile(f) { db.prepare('INSERT INTO files (id, user_id, kind, name, mime, size, path, at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)').run(f.id, f.user_id, f.kind, f.name, f.mime, f.size, f.path, f.at); },
+    getFile(id) { return db.prepare('SELECT * FROM files WHERE id = ?').get(id); },
+    filesFor(uid) { return db.prepare('SELECT id, kind, name, mime, size, at FROM files WHERE user_id = ? ORDER BY at').all(uid); },
+    addSession(id, userId, createdAt, expiresAt) { db.prepare('INSERT INTO sessions (id, user_id, created_at, expires_at) VALUES (?, ?, ?, ?)').run(id, userId, createdAt, expiresAt); },
+    getSession(id) { return db.prepare('SELECT user_id, expires_at FROM sessions WHERE id = ?').get(id); },
+    delSession(id) { db.prepare('DELETE FROM sessions WHERE id = ?').run(id); },
+    addLoginToken(hash, email, expiresAt) { db.prepare('INSERT INTO login_tokens (hash, email, expires_at) VALUES (?, ?, ?)').run(hash, email, expiresAt); },
+    getLoginToken(hash) { return db.prepare('SELECT * FROM login_tokens WHERE hash = ?').get(hash); },
+    useLoginToken(hash, at) { db.prepare('UPDATE login_tokens SET used_at = ? WHERE hash = ?').run(at, hash); },
+    addOAuthState(s) { db.prepare('DELETE FROM oauth_states WHERE expires_at < ?').run(Date.now()); db.prepare('INSERT INTO oauth_states (state, provider, verifier, nonce, next, expires_at) VALUES (?, ?, ?, ?, ?, ?)').run(s.state, s.provider, s.verifier, s.nonce, s.next, s.expires_at); },
+    takeOAuthState(state) { const r = db.prepare('SELECT * FROM oauth_states WHERE state = ?').get(state); if (r) db.prepare('DELETE FROM oauth_states WHERE state = ?').run(state); return r; },
+    getIdentity(provider, sub) { return db.prepare('SELECT user_id FROM identities WHERE provider = ? AND sub = ?').get(provider, sub); },
+    addIdentity(provider, sub, userId, email, at) { db.prepare('INSERT OR IGNORE INTO identities (provider, sub, user_id, email, at) VALUES (?, ?, ?, ?, ?)').run(provider, sub, userId, email, at); },
+    providersFor(uid) { return db.prepare('SELECT provider FROM identities WHERE user_id = ?').all(uid).map(r => r.provider); },
   };
   function check(t) { if (!DOC_TABLES.includes(t)) throw new Error('unknown table ' + t); return t; }
   return store;

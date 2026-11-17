@@ -5,6 +5,15 @@ DELTA — Analysis · Intelligence · Method. Continues the Grok prototype
 working web app: real accounts, checkout, the lab → report pipeline, the safety gate, the member
 portal and the admin area. Design, copy and imagery carry over from the Grok build.
 
+## Instant preview (opens in seconds)
+
+**https://claude.ai/artifact/K1Bc5En9ad75FYoZQLo4Xx** — the whole app running in the browser in demo mode.
+`npm run build:static` bundles the real server modules (`server/*`) with an in-memory store
+(`server/memory-store.js`, same API as `db.js`) into `dist/static`; the app's `/api` requests are
+answered inside the page and demo data is kept in that browser. The test suite runs against both
+stores (`npm test`), and `STATIC=1 BASE=… node test/e2e.js` runs the browser journey against the build.
+In this preview, YouTube videos open on YouTube (embedded players and thumbnails need the real site).
+
 ## Preview it on GitHub (no install)
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/gerryk234-dev/fishandchipslanzarote?ref=ccr-939744ce-jk6o5l&devcontainer_path=.devcontainer%2Fdelta%2Fdevcontainer.json)
@@ -36,7 +45,7 @@ in production.
 | Part | Choice | Why |
 |---|---|---|
 | Server | Node.js 22 + Express 5 | Small, common, easy to hand over |
-| Database | SQLite via Node's built-in `node:sqlite` | No separate DB server for Phase 1; one file to back up. `server/db.js` is the only file to change to move to Postgres |
+| Database | SQLite via Node's built-in `node:sqlite` | No separate DB server for Phase 1; one file to back up. All SQL lives in `server/db.js` — the only file to change to move to Postgres |
 | Sign-in | Emailed single-use link, **Continue with Google**, **Continue with Microsoft**, **Continue with Apple** (OpenID Connect, ID-token signature verified) → httpOnly session cookie | No passwords to leak or reset. Each switches on when its keys are set. Work/school Microsoft accounts never merge into an existing account by email |
 | Registration | Name, email, mobile phone, nationality, date of birth (minimum age in Settings, default 18) | Social sign-ups skip the form and add phone, nationality and date of birth at intake |
 | Payments | Stripe Checkout + signed webhook | Card data never touches DELTA; TEST mode until keys are added |

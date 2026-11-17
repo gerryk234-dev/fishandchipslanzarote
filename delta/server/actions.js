@@ -46,7 +46,7 @@ function createActions(store, L, auth, payments, mailer, config, oauth) {
     fs.mkdirSync(dir, { recursive: true });
     const p = path.join(dir, fid);
     fs.writeFileSync(p, buf);
-    store.db.prepare('INSERT INTO files (id, user_id, kind, name, mime, size, path, at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)').run(fid, ownerId, kind, str(f.name, 120) || kind, f.mime, buf.length, p, L.now());
+    store.addFile({ id: fid, user_id: ownerId, kind, name: str(f.name, 120) || kind, mime: f.mime, size: buf.length, path: p, at: L.now() });
     return fid;
   };
   const isPdf = (mime, buf) => mime === 'application/pdf' && buf.subarray(0, 5).toString() === '%PDF-';
@@ -106,12 +106,12 @@ function createActions(store, L, auth, payments, mailer, config, oauth) {
       L.notify(user, 'Sample instructions', 'Wash with plain shampoo 24 hours before, cut a small sample from the nape of the neck close to the scalp, and post it back in the envelope provided.');
       return { go: '/portal' };
     } },
-    'mark-read': { perm: 'auth', fn: ({ user }) => { store.db.prepare("UPDATE notifications SET data = json_set(data, '$.read', json('true')) WHERE user_id = ?").run(user.id); return {}; } },
+    'mark-read': { perm: 'auth', fn: ({ user }) => { for (const n of store.find('notifications', { user_id: user.id })) if (!n.read) store.put('notifications', { ...n, read: true }); return {}; } },
     consent: { perm: 'auth', fn: ({ user, body }) => { need(['marketing', 'sms'].includes(body.k), 'Unknown setting'); user.consent[body.k] = !!body.v; L.saveUser(user); L.audit(user.name, 'Consent updated', `${body.k}=${!!body.v}`); return {}; } },
     export: { perm: 'auth', fn: ({ user }) => {
       L.audit(user.name, 'Data export', '');
       const data = { exportedAt: new Date(L.now()).toISOString(), profile: { name: user.name, email: user.email, createdAt: user.createdAt }, membership: { expiresAt: user.expiresAt ? new Date(user.expiresAt).toISOString() : null, status: L.memberStatus(user) }, intake: user.intake, consent: user.consent,
-        orders: store.find('orders', { user_id: user.id }), tests: store.find('tests', { user_id: user.id }), lessonsDone: user.lessonsDone, messages: store.find('notifications', { user_id: user.id }), voiceNotes: store.find('voice_notes', { user_id: user.id }), files: store.db.prepare('SELECT id, kind, name, size, at FROM files WHERE user_id = ?').all(user.id) };
+        orders: store.find('orders', { user_id: user.id }), tests: store.find('tests', { user_id: user.id }), lessonsDone: user.lessonsDone, messages: store.find('notifications', { user_id: user.id }), voiceNotes: store.find('voice_notes', { user_id: user.id }), files: store.filesFor(user.id) };
       return { download: { name: `delta-data-${user.id}.json`, text: JSON.stringify(data, null, 2) } };
     } },
     'delete-request': { perm: 'auth', fn: ({ user }) => { L.audit(user.name, 'Deletion requested', user.email); mailer.task({ toName: 'Data protection', subject: `Deletion request: ${user.name}` }); L.notify(user, 'Deletion request received', 'We will respond within one month, as required by UK GDPR.'); return { toast: 'Deletion request sent.' }; } },
@@ -289,7 +289,7 @@ function createActions(store, L, auth, payments, mailer, config, oauth) {
     const members = store.find('users', { role: 'member' });
     if (/renew|expir/.test(s)) return `Renewal due: ${members.filter(u => L.memberStatus(u) === 'renewal_due').map(u => `${u.name} (${L.fmtDate(u.expiresAt)})`).join(', ') || 'none'}.\nExpired: ${members.filter(u => L.memberStatus(u) === 'expired').map(u => u.name).join(', ') || 'none'}.\nReminders go out automatically at ${L.settings().reminderDays.join(' and ')} days.`;
     if (/wait|queue|today|todo|to do/.test(s)) return `Exceptions: ${by('validation_needed').join(', ') || 'none'}\nSafety review: ${by('safety_review').join(', ') || 'none'}\nReady to publish: ${by('ready_to_publish').join(', ') || 'none'}\nLab processing (upload needed): ${by('lab_processing').join(', ') || 'none'}\nVoice notes: ${store.find('voice_notes', { status: 'requested' }).length} requested\nModeration: ${store.find('laughs', { status: 'pending' }).length} submissions, ${store.all('posts').filter(p => p.reported && !p.removed).length} reports`;
-    if (/summar|activity|happen/.test(s)) return 'Latest activity:\n' + store.db.prepare('SELECT action, details FROM audit ORDER BY id DESC LIMIT 8').all().map(a => `• ${a.action} — ${a.details}`).join('\n');
+    if (/summar|activity|happen/.test(s)) return 'Latest activity:\n' + store.recentAudit(8).map(a => `• ${a.action} — ${a.details}`).join('\n');
     return 'I can: list what\'s waiting, publish ready reports, summarise recent activity, or show renewals and expiries.';
   }
 

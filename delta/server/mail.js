@@ -10,21 +10,20 @@ if (config.smtpUrl) {
 }
 function createMailer(store) {
   function record(m, status, error) {
-    return store.db.prepare('INSERT INTO outbox (at, to_email, to_name, channel, subject, body, status, error) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
-      .run(Date.now(), m.to || '', m.toName || '', m.channel, m.subject, m.text, status, error || null).lastInsertRowid;
+    return store.addOutbox({ at: Date.now(), to_email: m.to || '', to_name: m.toName || '', channel: m.channel, subject: m.subject, body: m.text, status, error: error || null });
   }
   return {
     mode: transport ? 'smtp' : 'log',
     email({ to, toName, subject, text }) {
       const id = record({ to, toName, subject, text, channel: 'email' }, transport ? 'queued' : 'logged');
       if (transport) transport.sendMail({ from: config.mailFrom, to, subject, text })
-        .then(() => store.db.prepare("UPDATE outbox SET status = 'sent' WHERE id = ?").run(id))
-        .catch(e => store.db.prepare("UPDATE outbox SET status = 'failed', error = ? WHERE id = ?").run(String(e.message), id));
+        .then(() => store.setOutboxStatus(id, 'sent'))
+        .catch(e => store.setOutboxStatus(id, 'failed', String(e.message)));
       else if (!config.demo) console.log(`[mail:log] to=${to} subject=${subject}`);
     },
     sms({ to, toName, text }) { record({ to, toName, subject: text.slice(0, 80), text, channel: 'sms' }, 'logged'); },
     task({ toName, subject, text }) { record({ to: '', toName, subject, text: text || subject, channel: 'task' }, 'logged'); },
-    recent(limit = 50) { return store.db.prepare('SELECT * FROM outbox ORDER BY id DESC LIMIT ?').all(limit); },
+    recent(limit = 50) { return store.recentOutbox(limit); },
   };
 }
 module.exports = { createMailer };

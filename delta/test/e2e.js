@@ -4,6 +4,7 @@
 const { chromium } = require('playwright');
 const BASE = (process.env.BASE || 'http://localhost:3000').replace(/\/$/, '') + '/';
 let failed = 0;
+const STATIC = process.env.STATIC === '1'; // testing the instant browser build (dist/static)
 const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) failed++; };
 
 (async () => {
@@ -75,8 +76,8 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) failed+
   const lee = (await state()).users.find(u => u.name === 'Lee Chen').tests[0];
   ok(lee.status === 'validation_needed' && lee.issues.length >= 4, `bad upload → exception queue (${lee.issues.length} issues)`);
   ok(!!lee.pdfFile, 'lab PDF stored with the record');
-  const pdf = await p.evaluate(id => fetch('/api/files/' + id).then(r => r.status + ' ' + r.headers.get('content-disposition')), lee.pdfFile);
-  ok(pdf.startsWith('200 attachment'), 'staff can download the original PDF');
+  if (!STATIC) { const pdf = await p.evaluate(id => fetch('/api/files/' + id).then(r => r.status + ' ' + r.headers.get('content-disposition')), lee.pdfFile);
+  ok(pdf.startsWith('200 attachment'), 'staff can download the original PDF'); }
 
   // rules, voice note, moderation, assistant
   await visit('/admin/rules'); await p.click('text=Run test cases'); await wait();
@@ -91,8 +92,8 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) failed+
 
   // a member cannot read someone else's file; Alex hears the voice note
   await as('Alex Morgan');
-  const stolen = await p.evaluate(id => fetch('/api/files/' + id).then(r => r.status), lee.pdfFile);
-  ok(stolen === 404, 'member cannot download another client\'s lab PDF');
+  if (!STATIC) { const stolen = await p.evaluate(id => fetch('/api/files/' + id).then(r => r.status), lee.pdfFile);
+  ok(stolen === 404, 'member cannot download another client\'s lab PDF'); }
   await visit('/account'); ok(await p.locator('audio').count() >= 1, 'member sees their voice note player');
 
   // clock: reminders then expiry, paused access, renewal from purchase date
@@ -126,9 +127,15 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) failed+
   await api('logout'); await fresh('/login');
   await p.fill('input[name=email]', 'dana@example.com'); await p.click('text=Email me a sign-in link'); await wait();
   ok((await main()).includes('Check your email'), 'sign-in link requested');
+  if (STATIC) {
+    await visit('/dev/mailbox'); const href = await p.getAttribute('a[href*="auth/verify"]', 'href');
+    await p.click('a[href*="auth/verify"]'); await p.waitForTimeout(600); ok(p.url().endsWith('#/portal') && (await state()).users[0].name === 'Dana Price', 'magic link signs in (static)');
+    await p.goto(BASE + href); await p.waitForTimeout(600); ok(p.url().includes('expired=1'), 'magic link works only once (static)');
+  } else {
   await p.goto(BASE + 'dev/mailbox'); const link = await p.getAttribute('a[href*="/auth/verify"]', 'href');
   await p.goto(link); await wait(); ok(p.url().endsWith('#/portal') && (await state()).users[0].name === 'Dana Price', 'magic link signs in');
   await p.goto(link); await wait(); ok(p.url().includes('expired=1'), 'magic link works only once');
+  }
 
   await api('reset');
   ok(errs.length === 0, 'no browser errors' + (errs.length ? ': ' + errs.join(' | ') : ''));

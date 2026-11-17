@@ -10,7 +10,7 @@ const { createApp } = require('../server/app.js');
 const DAY = 864e5;
 function boot(extra = {}) {
   const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'delta-test-'));
-  const config = { production: false, demo: true, port: 0, baseUrl: 'http://test', dataDir, stripeKey: '', stripeWebhookSecret: '', smtpUrl: '', mailFrom: 'x', adminEmails: ['boss@delta.example'], cookieSecure: false, sessionDays: 30, loginTokenMinutes: 20, maxUploadMb: 15, ...extra };
+  const config = { memory: process.env.DELTA_TEST_STORE === 'memory', production: false, demo: true, port: 0, baseUrl: 'http://test', dataDir, stripeKey: '', stripeWebhookSecret: '', smtpUrl: '', mailFrom: 'x', adminEmails: ['boss@delta.example'], cookieSecure: false, sessionDays: 30, loginTokenMinutes: 20, maxUploadMb: 15, ...extra };
   const ctx = createApp(config);
   return new Promise(res => { const srv = ctx.app.listen(0, () => res({ ...ctx, srv, url: `http://127.0.0.1:${srv.address().port}`, done: () => { srv.close(); ctx.close(); fs.rmSync(dataDir, { recursive: true, force: true }); } })); });
 }
@@ -102,7 +102,7 @@ test('email sign-in: unknown emails reveal nothing, links are single-use, admin 
     const a = await c.act('login-request', { email: 'nobody@example.com' }), b = await c.act('login-request', { email: 'sam@example.com' });
     assert.equal(a.toast, b.toast);
     await c.act('login-request', { email: 'boss@delta.example' });
-    const mail = app.store.db.prepare("SELECT body FROM outbox WHERE to_email = 'boss@delta.example' ORDER BY id DESC").get().body;
+    const mail = app.store.recentOutbox(500).find(o => o.to_email === 'boss@delta.example').body;
     const token = mail.match(/token=([\w-]+)/)[1];
     const r1 = await c.get('/auth/verify?token=' + token);
     assert.equal(r1.headers.get('location'), '/#/admin');
@@ -151,7 +151,7 @@ test('registration: email + phone + nationality + date of birth, with validation
     const me = (await c.state()).users[0];
     assert.equal(me.phone, '+34612225843'); assert.equal(me.nationality, 'Spanish'); assert.equal(me.dob, '1990-06-01'); assert.equal(me.emailVerified, false);
     assert.equal((await client(app.url).act('register', good)).status, 409);
-    const mail = app.store.db.prepare("SELECT subject FROM outbox WHERE to_email = 'ana@example.com'").get();
+    const mail = app.store.recentOutbox(500).find(o => o.to_email === 'ana@example.com');
     assert.match(mail.subject, /Confirm your DELTA email/);
   } finally { app.done(); }
 });
@@ -215,7 +215,7 @@ test('social sign-ups give phone, nationality and date of birth at intake; DOB d
     const u = app.L.createUser({ name: 'Social', email: 'social@example.com' });
     const c = client(app.url);
     await c.act('login-request', { email: 'social@example.com' });
-    const token = app.store.db.prepare("SELECT body FROM outbox WHERE to_email = 'social@example.com' ORDER BY id DESC").get().body.match(/token=([\w-]+)/)[1];
+    const token = app.store.recentOutbox(500).find(o => o.to_email === 'social@example.com').body.match(/token=([\w-]+)/)[1];
     await c.get('/auth/verify?token=' + token);
     const base = { pregnant: 'no', under18: 'no', medications: '', conditions: '', edu: true, consent: true };
     assert.match((await c.act('intake', base)).error, /phone number/);

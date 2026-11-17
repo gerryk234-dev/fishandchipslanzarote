@@ -20,7 +20,7 @@ function createLogic(store, mailer, config) {
     settings() { return { ...DEFAULT_SETTINGS, ...store.kvGet('settings', {}) }; },
 
     audit(actor, action, details = '') {
-      store.db.prepare('INSERT INTO audit (at, actor, action, details) VALUES (?, ?, ?, ?)').run(L.now(), actor || 'System', action, String(details));
+      store.addAudit(L.now(), actor || 'System', action, String(details));
     },
     actorName: u => u ? `${u.name} (${u.role})` : 'Visitor',
 
