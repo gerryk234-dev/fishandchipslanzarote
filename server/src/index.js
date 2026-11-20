@@ -252,6 +252,41 @@ app.post("/api/weighings", requireDevice, (req, res) => {
 const weighedExtraBetween = (from, to) =>
   Math.round((db.prepare("SELECT COALESCE(SUM(grams),0) g FROM weighings WHERE ts >= ? AND ts <= ?").get(from, to).g) * 100) / 100;
 
+/* day-by-day log of everything weighed on the scale, counting only the
+   10:00–22:00 window (Canary time), with per-day and overall averages */
+const CLUB_TZ = "Atlantic/Canary";
+const localParts = (ts) => {
+  const p = Object.fromEntries(new Intl.DateTimeFormat("en-CA", {
+    timeZone: CLUB_TZ, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", hour12: false,
+  }).formatToParts(ts).map((x) => [x.type, x.value]));
+  return { day: `${p.year}-${p.month}-${p.day}`, hour: Number(p.hour) % 24 };
+};
+app.get("/api/weighings/daily", requireAdmin, (req, res) => {
+  const rows = db.prepare("SELECT ts, grams FROM weighings ORDER BY ts").all();
+  const byDay = new Map();
+  for (const r of rows) {
+    const { day, hour } = localParts(r.ts);
+    if (hour < 10 || hour >= 22) continue; // only the 10:00–22:00 trading window
+    const d = byDay.get(day) || { day, grams: 0, count: 0 };
+    d.grams += r.grams; d.count += 1;
+    byDay.set(day, d);
+  }
+  const days = [...byDay.values()]
+    .map((d) => ({ day: d.day, grams: Math.round(d.grams * 100) / 100, count: d.count, avg: d.count ? Math.round((d.grams / d.count) * 100) / 100 : 0 }))
+    .sort((a, b) => b.day.localeCompare(a.day));
+  const grams = Math.round(days.reduce((a, d) => a + d.grams, 0) * 100) / 100;
+  const count = days.reduce((a, d) => a + d.count, 0);
+  res.json({
+    days,
+    totals: {
+      grams, count, daysCount: days.length,
+      avgGramsPerDay: days.length ? Math.round((grams / days.length) * 100) / 100 : 0,
+      avgWeighsPerDay: days.length ? Math.round((count / days.length) * 10) / 10 : 0,
+      avgGramsPerWeigh: count ? Math.round((grams / count) * 100) / 100 : 0,
+    },
+  });
+});
+
 
 function summarize(rows) {
   let total = 0, cash = 0, card = 0, fiado = 0, grams = 0, units = 0;
