@@ -262,7 +262,7 @@ export default function App() {
 
   const isAdmin = !!user.admin;
   const NAV = isAdmin
-    ? [{ id: "informes", label: "Informes" }, { id: "socios", label: "Socios" }, { id: "caja", label: "Caja / Cierres" }, { id: "inventario", label: "Inventario" }, { id: "dispensar", label: "Dispensar" }, { id: "ajustes", label: "Ajustes" }]
+    ? [{ id: "informes", label: "Informes" }, { id: "socios", label: "Socios" }, { id: "caja", label: "Caja / Cierres" }, { id: "bascula", label: "Báscula" }, { id: "inventario", label: "Inventario" }, { id: "dispensar", label: "Dispensar" }, { id: "ajustes", label: "Ajustes" }]
     : [{ id: "dispensar", label: "Dispensar" }, { id: "socios", label: "Socios" }, { id: "caja", label: "Caja" }, { id: "inventario", label: "Inventario" }];
   const pendingCount = data.members.filter((m) => m.status === "pendiente").length;
 
@@ -343,6 +343,7 @@ export default function App() {
         {tab === "caja" && <Caja data={data} user={user} notify={notify} isAdmin={isAdmin} />}
         {tab === "inventario" && <Inventario data={data} refresh={refresh} notify={notify} />}
         {tab === "informes" && isAdmin && <Informes data={data} />}
+        {tab === "bascula" && isAdmin && <Bascula />}
         {tab === "ajustes" && isAdmin && <Passwords data={data} refresh={refresh} notify={notify} />}
       </main>
 
@@ -1654,6 +1655,62 @@ function Inventario({ data, refresh, notify }) {
           </tbody>
         </table>
       </Panel>
+    </div>
+  );
+}
+
+/* ============================ BÁSCULA (ADMIN) ============================ */
+function Bascula() {
+  const [log, setLog] = useState(null);
+  const [err, setErr] = useState(false);
+  useEffect(() => { api.get("/api/weighings/daily").then(setLog).catch(() => setErr(true)); }, []);
+
+  const Stat = ({ label, value, color }) => (
+    <Panel style={{ padding: 16, flex: 1, minWidth: 130 }}>
+      <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 6 }}>{label}</div>
+      <div className="mono" style={{ fontSize: 22, fontWeight: 700, color: color || C.text }}>{value}</div>
+    </Panel>
+  );
+
+  if (err) return <div className="fadein" style={{ color: C.muted }}>No se pudo cargar el registro de báscula.</div>;
+  if (!log) return <div className="fadein" style={{ color: C.muted }}>Cargando…</div>;
+  const t = log.totals;
+
+  return (
+    <div className="fadein">
+      <h2 style={{ margin: "0 0 4px", fontSize: 24 }}>Registro de báscula</h2>
+      <p style={{ color: C.muted, marginBottom: 16, fontSize: 14 }}>
+        Todo lo que se pesa en la báscula (con o sin cliente), por día. Se cuenta el horario de <b style={{ color: C.text }}>10:00 a 22:00</b>.
+      </p>
+
+      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 22 }}>
+        <Stat label="DÍAS" value={t.daysCount} />
+        <Stat label="TOTAL PESADO" value={`${t.grams} g`} color={C.green} />
+        <Stat label="Nº PESAJES" value={t.count} color={C.blue} />
+        <Stat label="MEDIA G/DÍA" value={`${t.avgGramsPerDay} g`} color={C.amber} />
+        <Stat label="MEDIA PESAJES/DÍA" value={t.avgWeighsPerDay} color={C.amber} />
+        <Stat label="MEDIA G/PESAJE" value={`${t.avgGramsPerWeigh} g`} />
+      </div>
+
+      <div className="mono" style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 8 }}>DÍA A DÍA</div>
+      {log.days.length === 0 ? (
+        <div style={{ color: C.muted, fontSize: 14 }}>Todavía no se ha pesado nada. Al pesar en Dispensar, pulsa «Anotar» para registrarlo.</div>
+      ) : (
+        <Panel style={{ padding: 0, overflow: "hidden" }}>
+          {log.days.map((d, i) => (
+            <div key={d.day} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, padding: "13px 16px", borderTop: i ? `1px solid ${C.line}` : "none", flexWrap: "wrap" }}>
+              <div style={{ fontWeight: 700, textTransform: "capitalize" }}>
+                {dateES(d.day)} <span className="mono" style={{ color: C.muted, fontWeight: 400, fontSize: 13 }}>· {d.day}</span>
+              </div>
+              <div style={{ display: "flex", gap: 18, alignItems: "baseline", flexWrap: "wrap" }}>
+                <span className="mono" style={{ color: C.green, fontWeight: 800, fontSize: 16 }}>{d.grams} g</span>
+                <span className="mono" style={{ color: C.blue, fontSize: 14 }}>{d.count} pesajes</span>
+                <span className="mono" style={{ color: C.muted, fontSize: 13 }}>media {d.avg} g</span>
+              </div>
+            </div>
+          ))}
+        </Panel>
+      )}
     </div>
   );
 }

@@ -221,6 +221,26 @@ export async function mockRequest(method, path, body) {
     save(s);
     return { ok: true };
   }
+  if (method === "GET" && route === "/api/weighings/daily") {
+    needAdmin();
+    const byDay = {};
+    for (const w of (s.weighings || [])) {
+      const dt = new Date(w.ts); const hour = dt.getHours();
+      if (hour < 10 || hour >= 22) continue;
+      const day = isoOf(w.ts);
+      const d = byDay[day] || { day, grams: 0, count: 0 };
+      d.grams += w.grams; d.count += 1; byDay[day] = d;
+    }
+    const r2 = (n) => Math.round(n * 100) / 100;
+    const days = Object.values(byDay).map((d) => ({ day: d.day, grams: r2(d.grams), count: d.count, avg: d.count ? r2(d.grams / d.count) : 0 }))
+      .sort((a, b) => b.day.localeCompare(a.day));
+    const grams = r2(days.reduce((a, d) => a + d.grams, 0));
+    const count = days.reduce((a, d) => a + d.count, 0);
+    return clone({ days, totals: { grams, count, daysCount: days.length,
+      avgGramsPerDay: days.length ? r2(grams / days.length) : 0,
+      avgWeighsPerDay: days.length ? Math.round((count / days.length) * 10) / 10 : 0,
+      avgGramsPerWeigh: count ? r2(grams / count) : 0 } });
+  }
   const weighedExtra = (from, to) => (s.weighings || []).filter((w) => w.ts >= from && w.ts <= to).reduce((a, w) => a + w.grams, 0);
   if (method === "GET" && route === "/api/caja/open") {
     needDevice();
