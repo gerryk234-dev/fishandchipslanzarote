@@ -1,0 +1,19 @@
+{
+  "name": "onelife-club-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/index.js",
+    "dev": "node --env-file-if-exists=.env --watch src/index.js",
+    "set-secrets": "node scripts/set-secrets.js"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "express": "^4.21.2",
+    "imapflow": "^1.4.7",
+    "mailparser": "^3.9.14",
+    "nodemailer": "^9.0.3",
+    "pdf-lib": "^1.17.1"
+  }
+}
