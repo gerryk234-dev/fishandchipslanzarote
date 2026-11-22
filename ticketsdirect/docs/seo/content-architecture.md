@@ -65,8 +65,8 @@ One H1 per page; unique title/meta; readable URL; H2/H3/H4 hierarchy; descriptiv
 - **Phase 1 — foundation (this project):** nav → 5 sections ✅ · Things-to-Do pillar hub ✅ · blueprint/tracker ✅ · internal-link hub wiring ✅.
 - **Phase 1 — first new commercial content:** Best Catamaran Trips ✅ · Best Beaches ✅.
 - **Phase 2 — destination guides:** resort pages now carry a "Plan your stay in {resort}" cross-link block to the hub, beaches, catamaran, kids, itinerary and without-a-car guides ✅. Still to do: per-resort things-to-do prose + map + Arrecife cruise angle. *partial*
-- **Phase 2 — itineraries & planning:** 7-day itinerary ✅ · Lanzarote without a car ✅ · Is Lanzarote worth visiting ✅ · 3-day itinerary *pending* · November/weather *pending*.
-- **Phase 3 — conversion & authority:** volcano "which tour" comparison · enhance Best Excursions & Boat Trips hubs · comparison tables/labels (best for families/couples/adventure) · KPI baseline doc (GSC/GA4). *pending*
+- **Phase 2 — itineraries & planning:** 7-day itinerary ✅ · Lanzarote without a car ✅ · Is Lanzarote worth visiting ✅ · 3-day itinerary ✅ · November/weather ✅.
+- **Phase 3 — conversion & authority:** volcano "which tour" comparison ✅ (with comparison table) · Best Excursions hub cross-linked to new guides ✅ · KPI baseline doc (GSC/GA4) ✅ (`kpi-baseline.md`). Still to do: per-resort things-to-do prose + Arrecife cruise page · "best for families/couples/adventure" labels on category pages · enhance Boat Trips post internal links. *partial*
 
 ## KPI tracking (to set up in Phase 3)
 Baseline then 30/60/90-day: GSC organic clicks, impressions, avg position, CTR, indexed target pages, ranking keywords; GA4 organic sessions, booking-button clicks, booking funnel, organic bookings, conversion rate. Effort split ≈ 60% booking-intent / 30% destination & activity / 10% broad informational.

@@ -35,6 +35,8 @@ export const guides = [
 <li><strong>Value for money</strong> compared with similar trips on the island.</li>
 <li><strong>Reliability</strong>: how often a trip runs as planned, including in windy weather.</li>
 </ul>
+<h2>Keep planning your trip</h2>
+<p>Go deeper by type with our guides to the [[link:guide:lanzarote-volcano-tours|volcano tours]], [[link:guide:best-catamaran-trips-lanzarote|catamaran trips]] and [[link:guide:best-beaches-lanzarote|best beaches]], see [[link:guide:things-to-do-lanzarote|things to do in Lanzarote]], or plan the week with the [[link:guide:lanzarote-7-day-itinerary|7-day itinerary]].</p>
 <p>Not sure which suits you? Ask our assistant (bottom right), message us on WhatsApp or drop into one of our offices.</p>`,
       faqs: [
         ["What is the number one excursion in Lanzarote?", "Lanzarote's Highlights Tour, a full guided day (8 hours, €99) covering Timanfaya's volcanoes and the highlights of the north. It is the best overview for first-time visitors."],
@@ -68,6 +70,8 @@ export const guides = [
 <li><strong>Relación calidad-precio</strong> frente a excursiones similares en la isla.</li>
 <li><strong>Fiabilidad</strong>: cuántas veces sale según lo previsto, también con viento.</li>
 </ul>
+<h2>Sigue planificando tu viaje</h2>
+<p>Profundiza por tipo con nuestras guías de [[link:guide:lanzarote-volcano-tours|excursiones a los volcanes]], [[link:guide:best-catamaran-trips-lanzarote|catamaranes]] y [[link:guide:best-beaches-lanzarote|mejores playas]], mira [[link:guide:things-to-do-lanzarote|qué hacer en Lanzarote]] o planifica la semana con el [[link:guide:lanzarote-7-day-itinerary|itinerario de 7 días]].</p>
 <p>¿No sabes cuál elegir? Pregunta a nuestro asistente (abajo a la derecha), escríbenos por WhatsApp o pasa por una de nuestras oficinas.</p>`,
       faqs: [
         ["¿Cuál es la excursión número uno en Lanzarote?", "Lo Mejor de Lanzarote, un día completo con guía (8 horas, 99 €) que recorre los volcanes de Timanfaya y lo mejor del norte. Es la mejor visión general para una primera visita."],
@@ -828,6 +832,239 @@ export const guides = [
         ["¿Lanzarote es aburrida?", "Es más tranquila y de menor altura que muchos destinos de resort, a propósito, pero lejos de aburrida: volcanes, barcos, deportes acuáticos, playas, mercadillos y excursiones a otras islas llenan una semana con facilidad."],
         ["¿Hace demasiado viento en Lanzarote?", "Lanzarote tiene brisa todo el año, lo que es genial para el windsurf y hace el verano más llevadero. A veces afecta a los barcos de mar abierto, así que recomendamos reservar los días de barco al principio de la estancia para tener flexibilidad."],
         ["¿Lanzarote está bien en invierno?", "Sí: es de los destinos de sol de invierno más fiables de Europa, con días suaves y secos de noviembre a marzo y casi todas las excursiones en funcionamiento todo el año."]
+      ]
+    }
+  },
+
+  {
+    slug: "lanzarote-volcano-tours",
+    pillar: true,
+    en: {
+      title: "Lanzarote Volcano Tours 2026: Which Timanfaya Tour Should You Choose?",
+      h1: "Lanzarote Volcano Tours: Which Timanfaya Tour Should You Choose?",
+      meta: "Compare Lanzarote's Timanfaya volcano tours for 2026 by a local agency: half-day vs full-day vs the complete island day — what each covers, how long, and which is right for you.",
+      lead: "Timanfaya is the reason most people come to Lanzarote, and you cannot drive the volcano route yourself — so a tour is the way in. The catch is there are several, and they are not the same. Here is exactly what each covers and which to pick.",
+      body: `
+<h2>Quick answer</h2>
+<ul>
+<li><strong>First time on the island, want the full picture:</strong> the <strong>Highlights Tour</strong> (8 hours) — Timanfaya plus the Cueva de los Verdes and Jameos del Agua caves in one day.</li>
+<li><strong>Want Timanfaya done properly without a huge day:</strong> the full-day <strong>Timanfaya Volcano Tour</strong> or the <strong>Grand Tour</strong> (7 hours) — volcanoes, the geyser demonstrations, La Geria wine country and camel country.</li>
+<li><strong>Short on time or budget:</strong> the <strong>Half Day / Short South</strong> volcano tour (5 hours) — the Timanfaya essentials and back.</li>
+</ul>
+<h2>The Timanfaya tours compared</h2>
+<table>
+<thead><tr><th>Tour</th><th>Length</th><th>What it covers</th><th>Best for</th></tr></thead>
+<tbody>
+<tr><td>Half Day / Short South Volcano</td><td>~5 hours</td><td>Timanfaya National Park, La Geria, optional camel ride</td><td>A quick, affordable volcano fix</td></tr>
+<tr><td>Timanfaya Volcano Tour (full day)</td><td>~7 hours</td><td>Timanfaya, geyser demos, El Diablo, Green Lagoon, wine stop</td><td>Doing Timanfaya in depth</td></tr>
+<tr><td>Grand Tour</td><td>~7 hours</td><td>Timanfaya, Green Lake, camel country, wine, Jameos del Agua</td><td>Volcanoes plus a taste of the north</td></tr>
+<tr><td>Highlights Tour</td><td>~8 hours</td><td>Timanfaya, Cueva de los Verdes, Jameos del Agua</td><td>The complete first-visit overview</td></tr>
+</tbody>
+</table>
+<h2>Half-day Timanfaya (Short South / Half Day Volcanoes)</h2>
+<p>The quickest way to see the volcanoes: priority entry to Timanfaya, the geothermal demonstrations, a stop in the La Geria wine valley and back by lunchtime, with an optional camel ride. Ideal if you only have a spare morning or want to keep one day free for the beach.</p>
+[[tours:short-south-tour-volcano,half-day-volcanoes-tour-2]]
+<h2>Full-day Timanfaya (Timanfaya Volcano Tour / Grand Tour)</h2>
+<p>A fuller day built around the volcanoes: the geyser and heat demonstrations, the restaurant at El Diablo, the striking Green Lagoon at El Golfo and the vineyards of La Geria. The Grand Tour adds the Jameos del Agua cave so you get a flavour of the north too.</p>
+[[tours:full-day-volcanoes,lanzarote-grand-tour]]
+<h2>The complete island day (Highlights Tour)</h2>
+<p>If you only do one big tour all week, this is it — Timanfaya plus the two great lava caves of the north, the Cueva de los Verdes and César Manrique's Jameos del Agua, in a single guided day. The best single overview of what makes Lanzarote unique.</p>
+[[tours:lanzarotes-highlights-tour]]
+<h2>Caves and the north (great companions)</h2>
+<p>Already done the volcanoes, or visiting on a windy day? These focus on the lava caves and the island's culture and scenery rather than Timanfaya.</p>
+[[tours:caves-express,coast-2-coast]]
+<h2>Good to know before you book</h2>
+<ul>
+<li><strong>You cannot drive through Timanfaya.</strong> Private cars are not allowed on the volcano route; access is on the park coach or an organised tour.</li>
+<li><strong>Camel rides are optional and paid separately</strong> at the camel station — a short ride up the ash slopes, not included in the tour price.</li>
+<li><strong>Lunch</strong> is usually not included (there is a stop); El Diablo, designed by César Manrique, grills over volcanic heat.</li>
+<li><strong>Bring</strong> sun cream, water, sturdy shoes and a light layer — it can be breezy on the high ground.</li>
+</ul>
+<p>Not sure? Compare everything in [[link:guide:things-to-do-lanzarote|things to do in Lanzarote]], see the full [[link:guide:best-excursions-in-lanzarote|best excursions]], or ask our assistant to match a tour to your group.</p>`,
+      faqs: [
+        ["Which Timanfaya tour is best?", "For a first visit, the Highlights Tour — it covers Timanfaya plus the Cueva de los Verdes and Jameos del Agua caves in one day. If you only want the volcanoes, the full-day Timanfaya Volcano Tour; if you are short on time, the half-day Short South tour."],
+        ["Can you drive through Timanfaya National Park yourself?", "No. Private vehicles are not allowed on the volcano route to protect the park. You visit on the park's own coach (included in the organised tours) or on a guided excursion with hotel pickup."],
+        ["Is the camel ride included in the volcano tour?", "No — the camel ride at Timanfaya is optional and paid separately at the camel station. It is a short ride up the ash slopes and is not part of the tour price."],
+        ["How long is a Lanzarote volcano tour?", "Half-day volcano tours run about 5 hours; full-day Timanfaya and Grand tours about 7 hours; the complete Highlights Tour about 8 hours. All include hotel pickup from the main resorts."],
+        ["Do volcano tours include lunch?", "Usually not — there is a lunch stop you pay for separately, often at the El Diablo restaurant inside the park, which grills food over the volcano's natural heat."]
+      ]
+    },
+    es: {
+      title: "Excursiones a los volcanes de Lanzarote 2026: ¿qué tour de Timanfaya elegir?",
+      h1: "Excursiones a los volcanes de Lanzarote: ¿qué tour de Timanfaya elegir?",
+      meta: "Compara las excursiones a Timanfaya en Lanzarote para 2026 por una agencia local: media jornada, día completo o el día de isla completo — qué incluye cada una y cuál te conviene.",
+      lead: "Timanfaya es el motivo por el que casi todos vienen a Lanzarote, y no puedes recorrer la ruta de los volcanes con tu coche, así que la excursión es la vía de entrada. El detalle es que hay varias y no son iguales. Esto es lo que cubre cada una y cuál elegir.",
+      body: `
+<h2>Respuesta rápida</h2>
+<ul>
+<li><strong>Primera vez y quieres verlo todo:</strong> el <strong>Highlights (Lo Mejor de Lanzarote)</strong> (8 horas): Timanfaya más las cuevas Cueva de los Verdes y Jameos del Agua en un día.</li>
+<li><strong>Quieres Timanfaya bien, sin un día enorme:</strong> el <strong>Timanfaya Volcano Tour</strong> de día completo o el <strong>Grand Tour</strong> (7 horas): volcanes, las demostraciones geotérmicas, el viñedo de La Geria y la zona de los camellos.</li>
+<li><strong>Poco tiempo o presupuesto:</strong> el tour de volcanes de <strong>media jornada / Short South</strong> (5 horas): lo esencial de Timanfaya y de vuelta.</li>
+</ul>
+<h2>Las excursiones a Timanfaya comparadas</h2>
+<table>
+<thead><tr><th>Excursión</th><th>Duración</th><th>Qué incluye</th><th>Ideal para</th></tr></thead>
+<tbody>
+<tr><td>Media jornada / Short South Volcano</td><td>~5 horas</td><td>Parque Nacional de Timanfaya, La Geria, camello opcional</td><td>Un plan de volcanes rápido y económico</td></tr>
+<tr><td>Timanfaya Volcano Tour (día completo)</td><td>~7 horas</td><td>Timanfaya, demostraciones, El Diablo, el Lago Verde, parada de vino</td><td>Ver Timanfaya a fondo</td></tr>
+<tr><td>Grand Tour</td><td>~7 horas</td><td>Timanfaya, Lago Verde, camellos, vino, Jameos del Agua</td><td>Volcanes con una muestra del norte</td></tr>
+<tr><td>Highlights (Lo Mejor de Lanzarote)</td><td>~8 horas</td><td>Timanfaya, Cueva de los Verdes, Jameos del Agua</td><td>La visión completa de la primera visita</td></tr>
+</tbody>
+</table>
+<h2>Timanfaya de media jornada (Short South / Media jornada)</h2>
+<p>La forma más rápida de ver los volcanes: entrada preferente a Timanfaya, las demostraciones geotérmicas, una parada en el valle del vino de La Geria y de vuelta a mediodía, con camello opcional. Ideal si solo tienes una mañana o quieres dejar un día libre para la playa.</p>
+[[tours:short-south-tour-volcano,half-day-volcanoes-tour-2]]
+<h2>Timanfaya de día completo (Timanfaya Volcano Tour / Grand Tour)</h2>
+<p>Un día más completo en torno a los volcanes: las demostraciones de calor y géiser, el restaurante de El Diablo, el llamativo Lago Verde de El Golfo y los viñedos de La Geria. El Grand Tour añade la cueva de los Jameos del Agua para que pruebes también el norte.</p>
+[[tours:full-day-volcanoes,lanzarote-grand-tour]]
+<h2>El día de isla completo (Highlights)</h2>
+<p>Si solo haces un gran tour en toda la semana, que sea este: Timanfaya más las dos grandes cuevas de lava del norte, la Cueva de los Verdes y los Jameos del Agua de César Manrique, en un solo día con guía. La mejor visión de conjunto de lo que hace única a Lanzarote.</p>
+[[tours:lanzarotes-highlights-tour]]
+<h2>Cuevas y norte (buenos complementos)</h2>
+<p>¿Ya has hecho los volcanes, o vienes un día de viento? Estas se centran en las cuevas de lava y en la cultura y el paisaje de la isla, más que en Timanfaya.</p>
+[[tours:caves-express,coast-2-coast]]
+<h2>Antes de reservar</h2>
+<ul>
+<li><strong>No puedes atravesar Timanfaya en coche.</strong> No se permiten vehículos privados en la ruta de los volcanes; se accede con la guagua del parque o en una excursión organizada.</li>
+<li><strong>El paseo en camello es opcional y se paga aparte</strong> en la estación de camellos: un paseo corto por las laderas de ceniza, no incluido en el precio.</li>
+<li><strong>La comida</strong> normalmente no está incluida (hay una parada); El Diablo, diseñado por César Manrique, asa sobre el calor volcánico.</li>
+<li><strong>Lleva</strong> protector solar, agua, calzado cómodo y una capa ligera: en lo alto corre la brisa.</li>
+</ul>
+<p>¿Dudas? Compara todo en [[link:guide:things-to-do-lanzarote|qué hacer en Lanzarote]], mira las [[link:guide:best-excursions-in-lanzarote|mejores excursiones]] o pide a nuestro asistente que te recomiende según tu grupo.</p>`,
+      faqs: [
+        ["¿Cuál es la mejor excursión a Timanfaya?", "Para una primera visita, el Highlights: cubre Timanfaya más las cuevas Cueva de los Verdes y Jameos del Agua en un día. Si solo quieres los volcanes, el Timanfaya de día completo; si vas justo de tiempo, el Short South de media jornada."],
+        ["¿Se puede atravesar el Parque Nacional de Timanfaya en coche?", "No. No se permiten vehículos privados en la ruta de los volcanes para proteger el parque. Se visita con la guagua del parque (incluida en las excursiones organizadas) o en una excursión con recogida en el hotel."],
+        ["¿El paseo en camello está incluido en la excursión?", "No: el paseo en camello en Timanfaya es opcional y se paga aparte en la estación de camellos. Es un paseo corto por las laderas de ceniza y no forma parte del precio."],
+        ["¿Cuánto dura una excursión a los volcanes?", "Las de media jornada duran unas 5 horas; las de Timanfaya y Grand Tour de día completo unas 7; el Highlights completo unas 8. Todas incluyen recogida en el hotel en los principales núcleos."],
+        ["¿Las excursiones a los volcanes incluyen comida?", "Normalmente no: hay una parada para comer que se paga aparte, a menudo en el restaurante El Diablo dentro del parque, que asa la comida con el calor natural del volcán."]
+      ]
+    }
+  },
+
+  {
+    slug: "lanzarote-3-day-itinerary",
+    en: {
+      title: "3 Days in Lanzarote: The Perfect Short Itinerary (2026)",
+      h1: "3 Days in Lanzarote: The Perfect Short Itinerary",
+      meta: "A local 3-day Lanzarote itinerary for 2026: the volcanoes, a boat day and a beach or adventure day — the essentials done well, with the excursions to book.",
+      lead: "Three days is enough to see the best of Lanzarote if you pick well. This is the short, high-value plan we give guests on a long weekend: one island day, one boat day, one free day — no rushing.",
+      body: `
+<h2>Day 1 — The volcanoes and the island</h2>
+<p>Start with the big one. A guided island day covers Timanfaya and the north so the island makes sense from the off. Not sure which to pick? See the [[link:guide:lanzarote-volcano-tours|volcano tours comparison]].</p>
+[[tours:lanzarotes-highlights-tour,half-day-volcanoes-tour-2,lanzarote-grand-tour]]
+<h2>Day 2 — A day on the water</h2>
+<p>Get out on the Atlantic: La Graciosa for beaches, Lobos for wildlife, or a Papagayo catamaran. Full help in the [[link:guide:best-catamaran-trips-lanzarote|catamaran trips guide]].</p>
+[[tours:la-graciosa-all-inclusive-catamaran-cruise,lobos-island-dolphins-cruise,papagayo-all-inclusive-catamaran-cruise]]
+<h2>Day 3 — Your choice: beach or adventure</h2>
+<p>On your last day, do what you came for. Relax at Papagayo or your resort beach (see [[link:guide:best-beaches-lanzarote|best beaches]]), or add adrenaline with a buggy or jet ski. Finish with a sunset catamaran.</p>
+[[tours:super-buggy-tour-lanzabuggy,jet-ski-lanzarote-20-minute-express-jet-ski-rental,sunset-catamaran-dolphins]]
+<h2>Tips for a short stay</h2>
+<ul>
+<li>Book the island day and boat day <strong>as soon as you arrive</strong> — on three days there is no slack if they sell out.</li>
+<li>All excursions include hotel pickup and <strong>free cancellation up to 24 hours before</strong>.</li>
+<li>Staying longer? See the [[link:guide:lanzarote-7-day-itinerary|7-day itinerary]].</li>
+</ul>`,
+      faqs: [
+        ["Is 3 days enough for Lanzarote?", "Yes, for the essentials. Three days comfortably covers one island/volcano day, one boat day and a beach or adventure day. For the other islands and more beaches, give it a week."],
+        ["What should I not miss on a short Lanzarote trip?", "Timanfaya (on a guided island tour, since you cannot drive it yourself) and one boat day to La Graciosa, Lobos or Papagayo. Add a sunset catamaran if you have an evening free."],
+        ["Should I book excursions before I arrive?", "On a short stay, yes — book the island day and boat day early so they do not sell out while you are there. You can reserve with a deposit and cancel free up to 24 hours before."]
+      ]
+    },
+    es: {
+      title: "3 días en Lanzarote: el itinerario corto perfecto (2026)",
+      h1: "3 días en Lanzarote: el itinerario corto perfecto",
+      meta: "Itinerario local de 3 días por Lanzarote para 2026: los volcanes, un día de barco y un día de playa o aventura — lo esencial bien hecho, con las excursiones que reservar.",
+      lead: "Tres días bastan para ver lo mejor de Lanzarote si eliges bien. Este es el plan corto y de alto valor que damos a quien viene un fin de semana largo: un día de isla, un día de barco y un día libre, sin prisas.",
+      body: `
+<h2>Día 1 — Los volcanes y la isla</h2>
+<p>Empieza por lo grande. Un día de isla con guía cubre Timanfaya y el norte para que la isla cobre sentido desde el principio. ¿Dudas de cuál? Mira la [[link:guide:lanzarote-volcano-tours|comparativa de excursiones a los volcanes]].</p>
+[[tours:lanzarotes-highlights-tour,half-day-volcanoes-tour-2,lanzarote-grand-tour]]
+<h2>Día 2 — Un día en el agua</h2>
+<p>Sal al Atlántico: La Graciosa por las playas, Lobos por la fauna o un catamarán a Papagayo. Toda la ayuda en la [[link:guide:best-catamaran-trips-lanzarote|guía de catamaranes]].</p>
+[[tours:la-graciosa-all-inclusive-catamaran-cruise,lobos-island-dolphins-cruise,papagayo-all-inclusive-catamaran-cruise]]
+<h2>Día 3 — Tú eliges: playa o aventura</h2>
+<p>El último día, haz lo que viniste a hacer. Relájate en Papagayo o en la playa de tu zona (mira [[link:guide:best-beaches-lanzarote|mejores playas]]), o añade adrenalina con un buggy o una moto de agua. Termina con un catamarán al atardecer.</p>
+[[tours:super-buggy-tour-lanzabuggy,jet-ski-lanzarote-20-minute-express-jet-ski-rental,sunset-catamaran-dolphins]]
+<h2>Consejos para una estancia corta</h2>
+<ul>
+<li>Reserva el día de isla y el de barco <strong>nada más llegar</strong>: en tres días no hay margen si se agotan.</li>
+<li>Todas las excursiones incluyen recogida en el hotel y <strong>cancelación gratuita hasta 24 horas antes</strong>.</li>
+<li>¿Te quedas más? Mira el [[link:guide:lanzarote-7-day-itinerary|itinerario de 7 días]].</li>
+</ul>`,
+      faqs: [
+        ["¿Tres días son suficientes para Lanzarote?", "Sí, para lo esencial. Tres días cubren con holgura un día de isla/volcanes, un día de barco y un día de playa o aventura. Para las otras islas y más playas, mejor una semana."],
+        ["¿Qué no puedo perderme en un viaje corto a Lanzarote?", "Timanfaya (en una excursión de isla con guía, ya que no se puede conducir) y un día de barco a La Graciosa, Lobos o Papagayo. Añade un catamarán al atardecer si tienes una tarde libre."],
+        ["¿Reservo las excursiones antes de llegar?", "En una estancia corta, sí: reserva el día de isla y el de barco pronto para que no se agoten. Puedes reservar con depósito y cancelar gratis hasta 24 horas antes."]
+      ]
+    }
+  },
+
+  {
+    slug: "lanzarote-in-november",
+    en: {
+      title: "Lanzarote in November 2026: Weather & the Best Things to Do",
+      h1: "Lanzarote in November: Weather & Things to Do",
+      meta: "Lanzarote in November 2026: what the weather is really like, what to pack, and the best things to do and excursions that run — winter sun from a local agency.",
+      lead: "November is one of the island's quiet secrets: warm days, thin crowds and almost everything still open. Here is what to expect from the weather and the excursions worth doing.",
+      body: `
+<h2>What's the weather like in Lanzarote in November?</h2>
+<p>Mild and usually dry. Daytime highs typically sit in the low-to-mid 20s °C, the sea is still comfortable for swimming, and the island gets far less rain than northern Europe. It is breezy — Lanzarote always is — and evenings are cooler, so pack a light layer. In short: proper winter sun.</p>
+<h2>Is November a good time to visit?</h2>
+<p>Yes, especially if you want warmth without the summer crowds or prices. The volcano tours, caves, buggies and most boat trips run all through November. Open-water boat days can occasionally be moved if the wind is up, so book them early in your stay — see [[link:guide:windy-day-lanzarote-boat-cancelled|what to do on a windy day]].</p>
+<h2>Best things to do in November</h2>
+<p>The island days are at their best in the clear autumn light, and the water is still warm enough for a boat day.</p>
+[[tours:lanzarotes-highlights-tour,la-graciosa-all-inclusive-catamaran-cruise,half-day-volcanoes-tour-2]]
+<h2>Sunset comes early — make the most of it</h2>
+<p>With shorter days, sunset catamarans sail earlier in the afternoon, which makes them an easy pre-dinner plan.</p>
+[[tours:sunset-catamaran-dolphins,sunset-dolphins-cruise]]
+<h2>If the wind blows</h2>
+<p>Lanzarote is windy by nature, and November is no exception. Land tours and the caves are reliable all month.</p>
+[[tours:caves-express,super-buggy-tour-lanzabuggy]]
+<h2>What to pack for November</h2>
+<ul>
+<li>Summer clothes for the day, plus a light jacket or jumper for the evening and the boat.</li>
+<li>Sun cream — the sun is still strong.</li>
+<li>Swimwear: the sea stays swimmable.</li>
+</ul>
+<p>More ideas any time of year in [[link:guide:things-to-do-lanzarote|things to do in Lanzarote]], and see [[link:guide:lanzarote-excursions-in-winter|Lanzarote in winter]] for December onwards.</p>`,
+      faqs: [
+        ["What is the weather like in Lanzarote in November?", "Mild and mostly dry, with daytime highs typically in the low-to-mid 20s °C and a sea still warm enough to swim. It is breezy and evenings are cooler, so bring a light layer. It is one of Europe's most reliable winter-sun spots."],
+        ["Is November a good time to visit Lanzarote?", "Yes — warm, far quieter than summer, cheaper, and with almost all excursions still running. Just book open-water boat trips early in your stay in case wind moves a date."],
+        ["Can you still swim and do boat trips in November?", "Yes. The sea stays comfortable for swimming and boat trips run all month. Occasionally a windy day moves an open-water sailing, which is why we suggest booking boat days early."],
+        ["What should I pack for Lanzarote in November?", "Summer clothes for the day, a light jacket or jumper for evenings and the boat, sun cream and swimwear. Days are warm but evenings and the sea breeze are cooler."]
+      ]
+    },
+    es: {
+      title: "Lanzarote en noviembre 2026: tiempo y las mejores cosas que hacer",
+      h1: "Lanzarote en noviembre: tiempo y qué hacer",
+      meta: "Lanzarote en noviembre 2026: cómo es el tiempo de verdad, qué llevar y las mejores cosas que hacer y excursiones que salen — sol de invierno por una agencia local.",
+      lead: "Noviembre es uno de los secretos tranquilos de la isla: días cálidos, pocas colas y casi todo abierto. Esto es lo que puedes esperar del tiempo y las excursiones que merecen la pena.",
+      body: `
+<h2>¿Qué tiempo hace en Lanzarote en noviembre?</h2>
+<p>Suave y normalmente seco. Las máximas de día suelen rondar los 22-25 °C, el mar sigue agradable para bañarse y llueve mucho menos que en el norte de Europa. Hay brisa —Lanzarote siempre la tiene— y las noches son más frescas, así que lleva una capa ligera. En resumen: auténtico sol de invierno.</p>
+<h2>¿Es buena época para visitarla?</h2>
+<p>Sí, sobre todo si quieres calor sin las colas ni los precios del verano. Los volcanes, las cuevas, los buggies y casi todos los barcos salen todo noviembre. Los días de barco de mar abierto a veces se mueven si sopla viento, así que resérvalos al principio de la estancia; mira [[link:guide:windy-day-lanzarote-boat-cancelled|qué hacer un día de viento]].</p>
+<h2>Las mejores cosas que hacer en noviembre</h2>
+<p>Los días de isla lucen al máximo con la luz limpia del otoño, y el agua sigue lo bastante cálida para un día de barco.</p>
+[[tours:lanzarotes-highlights-tour,la-graciosa-all-inclusive-catamaran-cruise,half-day-volcanoes-tour-2]]
+<h2>Anochece pronto: aprovéchalo</h2>
+<p>Con días más cortos, los catamaranes al atardecer salen antes por la tarde, lo que los convierte en un plan fácil antes de cenar.</p>
+[[tours:sunset-catamaran-dolphins,sunset-dolphins-cruise]]
+<h2>Si sopla el viento</h2>
+<p>Lanzarote es ventosa por naturaleza, y noviembre no es excepción. Las excursiones de tierra y las cuevas son fiables todo el mes.</p>
+[[tours:caves-express,super-buggy-tour-lanzabuggy]]
+<h2>Qué llevar en noviembre</h2>
+<ul>
+<li>Ropa de verano para el día y una chaqueta o jersey ligero para la noche y el barco.</li>
+<li>Protector solar: el sol sigue siendo fuerte.</li>
+<li>Bañador: el mar se puede disfrutar.</li>
+</ul>
+<p>Más ideas en cualquier época en [[link:guide:things-to-do-lanzarote|qué hacer en Lanzarote]], y mira [[link:guide:lanzarote-excursions-in-winter|Lanzarote en invierno]] para diciembre en adelante.</p>`,
+      faqs: [
+        ["¿Qué tiempo hace en Lanzarote en noviembre?", "Suave y casi siempre seco, con máximas de día en torno a 22-25 °C y un mar todavía templado para bañarse. Hay brisa y las noches son más frescas, así que lleva una capa ligera. Es de los destinos de sol de invierno más fiables de Europa."],
+        ["¿Es noviembre buena época para ir a Lanzarote?", "Sí: cálido, mucho más tranquilo que en verano, más barato y con casi todas las excursiones en marcha. Solo reserva los barcos de mar abierto al principio de la estancia por si el viento mueve una fecha."],
+        ["¿Se puede uno bañar y hacer barcos en noviembre?", "Sí. El mar sigue agradable para bañarse y los barcos salen todo el mes. A veces un día de viento mueve una salida de mar abierto, por eso recomendamos reservar los días de barco pronto."],
+        ["¿Qué llevar a Lanzarote en noviembre?", "Ropa de verano para el día, una chaqueta o jersey ligero para la noche y el barco, protector solar y bañador. Los días son cálidos, pero las noches y la brisa del mar son más frescas."]
       ]
     }
   }
