@@ -393,5 +393,224 @@ export const guides = [
         ["¿Cuál es la mejor excursión en Lanzarote en invierno?", "Lo Mejor de Lanzarote es ideal en invierno: temperaturas cómodas para hacer turismo y los volcanes lucen espectaculares con la luz clara."]
       ]
     }
+  },
+
+  {
+    slug: "things-to-do-lanzarote",
+    pillar: true,
+    en: {
+      title: "Things to Do in Lanzarote: The Complete Local Guide (2026)",
+      h1: "Things to Do in Lanzarote: The Complete Guide",
+      meta: "Everything worth doing in Lanzarote in 2026, by a local excursion agency: volcano tours, boat trips, beaches, buggies, water parks and family days — with real prices and how to book.",
+      lead: "We live here and sell these experiences every day from offices in Costa Teguise, Puerto del Carmen and Playa Blanca. This is the honest local list of what is actually worth your time — and how to book it.",
+      body: `
+<h2>Start here: the whole island in one day</h2>
+<p>If you do one thing, make it a guided island day. It joins up the volcanoes, the north and the famous César Manrique sites with a driver-guide who explains what you are looking at, so the rest of your holiday makes more sense.</p>
+[[tours:lanzarotes-highlights-tour,lanzarote-grand-tour,half-day-volcanoes-tour-2]]
+<h2>See the volcanoes: Timanfaya</h2>
+<p>Timanfaya National Park is the reason most people come. You cannot drive through it yourself — access is by the park's own coach or on an organised tour — so a <a href="/trip-types/lanzarote-bus-tours/">bus tour</a> is the simplest way in, usually combined with the Jameos del Agua caves and a wine-country stop in La Geria.</p>
+[[tours:full-day-volcanoes,caves-express,short-south-tour-volcano]]
+<h2>Get on the water: boat trips & catamarans</h2>
+<p>Lanzarote's clearest water is on its boat trips, and there are dolphins in these waters all year (never guaranteed, but common). See our <a href="/trip-types/lanzarote-boat-trips/">boat trips</a> or the dedicated [[link:guide:best-catamaran-trips-lanzarote|catamaran trips guide]] to choose.</p>
+[[tours:la-graciosa-all-inclusive-catamaran-cruise,lobos-island-dolphins-cruise,sunset-catamaran-dolphins]]
+<h2>Adventure: buggies, jet skis and diving</h2>
+<p>Drive a <a href="/trip-types/buggies-lanzarote/">buggy</a> over volcanic tracks, open the throttle on a jet ski, or try a first dive. Groups are small, so book these a few days ahead in summer.</p>
+[[tours:super-buggy-tour-lanzabuggy,jet-ski-lanzarote-20-minute-express-jet-ski-rental,try-dive]]
+<h2>Beaches and swimming</h2>
+<p>From the golden sweep of Papagayo to surf-swept Famara, the beaches are a highlight in their own right. Full rundown in our [[link:guide:best-beaches-lanzarote|best beaches guide]]; the easiest way to reach the wild Papagayo coves is by catamaran from Playa Blanca.</p>
+[[tours:papagayo-all-inclusive-catamaran-cruise,playa-blanca-to-papagayo-beach-catamaran-mini-cruise]]
+<h2>Family days: water parks and animals</h2>
+<p>Rainy or windy day, or just travelling with kids? The water parks and Rancho Texas are reliable winners. More ideas in our [[link:guide:lanzarote-excursions-with-kids|Lanzarote with kids guide]].</p>
+[[tours:aquapark-costa-teguise,rancho-texas-animal-splash-park-entry,aqualava-playa-blanca]]
+<h2>Plan by where you are staying</h2>
+<p>Most excursions pick up from the three main resorts. Jump to your base: [[link:resort:costa-teguise|Costa Teguise]], [[link:resort:puerto-del-carmen|Puerto del Carmen]] or [[link:resort:playa-blanca|Playa Blanca]]. Arriving on a cruise? See [[link:guide:lanzarote-shore-excursions-cruise-port|shore excursions from Arrecife]].</p>
+<h2>If the weather turns</h2>
+<p>Lanzarote is windy by nature. If a boat day is cancelled, there is still plenty to do — see [[link:guide:windy-day-lanzarote-boat-cancelled|what to do on a windy day]] — and most land tours run right through [[link:guide:lanzarote-excursions-in-winter|winter]].</p>`,
+      faqs: [
+        ["What is the number one thing to do in Lanzarote?", "Visit Timanfaya National Park. Because you cannot drive through it yourself, the easiest way is a guided island tour that also covers the north and the César Manrique sites — the best single overview of the island."],
+        ["Is one week enough to see Lanzarote?", "Yes. A week is plenty for the volcanoes, a boat day to La Graciosa or Lobos, a beach day at Papagayo and an adventure such as a buggy, with time left to relax. Three or four days covers the essentials."],
+        ["What is there to do in Lanzarote with kids?", "Water parks (Aquapark Costa Teguise, Aqualava Playa Blanca), Rancho Texas animal park, gentle catamaran cruises and the submarine safari are the family favourites. See our Lanzarote with kids guide."],
+        ["What can you do in Lanzarote for free?", "The beaches, the Sunday market in Teguise, walking the old town of Teguise and the Playa Blanca promenade cost nothing. Most paid attractions and all excursions can be booked with free cancellation up to 24 hours before."]
+      ]
+    },
+    es: {
+      title: "Qué hacer en Lanzarote: la guía local completa (2026)",
+      h1: "Qué hacer en Lanzarote: la guía completa",
+      meta: "Todo lo que merece la pena hacer en Lanzarote en 2026, por una agencia local: volcanes, barcos, playas, buggies, parques acuáticos y planes en familia, con precios reales y cómo reservar.",
+      lead: "Vivimos aquí y vendemos estas experiencias cada día desde nuestras oficinas en Costa Teguise, Puerto del Carmen y Playa Blanca. Esta es la lista local y honesta de lo que de verdad merece la pena, y cómo reservarlo.",
+      body: `
+<h2>Empieza por aquí: toda la isla en un día</h2>
+<p>Si solo haces una cosa, que sea un día de isla con guía. Une los volcanes, el norte y los famosos espacios de César Manrique con un guía-conductor que te explica lo que ves, y así el resto de tus vacaciones cobra sentido.</p>
+[[tours:lanzarotes-highlights-tour,lanzarote-grand-tour,half-day-volcanoes-tour-2]]
+<h2>Ver los volcanes: Timanfaya</h2>
+<p>El Parque Nacional de Timanfaya es el motivo por el que vienen casi todos. No puedes recorrerlo con tu coche —se entra con la guagua del parque o en una excursión organizada—, así que una <a href="/es/trip-types/lanzarote-bus-tours-es/">excursión en autobús</a> es la forma más sencilla, normalmente junto a los Jameos del Agua y una parada en el viñedo de La Geria.</p>
+[[tours:full-day-volcanoes,caves-express,short-south-tour-volcano]]
+<h2>Al agua: barcos y catamaranes</h2>
+<p>El agua más clara de Lanzarote está en sus barcos, y hay delfines todo el año (nunca garantizados, pero habituales). Mira nuestras <a href="/es/trip-types/excursiones-en-barco-por-lanzarote/">excursiones en barco</a> o la [[link:guide:best-catamaran-trips-lanzarote|guía de catamaranes]] para elegir.</p>
+[[tours:la-graciosa-all-inclusive-catamaran-cruise,lobos-island-dolphins-cruise,sunset-catamaran-dolphins]]
+<h2>Aventura: buggies, motos de agua y buceo</h2>
+<p>Conduce un <a href="/es/trip-types/aventuras-y-safaris/">buggy</a> por pistas volcánicas, acelera en una moto de agua o prueba un primer bautismo de buceo. Los grupos son pequeños, así que resérvalas con unos días de antelación en verano.</p>
+[[tours:super-buggy-tour-lanzabuggy,jet-ski-lanzarote-20-minute-express-jet-ski-rental,try-dive]]
+<h2>Playas y baño</h2>
+<p>Desde el dorado de Papagayo hasta el oleaje de Famara, las playas son un plan en sí mismas. Todo el detalle en nuestra [[link:guide:best-beaches-lanzarote|guía de mejores playas]]; la forma más fácil de llegar a las calas de Papagayo es en catamarán desde Playa Blanca.</p>
+[[tours:papagayo-all-inclusive-catamaran-cruise,playa-blanca-to-papagayo-beach-catamaran-mini-cruise]]
+<h2>Días en familia: parques acuáticos y animales</h2>
+<p>¿Día de viento o de lluvia, o viajas con niños? Los parques acuáticos y Rancho Texas no fallan. Más ideas en nuestra [[link:guide:lanzarote-excursions-with-kids|guía de Lanzarote con niños]].</p>
+[[tours:aquapark-costa-teguise,rancho-texas-animal-splash-park-entry,aqualava-playa-blanca]]
+<h2>Según dónde te alojes</h2>
+<p>Casi todas las excursiones recogen en los tres grandes núcleos. Ve a tu base: [[link:resort:costa-teguise|Costa Teguise]], [[link:resort:puerto-del-carmen|Puerto del Carmen]] o [[link:resort:playa-blanca|Playa Blanca]]. ¿Llegas en crucero? Mira las [[link:guide:lanzarote-shore-excursions-cruise-port|excursiones desde el puerto de Arrecife]].</p>
+<h2>Si cambia el tiempo</h2>
+<p>Lanzarote es ventosa por naturaleza. Si se cancela un día de barco, hay mucho que hacer —mira [[link:guide:windy-day-lanzarote-boat-cancelled|qué hacer un día de viento]]— y casi todas las excursiones de tierra salen todo el [[link:guide:lanzarote-excursions-in-winter|invierno]].</p>`,
+      faqs: [
+        ["¿Qué es lo número uno que hacer en Lanzarote?", "Visitar el Parque Nacional de Timanfaya. Como no puedes recorrerlo con tu coche, lo más fácil es una excursión de isla con guía que incluya también el norte y los espacios de César Manrique: la mejor visión de conjunto de la isla."],
+        ["¿Una semana es suficiente para ver Lanzarote?", "Sí. Una semana da de sobra para los volcanes, un día de barco a La Graciosa o Lobos, un día de playa en Papagayo y una actividad como un buggy, y aún queda tiempo para descansar. En tres o cuatro días ves lo esencial."],
+        ["¿Qué hacer en Lanzarote con niños?", "Parques acuáticos (Aquapark Costa Teguise, Aqualava Playa Blanca), el parque de animales Rancho Texas, cruceros suaves en catamarán y el safari en submarino son los favoritos. Mira nuestra guía de Lanzarote con niños."],
+        ["¿Qué se puede hacer gratis en Lanzarote?", "Las playas, el mercadillo del domingo en Teguise, pasear el casco antiguo de Teguise o el paseo de Playa Blanca no cuestan nada. Casi todas las atracciones y excursiones se reservan con cancelación gratuita hasta 24 horas antes."]
+      ]
+    }
+  },
+
+  {
+    slug: "best-catamaran-trips-lanzarote",
+    en: {
+      title: "Best Catamaran Trips in Lanzarote 2026: La Graciosa, Papagayo & Sunset Cruises",
+      h1: "Best Catamaran Trips in Lanzarote 2026",
+      meta: "The best catamaran trips in Lanzarote for 2026, chosen by a local agency: La Graciosa and Papagayo cruises, sunset and dolphin sailings — with prices, what's included and which to pick.",
+      lead: "A catamaran is the most comfortable way to see Lanzarote's coast: stable decks, shade, space to swim and usually food and drinks included. These are the ones we book most, and who each suits.",
+      body: `
+<h2>Our quick answer</h2>
+<p>For a full beach day, take the <strong>La Graciosa</strong> or <strong>Papagayo all-inclusive catamaran</strong>. For couples and a short stay, the <strong>sunset catamaran</strong> is unbeatable. Want the best chance of dolphins? Choose a <strong>Lobos & dolphins</strong> sailing. All of these are part of our wider <a href="/trip-types/lanzarote-boat-trips/">boat trips</a> range.</p>
+<h2>All-inclusive day cruises (La Graciosa & Papagayo)</h2>
+<p>These are full days with lunch and drinks included, swim stops in sheltered bays and plenty of deck space. La Graciosa sails to the car-free island off the north coast; Papagayo cruises explore the golden coves of the south.</p>
+[[tours:la-graciosa-all-inclusive-catamaran-cruise,papagayo-all-inclusive-catamaran-cruise,i-love-la-graciosa-catamaran-cruise]]
+<h2>Sunset catamarans</h2>
+<p>Two to three hours out of Puerto Calero or Playa Blanca as the light drops, usually with a drink and the chance of dolphins. The most romantic few hours on the island.</p>
+[[tours:sunset-catamaran-dolphins,i-love-sunset-catamaran-cruise,sunset-dolphins-cruise]]
+<h2>Dolphin and wildlife sailings</h2>
+<p>Dolphins live in these waters year-round. Sightings are never guaranteed, but the Lobos and dolphin sailings give you the best odds, with time to swim off the boat.</p>
+[[tours:lobos-island-dolphins-cruise,lanzarote-dolphins-whales-watching]]
+<h2>Which catamaran is right for you?</h2>
+<ul>
+<li><strong>Families:</strong> an all-inclusive La Graciosa or Papagayo day — food sorted, shallow swim stops, room for kids to move.</li>
+<li><strong>Couples:</strong> the sunset catamaran.</li>
+<li><strong>Short stay, one boat trip only:</strong> Papagayo from Playa Blanca, or La Graciosa if you are in the north.</li>
+<li><strong>Keen on wildlife:</strong> a Lobos & dolphins sailing.</li>
+</ul>
+<h2>What's included and what to bring</h2>
+<p>Most all-inclusive cruises include lunch, soft drinks and often a local wine or beer, plus snorkelling gear. Bring a towel, sun cream, a light layer for the breeze and a waterproof phone case. Pickup from the main resorts can usually be added when you book — the exact point and time are on your e-ticket.</p>
+<p>Not sure which to choose? Ask our assistant (bottom right), message us on WhatsApp, or see the full [[link:guide:things-to-do-lanzarote|things to do in Lanzarote]] guide.</p>`,
+      faqs: [
+        ["Which is the best catamaran trip in Lanzarote?", "For most people the all-inclusive La Graciosa or Papagayo day cruise — a full day with lunch, drinks and swim stops. Couples usually prefer the shorter sunset catamaran."],
+        ["Are catamaran trips good for families?", "Yes. Catamarans are stable and roomy, the all-inclusive cruises sort out lunch, and swim stops are in sheltered bays. They are among the easiest boat trips with children."],
+        ["Will I see dolphins on a catamaran cruise?", "Often, but never guaranteed — dolphins are wild. The Lobos and dolphin-watching sailings are designed around the best sighting areas and give you the best chance."],
+        ["Do catamaran trips include food and drinks?", "The all-inclusive day cruises do — usually lunch, soft drinks and a local wine or beer. Shorter sunset trips typically include one drink. Each tour page lists exactly what is included."]
+      ]
+    },
+    es: {
+      title: "Mejores excursiones en catamarán en Lanzarote 2026: La Graciosa, Papagayo y atardecer",
+      h1: "Mejores excursiones en catamarán en Lanzarote 2026",
+      meta: "Las mejores excursiones en catamarán en Lanzarote para 2026, elegidas por una agencia local: La Graciosa y Papagayo, atardecer y delfines, con precios, qué incluyen y cuál elegir.",
+      lead: "El catamarán es la forma más cómoda de ver la costa de Lanzarote: cubiertas estables, sombra, espacio para bañarse y normalmente comida y bebida incluidas. Estas son las que más reservamos y a quién le va cada una.",
+      body: `
+<h2>Respuesta rápida</h2>
+<p>Para un día de playa completo, el <strong>catamarán todo incluido de La Graciosa</strong> o de <strong>Papagayo</strong>. En pareja y pocos días, el <strong>catamarán al atardecer</strong> no tiene rival. ¿Quieres la mejor oportunidad de ver delfines? Elige una salida de <strong>Lobos y delfines</strong>. Todas forman parte de nuestras <a href="/es/trip-types/excursiones-en-barco-por-lanzarote/">excursiones en barco</a>.</p>
+<h2>Cruceros de día todo incluido (La Graciosa y Papagayo)</h2>
+<p>Días completos con comida y bebida incluidas, paradas de baño en bahías resguardadas y mucha cubierta. La Graciosa navega a la isla sin coches del norte; los de Papagayo recorren las calas doradas del sur.</p>
+[[tours:la-graciosa-all-inclusive-catamaran-cruise,papagayo-all-inclusive-catamaran-cruise,i-love-la-graciosa-catamaran-cruise]]
+<h2>Catamaranes al atardecer</h2>
+<p>Dos o tres horas desde Puerto Calero o Playa Blanca mientras cae la luz, normalmente con una copa y la posibilidad de ver delfines. Las horas más románticas de la isla.</p>
+[[tours:sunset-catamaran-dolphins,i-love-sunset-catamaran-cruise,sunset-dolphins-cruise]]
+<h2>Salidas de delfines y fauna</h2>
+<p>Hay delfines todo el año en estas aguas. Nunca se garantizan, pero las salidas a Lobos y de delfines te dan la mejor oportunidad, con tiempo para bañarte desde el barco.</p>
+[[tours:lobos-island-dolphins-cruise,lanzarote-dolphins-whales-watching]]
+<h2>¿Cuál es tu catamarán?</h2>
+<ul>
+<li><strong>Familias:</strong> un día todo incluido de La Graciosa o Papagayo: comida resuelta, baños en aguas tranquilas y sitio para los niños.</li>
+<li><strong>Parejas:</strong> el catamarán al atardecer.</li>
+<li><strong>Pocos días, un solo barco:</strong> Papagayo desde Playa Blanca, o La Graciosa si estás en el norte.</li>
+<li><strong>Amantes de la fauna:</strong> una salida de Lobos y delfines.</li>
+</ul>
+<h2>Qué incluye y qué llevar</h2>
+<p>La mayoría de cruceros todo incluido llevan comida, refrescos y a menudo vino o cerveza local, además de equipo de snorkel. Lleva toalla, protector solar, una capa ligera para la brisa y una funda estanca para el móvil. La recogida en los principales núcleos suele poder añadirse al reservar; el punto y la hora exactos van en tu e-ticket.</p>
+<p>¿No sabes cuál elegir? Pregunta a nuestro asistente (abajo a la derecha), escríbenos por WhatsApp o mira la guía completa de [[link:guide:things-to-do-lanzarote|qué hacer en Lanzarote]].</p>`,
+      faqs: [
+        ["¿Cuál es la mejor excursión en catamarán en Lanzarote?", "Para la mayoría, el crucero de día todo incluido de La Graciosa o Papagayo: un día completo con comida, bebida y paradas de baño. En pareja suele preferirse el catamarán al atardecer, más corto."],
+        ["¿Los catamaranes son buenos para familias?", "Sí. Son estables y amplios, los todo incluido resuelven la comida y los baños son en bahías tranquilas. Están entre los barcos más fáciles con niños."],
+        ["¿Veré delfines en el catamarán?", "A menudo, pero nunca está garantizado: son salvajes. Las salidas de Lobos y de avistamiento de delfines se diseñan sobre las mejores zonas y dan la mayor probabilidad."],
+        ["¿Los catamaranes incluyen comida y bebida?", "Los cruceros de día todo incluido sí: normalmente comida, refrescos y vino o cerveza local. Los de atardecer, más cortos, suelen incluir una copa. Cada ficha indica exactamente qué incluye."]
+      ]
+    }
+  },
+
+  {
+    slug: "best-beaches-lanzarote",
+    en: {
+      title: "Best Beaches in Lanzarote 2026: Papagayo, Famara & Where to Swim",
+      h1: "Best Beaches in Lanzarote: Where to Swim, Surf & Relax",
+      meta: "A local guide to the best beaches in Lanzarote for 2026: Papagayo, Famara, Costa Teguise and Playa Blanca — swimming, wind, facilities, and the easiest ways to reach them.",
+      lead: "Lanzarote has beaches for every mood — sheltered family bays, golden protected coves and wild surf strands. Here is where to go, what each is like, and how to reach the ones you cannot drive to.",
+      body: `
+<h2>Papagayo — the island's famous coves</h2>
+<p>A string of golden, protected coves at the southern tip, inside the Los Ajaches natural monument. Calm, clear water and no development — but little shade and a bumpy dirt road in. The relaxed way to visit is by boat from Playa Blanca, dropping you right on the water.</p>
+[[tours:papagayo-all-inclusive-catamaran-cruise,playa-blanca-to-papagayo-beach-catamaran-mini-cruise]]
+<h2>Famara — the surf beach</h2>
+<p>A dramatic six-kilometre strand under cliffs in the north-west. Spectacular for a walk and the home of Lanzarote surfing, but strong currents and wind mean it is for surfing and paddling, not relaxed swimming. Great to pair with a north island tour.</p>
+<h2>Playa de las Cucharas — Costa Teguise</h2>
+<p>The main resort beach of <a href="/excursions-from/costa-teguise/">Costa Teguise</a>: wide, sandy, with sunbeds, cafés and steady wind that makes it a windsurf hub. Easy and family-friendly.</p>
+<h2>Playa Chica & Playa Grande — Puerto del Carmen</h2>
+<p>Sheltered, central and walkable from the hotels of <a href="/excursions-from/puerto-del-carmen/">Puerto del Carmen</a>. Playa Chica is a small, calm cove that is also the island's most popular shore-diving spot.</p>
+<h2>Playa Blanca — Dorada, Flamingo & the promenade</h2>
+<p>Calm, shallow, man-made bays that are ideal for young families, linked by a long seafront promenade. <a href="/excursions-from/playa-blanca/">Playa Blanca</a> is also the launch point for Papagayo boat trips and the Fuerteventura ferry.</p>
+<h2>Natural vs resort beaches — how to choose</h2>
+<ul>
+<li><strong>Want facilities and easy access:</strong> Cucharas, Playa Grande, or the Playa Blanca bays.</li>
+<li><strong>Want wild and scenic:</strong> Papagayo (go by boat) and Famara (for the view and surf).</li>
+<li><strong>Travelling with small children:</strong> the sheltered Playa Blanca bays and Playa Chica.</li>
+<li><strong>Windy day:</strong> the south coast is usually the most sheltered.</li>
+</ul>
+<h2>Make a beach day of it</h2>
+<p>Reach Papagayo by catamaran, add snorkelling or try a water sport off the sand. See more [[link:guide:things-to-do-lanzarote|things to do in Lanzarote]] or go straight to <a href="/trip-types/water-sports-activities/">water sports</a>.</p>
+[[tours:jet-ski-lanzarote-20-minute-express-jet-ski-rental,parascending]]`,
+      faqs: [
+        ["What is the best beach in Lanzarote?", "For calm, scenic swimming, the Papagayo coves near Playa Blanca are the island's finest — easiest to reach by boat. For facilities and easy access, Playa de las Cucharas in Costa Teguise or Playa Grande in Puerto del Carmen."],
+        ["Can you swim at Famara beach?", "Famara is beautiful but has strong currents and wind, so it is better for surfing, bodyboarding and walking than for relaxed swimming. For easy swimming choose the resort beaches or Papagayo."],
+        ["How do you get to Papagayo beach?", "By the dirt road from Playa Blanca (a small charge, rough surface, limited shade) or — more relaxed — by catamaran or boat trip from Playa Blanca marina that anchors off the coves."],
+        ["Which Lanzarote beaches are best for families?", "The sheltered, shallow bays of Playa Blanca (Dorada and Flamingo) and Playa Chica in Puerto del Carmen are calm and easy with young children."]
+      ]
+    },
+    es: {
+      title: "Mejores playas de Lanzarote 2026: Papagayo, Famara y dónde bañarse",
+      h1: "Mejores playas de Lanzarote: dónde bañarte, surfear y relajarte",
+      meta: "Guía local de las mejores playas de Lanzarote para 2026: Papagayo, Famara, Costa Teguise y Playa Blanca — baño, viento, servicios y la forma más fácil de llegar.",
+      lead: "Lanzarote tiene playa para cada momento: calas familiares resguardadas, arenales dorados protegidos y playas de surf salvajes. Aquí tienes dónde ir, cómo es cada una y cómo llegar a las que no se accede en coche.",
+      body: `
+<h2>Papagayo — las calas famosas de la isla</h2>
+<p>Una sucesión de calas doradas y protegidas en la punta sur, dentro del monumento natural de Los Ajaches. Agua tranquila y cristalina y nada de construcción, pero poca sombra y una pista de tierra para llegar. La forma cómoda de visitarlas es en barco desde Playa Blanca, que te deja a pie de agua.</p>
+[[tours:papagayo-all-inclusive-catamaran-cruise,playa-blanca-to-papagayo-beach-catamaran-mini-cruise]]
+<h2>Famara — la playa del surf</h2>
+<p>Un arenal espectacular de seis kilómetros bajo el risco, en el noroeste. Impresionante para pasear y cuna del surf en Lanzarote, pero con corrientes y viento fuertes: es para surfear y mojar los pies, no para un baño tranquilo. Ideal junto a una excursión por el norte.</p>
+<h2>Playa de las Cucharas — Costa Teguise</h2>
+<p>La playa principal de <a href="/es/excursiones-desde/costa-teguise/">Costa Teguise</a>: amplia, de arena, con hamacas, cafeterías y un viento constante que la hace un punto de windsurf. Cómoda y familiar.</p>
+<h2>Playa Chica y Playa Grande — Puerto del Carmen</h2>
+<p>Resguardadas, céntricas y a pie desde los hoteles de <a href="/es/excursiones-desde/puerto-del-carmen/">Puerto del Carmen</a>. Playa Chica es una cala pequeña y tranquila, además del punto de buceo desde costa más popular de la isla.</p>
+<h2>Playa Blanca — Dorada, Flamingo y el paseo</h2>
+<p>Bahías tranquilas y poco profundas, perfectas para familias con niños y unidas por un largo paseo marítimo. <a href="/es/excursiones-desde/playa-blanca/">Playa Blanca</a> es también el punto de salida de los barcos a Papagayo y del ferry a Fuerteventura.</p>
+<h2>Playas naturales o de resort: cómo elegir</h2>
+<ul>
+<li><strong>Quieres servicios y acceso fácil:</strong> Cucharas, Playa Grande o las bahías de Playa Blanca.</li>
+<li><strong>Quieres algo salvaje y con paisaje:</strong> Papagayo (ve en barco) y Famara (por las vistas y el surf).</li>
+<li><strong>Viajas con niños pequeños:</strong> las bahías resguardadas de Playa Blanca y Playa Chica.</li>
+<li><strong>Día de viento:</strong> la costa sur suele ser la más resguardada.</li>
+</ul>
+<h2>Haz un día de playa completo</h2>
+<p>Llega a Papagayo en catamarán, añade snorkel o prueba un deporte acuático sobre la arena. Mira más [[link:guide:things-to-do-lanzarote|cosas que hacer en Lanzarote]] o ve directo a <a href="/es/trip-types/deportes-y-actividades-acuaticas/">deportes acuáticos</a>.</p>
+[[tours:jet-ski-lanzarote-20-minute-express-jet-ski-rental,parascending]]`,
+      faqs: [
+        ["¿Cuál es la mejor playa de Lanzarote?", "Para baño tranquilo y con paisaje, las calas de Papagayo junto a Playa Blanca son las mejores de la isla, y lo más fácil es llegar en barco. Para servicios y acceso cómodo, Playa de las Cucharas en Costa Teguise o Playa Grande en Puerto del Carmen."],
+        ["¿Se puede uno bañar en Famara?", "Famara es preciosa pero tiene corrientes y viento fuertes, así que es mejor para surf, bodyboard y pasear que para un baño tranquilo. Para bañarte con comodidad, elige las playas de resort o Papagayo."],
+        ["¿Cómo se llega a la playa de Papagayo?", "Por la pista de tierra desde Playa Blanca (con un pequeño pago, firme irregular y poca sombra) o, más cómodo, en catamarán o barco desde el puerto de Playa Blanca, que fondea frente a las calas."],
+        ["¿Qué playas de Lanzarote son mejores para familias?", "Las bahías resguardadas y poco profundas de Playa Blanca (Dorada y Flamingo) y Playa Chica en Puerto del Carmen son tranquilas y cómodas con niños pequeños."]
+      ]
+    }
   }
 ];

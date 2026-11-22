@@ -51,7 +51,7 @@ const comboUrl = (lang, r, c) => `${url(lang, "resort", r.slug)}${comboSlug(lang
 const T = {
   en: {
     locale: "en_GB", htmlLang: "en",
-    nav: { tours: "All excursions", activities: "Activities", resorts: "Where you stay", islands: "Destinations", guides: "Guides", offices: "Our offices", about: "About us" },
+    nav: { tours: "All excursions", excursions: "Excursions", activities: "Activities", explore: "Explore Lanzarote", resorts: "Where you stay", islands: "Destinations", thingsToDo: "Things to Do", travelGuide: "Travel Guide", cruise: "Cruise Visitors", guides: "Guides", offices: "Our offices", about: "About us" },
     from: "From", book: "Book now", ask: "Ask on WhatsApp", child: "Child", adult: "Adult",
     freeCancel: "Free cancellation up to 24h", duration: "Duration",
     onRequest: "Price on request", onRequestLead: "Prices for this trip depend on the date and group. Ask us on WhatsApp or by phone for today's price and availability.",
@@ -111,7 +111,7 @@ const T = {
   },
   es: {
     locale: "es_ES", htmlLang: "es",
-    nav: { tours: "Todas las excursiones", activities: "Actividades", resorts: "Dónde te alojas", islands: "Destinos", guides: "Guías", offices: "Oficinas", about: "Quiénes somos" },
+    nav: { tours: "Todas las excursiones", excursions: "Excursiones", activities: "Actividades", explore: "Descubre Lanzarote", resorts: "Dónde te alojas", islands: "Destinos", thingsToDo: "Qué hacer", travelGuide: "Guía de viaje", cruise: "Cruceristas", guides: "Guías", offices: "Oficinas", about: "Quiénes somos" },
     from: "Desde", book: "Reservar", ask: "Preguntar por WhatsApp", child: "Niño", adult: "Adulto",
     freeCancel: "Cancelación gratuita hasta 24 h", duration: "Duración",
     onRequest: "Precio a consultar", onRequestLead: "El precio de esta excursión depende de la fecha y del grupo. Pregúntanos por WhatsApp o por teléfono el precio y la disponibilidad de hoy.",
@@ -177,7 +177,7 @@ for (const L2 of ["de", "it", "fr"]) { T[L2] = cloneT(T.en); T[L2].htmlLang = L2
 T.de.locale = "de_DE"; T.it.locale = "it_IT"; T.fr.locale = "fr_FR";
 
 Object.assign(T.de, {
-  nav: { tours: "Alle Ausflüge", activities: "Aktivitäten", resorts: "Dein Urlaubsort", islands: "Reiseziele", guides: "Reiseführer", offices: "Unsere Büros", about: "Über uns" },
+  nav: { tours: "Alle Ausflüge", excursions: "Ausflüge", activities: "Aktivitäten", explore: "Lanzarote entdecken", resorts: "Dein Urlaubsort", islands: "Reiseziele", thingsToDo: "Aktivitäten & Tipps", travelGuide: "Reiseführer", cruise: "Kreuzfahrtgäste", guides: "Reiseführer", offices: "Unsere Büros", about: "Über uns" },
   from: "Ab", book: "Jetzt buchen", ask: "Auf WhatsApp fragen", child: "Kind", adult: "Erwachsener",
   freeCancel: "Kostenlose Stornierung bis 24 Std.", duration: "Dauer",
   onRequest: "Preis auf Anfrage", onRequestLead: "Die Preise für diesen Ausflug hängen vom Datum und der Gruppe ab. Frag uns per WhatsApp oder telefonisch nach dem heutigen Preis und der Verfügbarkeit.",
@@ -445,9 +445,20 @@ function reviewsBlock(lang) {
 }
 
 function expandShortcodes(lang, html) {
+  // Internal link that stays correct in every language:
+  //   [[link:guide:best-beaches-lanzarote|Best beaches]]  (kinds: guide, cat, resort, tour)
+  //   [[link:tours|All excursions]]                        (page kinds: tours, destinations, offices, book, home)
+  const linkTo = (kind, slug, text) => {
+    try {
+      const href = slug ? url(lang, kind, slug) : url(lang, kind);
+      return `<a href="${href}">${text}</a>`;
+    } catch { return text; }
+  };
   return html
     .replace(/\[\[tours:([^\]]+)\]\]/g, (_, list) => cardGrid(lang, list.split(",").map((s) => tourBy[s.trim()]).filter(Boolean)))
-    .replace(/\[\[prices\]\]/g, () => priceTable(lang));
+    .replace(/\[\[prices\]\]/g, () => priceTable(lang))
+    .replace(/\[\[link:([a-z]+):([a-z0-9-]+)\|([^\]]+)\]\]/g, (_, kind, slug, text) => linkTo(kind, slug, text))
+    .replace(/\[\[link:([a-z]+)\|([^\]]+)\]\]/g, (_, kind, text) => linkTo(kind, null, text));
 }
 
 function priceTable(lang) {
@@ -538,13 +549,11 @@ function header(lang, alt) {
   <a class="logo" href="${url(lang, "home")}" aria-label="${esc(site.name)}"><img src="/assets/brand/logo-header.png" alt="Excursions Tickets Direct" width="167" height="44"></a>
   <button class="menu-btn" aria-expanded="false" aria-controls="nav">${lang === "es" ? "Menú" : lang === "de" ? "Menü" : "Menu"}</button>
   <nav id="nav" class="nav" aria-label="Main">
-    <a href="${url(lang, "tours")}">${L.nav.tours}</a>
-    <div class="dd"><button aria-expanded="false">${L.nav.activities}</button><div class="dd-menu">${mainCats.map((c) => `<a href="${url(lang, "cat", c.slug)}">${esc(catName(lang, c))}</a>`).join("")}</div></div>
-    <div class="dd"><button aria-expanded="false">${L.nav.resorts}</button><div class="dd-menu">${resorts.map((r) => `<a href="${url(lang, "resort", r.slug)}">${esc(r.name)}</a>`).join("")}<a href="${url(lang, "guide", "lanzarote-shore-excursions-cruise-port")}">${lang !== "es" ? "Cruise passengers" : "Cruceristas"}</a></div></div>
-    <div class="dd"><button aria-expanded="false">${L.nav.islands}</button><div class="dd-menu">${topDest.map((d) => `<a href="${destUrl(lang, d)}">${esc(d.name[lang])}</a>`).join("")}<a href="${url(lang, "destinations")}">${L.seeAll} →</a></div></div>
-    <a href="${url(lang, "reels")}">${L.reelsNav}</a>
-    <a href="${url(lang, "guide")}">${L.nav.guides}</a>
-    <a href="${url(lang, "offices")}">${L.nav.offices}</a>
+    <div class="dd"><button aria-expanded="false">${L.nav.excursions}</button><div class="dd-menu"><a href="${url(lang, "tours")}"><strong>${L.nav.tours}</strong></a>${mainCats.map((c) => `<a href="${url(lang, "cat", c.slug)}">${esc(catName(lang, c))}</a>`).join("")}</div></div>
+    <div class="dd"><button aria-expanded="false">${L.nav.explore}</button><div class="dd-menu">${resorts.map((r) => `<a href="${url(lang, "resort", r.slug)}">${esc(r.name)}</a>`).join("")}<a href="${url(lang, "offices")}">${L.nav.offices}</a>${topDest.map((d) => `<a href="${destUrl(lang, d)}">${esc(d.name[lang])}</a>`).join("")}<a href="${url(lang, "destinations")}">${L.seeAll} →</a></div></div>
+    <div class="dd"><button aria-expanded="false">${L.nav.thingsToDo}</button><div class="dd-menu"><a href="${url(lang, "guide", "things-to-do-lanzarote")}"><strong>${lang === "es" ? "Qué hacer en Lanzarote" : lang === "de" ? "Aktivitäten auf Lanzarote" : "Things to do in Lanzarote"}</strong></a><a href="${url(lang, "guide", "best-beaches-lanzarote")}">${lang === "es" ? "Mejores playas" : lang === "de" ? "Beste Strände" : "Best beaches"}</a><a href="${url(lang, "reels")}">${L.reelsNav}</a></div></div>
+    <a href="${url(lang, "guide")}">${L.nav.travelGuide}</a>
+    <a href="${url(lang, "guide", "lanzarote-shore-excursions-cruise-port")}">${L.nav.cruise}</a>
     <a class="nav-cart" href="${url(lang, "book")}" aria-label="${esc(L.cart.title)}">${icon("ticket")}<span>${esc(L.cart.nav)}</span><b data-cart-count hidden>0</b></a>
     <a class="lang" href="${otherHref}" hreflang="${other}" lang="${other}">${other.toUpperCase()}</a>
     <button class="btn ghost small" data-install hidden>${icon("download")}${L.installApp}</button>
@@ -1275,6 +1284,12 @@ function checks() {
   const problems = [];
   for (const r of resorts) for (const s of r.picks) if (!tourBy[s]) problems.push(`resort ${r.slug}: unknown tour ${s}`);
   for (const g of guides) for (const lang of LANGS) for (const [, list] of g[lang].body.matchAll(/\[\[tours:([^\]]+)\]\]/g)) for (const s of list.split(",")) if (!tourBy[s.trim()]) problems.push(`guide ${g.slug}/${lang}: unknown tour ${s}`);
+  // Validate internal-link shortcodes [[link:kind:slug|text]] so guide cross-links never break.
+  const guideBy = Object.fromEntries(guides.map((g) => [g.slug, g]));
+  for (const g of guides) for (const lang of LANGS) for (const [, kind, slug] of g[lang].body.matchAll(/\[\[link:([a-z]+):([a-z0-9-]+)\|/g)) {
+    const known = kind === "guide" ? guideBy[slug] : kind === "cat" ? catBy[slug] : kind === "resort" ? resorts.some((r) => r.slug === slug) : kind === "tour" ? tourBy[slug] : true;
+    if (!known) problems.push(`guide ${g.slug}/${lang}: unknown link ${kind}:${slug}`);
+  }
   for (const c of categories) if (!c.path.en && tours.some((t) => t.cats.includes(c.slug))) problems.push(`category ${c.slug}: no WordPress URL`);
   if (problems.length) {
     console.error(problems.join("\n"));
