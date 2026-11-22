@@ -64,8 +64,8 @@ One H1 per page; unique title/meta; readable URL; H2/H3/H4 hierarchy; descriptiv
 ## Build phases (tracker)
 - **Phase 1 — foundation (this project):** nav → 5 sections ✅ · Things-to-Do pillar hub ✅ · blueprint/tracker ✅ · internal-link hub wiring ✅.
 - **Phase 1 — first new commercial content:** Best Catamaran Trips ✅ · Best Beaches ✅.
-- **Phase 2 — destination guides:** enhance the 3 resort pages into full destination guides (things-to-do + beaches + map + more internal links); add Arrecife cruise angle. *pending*
-- **Phase 2 — itineraries & planning:** 7-day itinerary · 3-day itinerary · Lanzarote without a car · Is Lanzarote worth visiting · November/weather. *pending*
+- **Phase 2 — destination guides:** resort pages now carry a "Plan your stay in {resort}" cross-link block to the hub, beaches, catamaran, kids, itinerary and without-a-car guides ✅. Still to do: per-resort things-to-do prose + map + Arrecife cruise angle. *partial*
+- **Phase 2 — itineraries & planning:** 7-day itinerary ✅ · Lanzarote without a car ✅ · Is Lanzarote worth visiting ✅ · 3-day itinerary *pending* · November/weather *pending*.
 - **Phase 3 — conversion & authority:** volcano "which tour" comparison · enhance Best Excursions & Boat Trips hubs · comparison tables/labels (best for families/couples/adventure) · KPI baseline doc (GSC/GA4). *pending*
 
 ## KPI tracking (to set up in Phase 3)

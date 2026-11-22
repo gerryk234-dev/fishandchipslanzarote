@@ -860,6 +860,14 @@ function resortPage(lang, r) {
 ${combos.some((x) => x.r === r) ? `<section class="wrap section"><h2>${L.byActivity}</h2><p class="pills">${combos.filter((x) => x.r === r).map((x) => `<a href="${comboUrl(lang, r, x.c)}">${esc(catName(lang, x.c))} (${x.list.length})</a>`).join("")}</p></section>` : ""}
 <section class="wrap section"><h2>${lang === "es" ? `Las ${fromHere.length + picks.length} excursiones con recogida en ${r.name}` : lang === "de" ? `Alle ${fromHere.length + picks.length} Ausflüge mit Abholung in ${r.name}` : `All ${fromHere.length + picks.length} excursions with pickup in ${r.name}`}</h2>${cardGrid(lang, fromHere)}</section>
 ${C.pickupPoints.some((p) => p.resort === r.slug) ? `<section class="wrap section"><h2>${esc(L.collectionIn(r.name))}</h2>${pointsTable(lang, C.pickupPoints.filter((p) => p.resort === r.slug))}</section>` : ""}
+<section class="wrap section"><h2>${lang === "es" ? `Planifica tu estancia en ${r.name}` : lang === "de" ? `Plane deinen Aufenthalt in ${r.name}` : `Plan your stay in ${r.name}`}</h2><p class="pills">${[
+    ["things-to-do-lanzarote", lang === "es" ? "Qué hacer en Lanzarote" : lang === "de" ? "Aktivitäten auf Lanzarote" : "Things to do in Lanzarote"],
+    ["best-beaches-lanzarote", lang === "es" ? "Mejores playas" : lang === "de" ? "Beste Strände" : "Best beaches"],
+    ["best-catamaran-trips-lanzarote", lang === "es" ? "Catamaranes" : lang === "de" ? "Katamaran-Touren" : "Catamaran trips"],
+    ["lanzarote-excursions-with-kids", lang === "es" ? "Con niños" : lang === "de" ? "Mit Kindern" : "With kids"],
+    ["lanzarote-7-day-itinerary", lang === "es" ? "Itinerario de 7 días" : lang === "de" ? "7-Tage-Reiseplan" : "7-day itinerary"],
+    ["lanzarote-without-a-car", lang === "es" ? "Sin coche" : lang === "de" ? "Ohne Auto" : "Without a car"],
+  ].map(([s, t]) => `<a href="${url(lang, "guide", s)}">${esc(t)}</a>`).join("")}</p></section>
 <section class="wrap section">${faqBlock(lang, r.faqs[lang])}</section>`;
   page({ lang, path: alt[lang], alt, title: clip(h1, 70), description: metaDesc, body, ld: [itemListLd(lang, [...picks, ...fromHere]), bc.ld, faqLd(r.faqs[lang]), ...local.filter((o) => o.streetAddress).map((o) => ({ "@context": "https://schema.org", ...officeLd(o) }))], ogImage: picks.find((t) => t.images.length)?.images[0].src });
 }
