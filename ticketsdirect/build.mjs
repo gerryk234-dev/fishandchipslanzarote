@@ -36,6 +36,21 @@ const LANGS = ["en", "es", "de"];
 const ORG_ID = `${SITE}/#organization`;
 const BUILD_ID = Date.now().toString(36);
 const mainCats = categories.filter((c) => !c.secondary && tours.some((t) => t.cats.includes(c.slug)));
+// Related guides shown on each category page, to funnel money pages into the SEO content (and back).
+const guideBy = Object.fromEntries(guides.map((g) => [g.slug, g]));
+const CAT_GUIDES = {
+  "boat-trips": ["best-catamaran-trips-lanzarote", "best-beaches-lanzarote", "things-to-do-lanzarote"],
+  "bus-tours": ["lanzarote-volcano-tours", "lanzarote-without-a-car", "things-to-do-lanzarote"],
+  "buggy-tours": ["things-to-do-lanzarote", "lanzarote-7-day-itinerary"],
+  "buggy-lanzarote": ["things-to-do-lanzarote", "lanzarote-7-day-itinerary"],
+  "water-sports": ["best-beaches-lanzarote", "things-to-do-lanzarote"],
+  "underwater": ["lanzarote-excursions-with-kids", "things-to-do-lanzarote"],
+  "parks": ["lanzarote-excursions-with-kids", "things-to-do-lanzarote"],
+  "ferries-islands": ["best-catamaran-trips-lanzarote", "things-to-do-lanzarote"],
+  "nightlife": ["things-to-do-lanzarote", "best-excursions-in-lanzarote"],
+  "private": ["best-excursions-in-lanzarote", "things-to-do-lanzarote"],
+  "special-packs": ["best-excursions-in-lanzarote", "lanzarote-7-day-itinerary"],
+};
 const minPrice = Math.min(...tours.map((t) => t.price));
 const BESTSELLERS = new Set([...tours].sort((a, b) => b.popularity - a.popularity).slice(0, 10).map((t) => t.slug));
 // Average of the walk-in offices' Google ratings (shown as such; review counts aren't public here, so no schema).
@@ -834,6 +849,7 @@ ${combos.some((x) => x.c === c) ? `<section class="wrap"><p class="pills"><stron
 <section class="wrap">${cardGrid(lang, list)}</section>
 ${wpText && plain(wpText).length > 200 ? `<section class="wrap section"><div class="prose prose-wrap">${wpText}</div></section>` : ""}
 <section class="wrap section">${faqBlock(lang, c.faqs?.[lang])}</section>
+${(CAT_GUIDES[c.slug] || []).some((s) => guideBy[s]) ? `<section class="wrap section"><h2>${lang === "es" ? "Guías relacionadas" : lang === "de" ? "Passende Reiseführer" : "Related guides"}</h2><p class="pills">${CAT_GUIDES[c.slug].filter((s) => guideBy[s]).map((s) => `<a href="${url(lang, "guide", s)}">${esc(guideBy[s][lang].h1.split(":")[0])}</a>`).join("")}</p></section>` : ""}
 <section class="wrap section"><h2>${T[lang].nav.activities}</h2><p class="pills">${mainCats.filter((x) => x.slug !== c.slug).map((x) => `<a href="${url(lang, "cat", x.slug)}">${esc(catName(lang, x))}</a>`).join("")}</p></section>`;
   page({ lang, path: p, alt: alt.es ? alt : { en: alt.en }, title: clip(h1, 70), description: meta, body, ld: [itemListLd(lang, list), bc.ld, faqLd(c.faqs?.[lang])], ogImage: list.find((t) => t.images.length)?.images[0].src });
 }
