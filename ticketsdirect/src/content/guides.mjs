@@ -1067,5 +1067,67 @@ export const guides = [
         ["¿Qué llevar a Lanzarote en noviembre?", "Ropa de verano para el día, una chaqueta o jersey ligero para la noche y el barco, protector solar y bañador. Los días son cálidos, pero las noches y la brisa del mar son más frescas."]
       ]
     }
+  },
+
+  {
+    slug: "arrecife-cruise-port",
+    en: {
+      title: "Arrecife & the Cruise Port: Things to Do in Lanzarote's Capital (2026)",
+      h1: "Arrecife & the Cruise Port: Things to Do in Lanzarote's Capital",
+      meta: "What to do in Arrecife, Lanzarote's capital and cruise port, in 2026: the Charco de San Ginés, the castles, the town beach and markets — plus how to fill a cruise stop.",
+      lead: "Most visitors pass straight through Arrecife, but Lanzarote's capital and cruise port has an easy half-day of its own — a lagoon in the middle of town, two sea castles and a proper local beach. Here is what to see, and how to make the most of a port day.",
+      body: `
+<h2>Arrived on a cruise?</h2>
+<p>Ships dock at Puerto de los Mármoles, a short ride from the centre. For the big island sights — Timanfaya, the caves — you'll want an organised excursion, since you cannot drive the volcano route yourself and time is tight. Our [[link:guide:lanzarote-shore-excursions-cruise-port|shore excursions from Arrecife cruise port]] guide explains which tours fit a port day; these shorter ones are the usual picks.</p>
+[[tours:half-day-volcanoes-tour-2,caves-express,short-south-tour-volcano]]
+<h2>Things to do in Arrecife town</h2>
+<p>If you're staying in town or have a few hours to spare, the centre is flat and walkable:</p>
+<ul>
+<li><strong>Charco de San Ginés</strong> — a tidal lagoon ringed by whitewashed fishermen's houses and cafés, right in the middle of the city. The prettiest corner of Arrecife.</li>
+<li><strong>Castillo de San Gabriel</strong> — a 16th-century fort on an islet, reached by the little <strong>Puente de las Bolas</strong> drawbridge, with a small history museum.</li>
+<li><strong>Castillo de San José & MIAC</strong> — a seafront fortress that César Manrique turned into the International Museum of Contemporary Art, with a dramatic restaurant below.</li>
+<li><strong>Playa del Reducto</strong> — a calm, Blue-Flag town beach, golden sand and shallow water, an easy walk from the centre.</li>
+<li><strong>Calle León y Castillo</strong> — the main shopping street, plus the Saturday market and the Gran Hotel's rooftop bar for the best view over the city.</li>
+</ul>
+<h2>Beyond the town</h2>
+<p>Arrecife is a good base for a meal and a stroll, but Lanzarote's headline sights are out on the island. The volcanoes in particular need a tour — see which to choose in our [[link:guide:lanzarote-volcano-tours|volcano tours guide]], or browse everything in [[link:guide:things-to-do-lanzarote|things to do in Lanzarote]].</p>
+<h2>Getting around</h2>
+<p>The centre is walkable and the bus hub links Arrecife to all the resorts and the airport. For the island sights, excursions with pickup are the simplest option — see [[link:guide:lanzarote-without-a-car|exploring Lanzarote without a car]].</p>`,
+      faqs: [
+        ["What is there to do in Arrecife, Lanzarote?", "Walk the Charco de San Ginés lagoon, cross the drawbridge to the Castillo de San Gabriel, visit the MIAC modern-art museum in the Castillo de San José, relax on Playa del Reducto and browse the shops and Saturday market. It's an easy half-day on foot."],
+        ["What can you do on a cruise stop in Lanzarote?", "Short guided excursions to Timanfaya or the caves fit a port day, or you can explore Arrecife town on foot. See our shore-excursions guide for tours timed to cruise stops — and always confirm return times before booking."],
+        ["Is Arrecife worth visiting?", "For a half-day, yes — the lagoon, the two castles and the town beach make a pleasant stroll and a good meal. Lanzarote's main attractions, though, are out on the island and best reached by tour."],
+        ["How far is the cruise port from Arrecife centre?", "Puerto de los Mármoles is just outside the city, a short taxi or shuttle ride from the centre of Arrecife. Organised excursions pick up at the port."]
+      ]
+    },
+    es: {
+      title: "Arrecife y el puerto de cruceros: qué hacer en la capital de Lanzarote (2026)",
+      h1: "Arrecife y el puerto de cruceros: qué hacer en la capital de Lanzarote",
+      meta: "Qué hacer en Arrecife, capital y puerto de cruceros de Lanzarote, en 2026: el Charco de San Ginés, los castillos, la playa urbana y los mercadillos, y cómo aprovechar una escala.",
+      lead: "Casi todos pasan de largo por Arrecife, pero la capital y puerto de cruceros de Lanzarote tiene su propia media jornada: una laguna en pleno centro, dos castillos junto al mar y una buena playa urbana. Esto es lo que ver y cómo aprovechar un día de escala.",
+      body: `
+<h2>¿Llegas en crucero?</h2>
+<p>Los barcos atracan en el Puerto de los Mármoles, a un corto trayecto del centro. Para los grandes atractivos de la isla —Timanfaya, las cuevas— conviene una excursión organizada, ya que no se puede recorrer la ruta de los volcanes por tu cuenta y el tiempo es justo. Nuestra guía de [[link:guide:lanzarote-shore-excursions-cruise-port|excursiones desde el puerto de Arrecife]] explica qué tours encajan en un día de escala; estos, más cortos, son los habituales.</p>
+[[tours:half-day-volcanoes-tour-2,caves-express,short-south-tour-volcano]]
+<h2>Qué hacer en la ciudad de Arrecife</h2>
+<p>Si te alojas en la ciudad o tienes unas horas, el centro es llano y se recorre a pie:</p>
+<ul>
+<li><strong>Charco de San Ginés</strong> — una laguna de marea rodeada de casas de pescadores encaladas y cafeterías, en pleno centro. El rincón más bonito de Arrecife.</li>
+<li><strong>Castillo de San Gabriel</strong> — una fortaleza del siglo XVI en un islote, a la que se llega por el pequeño puente levadizo <strong>Puente de las Bolas</strong>, con un pequeño museo de historia.</li>
+<li><strong>Castillo de San José y MIAC</strong> — una fortaleza junto al mar que César Manrique convirtió en el Museo Internacional de Arte Contemporáneo, con un restaurante espectacular debajo.</li>
+<li><strong>Playa del Reducto</strong> — una playa urbana tranquila con bandera azul, arena dorada y agua poco profunda, a un paseo del centro.</li>
+<li><strong>Calle León y Castillo</strong> — la principal calle comercial, además del mercadillo del sábado y la azotea del Gran Hotel para las mejores vistas de la ciudad.</li>
+</ul>
+<h2>Más allá de la ciudad</h2>
+<p>Arrecife es buena base para comer y pasear, pero los grandes reclamos de Lanzarote están en la isla. Los volcanes, en especial, requieren una excursión: mira cuál elegir en nuestra [[link:guide:lanzarote-volcano-tours|guía de excursiones a los volcanes]], o ve todo en [[link:guide:things-to-do-lanzarote|qué hacer en Lanzarote]].</p>
+<h2>Cómo moverse</h2>
+<p>El centro se recorre a pie y la estación de guaguas conecta Arrecife con todos los núcleos y el aeropuerto. Para los atractivos de la isla, las excursiones con recogida son lo más sencillo: mira [[link:guide:lanzarote-without-a-car|Lanzarote sin coche]].</p>`,
+      faqs: [
+        ["¿Qué hacer en Arrecife, Lanzarote?", "Pasear el Charco de San Ginés, cruzar el puente levadizo al Castillo de San Gabriel, visitar el museo de arte MIAC en el Castillo de San José, relajarte en la Playa del Reducto y recorrer las tiendas y el mercadillo del sábado. Es una media jornada cómoda a pie."],
+        ["¿Qué se puede hacer en una escala de crucero en Lanzarote?", "Excursiones cortas con guía a Timanfaya o las cuevas encajan en un día de escala, o puedes recorrer Arrecife a pie. Mira nuestra guía de excursiones desde el puerto para tours ajustados a las escalas, y confirma siempre las horas de regreso antes de reservar."],
+        ["¿Merece la pena visitar Arrecife?", "Para una media jornada, sí: la laguna, los dos castillos y la playa urbana dan para un buen paseo y una buena comida. Los grandes atractivos de Lanzarote, eso sí, están en la isla y se ven mejor con una excursión."],
+        ["¿A qué distancia está el puerto de cruceros del centro de Arrecife?", "El Puerto de los Mármoles está a las afueras de la ciudad, a un corto trayecto en taxi o lanzadera del centro de Arrecife. Las excursiones organizadas recogen en el puerto."]
+      ]
+    }
   }
 ];
