@@ -25,7 +25,7 @@ export const guides = [
 [[tours:lobos-island-dolphins-cruise,sunset-catamaran-dolphins,submarine-safari]]
 <h2>7–9. Adrenaline</h2>
 <p>Drive a buggy over volcanic tracks or take a jet ski out on the Atlantic. Book these early in summer: groups are small and fill up.</p>
-[[tours:super-buggy-tour-lanzabuggy,lanzaxtreme-polaris-tours,40-minute-jet-ski-tour-an-unforgettable-lanzarote-adventure]]
+[[tours:buggy-tour-maverick-can-am-trail,4-seater-buggy-tour-50-off-road,jet-ski-lanzarote-20-minute-express-jet-ski-rental]]
 <h2>10–12. Something different</h2>
 <p>A second island, a Sunday market or a cave tour for a windy day.</p>
 [[tours:fuerteventura-delight,sunday-market-la-graciosa,caves-express]]
@@ -60,7 +60,7 @@ export const guides = [
 [[tours:lobos-island-dolphins-cruise,sunset-catamaran-dolphins,submarine-safari]]
 <h2>7–9. Adrenalina</h2>
 <p>Conduce un buggy por pistas volcánicas o sal al Atlántico en moto de agua. En verano resérvalas con antelación: los grupos son pequeños y se llenan.</p>
-[[tours:super-buggy-tour-lanzabuggy,lanzaxtreme-polaris-tours,40-minute-jet-ski-tour-an-unforgettable-lanzarote-adventure]]
+[[tours:buggy-tour-maverick-can-am-trail,4-seater-buggy-tour-50-off-road,jet-ski-lanzarote-20-minute-express-jet-ski-rental]]
 <h2>10–12. Algo diferente</h2>
 <p>Otra isla, un mercadillo de domingo o unas cuevas para un día de viento.</p>
 [[tours:fuerteventura-delight,sunday-market-la-graciosa,caves-express]]
@@ -360,7 +360,7 @@ export const guides = [
 <h2>Do excursions run in winter?</h2>
 <p>Yes. Island tours, caves, buggies and most boat trips run all year. The Atlantic can bring bigger swells in winter, so open-water crossings are more often affected by the weather. That is why we recommend booking boat days early in your holiday, so there is time to move them if needed.</p>
 <h2>Best winter excursions</h2>
-[[tours:lanzarotes-highlights-tour,caves-express,lanzaxtreme-polaris-tours]]
+[[tours:lanzarotes-highlights-tour,caves-express,4-seater-buggy-tour-50-off-road]]
 <h2>Sunset cruises in winter</h2>
 <p>Days are shorter, so sunset cruises leave earlier in the evening. It is a great plan before dinner.</p>
 [[tours:sunset-catamaran-dolphins,sunset-dolphins-cruise]]
@@ -383,7 +383,7 @@ export const guides = [
 <h2>¿Salen las excursiones en invierno?</h2>
 <p>Sí. Las excursiones por la isla, las cuevas, los buggies y la mayoría de los barcos salen todo el año. En invierno el Atlántico puede traer más oleaje, así que las travesías por mar abierto se ven afectadas con más frecuencia. Por eso recomendamos reservar los días de barco al principio de las vacaciones, para tener margen si hay que cambiarlos.</p>
 <h2>Las mejores excursiones de invierno</h2>
-[[tours:lanzarotes-highlights-tour,caves-express,lanzaxtreme-polaris-tours]]
+[[tours:lanzarotes-highlights-tour,caves-express,4-seater-buggy-tour-50-off-road]]
 <h2>Cruceros al atardecer en invierno</h2>
 <p>Los días son más cortos, así que los cruceros al atardecer salen antes. Un plan perfecto antes de cenar.</p>
 [[tours:sunset-catamaran-dolphins,sunset-dolphins-cruise]]
@@ -419,7 +419,7 @@ export const guides = [
 [[tours:la-graciosa-all-inclusive-catamaran-cruise,lobos-island-dolphins-cruise,sunset-catamaran-dolphins]]
 <h2>Adventure: buggies, jet skis and diving</h2>
 <p>Drive a <a href="/trip-types/buggies-lanzarote/">buggy</a> over volcanic tracks, open the throttle on a jet ski, or try a first dive. Groups are small, so book these a few days ahead in summer.</p>
-[[tours:super-buggy-tour-lanzabuggy,jet-ski-lanzarote-20-minute-express-jet-ski-rental,try-dive]]
+[[tours:buggy-tour-maverick-can-am-trail,jet-ski-lanzarote-20-minute-express-jet-ski-rental,try-dive]]
 <h2>Beaches and swimming</h2>
 <p>From the golden sweep of Papagayo to surf-swept Famara, the beaches are a highlight in their own right. Full rundown in our [[link:guide:best-beaches-lanzarote|best beaches guide]]; the easiest way to reach the wild Papagayo coves is by catamaran from Playa Blanca.</p>
 [[tours:papagayo-all-inclusive-catamaran-cruise,playa-blanca-to-papagayo-beach-catamaran-mini-cruise]]
@@ -454,7 +454,7 @@ export const guides = [
 [[tours:la-graciosa-all-inclusive-catamaran-cruise,lobos-island-dolphins-cruise,sunset-catamaran-dolphins]]
 <h2>Aventura: buggies, motos de agua y buceo</h2>
 <p>Conduce un <a href="/es/trip-types/aventuras-y-safaris/">buggy</a> por pistas volcánicas, acelera en una moto de agua o prueba un primer bautismo de buceo. Los grupos son pequeños, así que resérvalas con unos días de antelación en verano.</p>
-[[tours:super-buggy-tour-lanzabuggy,jet-ski-lanzarote-20-minute-express-jet-ski-rental,try-dive]]
+[[tours:buggy-tour-maverick-can-am-trail,jet-ski-lanzarote-20-minute-express-jet-ski-rental,try-dive]]
 <h2>Playas y baño</h2>
 <p>Desde el dorado de Papagayo hasta el oleaje de Famara, las playas son un plan en sí mismas. Todo el detalle en nuestra [[link:guide:best-beaches-lanzarote|guía de mejores playas]]; la forma más fácil de llegar a las calas de Papagayo es en catamarán desde Playa Blanca.</p>
 [[tours:papagayo-all-inclusive-catamaran-cruise,playa-blanca-to-papagayo-beach-catamaran-mini-cruise]]
@@ -638,7 +638,7 @@ export const guides = [
 [[tours:la-graciosa-all-inclusive-catamaran-cruise,lobos-island-dolphins-cruise,papagayo-all-inclusive-catamaran-cruise]]
 <h2>Day 5 — Adventure</h2>
 <p>Add some adrenaline: a buggy over volcanic tracks, a jet ski, or a first dive. Small groups, so book ahead.</p>
-[[tours:super-buggy-tour-lanzabuggy,jet-ski-lanzarote-20-minute-express-jet-ski-rental,try-dive]]
+[[tours:buggy-tour-maverick-can-am-trail,jet-ski-lanzarote-20-minute-express-jet-ski-rental,try-dive]]
 <h2>Day 6 — A second island or the caves</h2>
 <p>Take the ferry day-trip to Fuerteventura's dunes, or visit the lava caves — a good option if the wind is up.</p>
 [[tours:fuerteventura-delight,caves-express,submarine-safari]]
@@ -676,7 +676,7 @@ export const guides = [
 [[tours:la-graciosa-all-inclusive-catamaran-cruise,lobos-island-dolphins-cruise,papagayo-all-inclusive-catamaran-cruise]]
 <h2>Día 5 — Aventura</h2>
 <p>Añade adrenalina: un buggy por pistas volcánicas, una moto de agua o un primer bautismo de buceo. Grupos pequeños, así que resérvalo con antelación.</p>
-[[tours:super-buggy-tour-lanzabuggy,jet-ski-lanzarote-20-minute-express-jet-ski-rental,try-dive]]
+[[tours:buggy-tour-maverick-can-am-trail,jet-ski-lanzarote-20-minute-express-jet-ski-rental,try-dive]]
 <h2>Día 6 — Otra isla o las cuevas</h2>
 <p>Haz la excursión en ferry a las dunas de Fuerteventura, o visita las cuevas de lava, buena opción si sopla viento.</p>
 [[tours:fuerteventura-delight,caves-express,submarine-safari]]
@@ -715,7 +715,7 @@ export const guides = [
 <p>Taxis are metered, widely available at resort ranks and reasonable for short hops to a beach, a restaurant or a marina. For a full day of sightseeing they add up fast, which is where an excursion with included transport wins.</p>
 <h2>Excursions with hotel pickup — the car-free advantage</h2>
 <p>This is the key: our island tours, caves trips and most boat days include pickup from the main resorts, so the sights that are awkward to reach independently become the easy part of your trip. The exact point and time are on your e-ticket.</p>
-[[tours:caves-express,super-buggy-tour-lanzabuggy,la-graciosa-all-inclusive-catamaran-cruise]]
+[[tours:caves-express,buggy-tour-maverick-can-am-trail,la-graciosa-all-inclusive-catamaran-cruise]]
 <h2>Getting to the other islands</h2>
 <p>No car needed at all: ferries and catamarans leave from Playa Blanca and the marinas for La Graciosa, Lobos and Fuerteventura.</p>
 [[tours:fuerteventura-express-transfer-ferry,la-graciosa-express-transfer-ferry,lobos-island-express-transfers-ferry]]
@@ -749,7 +749,7 @@ export const guides = [
 <p>Los taxis van con taxímetro, hay paradas en los núcleos y salen a cuenta para trayectos cortos a una playa, un restaurante o un puerto. Para un día entero de turismo se encarecen rápido, y ahí gana una excursión con transporte incluido.</p>
 <h2>Excursiones con recogida: la ventaja sin coche</h2>
 <p>Esta es la clave: nuestras excursiones de isla, las de cuevas y casi todos los días de barco incluyen recogida en los principales núcleos, así que los sitios incómodos de alcanzar por tu cuenta se vuelven la parte fácil del viaje. El punto y la hora exactos van en tu e-ticket.</p>
-[[tours:caves-express,super-buggy-tour-lanzabuggy,la-graciosa-all-inclusive-catamaran-cruise]]
+[[tours:caves-express,buggy-tour-maverick-can-am-trail,la-graciosa-all-inclusive-catamaran-cruise]]
 <h2>Llegar a las otras islas</h2>
 <p>Sin coche: los ferris y catamaranes salen de Playa Blanca y los puertos hacia La Graciosa, Lobos y Fuerteventura.</p>
 [[tours:fuerteventura-express-transfer-ferry,la-graciosa-express-transfer-ferry,lobos-island-express-transfers-ferry]]
@@ -957,7 +957,7 @@ export const guides = [
 [[tours:la-graciosa-all-inclusive-catamaran-cruise,lobos-island-dolphins-cruise,papagayo-all-inclusive-catamaran-cruise]]
 <h2>Day 3 — Your choice: beach or adventure</h2>
 <p>On your last day, do what you came for. Relax at Papagayo or your resort beach (see [[link:guide:best-beaches-lanzarote|best beaches]]), or add adrenaline with a buggy or jet ski. Finish with a sunset catamaran.</p>
-[[tours:super-buggy-tour-lanzabuggy,jet-ski-lanzarote-20-minute-express-jet-ski-rental,sunset-catamaran-dolphins]]
+[[tours:buggy-tour-maverick-can-am-trail,jet-ski-lanzarote-20-minute-express-jet-ski-rental,sunset-catamaran-dolphins]]
 <h2>Tips for a short stay</h2>
 <ul>
 <li>Book the island day and boat day <strong>as soon as you arrive</strong> — on three days there is no slack if they sell out.</li>
@@ -984,7 +984,7 @@ export const guides = [
 [[tours:la-graciosa-all-inclusive-catamaran-cruise,lobos-island-dolphins-cruise,papagayo-all-inclusive-catamaran-cruise]]
 <h2>Día 3 — Tú eliges: playa o aventura</h2>
 <p>El último día, haz lo que viniste a hacer. Relájate en Papagayo o en la playa de tu zona (mira [[link:guide:best-beaches-lanzarote|mejores playas]]), o añade adrenalina con un buggy o una moto de agua. Termina con un catamarán al atardecer.</p>
-[[tours:super-buggy-tour-lanzabuggy,jet-ski-lanzarote-20-minute-express-jet-ski-rental,sunset-catamaran-dolphins]]
+[[tours:buggy-tour-maverick-can-am-trail,jet-ski-lanzarote-20-minute-express-jet-ski-rental,sunset-catamaran-dolphins]]
 <h2>Consejos para una estancia corta</h2>
 <ul>
 <li>Reserva el día de isla y el de barco <strong>nada más llegar</strong>: en tres días no hay margen si se agotan.</li>
@@ -1019,7 +1019,7 @@ export const guides = [
 [[tours:sunset-catamaran-dolphins,sunset-dolphins-cruise]]
 <h2>If the wind blows</h2>
 <p>Lanzarote is windy by nature, and November is no exception. Land tours and the caves are reliable all month.</p>
-[[tours:caves-express,super-buggy-tour-lanzabuggy]]
+[[tours:caves-express,buggy-tour-maverick-can-am-trail]]
 <h2>What to pack for November</h2>
 <ul>
 <li>Summer clothes for the day, plus a light jacket or jumper for the evening and the boat.</li>
@@ -1052,7 +1052,7 @@ export const guides = [
 [[tours:sunset-catamaran-dolphins,sunset-dolphins-cruise]]
 <h2>Si sopla el viento</h2>
 <p>Lanzarote es ventosa por naturaleza, y noviembre no es excepción. Las excursiones de tierra y las cuevas son fiables todo el mes.</p>
-[[tours:caves-express,super-buggy-tour-lanzabuggy]]
+[[tours:caves-express,buggy-tour-maverick-can-am-trail]]
 <h2>Qué llevar en noviembre</h2>
 <ul>
 <li>Ropa de verano para el día y una chaqueta o jersey ligero para la noche y el barco.</li>
