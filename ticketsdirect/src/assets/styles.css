@@ -621,6 +621,7 @@ a:hover { color: var(--navy); }
 
 /* Imported blog posts */
 .post-hero { display: block; width: 100%; height: auto; border-radius: var(--radius, 16px); margin: 0 0 1.5rem; }
+.guide-hero { display: block; width: 100%; height: clamp(220px, 34vw, 420px); object-fit: cover; border-radius: var(--radius, 16px); margin: 6px 0 1.6rem; box-shadow: var(--shadow); }
 .prose img { max-width: 100%; height: auto; border-radius: 12px; }
 .prose table { display: block; overflow-x: auto; border-collapse: collapse; margin: 1rem 0; }
 .prose th, .prose td { border: 1px solid #dfe3ee; padding: .5rem .75rem; text-align: left; vertical-align: top; }

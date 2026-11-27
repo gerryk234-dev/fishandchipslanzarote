@@ -51,6 +51,31 @@ const CAT_GUIDES = {
   "private": ["best-excursions-in-lanzarote", "things-to-do-lanzarote"],
   "special-packs": ["best-excursions-in-lanzarote", "lanzarote-7-day-itinerary"],
 };
+// Hero photo for each guide (uses an existing, optimised tour photo so text pages aren't bare).
+const GUIDE_HERO = {
+  "best-excursions-in-lanzarote": "lanzarotes-highlights-tour",
+  "things-to-do-lanzarote": "lanzarote-grand-tour",
+  "lanzarote-volcano-tours": "full-day-volcanoes",
+  "best-catamaran-trips-lanzarote": "la-graciosa-all-inclusive-catamaran-cruise",
+  "best-beaches-lanzarote": "papagayo-all-inclusive-catamaran-cruise",
+  "lanzarote-7-day-itinerary": "lanzarotes-highlights-tour",
+  "lanzarote-3-day-itinerary": "lanzarote-grand-tour",
+  "lanzarote-without-a-car": "half-day-volcanoes-tour-2",
+  "is-lanzarote-worth-visiting": "lanzarotes-highlights-tour",
+  "lanzarote-in-november": "sunset-catamaran-dolphins",
+  "arrecife-cruise-port": "caves-express",
+  "lanzarote-excursion-prices": "lanzarote-grand-tour",
+  "lanzarote-shore-excursions-cruise-port": "lanzarotes-highlights-tour",
+  "windy-day-lanzarote-boat-cancelled": "caves-express",
+  "lanzarote-excursions-with-kids": "aquapark-costa-teguise",
+  "book-lanzarote-excursions-direct": "lanzarotes-highlights-tour",
+  "lanzarote-excursions-in-winter": "sunset-catamaran-dolphins",
+};
+const guideHero = (slug, lang) => {
+  const t = tourBy[GUIDE_HERO[slug]];
+  const img = t?.images?.[0];
+  return img ? { src: img.src, alt: img.alt || t.name[lang] } : null;
+};
 const minPrice = Math.min(...tours.map((t) => t.price));
 const BESTSELLERS = new Set([...tours].sort((a, b) => b.popularity - a.popularity).slice(0, 10).map((t) => t.slug));
 // Average of the walk-in offices' Google ratings (shown as such; review counts aren't public here, so no schema).
@@ -966,8 +991,10 @@ function guidePage(lang, g) {
   const alt = altOf("guide", g.slug);
   const bc = breadcrumbs(lang, [[L.nav.guides, url(lang, "guide")], [G.h1.split(":")[0], alt[lang]]]);
   const others = guides.filter((x) => x.slug !== g.slug).slice(0, 4);
+  const hero = guideHero(g.slug, lang);
   const body = `<div class="wrap">${bc.html}</div>
 <article class="wrap prose-wrap"><header class="page-head"><p class="eyebrow">${L.nav.guides}</p><h1>${esc(G.h1)}</h1><p class="byline">${L.by} · ${L.updated} <time datetime="${UPDATED}">${UPDATED}</time></p><p class="lead">${esc(G.lead)}</p></header>
+${hero ? `<img class="guide-hero" src="${esc(hero.src)}" alt="${esc(hero.alt)}" fetchpriority="high" width="990" height="490">` : ""}
 <div class="prose">${expandShortcodes(lang, G.body)}</div>
 ${faqBlock(lang, G.faqs)}
 <aside class="cta-box"><h2>${lang === "es" ? "¿Te ayudamos a elegir?" : lang === "de" ? "Hilfe bei der Auswahl?" : "Need help choosing?"}</h2><p>${esc(L.whyLead)}</p><p><a class="btn" href="${url(lang, "tours")}">${L.allTours}</a> <a class="btn wa" href="https://wa.me/${site.whatsapp}" rel="noopener" target="_blank">${icon("wa")}WhatsApp</a></p></aside>
