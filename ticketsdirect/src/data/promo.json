@@ -1,0 +1,11 @@
+{
+  "_note": "Discount-code banner. It shows on every page ONLY when active is true AND code is filled in (and expires, if set, is today or later). To run a 5% offer: set active to true, put the code in 'code', and redeploy. To stop it: set active to false. {percent} and {code} are filled in from the fields below.",
+  "active": false,
+  "code": "",
+  "percent": 5,
+  "expires": "",
+  "text": {
+    "en": "Save {percent}% on your Lanzarote excursions — book online with code {code}",
+    "es": "Ahorra un {percent}% en tus excursiones en Lanzarote — reserva online con el código {code}"
+  }
+}

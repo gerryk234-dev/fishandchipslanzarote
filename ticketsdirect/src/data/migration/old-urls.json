@@ -1,0 +1,2077 @@
+{
+  "_note": "Every path of the current WordPress site that Google listed (Yoast sitemaps, crawled 2026-10-25) or showed in search (Search Console, Jul 2025-Nov 2026). liveTo: where the live site redirected it on 2026-11-05. Used by npm run redirects. Paths only, no traffic data: the repository is public.",
+  "paths": [
+    {
+      "path": "/"
+    },
+    {
+      "path": "/25-best-things-to-do-in-lanzarote-2026-guide/"
+    },
+    {
+      "path": "/about/"
+    },
+    {
+      "path": "/activities/"
+    },
+    {
+      "path": "/activities/art-culture/"
+    },
+    {
+      "path": "/activities/buggies-lanzarote-lanzabuggy-adventures/"
+    },
+    {
+      "path": "/activities/couples-tours/"
+    },
+    {
+      "path": "/activities/discover-fuerteventura/"
+    },
+    {
+      "path": "/activities/discover-la-graciosa/"
+    },
+    {
+      "path": "/activities/family-friendly/"
+    },
+    {
+      "path": "/activities/full-day-tours/"
+    },
+    {
+      "path": "/activities/half-day-tours/"
+    },
+    {
+      "path": "/activities/most-popular/"
+    },
+    {
+      "path": "/activities/nightlife-events-actvities/"
+    },
+    {
+      "path": "/activities/offers/"
+    },
+    {
+      "path": "/activities/private-tours-boat-hires/"
+    },
+    {
+      "path": "/activities/sightseing-bus-tour/"
+    },
+    {
+      "path": "/activities/travellers-recommend/"
+    },
+    {
+      "path": "/activities/watersports-activities/"
+    },
+    {
+      "path": "/activities/wildlife-nature/"
+    },
+    {
+      "path": "/affiliate-account/"
+    },
+    {
+      "path": "/affiliate-registration/"
+    },
+    {
+      "path": "/affiliate-reset-password/"
+    },
+    {
+      "path": "/all-tours/"
+    },
+    {
+      "path": "/author/difundete/"
+    },
+    {
+      "path": "/best-boat-trips-in-lanzarote-catamaran-cruises-dolphin-tours-sunset-sailings/"
+    },
+    {
+      "path": "/best-excursions-in-lanzarote-top-15-tours-you-must-book/"
+    },
+    {
+      "path": "/blog/"
+    },
+    {
+      "path": "/buggy-excursions-in-lanzarote-the-most-exciting-way-to-explore-the-island/"
+    },
+    {
+      "path": "/category/canary-islands-guide/"
+    },
+    {
+      "path": "/category/la-graciosa/"
+    },
+    {
+      "path": "/category/what-to-do-in-lanzarote/"
+    },
+    {
+      "path": "/category/what-to-do-in-lanzarote/adventure-tours-in-lanzarote/"
+    },
+    {
+      "path": "/category/what-to-do-in-lanzarote/adventure-tours-in-lanzarote/buggies-in-lanzarote/"
+    },
+    {
+      "path": "/category/what-to-do-in-lanzarote/adventure-tours-in-lanzarote/jet-ski/"
+    },
+    {
+      "path": "/category/what-to-do-in-lanzarote/boat-trips/"
+    },
+    {
+      "path": "/category/what-to-do-in-lanzarote/bus-tours/"
+    },
+    {
+      "path": "/category/what-to-do-in-lanzarote/ferries-and-boats-to-explore-the-canary-islands/"
+    },
+    {
+      "path": "/category/what-to-do-in-lanzarote/ferries-and-boats-to-explore-the-canary-islands/boat-trips-to-la-graciosa/"
+    },
+    {
+      "path": "/category/what-to-do-in-lanzarote/guided-tours/"
+    },
+    {
+      "path": "/category/what-to-do-in-lanzarote/papagayo-beaches/"
+    },
+    {
+      "path": "/checkout/"
+    },
+    {
+      "path": "/contact-us/"
+    },
+    {
+      "path": "/cookie-policy/"
+    },
+    {
+      "path": "/destination/"
+    },
+    {
+      "path": "/destinations/fuerteventura/"
+    },
+    {
+      "path": "/destinations/fuerteventura/betancuria/"
+    },
+    {
+      "path": "/destinations/fuerteventura/corralejo/"
+    },
+    {
+      "path": "/destinations/fuerteventura/el-cotillo/"
+    },
+    {
+      "path": "/destinations/fuerteventura/mirador-de-los-reyes/"
+    },
+    {
+      "path": "/destinations/fuerteventura/sand-dunes/"
+    },
+    {
+      "path": "/destinations/la-geria-2/"
+    },
+    {
+      "path": "/destinations/la-graciosa/"
+    },
+    {
+      "path": "/destinations/lanzarote-es/haria-1000-palm-trees-lanzarote-es/"
+    },
+    {
+      "path": "/destinations/lanzarote/"
+    },
+    {
+      "path": "/destinations/lanzarote/aqualava-playa-blanca-waterpark/"
+    },
+    {
+      "path": "/destinations/lanzarote/aquapark-costa-teguise-waterpark/"
+    },
+    {
+      "path": "/destinations/lanzarote/cactus-garden/"
+    },
+    {
+      "path": "/destinations/lanzarote/caleta-de-famara/"
+    },
+    {
+      "path": "/destinations/lanzarote/cesar-manrique-foundation/"
+    },
+    {
+      "path": "/destinations/lanzarote/corona-volcano/"
+    },
+    {
+      "path": "/destinations/lanzarote/costa-teguise/"
+    },
+    {
+      "path": "/destinations/lanzarote/cueva-de-los-verdes-green-caves/"
+    },
+    {
+      "path": "/destinations/lanzarote/el-golfo-green-lake/"
+    },
+    {
+      "path": "/destinations/lanzarote/famara-beach/"
+    },
+    {
+      "path": "/destinations/lanzarote/famara-cliff/"
+    },
+    {
+      "path": "/destinations/lanzarote/haria-1000-palm-trees-lanzarote-es/"
+    },
+    {
+      "path": "/destinations/lanzarote/jameos-del-agua-home-to-albino-crabs/"
+    },
+    {
+      "path": "/destinations/lanzarote/la-santa/"
+    },
+    {
+      "path": "/destinations/lanzarote/lagomar-museum/"
+    },
+    {
+      "path": "/destinations/lanzarote/las-grietas-canyons/"
+    },
+    {
+      "path": "/destinations/lanzarote/los-hervideros-hotsprings/"
+    },
+    {
+      "path": "/destinations/lanzarote/markets-2/"
+    },
+    {
+      "path": "/destinations/lanzarote/mirador-del-rio-viewpoint/"
+    },
+    {
+      "path": "/destinations/lanzarote/mirador-hermita-las-nieves-viewpoint-lanzarote-es/"
+    },
+    {
+      "path": "/destinations/lanzarote/monumento-al-campesino/"
+    },
+    {
+      "path": "/destinations/lanzarote/papagayo-beaches-2/"
+    },
+    {
+      "path": "/destinations/lanzarote/puerto-calero/"
+    },
+    {
+      "path": "/destinations/lanzarote/puerto-del-carmen/"
+    },
+    {
+      "path": "/destinations/lanzarote/rancho-texas-lanzarote-park/"
+    },
+    {
+      "path": "/destinations/lanzarote/teguise-old-capital/"
+    },
+    {
+      "path": "/destinations/lanzarote/the-janubio-salt-lakes/"
+    },
+    {
+      "path": "/destinations/lanzarote/timanfaya-volcano-national-park/"
+    },
+    {
+      "path": "/destinations/lanzarote/volcan-el-cuervo/"
+    },
+    {
+      "path": "/destinations/lobos-island/"
+    },
+    {
+      "path": "/destinations/papagayo-beaches-2/"
+    },
+    {
+      "path": "/enquiry-thank-you-page/"
+    },
+    {
+      "path": "/es/"
+    },
+    {
+      "path": "/es/acceso-de-afiliados/"
+    },
+    {
+      "path": "/es/actividades/"
+    },
+    {
+      "path": "/es/activities/arte-y-cultura/"
+    },
+    {
+      "path": "/es/activities/aventura-y-safaris-en-4x4/"
+    },
+    {
+      "path": "/es/activities/deportes-y-actividades-acuaticas/"
+    },
+    {
+      "path": "/es/activities/descubre-fuerteventura/"
+    },
+    {
+      "path": "/es/activities/descubre-la-graciosa/"
+    },
+    {
+      "path": "/es/activities/eventos-y-actividades-nocturnas/"
+    },
+    {
+      "path": "/es/activities/excursiones-privadas-y-alquiler-de-barcos/"
+    },
+    {
+      "path": "/es/activities/fauna-y-naturaleza/"
+    },
+    {
+      "path": "/es/activities/los-mas-populares/"
+    },
+    {
+      "path": "/es/activities/ofertas/"
+    },
+    {
+      "path": "/es/activities/para-toda-la-familia/"
+    },
+    {
+      "path": "/es/activities/recomendado-por-los-viajeros/"
+    },
+    {
+      "path": "/es/activities/tours-dia-completo/"
+    },
+    {
+      "path": "/es/activities/tours-en-pareja/"
+    },
+    {
+      "path": "/es/activities/tours-medio-dia/"
+    },
+    {
+      "path": "/es/activities/visita-turistica-y-excursiones-en-autobus/"
+    },
+    {
+      "path": "/es/afiliarse/"
+    },
+    {
+      "path": "/es/all-tours/"
+    },
+    {
+      "path": "/es/author/difundete/"
+    },
+    {
+      "path": "/es/aviso-legal/"
+    },
+    {
+      "path": "/es/blog/"
+    },
+    {
+      "path": "/es/category/buggies-en-lanzarote/"
+    },
+    {
+      "path": "/es/category/excursiones-de-aventura-en-lanzarote/"
+    },
+    {
+      "path": "/es/category/guia-de-las-islas-canarias/"
+    },
+    {
+      "path": "/es/category/la-graciosa/"
+    },
+    {
+      "path": "/es/category/moto-acuatica/"
+    },
+    {
+      "path": "/es/category/playas-de-papagayo/"
+    },
+    {
+      "path": "/es/category/que-hacer-en-lanzarote/"
+    },
+    {
+      "path": "/es/category/que-hacer-en-lanzarote/excursiones-de-aventura-en-lanzarote/"
+    },
+    {
+      "path": "/es/category/que-hacer-en-lanzarote/excursiones-de-aventura-en-lanzarote/buggies-en-lanzarote/"
+    },
+    {
+      "path": "/es/category/que-hacer-en-lanzarote/excursiones-de-aventura-en-lanzarote/moto-acuatica/"
+    },
+    {
+      "path": "/es/category/que-hacer-en-lanzarote/ferries-y-barcos-para-explorar-las-islas-canarias/"
+    },
+    {
+      "path": "/es/category/que-hacer-en-lanzarote/ferries-y-barcos-para-explorar-las-islas-canarias/excursiones-en-barco-a-la-graciosa/"
+    },
+    {
+      "path": "/es/category/que-hacer-en-lanzarote/playas-de-papagayo/"
+    },
+    {
+      "path": "/es/category/que-hacer-en-lanzarote/recorridos-en-autobus/"
+    },
+    {
+      "path": "/es/category/que-hacer-en-lanzarote/viajes-en-barco/"
+    },
+    {
+      "path": "/es/category/que-hacer-en-lanzarote/visitas-guiadas/"
+    },
+    {
+      "path": "/es/category/recorridos-en-autobus/"
+    },
+    {
+      "path": "/es/category/visitas-guiadas/"
+    },
+    {
+      "path": "/es/clientes-de-gsim-europa/"
+    },
+    {
+      "path": "/es/como-explorar-la-graciosa-en-lanzarote-las-mejores-excursiones-y-cruceros-en-catamaran/"
+    },
+    {
+      "path": "/es/condiciones-generales/"
+    },
+    {
+      "path": "/es/destinations/costa-teguise/"
+    },
+    {
+      "path": "/es/destinations/fuerteventura-es/"
+    },
+    {
+      "path": "/es/destinations/fuerteventura-es/betancuria-es/"
+    },
+    {
+      "path": "/es/destinations/fuerteventura-es/corralejo-es/"
+    },
+    {
+      "path": "/es/destinations/fuerteventura-es/dunas-corralejo/"
+    },
+    {
+      "path": "/es/destinations/fuerteventura-es/dunas-de-corralejo/"
+    },
+    {
+      "path": "/es/destinations/fuerteventura-es/el-cotillo-es/"
+    },
+    {
+      "path": "/es/destinations/fuerteventura-es/mirador-de-los-reyes-es/"
+    },
+    {
+      "path": "/es/destinations/isla-de-lobos/"
+    },
+    {
+      "path": "/es/destinations/la-geria-es/"
+    },
+    {
+      "path": "/es/destinations/la-graciosa-es/"
+    },
+    {
+      "path": "/es/destinations/lagomar-museum-es/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/acantilado-de-famara/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/aqualava/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/aquapark/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/caleta-de-famara-es/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/costa-teguise/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/cueva-de-los-verdes/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/el-golfo-lago-verde/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/famara-playa/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/fundacion-de-cesar-manrique/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/haria/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/jameos-del-agua-home-to-albino-crabs-es/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/jardin-del-cactus/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/la-geria-es/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/la-santa-es/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/lagomar-museum-es/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/las-grietas-canyons-es/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/los-hervideros-hotsprings-es/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/mercados/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/mirador-del-rio/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/mirador-hermita-las-nieves/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/monumento-al-campesino-es/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/page/2/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/papagayo-playa/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/puerto-calero-es/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/puerto-del-carmen/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/rancho-texas-lanzarote-park-es/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/salinas-del-janubio/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/teguise-antigua-capital/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/volcan-de-la-corona/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/volcan-del-cuervo/"
+    },
+    {
+      "path": "/es/destinations/lanzarote-es/volcan-timanfaya-parque-nacional/"
+    },
+    {
+      "path": "/es/destinations/los-hervideros-hotsprings-es/"
+    },
+    {
+      "path": "/es/destinations/papagayo-playa/"
+    },
+    {
+      "path": "/es/destino/"
+    },
+    {
+      "path": "/es/excursion-al-parque-nacional-de-timanfaya-las-mejores-formas-de-visitar-los-volcanes-de-lanzarote/"
+    },
+    {
+      "path": "/es/excursion-de-un-dia-a-la-graciosa-desde-lanzarote-guia-de-ferry-y-catamaran/"
+    },
+    {
+      "path": "/es/excursion-de-un-dia-a-la-graciosa-desde-lanzarote-merece-la-pena/"
+    },
+    {
+      "path": "/es/excursion-de-un-dia-a-la-lanzarote-merece-la-pena/"
+    },
+    {
+      "path": "/es/excursion-en-buggy-por-los-volcanes-de-lanzarote-la-aventura-todoterreno-definitiva-por-los-paisajes-de-timanfaya/"
+    },
+    {
+      "path": "/es/excursiones-en-buggy-en-lanzarote-la-forma-mas-emocionante-de-explorar-la-isla/"
+    },
+    {
+      "path": "/es/excursiones-en-buggy-lanzarote-la-mejor-aventura-off-road-en-la-isla/"
+    },
+    {
+      "path": "/es/excursiones-entradas-direct-cart/"
+    },
+    {
+      "path": "/es/excursiones-tickets-direct-mapa-del-sitio/"
+    },
+    {
+      "path": "/es/excursiones-tickets-direct-mapa-del-sitio/page/2/"
+    },
+    {
+      "path": "/es/formulario-e-ticket/"
+    },
+    {
+      "path": "/es/jet-ski-lanzarote-las-mejores-excursiones-precios-rutas-y-todo-lo-que-necesitas-saber-guia-2026/"
+    },
+    {
+      "path": "/es/jet-ski-lanzarote-mejores-alquileres-precios-y-donde-reservar/"
+    },
+    {
+      "path": "/es/las-25-mejores-cosas-que-hacer-en-lanzarote-guia-2026/"
+    },
+    {
+      "path": "/es/las-mejores-excursiones-en-barco-en-lanzarote-cruceros-en-catamaran-paseos-con-delfines-y-puestas-de-sol/"
+    },
+    {
+      "path": "/es/las-mejores-excursiones-en-lanzarote-las-15-mejores-visitas-guiadas-que-no-te-puedes-perder/"
+    },
+    {
+      "path": "/es/lista-de-deseos/"
+    },
+    {
+      "path": "/es/lista-de-visitas/"
+    },
+    {
+      "path": "/es/location/costa-teguise-es/page/2/"
+    },
+    {
+      "path": "/es/location/lanzarote-es/"
+    },
+    {
+      "path": "/es/location/lanzarote-es/arrecife-es/"
+    },
+    {
+      "path": "/es/location/lanzarote-es/caleta-de-famara-es/"
+    },
+    {
+      "path": "/es/location/lanzarote-es/costa-teguise-es/"
+    },
+    {
+      "path": "/es/location/lanzarote-es/costa-teguise-es/page/2/"
+    },
+    {
+      "path": "/es/location/lanzarote-es/orzola-es/"
+    },
+    {
+      "path": "/es/location/lanzarote-es/playa-blanca-es/"
+    },
+    {
+      "path": "/es/location/lanzarote-es/playa-honda-es/"
+    },
+    {
+      "path": "/es/location/lanzarote-es/playa-honda-es/page/2/"
+    },
+    {
+      "path": "/es/location/lanzarote-es/puerto-calero-es/"
+    },
+    {
+      "path": "/es/location/lanzarote-es/puerto-del-carmen-es/"
+    },
+    {
+      "path": "/es/location/lanzarote-es/puerto-del-carmen-es/page/2/"
+    },
+    {
+      "path": "/es/location/lanzarote-es/uga-es/"
+    },
+    {
+      "path": "/es/location/lanzarote-es/yaiza-es/"
+    },
+    {
+      "path": "/es/location/lanzarote/arrecife/",
+      "liveTo": "/es/location/lanzarote-es/arrecife-es/"
+    },
+    {
+      "path": "/es/location/lanzarote/puerto-calero/",
+      "liveTo": "/es/location/lanzarote-es/puerto-calero-es/"
+    },
+    {
+      "path": "/es/location/lanzarote/yaiza/",
+      "liveTo": "/es/location/lanzarote-es/yaiza-es/"
+    },
+    {
+      "path": "/es/location/playa-blanca-es/page/2/"
+    },
+    {
+      "path": "/es/mi-cuenta-afiliados/"
+    },
+    {
+      "path": "/es/mi-cuenta/"
+    },
+    {
+      "path": "/es/pedido/"
+    },
+    {
+      "path": "/es/playas-de-papagayo-lanzarote-como-visitarlas-mejores-excursiones-y-paseos-en-barco/"
+    },
+    {
+      "path": "/es/politica-de-cookies/"
+    },
+    {
+      "path": "/es/politica-de-privacidad/"
+    },
+    {
+      "path": "/es/pongase-en-contacto-con/"
+    },
+    {
+      "path": "/es/quienes-somos/"
+    },
+    {
+      "path": "/es/resultado-de-la-busqueda/"
+    },
+    {
+      "path": "/es/seleccion-de-la-fecha-de-salida-del-segundo-viaje/"
+    },
+    {
+      "path": "/es/tipos-de-viaje/"
+    },
+    {
+      "path": "/es/tour_duration/1-4-horas/"
+    },
+    {
+      "path": "/es/tour_duration/4-horas-a-dia-completo/"
+    },
+    {
+      "path": "/es/tour_duration/hasta-1-hora/"
+    },
+    {
+      "path": "/es/tour_language/aleman/"
+    },
+    {
+      "path": "/es/tour_language/espanol/"
+    },
+    {
+      "path": "/es/tour_language/frances/"
+    },
+    {
+      "path": "/es/tour_language/ingles/"
+    },
+    {
+      "path": "/es/trip-difficulty/facil-adrenalina/"
+    },
+    {
+      "path": "/es/trip-difficulty/facil/"
+    },
+    {
+      "path": "/es/trip-difficulty/media/"
+    },
+    {
+      "path": "/es/trip-types/aventuras-y-safaris/"
+    },
+    {
+      "path": "/es/trip-types/deportes-y-actividades-acuaticas/"
+    },
+    {
+      "path": "/es/trip-types/eventos-y-actividades-nocturnas/"
+    },
+    {
+      "path": "/es/trip-types/excursiones-en-barco-por-lanzarote/"
+    },
+    {
+      "path": "/es/trip-types/excursiones-en-buggy-por-lanzarote/"
+    },
+    {
+      "path": "/es/trip-types/experiencia-bajo-el-agua/"
+    },
+    {
+      "path": "/es/trip-types/ferrys-expres/"
+    },
+    {
+      "path": "/es/trip-types/lanzarote-bus-tours-es/"
+    },
+    {
+      "path": "/es/trip-types/packs-especiales-y-descuentos/"
+    },
+    {
+      "path": "/es/trip-types/parques-tematicos-y-de-atracciones/"
+    },
+    {
+      "path": "/es/trip-types/tours-privados-y-alquiler-de-barcos/"
+    },
+    {
+      "path": "/es/trip/"
+    },
+    {
+      "path": "/es/trip/4-seater-buggy-tour-50-off-road/",
+      "liveTo": "/es/trip/excursion-en-buggy-de-4-plazas-50-fuera-de-carretera/"
+    },
+    {
+      "path": "/es/trip/aqualava-playa-blanca/"
+    },
+    {
+      "path": "/es/trip/aquapark-costa-teguise/"
+    },
+    {
+      "path": "/es/trip/avistamiento-de-delfines-y-ballenas-lanzarote/"
+    },
+    {
+      "path": "/es/trip/bautismo-de-buceo-y-alquiler-de-moto-de-agua-en-lanzarote/"
+    },
+    {
+      "path": "/es/trip/bautizo-de-buceo/"
+    },
+    {
+      "path": "/es/trip/boat-cruise-buggy-jetski/"
+    },
+    {
+      "path": "/es/trip/can-am-spyder-tours/"
+    },
+    {
+      "path": "/es/trip/catamaran-al-atardecer-y-delfines/"
+    },
+    {
+      "path": "/es/trip/costa-a-costa/"
+    },
+    {
+      "path": "/es/trip/crucero-al-atardecer-con-delfines/"
+    },
+    {
+      "path": "/es/trip/crucero-chillout-playa-blanca/"
+    },
+    {
+      "path": "/es/trip/crucero-en-barco-buggy/"
+    },
+    {
+      "path": "/es/trip/crucero-en-barco-deportes-acuaticos/"
+    },
+    {
+      "path": "/es/trip/crucero-en-barco-moto-acuatica/"
+    },
+    {
+      "path": "/es/trip/crucero-en-barco-y-deportes-acuaticos/"
+    },
+    {
+      "path": "/es/trip/crucero-en-catamaran-con-todo-incluido-por-la-graciosa/"
+    },
+    {
+      "path": "/es/trip/crucero-en-catamaran-con-todo-incluido-por-papagayo/"
+    },
+    {
+      "path": "/es/trip/crucero-en-catamaran-por-la-graciosa-puesta-de-sol-y-delfines/"
+    },
+    {
+      "path": "/es/trip/crucero-especial-en-catamaran/"
+    },
+    {
+      "path": "/es/trip/crucero-isla-de-lobos-y-delfines/"
+    },
+    {
+      "path": "/es/trip/cruceros-en-barco-katfish-premium/"
+    },
+    {
+      "path": "/es/trip/cuevas-express/"
+    },
+    {
+      "path": "/es/trip/delicias-de-fuerteventura/"
+    },
+    {
+      "path": "/es/trip/descubra-lanzarote-y-la-graciosa/"
+    },
+    {
+      "path": "/es/trip/descubrir-lanzarote-y-la-isla-de-lobos/",
+      "liveTo": "/es/trip/excursion-isla-de-lobos-y-lanzarote/"
+    },
+    {
+      "path": "/es/trip/domingo-de-mercado-y-la-graciosa/"
+    },
+    {
+      "path": "/es/trip/excursion-al-volcan-timanfaya/"
+    },
+    {
+      "path": "/es/trip/excursion-buggy-todoterreno-3-horas-lanzarote/",
+      "liveTo": "/es/trip/excursion-en-buggy-desde-costa-teguise-lanzarote-3-horas/"
+    },
+    {
+      "path": "/es/trip/excursion-corta-volcanes-sur-lanzarote/"
+    },
+    {
+      "path": "/es/trip/excursion-de-medio-dia-a-los-volcanes/"
+    },
+    {
+      "path": "/es/trip/excursion-en-buggy-costa-teguise-2-horas/"
+    },
+    {
+      "path": "/es/trip/excursion-en-buggy-costa-teguise/",
+      "liveTo": "/es/trip/excursion-en-buggy-desde-costa-teguise-lanzarote-3-horas/"
+    },
+    {
+      "path": "/es/trip/excursion-en-buggy-de-4-plazas-50-fuera-de-carretera/"
+    },
+    {
+      "path": "/es/trip/excursion-en-buggy-desde-costa-teguise-lanzarote-3-horas/"
+    },
+    {
+      "path": "/es/trip/excursion-en-buggy-jetski/"
+    },
+    {
+      "path": "/es/trip/excursion-en-buggy-todoterreno-por-los-volcanes-con-recogida-incluida-2-horas/",
+      "liveTo": "/es/trip/excursion-en-buggy-costa-teguise-2-horas/"
+    },
+    {
+      "path": "/es/trip/excursion-en-moto-acuatica-de-40-minutos-una-aventura-inolvidable-en-lanzarote/"
+    },
+    {
+      "path": "/es/trip/excursion-familiar-en-buggy-excursion-al-volcan/"
+    },
+    {
+      "path": "/es/trip/excursion-isla-de-lobos-y-lanzarote/"
+    },
+    {
+      "path": "/es/trip/excursion-privada-barco-papagayo-puerto-del-carmen/"
+    },
+    {
+      "path": "/es/trip/excursion-volcanes-cuevas/"
+    },
+    {
+      "path": "/es/trip/excursion-volcanes-y-delfines-al-atardecer/"
+    },
+    {
+      "path": "/es/trip/experiencia-completa-en-lanzarote/"
+    },
+    {
+      "path": "/es/trip/fuerteventura-express-transfer-ferry/"
+    },
+    {
+      "path": "/es/trip/fuerteventura-express/"
+    },
+    {
+      "path": "/es/trip/gira-cesar-manrique/"
+    },
+    {
+      "path": "/es/trip/grand-tour-lanzarote/"
+    },
+    {
+      "path": "/es/trip/i-love-crucero-en-catamaran-al-atardecer/"
+    },
+    {
+      "path": "/es/trip/i-love-la-graciosa-crucero-en-catamaran/"
+    },
+    {
+      "path": "/es/trip/i-love-papagayo-crucero-en-catamaran/"
+    },
+    {
+      "path": "/es/trip/jet-ski-lanzarote-alquiler-de-motos-acuaticas-expres-en-20-minutos/"
+    },
+    {
+      "path": "/es/trip/jetski-parascending-crazy-dount/"
+    },
+    {
+      "path": "/es/trip/la-graciosa-all-inclusive-catamaran-cruise/",
+      "liveTo": "/es/trip/i-love-la-graciosa-crucero-en-catamaran/"
+    },
+    {
+      "path": "/es/trip/la-graciosa-express-transfer-ferry/"
+    },
+    {
+      "path": "/es/trip/la-graciosa-express/"
+    },
+    {
+      "path": "/es/trip/lanzarote-al-completo/",
+      "liveTo": "/es/trip/experiencia-completa-en-lanzarote/"
+    },
+    {
+      "path": "/es/trip/lanzarote-avistamiento-de-delfines-y-ballenas/"
+    },
+    {
+      "path": "/es/trip/lanzarote-karting/"
+    },
+    {
+      "path": "/es/trip/lanzarote-to-fuerteventura-excursions-fuerteventura-grand-tour/"
+    },
+    {
+      "path": "/es/trip/lanzarote-volcanoes-dolphins/",
+      "liveTo": "/es/trip/excursion-volcanes-y-delfines-al-atardecer/"
+    },
+    {
+      "path": "/es/trip/lanzatryke-tours/"
+    },
+    {
+      "path": "/es/trip/lanzaxtreme-polaris-tours/"
+    },
+    {
+      "path": "/es/trip/lo-mas-destacado-de-lanzarote/"
+    },
+    {
+      "path": "/es/trip/mini-crucero-de-catamaran-de-playa-blanca-a-playa-papagayo/"
+    },
+    {
+      "path": "/es/trip/mini-crucero-en-catamaran-de-playa-blanca-a-playa-papagayo/"
+    },
+    {
+      "path": "/es/trip/mizu-fishing-lanzarote-excursion-pesca-5-horas/"
+    },
+    {
+      "path": "/es/trip/moto-acuatica-parascending/"
+    },
+    {
+      "path": "/es/trip/music-hall-tavern-drag-dinner-show/"
+    },
+    {
+      "path": "/es/trip/noche-country-western/"
+    },
+    {
+      "path": "/es/trip/paquete-familiar/"
+    },
+    {
+      "path": "/es/trip/parapente-lanzarote/"
+    },
+    {
+      "path": "/es/trip/parascending/"
+    },
+    {
+      "path": "/es/trip/pesca-de-altura/"
+    },
+    {
+      "path": "/es/trip/pruebe-buceo-moto-acuatica/",
+      "liveTo": "/es/trip/bautismo-de-buceo-y-alquiler-de-moto-de-agua-en-lanzarote/"
+    },
+    {
+      "path": "/es/trip/rancho-texas-animal-splash-park-entrada/"
+    },
+    {
+      "path": "/es/trip/rancho-texas-aqualava/"
+    },
+    {
+      "path": "/es/trip/rancho-texas-noche-country-western/"
+    },
+    {
+      "path": "/es/trip/rancho-texas-park-interaccion-con-delfines/"
+    },
+    {
+      "path": "/es/trip/rancho-texas-park-nado-con-leones-marinos/"
+    },
+    {
+      "path": "/es/trip/recorrido-por-el-norte-y-sur/"
+    },
+    {
+      "path": "/es/trip/ruta-en-buggy-maverick-can-am-trail/"
+    },
+    {
+      "path": "/es/trip/safari-en-moto-acuatica/",
+      "liveTo": "/es/trip/excursion-en-moto-acuatica-de-40-minutos-una-aventura-inolvidable-en-lanzarote/"
+    },
+    {
+      "path": "/es/trip/safari-en-submarino/"
+    },
+    {
+      "path": "/es/trip/sea-trekkin/"
+    },
+    {
+      "path": "/es/trip/senderismo-por-las-colinas-de-famara/"
+    },
+    {
+      "path": "/es/trip/senderismo-reserva-natural-del-volcan/"
+    },
+    {
+      "path": "/es/trip/south-tour-lanzarote/"
+    },
+    {
+      "path": "/es/trip/super-buggy-tour-maverick-turbo-x3/"
+    },
+    {
+      "path": "/es/trip/surf/"
+    },
+    {
+      "path": "/es/trip/tesoros-del-norte/"
+    },
+    {
+      "path": "/es/trip/tour-vip-descubre-las-joyas-y-pueblos-ocultos-de-lanzarote/"
+    },
+    {
+      "path": "/es/trip/tour-volcan-timanfaya/",
+      "liveTo": "/es/trip/excursion-al-volcan-timanfaya/"
+    },
+    {
+      "path": "/es/trip/tour-volcanes-medio-dia/",
+      "liveTo": "/es/trip/excursion-corta-volcanes-sur-lanzarote/"
+    },
+    {
+      "path": "/es/trip/traslados-express-isla-de-lobos-ferry/"
+    },
+    {
+      "path": "/es/trip/tri-dive-excursion-en-buggy-jetski/"
+    },
+    {
+      "path": "/es/trip/visita-de-medio-dia-a-los-volcanes/",
+      "liveTo": "/es/trip/excursion-de-medio-dia-a-los-volcanes/"
+    },
+    {
+      "path": "/es/trip/wakeboard-en-lanzarote/"
+    },
+    {
+      "path": "/es/trip/watersports-fun-pack-jetski-banana-donut-for-2/"
+    },
+    {
+      "path": "/es/visitas-y-eventos-privados/"
+    },
+    {
+      "path": "/excursions-tickets-direct-cart/"
+    },
+    {
+      "path": "/excursions-tickets-direct-sitemap/"
+    },
+    {
+      "path": "/formulario-e-ticket/"
+    },
+    {
+      "path": "/gsim-europe-clients/"
+    },
+    {
+      "path": "/how-to-explore-la-graciosa-in-lanzarote-best-excursions-catamaran-cruises/"
+    },
+    {
+      "path": "/jet-ski-lanzarote-best-prices-routes-everything-you-need-to-know-2026-guide/"
+    },
+    {
+      "path": "/jet-ski-lanzarote-best-rentals-prices-where-to-book/"
+    },
+    {
+      "path": "/jet-ski-lanzarote-best-tours-prices-routes-everything-you-need-to-know-2026-guide/"
+    },
+    {
+      "path": "/la-graciosa-day-trip-an-is-it-worth-it/"
+    },
+    {
+      "path": "/la-graciosa-day-trip-from-lanzarote-ferry-catamaran-guide/"
+    },
+    {
+      "path": "/la-graciosa-day-trip-from-lanzarote-is-it-worth-it/"
+    },
+    {
+      "path": "/lanzarote-buggy-tour-the-ultimate-off-road-adventure/"
+    },
+    {
+      "path": "/lanzarote-excursions/fuerteventura-delights-day-trip/"
+    },
+    {
+      "path": "/lanzarote-guide/"
+    },
+    {
+      "path": "/lanzarote-volcano-buggy-tour-the-ultimate-off-road-adventure-across-timanfaya-landscapes/"
+    },
+    {
+      "path": "/legal-notice/"
+    },
+    {
+      "path": "/location/lanzarote/"
+    },
+    {
+      "path": "/location/lanzarote/arrecife/"
+    },
+    {
+      "path": "/location/lanzarote/caleta-de-famara/"
+    },
+    {
+      "path": "/location/lanzarote/costa-teguise/"
+    },
+    {
+      "path": "/location/lanzarote/costa-teguise/page/2/"
+    },
+    {
+      "path": "/location/lanzarote/orzola/"
+    },
+    {
+      "path": "/location/lanzarote/playa-blanca/"
+    },
+    {
+      "path": "/location/lanzarote/playa-blanca/page/2/"
+    },
+    {
+      "path": "/location/lanzarote/playa-honda/"
+    },
+    {
+      "path": "/location/lanzarote/playa-honda/page/2/"
+    },
+    {
+      "path": "/location/lanzarote/puerto-calero/"
+    },
+    {
+      "path": "/location/lanzarote/puerto-del-carmen/"
+    },
+    {
+      "path": "/location/lanzarote/puerto-del-carmen/page/2/"
+    },
+    {
+      "path": "/location/lanzarote/uga/"
+    },
+    {
+      "path": "/location/lanzarote/yaiza/"
+    },
+    {
+      "path": "/location/playa-blanca/page/2/"
+    },
+    {
+      "path": "/lost-password-affiliates/"
+    },
+    {
+      "path": "/lost-password/",
+      "liveTo": "/lost-password-affiliates/"
+    },
+    {
+      "path": "/my-account-2/"
+    },
+    {
+      "path": "/my-account/"
+    },
+    {
+      "path": "/papagayo-beaches-how-to-visit-best-tours-boat-trips/"
+    },
+    {
+      "path": "/papagayo-beaches-lanzarote-how-to-Visit-best-tours-boat-trips/"
+    },
+    {
+      "path": "/papagayo-beaches-lanzarote-how-to-visit-best-top-boat-trips/"
+    },
+    {
+      "path": "/papagayo-beaches-lanzarote-how-to-visit-best-tour-boat-trips/"
+    },
+    {
+      "path": "/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/"
+    },
+    {
+      "path": "/papagayo-beaches-lanzarote/",
+      "liveTo": "/papagayo-beaches-lanzarote-how-to-visit-best-tours-boat-trips/"
+    },
+    {
+      "path": "/papagayo-beaches-lanzarote/how-to-visit-best-tours-boat-trips/"
+    },
+    {
+      "path": "/papagayo-beaches-lanzarote/papagayo-beaches-lanzarote.d6067495.Attraction/"
+    },
+    {
+      "path": "/post/"
+    },
+    {
+      "path": "/privacy-policy/"
+    },
+    {
+      "path": "/private-tours-and-events/"
+    },
+    {
+      "path": "/robots.txt"
+    },
+    {
+      "path": "/selection-of-the-departure-date-of-the-second-tour/"
+    },
+    {
+      "path": "/terms-and-conditions/"
+    },
+    {
+      "path": "/thank-you/"
+    },
+    {
+      "path": "/timanfaya-national-park-tour-best-ways-to-visit-the-volcanoes-in-lanzarote/"
+    },
+    {
+      "path": "/tour-listing/"
+    },
+    {
+      "path": "/tour_duration/1-to-4-hours-tour/"
+    },
+    {
+      "path": "/tour_duration/4-hours-to-full-day-tour/"
+    },
+    {
+      "path": "/tour_duration/up-to-1-hour/"
+    },
+    {
+      "path": "/tour_language/english/"
+    },
+    {
+      "path": "/tour_language/french/"
+    },
+    {
+      "path": "/tour_language/german/"
+    },
+    {
+      "path": "/tour_language/german/page/2/"
+    },
+    {
+      "path": "/tour_language/spanish/"
+    },
+    {
+      "path": "/travellers-information/"
+    },
+    {
+      "path": "/trip-difficulty/easy-adrenalin/"
+    },
+    {
+      "path": "/trip-difficulty/easy/"
+    },
+    {
+      "path": "/trip-difficulty/medium/"
+    },
+    {
+      "path": "/trip-types/"
+    },
+    {
+      "path": "/trip-types/buggies-lanzarote/"
+    },
+    {
+      "path": "/trip-types/buggy-tours-lanzarote/"
+    },
+    {
+      "path": "/trip-types/express-ferries/"
+    },
+    {
+      "path": "/trip-types/lanzarote-boat-trips/"
+    },
+    {
+      "path": "/trip-types/lanzarote-bus-tours/"
+    },
+    {
+      "path": "/trip-types/lanzarote-parks/"
+    },
+    {
+      "path": "/trip-types/nightlife-events-activities/"
+    },
+    {
+      "path": "/trip-types/private-tours-boat-hires/"
+    },
+    {
+      "path": "/trip-types/special-packs-discounts/"
+    },
+    {
+      "path": "/trip-types/underwater-experience/"
+    },
+    {
+      "path": "/trip-types/water-sports-activities/"
+    },
+    {
+      "path": "/trip/"
+    },
+    {
+      "path": "/trip/4-seater-buggy-tour-50-off-road/"
+    },
+    {
+      "path": "/trip/4-x-4-vip-tour/"
+    },
+    {
+      "path": "/trip/40-minute-jet-ski-tour-an-unforgettable-lanzarote-adventure/"
+    },
+    {
+      "path": "/trip/aqualava-playa-blanca/"
+    },
+    {
+      "path": "/trip/aquapark-costa-teguise/"
+    },
+    {
+      "path": "/trip/big-game-fishing/"
+    },
+    {
+      "path": "/trip/boat-cruise-buggy-jetski/"
+    },
+    {
+      "path": "/trip/boat-cruise-buggy/"
+    },
+    {
+      "path": "/trip/boat-cruise-jetski/"
+    },
+    {
+      "path": "/trip/boat-cruise-watersports-2/"
+    },
+    {
+      "path": "/trip/boat-cruise-watersports/"
+    },
+    {
+      "path": "/trip/buggy-tour-costa-teguise/",
+      "liveTo": "/trip/costa-teguise-buggy-tour-3-hours/"
+    },
+    {
+      "path": "/trip/buggy-tour-jetski/"
+    },
+    {
+      "path": "/trip/buggy-tour-maverick-can-am-trail/"
+    },
+    {
+      "path": "/trip/can-am-spyder-tours/"
+    },
+    {
+      "path": "/trip/caves-express/"
+    },
+    {
+      "path": "/trip/cesar-manrique-tour/"
+    },
+    {
+      "path": "/trip/chillout-cruise-playa-blanca/"
+    },
+    {
+      "path": "/trip/coast-2-coast/"
+    },
+    {
+      "path": "/trip/costa-teguise-buggy-tour-2-hours/"
+    },
+    {
+      "path": "/trip/costa-teguise-buggy-tour-3-hours/"
+    },
+    {
+      "path": "/trip/country-western-night/"
+    },
+    {
+      "path": "/trip/discover-lanzarote-la-graciosa/"
+    },
+    {
+      "path": "/trip/discover-lanzarote-lobos-island/",
+      "liveTo": "/trip/lobos-island-tour-from-lanzarote-lanzarote-and-lobos-island-excursion/"
+    },
+    {
+      "path": "/trip/dolphins-whales-watching-lanzarote/"
+    },
+    {
+      "path": "/trip/family-buggy-tour-volcano-trek/"
+    },
+    {
+      "path": "/trip/fuerteventura-delight/"
+    },
+    {
+      "path": "/trip/fuerteventura-express-transfer-ferry/"
+    },
+    {
+      "path": "/trip/fuerteventura-express/"
+    },
+    {
+      "path": "/trip/fuerteventura-tour/"
+    },
+    {
+      "path": "/trip/full-day-volcanoes/"
+    },
+    {
+      "path": "/trip/full-lanzarote-experience/"
+    },
+    {
+      "path": "/trip/half-day-volcanoes-tour-2/"
+    },
+    {
+      "path": "/trip/i-love-la-graciosa-catamaran-cruise/"
+    },
+    {
+      "path": "/trip/i-love-papagayo-catamaran-cruise/"
+    },
+    {
+      "path": "/trip/i-love-sunset-catamaran-cruise/"
+    },
+    {
+      "path": "/trip/jet-ski-lanzarote-20-minute-express-jet-ski-rental/"
+    },
+    {
+      "path": "/trip/jetski-parascending-crazy-dount/"
+    },
+    {
+      "path": "/trip/jetski-parascending/"
+    },
+    {
+      "path": "/trip/jetski-safari/",
+      "liveTo": "/trip/40-minute-jet-ski-tour-an-unforgettable-lanzarote-adventure/"
+    },
+    {
+      "path": "/trip/katfish-premium-cruises/"
+    },
+    {
+      "path": "/trip/la-graciosa-all-inclusive-catamaran-cruise/"
+    },
+    {
+      "path": "/trip/la-graciosa-catamaran-cruise-sunset-dolphins/"
+    },
+    {
+      "path": "/trip/la-graciosa-express-transfer-ferry/"
+    },
+    {
+      "path": "/trip/la-graciosa-express/"
+    },
+    {
+      "path": "/trip/lanzarote-dolphins-whales-watching/"
+    },
+    {
+      "path": "/trip/lanzarote-grand-tour/"
+    },
+    {
+      "path": "/trip/lanzarote-karting/"
+    },
+    {
+      "path": "/trip/lanzarote-volcanoes-amp-dolphins/",
+      "liveTo": "/trip/lanzarote-volcanoes-and-dolphins/"
+    },
+    {
+      "path": "/trip/lanzarote-volcanoes-and-dolphins/"
+    },
+    {
+      "path": "/trip/lanzarotes-highlights-tour/"
+    },
+    {
+      "path": "/trip/lanzatryke-tours/"
+    },
+    {
+      "path": "/trip/lanzaxtreme-polaris-tours/"
+    },
+    {
+      "path": "/trip/lazarote-grand-tour/",
+      "liveTo": "/trip/lanzarote-grand-tour/"
+    },
+    {
+      "path": "/trip/lobos-island-dolphins-cruise/"
+    },
+    {
+      "path": "/trip/lobos-island-express-transfers-ferry/"
+    },
+    {
+      "path": "/trip/lobos-island-tour-from-lanzarote-lanzarote-and-lobos-island-excursion/"
+    },
+    {
+      "path": "/trip/mizu-fishing-lanzarote-5-hour-fishing-trip/"
+    },
+    {
+      "path": "/trip/music-hall-tavern-drag-dinner-show/"
+    },
+    {
+      "path": "/trip/north-and-south-tour/"
+    },
+    {
+      "path": "/trip/northern-treasures/"
+    },
+    {
+      "path": "/trip/off-road-buggy-tour-of-the-volcanoes-with-pick-up-2-hours/",
+      "liveTo": "/trip/costa-teguise-buggy-tour-2-hours/"
+    },
+    {
+      "path": "/trip/off-road-buggy-tour-of-the-volcanoes-with-pick-up-3-hours/",
+      "liveTo": "/trip/costa-teguise-buggy-tour-3-hours/"
+    },
+    {
+      "path": "/trip/page/2/"
+    },
+    {
+      "path": "/trip/papagayo-all-inclusive-catamaran-cruise/"
+    },
+    {
+      "path": "/trip/paragliding-lanzarote/"
+    },
+    {
+      "path": "/trip/parascending/"
+    },
+    {
+      "path": "/trip/playa-blanca-to-papagayo-beach-catamaran-mini-cruise/"
+    },
+    {
+      "path": "/trip/private-boat-trip-papagayo-beaches-from-puerto-del-carmen/"
+    },
+    {
+      "path": "/trip/private-boat-trip-papagayo-beaches/"
+    },
+    {
+      "path": "/trip/rancho-texas-animal-splash-park-entry/"
+    },
+    {
+      "path": "/trip/rancho-texas-aqualava/"
+    },
+    {
+      "path": "/trip/rancho-texas-country-western-night/"
+    },
+    {
+      "path": "/trip/rancho-texas-park-interaction-with-dolphins/"
+    },
+    {
+      "path": "/trip/rancho-texas-park-swim-with-sealions/"
+    },
+    {
+      "path": "/trip/sea-trekkin/"
+    },
+    {
+      "path": "/trip/short-south-tour-volcano/"
+    },
+    {
+      "path": "/trip/short-volcanoes-short-caves-tour-2/"
+    },
+    {
+      "path": "/trip/south-tour/"
+    },
+    {
+      "path": "/trip/special-catamaran-cruise/"
+    },
+    {
+      "path": "/trip/submarine-safari/"
+    },
+    {
+      "path": "/trip/sunday-market-la-graciosa/"
+    },
+    {
+      "path": "/trip/sunset-catamaran-dolphins/"
+    },
+    {
+      "path": "/trip/sunset-dolphins-cruise/"
+    },
+    {
+      "path": "/trip/super-buggy-tour-lanzabuggy/"
+    },
+    {
+      "path": "/trip/super-buggy-tour-maverick-turbo-x3/",
+      "liveTo": "/trip/super-buggy-tour-lanzabuggy/"
+    },
+    {
+      "path": "/trip/surfing/"
+    },
+    {
+      "path": "/trip/the-family-pack/"
+    },
+    {
+      "path": "/trip/trekking-famara-hills/"
+    },
+    {
+      "path": "/trip/trekking-volcano-natural-reserve/"
+    },
+    {
+      "path": "/trip/tri-dive-buggy-tour-jetski/"
+    },
+    {
+      "path": "/trip/try-dive-jetski/"
+    },
+    {
+      "path": "/trip/try-dive/"
+    },
+    {
+      "path": "/trip/wakeboard-lanzarote/"
+    },
+    {
+      "path": "/trip/watersports-fun-pack/"
+    },
+    {
+      "path": "/wp-content/uploads/2023/07/Jetski-Safari-6.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/07/fuerteventura.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/07/la-graciosa.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/09/Aqualava2-1.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/09/Cactus-garden.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/09/La-Geria-subcategory.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/09/La-Geria-subcategory.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/09/Papagayo-beaches.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/09/Papagayo-beaches.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/09/Rancho-texas2-1.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/09/el-golfo2-1.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/09/el-golfo2-1.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/09/green-caves.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/09/green-caves.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/09/haria.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/09/lagomar-museum.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/09/lagomar-museum.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/09/lobos-island.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/09/los-hervideros.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/09/monumento-al-campesino.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/09/timanfaya2-1.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/09/timanfaya2-1.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/4-X-4-VIP-Tour-3-1024x668.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/4-X-4-VIP-Tour-4-1024x578.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Aqualava-Playa-Blanca-1.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Aqualava-Playa-Blanca-2.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Aqualava-Playa-Blanca-3.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Aqualava-Playa-Blanca-3.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Aqualava-Playa-Blanca-4.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Aqualava-Playa-Blanca-4.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Aquapark-Costa-Teguise-1.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Aquapark-Costa-Teguise-2.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Aquapark-Costa-Teguise-3.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Buggy-Maverick-TRAIL2-374x226.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Country-Western-Night-1.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Cueva-de-los-Verdes.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/El-Golfo-2.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/El-Golfo-2.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/El-Golfo.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/El-Golfo.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Family-Buggy-Tour-Volcano-Trek-1.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Family-Buggy-Tour-Volcano-Trek-3.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Family-Buggy-Tour-Volcano-Trek-3.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Family-Buggy-Tour-Volcano-Trek-4.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Fuerteventura-1.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Fuerteventura-8.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Fuerteventura-Delight-4.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Fuerteventura-Delight-6.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Haria.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/I-Love-Papagayo-1.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/I-Love-Papagayo-1.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/I-Love-Papagayo-6.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/I-Love-Papagayo-6.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/I-Love-Sunset-Catamaran-Cruise-3.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/I-Love-Sunset-Dolphins-2.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Jameos-del-Agua-1.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Jameos-del-Agua-1.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Jardin-Cactus.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Jardin-Cactus.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Jetsky-Safari-1.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/La-Geria.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/La-Geria.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/La-Graciosa-Island-3.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/La-Graciosa-Island-7.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Lagomar.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Lagomar.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Lanzaxtreme-polaris-tours-2.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Lanzaxtreme-polaris-tours-3.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Lanzaxtreme-polaris-tours-3.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Lanzaxtreme-polaris-tours-4-600x490.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Lobos-Island-Dolphins-Cruise-2.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Lobos-Island-Dolphins-Cruise-3.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Los-hervideros.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Los-hervideros.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Mirador-de-las-nieves.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Mirador-del-Ri.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Paragliding-Lanzarote-1.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Paragliding-Lanzarote-3.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-1-374x226.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-1.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-1.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-10.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-10.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-11-374x226.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-11-600x490.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-11.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-11.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-13-600x490.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-14.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-2.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-2.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-3.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-4.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-5.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-7-374x226.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-7.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-7.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-8.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-8.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Rancho-Texas-Animal-Splash-Park-Entry-9.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Submarine-Safaris-3.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Submarine-Safaris-4.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Submarine-Safaris-4.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Super-Buggy-Tour-Maverick-Turbo-X3-1.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Teguise-Market-La-Graciosa-3.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Teguise-Market-La-Graciosa-3.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Teguise-Market-La-Graciosa-6.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Timanfaya-2.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Timanfaya-33.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Timanfaya.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Timanfaya.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Trekking-Famara-Hills-4.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2023/12/Try-Dive-1.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2024/01/Lobos-Island-at-your-Leisure-4.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2024/01/Lobos-Island-at-your-Leisure-5.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2024/02/Grand-Tour-Cesar-Manrique-Tour-1.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2024/02/Grand-Tour-Cesar-Manrique-Tour-3.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2024/02/Grand-Tour-Cesar-Manrique-Tour-5.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2024/02/La-Graciosa-Catamaran-Cruise-Sunset-Dolphins-990x490.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2024/02/La-Graciosa-Catamaran-Cruise-Sunset-Dolphins.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2024/02/La-Graciosa-Catamaran-Cruise-Sunset-Dolphins.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2024/02/Watersports-Fun-Pack-1-1.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2024/02/Watersports-Fun-Pack-1-2.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2024/02/Watersports-Fun-Pack.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2024/02/Watersports-Fun-Pack.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2024/02/tri-dive-jetski.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2024/03/Lanzarote-karting-2-600x662.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2024/03/Lanzarote-karting-4-600x662.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2024/03/Lanzarote-karting-6.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2024/03/Lanzarote-karting-7.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2024/03/Lanzarote-karting-8.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2024/03/rancho-texas-aqualava.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2024/03/rancho-texas-aqualava.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2024/04/Buggy-4-Seater-1.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2024/04/Buggy-4-Seater-4.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2024/07/Underwater-Experiences_.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2024/07/Watersport-Activities.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2024/07/couples-tours.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2025/09/Aqualava-lanzarote-taxonomy.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2025/09/Aqualava-lanzarote-taxonomy.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2025/09/Aquapark-lanzarote-taxonomy.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2025/09/Cactus-Garden-lanzarote-taxonomy.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2025/09/Cesar-Manrique-Foundation-taxonomy.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2025/09/Cueva-de-los-verdes-lanzarote-taxonomy.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2025/09/Jameos-del-agua-lanzarote-taxonomy.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2025/09/Jameos-del-agua-lanzarote-taxonomy.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2025/09/Las-Grietas-lanzarote-taxonomy.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2025/09/Las-Grietas-lanzarote-taxonomy.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2025/09/Los-Hervideros-lanzarote-taxonomy.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2025/09/Los-Hervideros-lanzarote-taxonomy.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2025/09/Teguise-lanzarote-taxonomy.jpg"
+    },
+    {
+      "path": "/wp-content/uploads/2025/09/el-golfo-lanzarote-taxonomy.jpg.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2026/02/Buggy-and-adventure-tours-in-lanzarote.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2026/02/Buggy-excursions-in-Lanzarote-the-most-exciting-way-to-explore-the-island.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2026/02/Why-choose-buggy-excursions-in-Lanzarote.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2026/03/El-Golfo-Charco-del-Clico-Lanzarote.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2026/03/Jet-ski-Lanzarote-aerial-view-tourists-riding-jet-ski-in-the-Atlantic-Ocean-near-Puerto-del-Carmen-volcanic-coastline-1024x682.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2026/03/Jet-ski-Lanzarote-aerial-view-tourists-riding-jet-ski-in-the-Atlantic-Ocean-near-Puerto-del-Carmen-volcanic-coastline-374x226.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2026/03/Lanzarote-La-Geria.webp"
+    },
+    {
+      "path": "/wp-content/uploads/2026/03/Lanzarote-Volcano-Buggy-Tour-The-Ultimate-Off-Road-Adventure-Across-Timanfaya-Landscapes-3-1024x427.webp"
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Confirm booking & e-ticket · Tickets Direct</title>
+<style>
+  :root { --navy:#2f2483; --blue:#0077c8; --bg:#f5f7fc; --line:#dfe4ee; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:15px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color:#1f2430; background:var(--bg); }
+  header { background:var(--navy); color:#fff; padding:14px 20px; display:flex; align-items:center; gap:12px; }
+  header b { font-size:18px; }
+  .wrap { display:grid; grid-template-columns: 420px 1fr; gap:20px; padding:20px; align-items:start; }
+  @media (max-width:900px){ .wrap{ grid-template-columns:1fr; } }
+  form { background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px; }
+  h2 { font-size:13px; text-transform:uppercase; letter-spacing:.04em; color:#8a93a6; margin:18px 0 8px; }
+  h2:first-child{ margin-top:0; }
+  label { display:block; font-size:12px; color:#6b7280; margin:8px 0 3px; }
+  input, select, textarea { width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:8px; font:inherit; background:#fff; }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .three { display:grid; grid-template-columns:2fr 1fr 1fr; gap:10px; align-items:end; }
+  .totals { background:#eaf4fb; border-radius:8px; padding:10px 12px; margin-top:10px; font-size:14px; }
+  .totals div { display:flex; justify-content:space-between; padding:2px 0; }
+  .totals .g { font-weight:700; color:var(--blue); }
+  .actions { position:sticky; bottom:0; background:#fff; padding-top:12px; margin-top:12px; border-top:1px solid var(--line); display:flex; gap:10px; flex-wrap:wrap; }
+  button { border:0; border-radius:10px; padding:11px 16px; font:inherit; font-weight:700; cursor:pointer; }
+  .btn { background:var(--blue); color:#fff; }
+  .btn.ghost { background:#eef1f7; color:#1f2430; }
+  .preview { background:#fff; border:1px solid var(--line); border-radius:12px; overflow:hidden; position:sticky; top:20px; }
+  .preview .bar { padding:8px 14px; background:#fafbff; border-bottom:1px solid var(--line); font-size:12px; color:#6b7280; }
+  iframe { width:100%; height:80vh; border:0; background:#fff; }
+  .hint { font-size:12px; color:#8a93a6; margin-top:4px; }
+</style>
+</head>
+<body>
+<header><b>Tickets Direct</b> · Confirm booking & e-ticket</header>
+<div class="wrap">
+  <form id="f" autocomplete="off">
+    <h2>Booking</h2>
+    <div class="two">
+      <div><label>Booking / reference number</label><input name="bookingNumber" value="10001"></div>
+      <div><label>Locator</label><input name="locator" value=""></div>
+    </div>
+    <div class="two">
+      <div><label>E-ticket date</label><input type="date" name="date"></div>
+      <div><label>Seller</label><input name="seller" value="VENTA ONLINE"></div>
+    </div>
+
+    <h2>Excursion</h2>
+    <label>Tour name</label><input name="tour" value="">
+    <div class="two">
+      <div><label>Departure date</label><input type="date" name="departure"></div>
+      <div><label>Language</label><input name="language" value="EN" maxlength="3"></div>
+    </div>
+    <label>Package</label><input name="package" value="">
+
+    <h2>Customer</h2>
+    <div class="two">
+      <div><label>Name</label><input name="customerName" value=""></div>
+      <div><label>Country</label><input name="country" value=""></div>
+    </div>
+    <div class="two">
+      <div><label>Phone</label><input name="phone" value=""></div>
+      <div><label>Email</label><input name="email" type="email" value=""></div>
+    </div>
+    <label>Hotel &amp; room number</label><input name="hotelRoom" value="" placeholder="Hotel name, room 000">
+
+    <h2>Pickup</h2>
+    <div class="two">
+      <div><label>Pickup point</label><input name="pickupPoint" value=""></div>
+      <div><label>Pickup time</label><input name="pickupTime" value="" placeholder="08:00"></div>
+    </div>
+
+    <h2>People &amp; price</h2>
+    <div class="three"><div><label>Adults</label><input type="number" name="adults" min="0" value="2"></div><div><label>× price €</label><input type="number" name="adultPrice" step="0.01" value="69"></div><div></div></div>
+    <div class="three"><div><label>Children</label><input type="number" name="children" min="0" value="0"></div><div><label>× price €</label><input type="number" name="childPrice" step="0.01" value="45"></div><div></div></div>
+    <div class="two">
+      <div><label>Deposit paid €</label><input type="number" name="depositPaid" step="0.01" value="34.50"></div>
+      <div><label>Total € (auto, editable)</label><input type="number" name="total" step="0.01"></div>
+    </div>
+    <div class="totals">
+      <div><span>Total</span><span class="g" id="tTotal">€0.00</span></div>
+      <div><span>Deposit paid</span><span id="tDep">€0.00</span></div>
+      <div><span>Balance to pay on the day</span><span id="tPend">€0.00</span></div>
+    </div>
+
+    <h2>Notes</h2>
+    <textarea name="notes" rows="3"></textarea>
+
+    <div class="actions">
+      <button type="button" class="btn" id="print">Print / Save PDF</button>
+      <button type="button" class="btn ghost" id="dl">Download data (.json)</button>
+      <span class="hint">The server generator makes the final PDF from this data. Preview updates live.</span>
+    </div>
+  </form>
+
+  <div class="preview"><div class="bar">Live e-ticket preview</div><iframe id="pv"></iframe></div>
+</div>
+
+<script type="module">
+import { renderEticket } from "./eticket.mjs";
+// QR is optional in the preview; the server generator always adds the real QR to the PDF.
+let QRCode = null;
+import("https://cdn.jsdelivr.net/npm/qrcode@1.5.4/+esm").then((m) => { QRCode = m.default; render(); }).catch(() => {});
+
+const f = document.getElementById("f");
+const pv = document.getElementById("pv");
+const today = new Date().toISOString().slice(0, 10);
+f.date.value = today; f.departure.value = today;
+
+function data() {
+  const g = (n) => f[n].value;
+  const adults = +f.adults.value || 0, children = +f.children.value || 0;
+  const ap = +f.adultPrice.value || 0, cp = +f.childPrice.value || 0;
+  const auto = adults * ap + children * cp;
+  const total = f.total.value !== "" ? +f.total.value : auto;
+  const rates = [];
+  if (adults > 0) rates.push({ label: "Adult", units: adults, price: ap });
+  if (children > 0) rates.push({ label: "Child", units: children, price: cp });
+  return {
+    bookingNumber: g("bookingNumber"), locator: g("locator"), date: g("date"), seller: g("seller"),
+    tour: g("tour"), departure: g("departure"), language: g("language"), package: g("package"),
+    customerName: g("customerName"), country: g("country"), phone: g("phone"), email: g("email"),
+    hotelRoom: g("hotelRoom"), pickupPoint: g("pickupPoint"), pickupTime: g("pickupTime"),
+    rates, total, depositPaid: +f.depositPaid.value || 0, pending: total - (+f.depositPaid.value || 0),
+    notes: g("notes"),
+    _autoTotal: auto,
+  };
+}
+
+async function render() {
+  const d = data();
+  document.getElementById("tTotal").textContent = "€" + d.total.toFixed(2);
+  document.getElementById("tDep").textContent = "€" + d.depositPaid.toFixed(2);
+  document.getElementById("tPend").textContent = "€" + d.pending.toFixed(2);
+  if (f.total.value === "") f.total.placeholder = d._autoTotal.toFixed(2);
+  const num = `ETD-${d.bookingNumber}-${(d.date || today).replace(/-/g, "")}-XXXX`;
+  let qr = "";
+  try { if (QRCode) qr = await QRCode.toDataURL(`https://excursionsticketsdirect.com/e/${num}`, { margin: 1, width: 300 }); } catch (e) {}
+  pv.srcdoc = renderEticket({ ...d, number: num }, { qr });
+}
+
+f.addEventListener("input", render);
+document.getElementById("print").addEventListener("click", () => pv.contentWindow.print());
+document.getElementById("dl").addEventListener("click", () => {
+  const d = data(); delete d._autoTotal;
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(d, null, 2)], { type: "application/json" }));
+  a.download = `booking-${d.bookingNumber}.json`; a.click();
+});
+render();
+</script>
+</body>
+</html>
